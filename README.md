@@ -1,4 +1,3 @@
-
 <h1>Morpheus<br/><sub>A WebApp to generate artwork with stable diffusion models.</sub></h1>
 
 ▶️ <a href="#quickstart">Quickstart</a> |
@@ -11,11 +10,13 @@
 
 <a href="https://github.com/Monadical-SAS/Morpheus/blob/master/LICENSE"><img src="https://img.shields.io/badge/Open_source-LGPL-green.svg?logo=git&logoColor=green"/></a>
 <a href="https://github.com/Monadical-SAS/Morpheus/"><img src="https://img.shields.io/github/stars/Monadical-SAS/Morpheus.svg?logo=github&label=Stars&logoColor=blue"/></a>
-<a href="https://github.com/Monadical-SAS/Morpheus/commits/main"><img src="https://img.shields.io/github/last-commit/Monadical-SAS/Morpheus.svg?logo=Sublime+Text&logoColor=green&label=active"/></a> &nbsp;
+<a href="https://github.com/Monadical-SAS/Morpheus/commits/main"><img src="https://img.shields.io/github/last-commit/Monadical-SAS/Morpheus.svg?logo=Sublime+Text&logoColor=green&label=active"/></a>
+&nbsp;
 <hr/>
 </div>
 
-**Morpheus is an open-source project that offers a creative and innovative platform for generating stunning artworks using image editing and stable diffusion models.**
+**Morpheus is an open-source project that offers a creative and innovative platform for generating stunning artworks
+using image editing and stable diffusion models.**
 
 
 <div align="center">
@@ -27,7 +28,7 @@
 ## Key Features
 
 - **Free & open source**, you can create your own server and keep your data
-- **Powerful, modular design to support and load many models**  
+- **Powerful, modular design to support and load many models**
 - **Several use cases supported**, we provide Image to image support, Controlnet and Pix2pix
 - **Local Setup or Cloud**
 - **Infrastructure as Code**, We also open source the infrastructure as code to run it on scale.
@@ -45,11 +46,13 @@
 
 Prequisites:
 
-> Morpheus uses Firebase for authentication: Generate a service account credentials JSON file in Firebase before starting.
+> Morpheus uses Firebase for authentication: Generate a service account credentials JSON file in Firebase before
+> starting.
 
-> Install <a href="https://docs.docker.com/get-docker/">Docker</a> and <a href="https://docs.docker.com/compose/install/#install-using-pip">Docker Compose</a> on your system (if not already installed, skip if using k8s setup)
+> Install <a href="https://docs.docker.com/get-docker/">Docker</a>
+> and <a href="https://docs.docker.com/compose/install/#install-using-pip">Docker Compose</a> on your system (if not
+> already installed, skip if using k8s setup)
 <br/>
-
 
 ```bash
 # make sure you've installed docker: https://docs.docker.com/engine/install/
@@ -73,6 +76,7 @@ nano morpheus-server/secrets.env
 # Build the docker images
 docker-compose build
 ```
+
 Follow one,
 
 <details>
@@ -83,6 +87,7 @@ Follow one,
 # Run using the staging profile
 docker-compose --profile=staging up
 ```
+
 </details>
 
 <details>
@@ -94,7 +99,9 @@ Update the environment variable for environment in `morpheus-server/secrets.env`
 ```shell
 ENVIRONMENT=local-mps
 ```
+
 Run the image locally if you have an M1/M2 Mac
+
 ```shell
 # Make sure you don't have any other morpheus docker containers running or images built
 docker-compose --file docker-compose-local-mps.yaml up
@@ -102,6 +109,7 @@ docker-compose --file docker-compose-local-mps.yaml up
 
 In a new terminal window, run the following commands to run the celery workers (for stable-diffusion and magic-prompt)
 locally:
+
 ```shell
 # Move to the morpheus-server directory
 cd morpheus-server
@@ -175,7 +183,7 @@ docker compose run --rm model-script db update local sdiffusion
 You only need to change the information in yaml file in order to update the information in db.
 
 If you want to add a new model, you only need to add its information in the
-file [models-info.yam](./morpheus-server/scripts/models/models-info.yaml)
+file [models-info.yaml](./morpheus-server/scripts/models/models-info.yaml)
 
 #### ControlNet models
 
@@ -186,9 +194,10 @@ In order to use ControlNet **locally**, you need to download and register the mo
 docker compose run --rm model-script upload local controlnet
 ```
 
-ControlNet models will also be downloaded to the directory `morpheus-server/tmp`. If you want to add a new model, you only
+ControlNet models will also be downloaded to the directory `morpheus-server/tmp`. If you want to add a new model, you
+only
 need to add its information in the
-file [controlnet-models-info.yam](./morpheus-server/scripts/models/controlnet-models-info.yaml)
+file [controlnet-models-info.yaml](./morpheus-server/scripts/models/controlnet-models-info.yaml)
 
 In the same way, if model is already registered on database, this command allows you update the register on it. If you
 want only interact with the database, you can run this command to update the register:
@@ -199,9 +208,24 @@ docker compose run --rm model-script db update local controlnet
 
 You only need to change the information in yaml file in order to update the information in db.
 
+#### MagicPrompt model
+
+In order to use MagicPrompt **locally**, you need to download and upload the model to the S3 bucket:
+
+```bash
+# register models specified in morpheus-server/scripts/models/magicprompt-models-info.yaml
+docker compose run --rm model-script upload local magicprompt
+```
+
+MagicPrompt model will also be downloaded to the directory `morpheus-server/tmp`. If you want to add a new model, you
+only
+need to add its information in the
+file [magicprompt-models-info.yaml](./morpheus-server/scripts/models/magicprompt-models-info.yaml)
+
 For more information about this script, you can read the [README](./morpheus-server/scripts/models/README.md).
 
 ## Development
+
 ### Running the backend tests
 
 ```shell
@@ -222,7 +246,7 @@ docker compose run --rm api pytest tests/test_module.py::test_function
 docker-compose run --rm api alembic revision --autogenerate -m "Initial migration"
 
 # Migrate / Update the head
-docker-compose run --rm api alembic upgrade head     
+docker-compose run --rm api alembic upgrade head
 ```
 
 ### PG admin
@@ -230,6 +254,7 @@ docker-compose run --rm api alembic upgrade head
 PGadmin is available in: localhost:8002
 
 The user and password must be added in secrets.env file.
+
 ```
 # example values
 PGADMIN_DEFAULT_EMAIL=admin@admin.com
@@ -267,7 +292,8 @@ jq -r '.default | to_entries[] | .key + .value.version' Pipfile.lock > requireme
 
 ```
 
-**Note:** This project doesn't use requirements.txt to manage dependencies. requirements.lint.txt is only used for using cache in ci workflow linting job.
+**Note:** This project doesn't use requirements.txt to manage dependencies. requirements.lint.txt is only used for using
+cache in ci workflow linting job.
 
 ### Adding a new dependency to the frontend
 
@@ -321,6 +347,7 @@ docker compose run --rm model-script db delete <model-source> <server> --target 
 ```
 
 ### Running without GPU (this returns fixed fake images from the models)
+
 ```shell
 # Build the docker image if you don't have gpu
 docker-compose --profile=local build
@@ -328,6 +355,7 @@ docker-compose --profile=local build
 # Run the image locally if you don't have gpu
 docker-compose --profile=local up
 ```
+
 ### Adding a new feature
 
 If you want to add a new feature, you should follow the next steps:
@@ -367,13 +395,20 @@ If all the checks pass, you can push your changes
 
 ## Configuring k8s cluster
 
-Some templates have been included to help create the Kubernetes cluster and the necessary infrastructure. For additional configuration documentation, please refer to this [link](https://github.com/Monadical-SAS/Morpheus/tree/main/infra/modules).
+Some templates have been included to help create the Kubernetes cluster and the necessary infrastructure. For additional
+configuration documentation, please refer to
+this [link](https://github.com/Monadical-SAS/Morpheus/tree/main/infra/modules).
 
 To configure Terraform, please follow these steps:
 
-* Create a new SSL certificate using the ACM (Amazon Certificate Manager) service in AWS to obtain the ARN (Amazon Resource Name). Remember to save the ARN for the next steps.
-* Create a DB secret using the "Secrets Manager" service in the AWS console. The secret should be an "Other type of secret". The value must be in this format: ```{"username":"username","password":"xxxxxxxxxxxxxxxxx"}```. Save the secret name for the next steps.
-* Create a terraform.tfvars file in the ./infra/envs/staging/ folder with the information obtained from your AWS account. Use the ARN for the <em>arn_ssl_certificate_cf_distribution</em> field and the DB secret name for <em>db_password_secret_manager_name</em>. Additionally, update cname_frontend with a domain that you manage.
+* Create a new SSL certificate using the ACM (Amazon Certificate Manager) service in AWS to obtain the ARN (Amazon
+  Resource Name). Remember to save the ARN for the next steps.
+* Create a DB secret using the "Secrets Manager" service in the AWS console. The secret should be an "Other type of
+  secret". The value must be in this format: ```{"username":"username","password":"xxxxxxxxxxxxxxxxx"}```. Save the
+  secret name for the next steps.
+* Create a terraform.tfvars file in the ./infra/envs/staging/ folder with the information obtained from your AWS
+  account. Use the ARN for the <em>arn_ssl_certificate_cf_distribution</em> field and the DB secret name for <em>
+  db_password_secret_manager_name</em>. Additionally, update cname_frontend with a domain that you manage.
 
 ```
 AWS_ACCESS_KEY = ""
@@ -393,7 +428,8 @@ region = "us-east-1"
 To manage Terraform backends, follow these steps:
 
 * Create an S3 bucket to manage the Terraform backends.
-* Create a backend.conf file in ./infra/envs/staging/ based on backend.conf.dist. Make sure to update the route if you prefer to use a different one.
+* Create a backend.conf file in ./infra/envs/staging/ based on backend.conf.dist. Make sure to update the route if you
+  prefer to use a different one.
 
 ```conf
 bucket = "morpheus-infra-backend"
@@ -411,7 +447,8 @@ terraform apply
 ```
 
 * Save the Terraform outputs to a separate file.
-* Create a kubectl configuration file to access the cluster. Use the Terraform outputs to complete the arguments for the region and cluster name.
+* Create a kubectl configuration file to access the cluster. Use the Terraform outputs to complete the arguments for the
+  region and cluster name.
 
 ```bash
 aws eks --region us-east-1 update-kubeconfig --name cluster-name-from-outputs
@@ -420,18 +457,22 @@ aws eks --region us-east-1 update-kubeconfig --name cluster-name-from-outputs
 ### Installing helm charts - Nginx ingress
 
 * Create a backend.conf file in the ./infra/charts/staging/ folder based on the backend.conf.dist file provided.
+
 ```
 bucket = "morpheus-infra-backend"
 key = "env/staging/charts/state.tfstate"
 region = "us-east-1"
 ```
 
-* Create a terraform.tfvars file in the ./infra/envs/staging/ folder that includes the path to your Kubernetes configuration.
+* Create a terraform.tfvars file in the ./infra/envs/staging/ folder that includes the path to your Kubernetes
+  configuration.
+
 ```
 kubeconfig_path = "/home/user/.kube/config"
 ```
 
 * To apply the Ingress Helm chart (this step should be performed after creating the cluster):
+
 ```bash
 cd ./infra/test/eks-charts
 terraform init -backend-config=backend.conf
@@ -443,6 +484,7 @@ terraform apply
 
 create a file called morpheus-secrets.yaml based on ./infra/tools/k8s/morpheus-secrets.yaml.example.
 Make sure to update the values with the secrets that are coded in base64.
+
 ```bash
 # To code for example POSTGRES_USER
 echo -n "dbpassword" | base64 -w 0
@@ -494,7 +536,6 @@ kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.
 
 ## Run with supervisor
 
-
 ```bash
 # In repo directory
 mkdir -p data/logs
@@ -519,59 +560,73 @@ sudo supervisorctl stop stablediffusion
 docker compose down
 ```
 
-When using the stop instruction, you need to down the containers manually using docker compose because supervisor can't handle docker
+When using the stop instruction, you need to down the containers manually using docker compose because supervisor can't
+handle docker
 processes, only start and check that the service is running
-
-
-
 
 # CI/CD configuration
 
-The platform currently uses GitHub Actions for deployment. To integrate this with your custom project, you should set the following secrets in GitHub:
+The platform currently uses GitHub Actions for deployment. To integrate this with your custom project, you should set
+the following secrets in GitHub:
 
 AWS access variables:
+
 - AWS_ACCESS_KEY_ID: Aws credential
 - AWS_SECRET_ACCESS_KEY: Aws credential
 - AWS_CLUSTER_NAME: Name of the eks cluster. This is used to generate the kube config.
 - AWS_REGION: Aws region where is located the eks cluster. Eg. us-east-1
 
 Cloudflare tokens to clear the cache:
+
 - CLOUDFLARE_API_TOKEN
 - CLOUDFLARE_ZONE_ID
 
 Dockerhub tokens to push and pull images in the deploy process:
+
 - DOCKER_HUB_TOKEN
 - DOCKER_HUB_USER
 
 Firebase configuration:
+
 - FIREBASE_CLIENT_EMAIL
 - FIREBASE_PRIVATE_KEY
 - FIREBASE_PROJECT_ID
 
 Other infra configuration:
+
 - FRONTEND_DOMAIN: Platform domain (Eg. morpheus.com)
 
 Sentry configuration:
+
 - SENTRY_AUTH_TOKEN
 - SENTRY_ENV
 - SENTRY_ORG
 - SENTRY_PROJECT
 - SENTRY_URL
 
+Monorepo configuration:
+
+- CICD_REPO_PATH: Repo path in the GitHub actions runner. Usually the repo name. E.g.
+  /home/runner/work/Morpheus/Morpheus
+
 # How to collaborate
 
 ### Forking the Repository
-* Go to the Morpheus's GitHub repository. 
+
+* Go to the Morpheus's GitHub repository.
 * Click on the "Fork" button in the top-right corner of the repository page.
 * This will create a copy of the repository under your GitHub account.
 
 ### Cloning the Forked Repository
+
 * On your GitHub account, navigate to the forked repository.
 * Click on the "Code" button and copy the repository URL.
 * Clone the repository locally
 
 ### Adding an Upstream Remote
+
 Change to the repository directory using cd.
+
 ```
 git remote add upstream https://github.com/Monadical-SAS/Morpheus.git
 ```
@@ -579,20 +634,27 @@ git remote add upstream https://github.com/Monadical-SAS/Morpheus.git
 ### Creating a New Branch for your changes
 
 ### Create a Pull request
+
 * Go to the original project's GitHub repository.
 * Create a new PR selecting your forked repository and the branch containing your changes.
 
 ### Updating Your Fork with Upstream Changes:
 
 * Fetch the upstream repository changes using the git fetch command.
+
 ```
 git fetch upstream
 ```
-* Switch to your local main branch using git checkout main and merge the upstream changes into your local main branch using git merge.
+
+* Switch to your local main branch using git checkout main and merge the upstream changes into your local main branch
+  using git merge.
+
 ```
 git merge upstream/main
 ```
+
 * Push the updated changes to your forked repository on GitHub using git push.
+
 ```
 git push origin main
 ```
