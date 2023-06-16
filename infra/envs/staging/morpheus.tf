@@ -1,0 +1,22 @@
+module "morpheus_cluster" {
+  source = "../../modules/morpheus-web-k8s-eks-aws"
+  db_password_secret_manager_name = var.db_password_secret_manager_name
+  vpc_cidr = var.vpc_cidr
+  vpc_public_subnets = var.vpc_public_subnets
+  vpc_private_subnets = var.vpc_private_subnets
+  self_managed_gpu_nodes_instance_type = var.self_managed_gpu_nodes_instance_type
+  self_managed_gpu_node_min_size = var.self_managed_gpu_node_min_size
+  self_managed_gpu_node_max_size = var.self_managed_gpu_node_max_size
+  self_managed_gpu_nodes_device_size = var.self_managed_gpu_nodes_device_size
+  scale_up_queue_threshold = var.scale_up_queue_threshold
+  scale_up_period = var.scale_up_period
+  scale_up_evaluation_period = var.scale_up_evaluation_period
+  scale_up_scaling_adjustment = var.scale_up_scaling_adjustment
+  scale_down_queue_threshold = var.scale_down_queue_threshold
+  scale_down_period = var.scale_down_period
+  scale_down_evaluation_period = var.scale_down_evaluation_period
+  scale_down_scaling_adjustment = var.scale_down_scaling_adjustment
+  api_hostname = var.api_hostname
+  client_hostname = var.client_hostname
+  env = "staging"
+}

@@ -1,0 +1,7 @@
+.idea
+.DS_store
+secrets.env
+*.module.css*
+etc/cloudflare/**/*.yml
+etc/cloudflare/**/*.json
+*.pyc

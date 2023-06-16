@@ -1,0 +1,116 @@
+name: CICD workflow
+on:
+  push:
+env:
+  WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+  CICD_REPO_PATH: ${{ secrets.CICD_REPO_PATH }}
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    outputs:
+      api: ${{ steps.api-step.outputs.api }}
+      collaborative: ${{ steps.collaborative-step.outputs.collaborative }}
+      frontend: ${{ steps.frontend-step.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '2'
+      - name: fetch main
+        run: |
+          git fetch origin main --depth 1
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install workflow dependencies
+        run: |
+          pip install requests GitPython
+      - id: api-step
+        name: Check change in api
+        run: |
+          api=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-server)
+          echo "api=$api" >> "$GITHUB_OUTPUT"
+      - id: collaborative-step
+        name: Check change in collaborative
+        run: |
+          collaborative=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-collaborative)
+          echo "collaborative=$collaborative" >> "$GITHUB_OUTPUT"
+      - id: frontend-step
+        name: Check change in frontend
+        run: |
+          frontend=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-client)
+          echo "frontend=$frontend" >> "$GITHUB_OUTPUT"
+
+  ci-api:
+    if: needs.ci.outputs.api == 'true'
+    needs:
+      - ci
+    uses: ./.github/workflows/ci-api.yaml
+    secrets: inherit
+  ci-collaborative:
+    if: needs.ci.outputs.collaborative == 'true'
+    needs:
+      - ci
+    uses: ./.github/workflows/ci-collaborative.yaml
+    secrets: inherit
+  ci-frontend:
+    if: needs.ci.outputs.frontend == 'true'
+    needs:
+      - ci
+    uses: ./.github/workflows/ci-frontend.yaml
+    secrets: inherit
+  
+#############################################################################################################
+### CD - jobs
+#############################################################################################################
+  cd:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    outputs:
+      api: ${{ steps.api-step.outputs.api }}
+      collaborative: ${{ steps.collaborative-step.outputs.collaborative }}
+      frontend: ${{ steps.frontend-step.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '2'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install workflow dependencies
+        run: |
+          pip install requests GitPython
+      - id: api-step
+        name: Check change in api
+        run: |
+          api=$(python ./monorepo/cicd.py --project morpheus-server)
+          echo "api=$api" >> "$GITHUB_OUTPUT"
+      - id: collaborative-step
+        name: Check change in collaborative
+        run: |
+          collaborative=$(python ./monorepo/cicd.py --project morpheus-collaborative)
+          echo "collaborative=$collaborative" >> "$GITHUB_OUTPUT"
+      - id: frontend-step
+        name: Check change in frontend
+        run: |
+          frontend=$(python ./monorepo/cicd.py --project morpheus-client)
+          echo "frontend=$frontend" >> "$GITHUB_OUTPUT"
+
+  cd-api:
+    if: needs.cd.outputs.api == 'true'
+    needs:
+      - cd
+    uses: ./.github/workflows/cd-api.yaml
+    secrets: inherit
+  cd-frontend:
+    if: needs.cd.outputs.frontend == 'true'
+    needs:
+      - cd
+    uses: ./.github/workflows/cd-frontend.yaml
+    secrets: inherit
+  cd-collaborative:
+    if: needs.cd.outputs.collaborative == 'true'
+    needs:
+      - cd
+    uses: ./.github/workflows/cd-collaborative.yaml
+    secrets: inherit

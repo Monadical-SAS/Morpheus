@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nvidia-smi
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: nvidia-smi
+    image: nvidia/cuda:11.8.0-base-ubuntu22.04
+    args:
+    - "nvidia-smi"
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: morpheus-type
+            operator: In
+            values:
+            - gpu

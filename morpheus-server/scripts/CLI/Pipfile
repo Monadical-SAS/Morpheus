@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "*"
+typer = "*"
+pydantic = "*"
+rich = "*"
+python-dotenv = "*"
+flake8 = "*"
+typing-extensions = "*"
+loguru = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

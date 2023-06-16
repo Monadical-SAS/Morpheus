@@ -1,0 +1,123 @@
+@use "styles/colors";
+@use "styles/variables";
+@use "styles/media";
+
+.aboutContainer {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 100px 24px;
+  max-width: variables.$max-width-landing;
+
+  @include media.mobile {
+    padding: 48px 24px;
+  }
+
+  .header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    @include media.mobile {
+      flex-direction: column;
+    }
+
+    .headerInfo {
+      max-width: 636px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      @include media.mobile {
+        max-width: 100%;
+        margin-top: 48px;
+      }
+    }
+
+    img {
+      margin-top: 48px;
+      margin-left: 48px;
+      width: 100%;
+      height: auto;
+
+      @include media.mobile {
+        margin-left: 0;
+        max-width: 100%;
+      }
+    }
+  }
+
+  .about {
+    margin-top: 96px;
+
+    p {
+      margin-bottom: 32px;
+    }
+  }
+
+  .frontEnd {
+    margin-top: 48px;
+
+    h3 {
+      margin-top: 48px;
+    }
+  }
+
+  .backEnd {
+    margin-top: 48px;
+
+    p {
+      margin-bottom: 32px;
+    }
+  }
+
+  .images {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .roadmap {
+    margin-top: 96px;
+
+    h3 {
+      margin-top: 48px;
+    }
+  }
+
+  ul {
+    list-style-type: disc;
+    margin-left: 32px;
+  }
+
+  li {
+    margin-bottom: 16px;
+  }
+
+  .galleryPreview {
+    width: 100%;
+    margin-top: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .galleryInfo {
+      max-width: 856px;
+      text-align: center;
+
+      p {
+        margin-top: 16px;
+      }
+    }
+  }
+
+  .faqContainer {
+    margin-top: 180px;
+    margin-bottom: 48px;
+  }
+}

@@ -1,0 +1,65 @@
+@use "styles/colors";
+@use "styles/media";
+
+.userProfileContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+
+  @include media.mobile {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .userProfileNav {
+    min-width: 144px;
+    margin-right: 32px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    @include media.mobile {
+      margin-right: 0;
+      margin-bottom: 24px;
+      flex-direction: row;
+      align-items: center;
+
+      gap: 64px;
+    }
+  }
+
+  .userProfileContent {
+    min-width: 422px;
+    display: flex;
+    flex-direction: column;
+    flex: 3;
+
+    @include media.mobile {
+      min-width: 100%;
+    }
+  }
+}
+
+.navItem {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  cursor: pointer;
+
+  &.active {
+    border-bottom: 2px solid colors.$main-color;
+  }
+
+  p {
+    margin-left: 12px;
+  }
+}
+
+.mobileDeleteAccount {
+  width: 100%;
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+}

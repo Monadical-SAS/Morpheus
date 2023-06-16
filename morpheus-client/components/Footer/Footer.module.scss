@@ -1,0 +1,53 @@
+@use "styles/colors";
+@use "styles/media";
+@use "styles/variables";
+
+.footerContainer {
+  width: 100%;
+  padding: 24px 72px;
+  display: flex;
+  align-items: center;
+  background: colors.$background-primary !important;
+
+  @include media.mobile {
+    height: auto;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .leftContent {
+    flex: 2;
+    display: flex;
+    justify-content: flex-start;
+    gap: 24px;
+
+    @include media.mobile {
+      margin-bottom: 16px;
+      order: 1;
+    }
+  }
+
+  .middleContent {
+    flex: 4;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+
+    @include media.mobile {
+      margin-bottom: 24px;
+      order: 3;
+    }
+  }
+
+  .rightContent {
+    flex: 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+
+    @include media.mobile {
+      margin-bottom: 24px;
+      order: 2;
+    }
+  }
+}

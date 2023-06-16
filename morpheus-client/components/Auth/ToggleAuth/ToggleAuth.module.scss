@@ -1,0 +1,39 @@
+@use "styles/colors";
+@use "styles/media";
+
+.toggleAuthContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 4px;
+  width: 526px;
+  height: 56px;
+  background: colors.$background-primary;
+  border-radius: 8px;
+
+  @include media.mobile {
+    width: 100%;
+  }
+
+  .toggleButton {
+    max-width: 259px;
+    height: 48px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    flex: 1;
+    user-select: none;
+    transition: all .2s ease-in-out;
+    border: none;
+    text-shadow: none;
+    background: transparent;
+
+    &.active {
+      background: #252238;
+      border-radius: 6px;
+    }
+  }
+}

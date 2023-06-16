@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: morpheus-client
+  labels:
+    name: morpheus-client
+spec:
+  replicas: {{ .Values.client.replicas }}
+  selector:
+    matchLabels:
+      name: morpheus-client
+  template:
+    metadata:
+      labels:
+        name: morpheus-client
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: morpheus-client
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: 
+            - bash
+            - bin/entrypoint-k8s.sh
+          ports:
+            - name: http
+              containerPort: {{ .Values.client.container.port }}
+              protocol: TCP
+          env:
+          - name: ENVIRONMENT
+            value: prod
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: morpheus-type
+                operator: In
+                values:
+                - web

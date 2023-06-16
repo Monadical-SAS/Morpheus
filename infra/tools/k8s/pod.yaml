@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: efs-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: efs-app
+spec:
+  containers:
+    - name: app
+      image: centos
+      command: ["/bin/sh"]
+      args: ["-c", "while true; do echo $(date -u) >> /data/out; sleep 5; done"]
+      volumeMounts:
+        - name: persistent-storage
+          mountPath: /data
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: morpheus-type
+            operator: In
+            values:
+            - api
+  volumes:
+    - name: persistent-storage
+      persistentVolumeClaim:
+        claimName: efs-claim

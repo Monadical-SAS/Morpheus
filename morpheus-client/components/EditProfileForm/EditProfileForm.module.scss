@@ -1,0 +1,37 @@
+@use "styles/colors";
+@use "styles/media";
+
+.editProfileForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+
+  .avatarContainer {
+    .avatarInput {
+      display: flex;
+      margin-top: 10px;
+
+      @include media.mobile {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .inputContent {
+        display: flex;
+        flex-direction: column;
+        margin-left: 16px;
+
+        @include media.mobile {
+          width: 100%;
+          margin-left: 0;
+          margin-top: 16px;
+        }
+
+        p {
+          margin-top: 16px;
+        }
+      }
+    }
+  }
+}

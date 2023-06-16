@@ -1,0 +1,4 @@
+#!/bin/bash
+MODELS_PATH=/opt/data/
+
+aws s3 sync "s3://${bucket_name}" "$MODELS_PATH" --delete

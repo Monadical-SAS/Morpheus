@@ -1,0 +1,14 @@
+@use "../../../styles/colors";
+
+.registerContainer {
+  width: 100%;
+
+  button {
+    margin-top: 32px;
+    width: 100%;
+  }
+
+  .caption {
+    margin-top: 24px;
+  }
+}

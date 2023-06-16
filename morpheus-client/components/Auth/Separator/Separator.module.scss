@@ -1,0 +1,19 @@
+@use "styles/colors";
+
+.separator {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 32px 0;
+
+  .separatorLine {
+    flex: 1;
+    border: 1px solid colors.$typography-secondary;
+  }
+
+  .separatorText {
+    margin: 0 24px;
+  }
+}

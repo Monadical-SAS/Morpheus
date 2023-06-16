@@ -1,0 +1,31 @@
+@use "../../../styles/colors";
+@use "../../../styles/typography";
+
+.inputCheckboxContainer {
+  min-width: 250px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .checkbox {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: colors.$typography-secondary;
+    border: 1px solid colors.$typography-secondary;
+    background-color: colors.$background-secondary;
+    border-radius: 4px;
+
+    &.checked {
+      border: none;
+      background: colors.$main-color;
+    }
+  }
+
+  label {
+    margin-left: 8px;
+  }
+}

@@ -1,0 +1,70 @@
+@use "styles/colors";
+
+.inputSelectContainer {
+  width: 100%;
+  position: relative;
+  margin-top: 0;
+  cursor: pointer;
+
+  .inputSelectHeader {
+    width: 100%;
+    height: 48px;
+    min-height: 48px;
+    padding: 0 20px 0 20px;
+    background-color: transparent;
+    color: colors.$typography-secondary;
+    border: 1px solid colors.$background-border;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+
+  .selectOptions {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid colors.$typography-secondary;
+    border-radius: 8px;
+    overflow-y: auto;
+    z-index: 30;
+
+    &.show {
+      display: flex;
+    }
+
+    .optionContainer {
+      z-index: 30;
+      width: 100%;
+      min-height: 48px !important;
+      height: 48px !important;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-left: 24px;
+      background-color: colors.$background-secondary;
+
+      &:first-child {
+        border-radius: 8px 8px 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0 8px 8px;
+      }
+
+      &:hover {
+        background-color: colors.$background-primary-3;
+      }
+
+      :last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}

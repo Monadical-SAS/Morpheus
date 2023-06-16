@@ -1,0 +1,32 @@
+@use "styles/colors";
+@use "styles/media";
+@use "styles/variables";
+
+.artworksContainer {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+
+  @include media.mobile {
+    max-width: 100%;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .artworksList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 24px;
+
+    @include media.mobile {
+      grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+      padding: 0;
+    }
+  }
+}

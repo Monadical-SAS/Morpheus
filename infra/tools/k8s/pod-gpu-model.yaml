@@ -1,0 +1,105 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: models-storage
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: local-storage
+  accessModes:
+   - ReadOnlyMany
+  local:
+    path: "/opt/data"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: morpheus-type
+          operator: In
+          values:
+          - gpu
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: models-claim
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local-storage
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - image: ubuntu
+    command:
+    - "sleep"
+    - "604800"
+    imagePullPolicy: IfNotPresent
+    name: ubuntu
+    volumeMounts:
+      - name: models
+        mountPath: /opt
+  volumes:
+  - name: models
+    persistentVolumeClaim:
+      claimName: models-claim
+      readOnly: true
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: morpheus-type
+            operator: In
+            values:
+            - gpu
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu2
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - image: ubuntu
+    command:
+    - "sleep"
+    - "604800"
+    imagePullPolicy: IfNotPresent
+    name: ubuntu
+    volumeMounts:
+      - name: models
+        mountPath: /opt
+  volumes:
+  - name: models
+    persistentVolumeClaim:
+      claimName: models-claim
+      readOnly: true
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: morpheus-type
+            operator: In
+            values:
+            - gpu

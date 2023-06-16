@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: morpheus-collaborative
+  labels:
+    name: morpheus-collaborative
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.collaborative.service.port }}
+      targetPort: {{ .Values.collaborative.container.port }}
+      protocol: TCP
+      name: http
+  selector:
+    name: morpheus-collaborative

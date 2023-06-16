@@ -1,0 +1,39 @@
+@use "styles/colors";
+@use "styles/media";
+
+.modalContent {
+  width: 500px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px;
+
+  @include media.mobile {
+    width: 100%;
+    padding: 0;
+  }
+
+  .shareOptions {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+}
+
+.imgIcon {
+  width: 60px;
+  min-width: 60px;
+  height: 60px;
+  min-height: 60px;
+  margin-right: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: colors.$box-shadow-2;
+  }
+}

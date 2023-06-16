@@ -1,0 +1,71 @@
+@use "styles/colors";
+@use "styles/media";
+
+.stats {
+  margin-top: 90px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: colors.$background-secondary;
+  border-radius: 8px;
+  padding: 48px;
+
+  @include media.mobile {
+    max-width: 100%;
+    flex-direction: column;
+  }
+
+  .stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &:nth-child(1) {
+      padding-right: 72px;
+      align-items: flex-end;
+
+      @include media.mobile {
+        padding-right: 0;
+        padding-bottom: 24px;
+        align-items: center;
+      }
+    }
+
+    &:nth-child(2) {
+      width: 241px;
+      max-width: 241px;
+      border-left: 1px solid colors.$background-border;
+      border-right: 1px solid colors.$background-border;
+
+      @include media.mobile {
+        padding: 24px 0;
+        width: 100%;
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid colors.$background-border;
+        border-bottom: 1px solid colors.$background-border;
+        align-items: center;
+      }
+    }
+
+    &:nth-child(3) {
+      padding-left: 72px;
+      align-items: flex-start;
+
+      @include media.mobile {
+        padding-left: 0;
+        padding-top: 24px;
+        align-items: center;
+      }
+    }
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

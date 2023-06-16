@@ -1,0 +1,43 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: models-storage
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: local-storage
+  accessModes:
+   - ReadOnlyMany
+  local:
+    path: "/opt/data"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: morpheus-type
+          operator: In
+          values:
+          - gpu
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: models-claim
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local-storage

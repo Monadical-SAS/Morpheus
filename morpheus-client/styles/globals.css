@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/fonts/Poppins-Regular.ttf");
+    font-display: swap;
+}
+
+@layer base {
+    :root {
+        --background: #14172D;
+        --foreground: #FFFFFF;
+
+        --muted: #252238;
+        --muted-foreground: #FFFFFF;
+
+        --popover: #14172D;
+        --popover-foreground: #FFFFFF;
+
+        --card: #14172D;
+        --card-foreground: #FFFFFF;
+
+        --border: #312E47;
+        --input: #14172D;
+
+        --primary: #B3005E;
+        --primary-foreground: #FFFFFF;
+
+        --secondary: #252238;
+        --secondary-foreground: #8B90B2;
+
+        --accent: #252238;
+        --accent-foreground: #FFFFFF;
+
+        --destructive: #ff548a;
+        --destructive-foreground: #222732;
+
+        --success: #d8fde0;
+        --success-foreground: #222732;
+
+        --info: #8eb2ff;
+        --info-foreground: #222732;
+
+        --warning: #ffcd47;
+        --warning-foreground: #222732;
+
+        --ring: 215 20.2% 65.1%;
+
+        --radius: 0.5rem;
+    }
+}

@@ -1,0 +1,3 @@
+bucket = "morpheus-infra-backend"
+key = "env/staging/charts/state.tfstate"
+region = "us-east-1"

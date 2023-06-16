@@ -1,0 +1,8 @@
+.terraform*
+kubectl
+terraform.tfstate*
+terraform.tfvars
+kubeconfig*
+myKey.pem
+scripts/deployment/deploy-models.sh
+scripts/deployment/morpheus-cloudwatch-agent-config.json

@@ -1,0 +1,63 @@
+@use "styles/media";
+@use "styles/colors";
+
+.imagineInputWrapper {
+  position: fixed;
+  left: 104px;
+  bottom: 0;
+  width: 100%;
+  max-width: calc(100vw - 128px);
+  height: auto;
+  padding: 8px 0 32px 0;
+  background-color: colors.$background-primary;
+
+  @include media.mobile {
+    position: initial;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .imagineInputContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 24px;
+
+    @include media.mobile {
+      height: auto;
+      flex-direction: column;
+      margin-top: 32px;
+      padding: 24px;
+    }
+
+    .inputText {
+      flex: 1;
+    }
+
+    .ImagineActions {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-left: 8px;
+
+      @include media.mobile {
+        gap: 12px;
+        width: 100%;
+        padding-left: 0;
+        margin-top: 16px;
+        margin-left: 0;
+      }
+    }
+
+    button {
+      width: 186px;
+
+      @include media.mobile {
+        width: 100%;
+      }
+    }
+  }
+}

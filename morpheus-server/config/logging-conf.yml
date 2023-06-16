@@ -1,0 +1,3 @@
+logger:
+  level: 'info'
+  format: "<level>{level: <8}</level> <green>{time:YYYY-MM-DD HH:mm:ss}</green> - <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"

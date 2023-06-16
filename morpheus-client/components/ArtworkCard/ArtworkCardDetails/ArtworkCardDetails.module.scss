@@ -1,0 +1,53 @@
+@use "styles/media";
+
+.artworkDetails {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+
+  @include media.mobile {
+    gap: 16px;
+    flex-direction: column;
+    justify-content: unset;
+  }
+
+  @include media.tablet {
+    gap: 16px;
+    flex-direction: column;
+    justify-content: unset;
+  }
+
+  .artworkImageContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    flex: 2;
+    min-width: 512px;
+    min-height: 512px;
+
+    @include media.mobile {
+      min-width: auto;
+      min-height: auto;
+    }
+  }
+
+  .details {
+    flex: 1;
+    min-width: 380px;
+
+    @include media.mobile {
+      padding-bottom: 16px;
+      max-width: unset;
+      min-width: auto;
+    }
+
+    @include media.tablet {
+      padding-bottom: 16px;
+      max-width: unset;
+    }
+  }
+}

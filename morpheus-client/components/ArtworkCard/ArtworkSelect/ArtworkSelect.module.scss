@@ -1,0 +1,21 @@
+@use "../../../styles/colors";
+
+.ISContainer {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 50%;
+  background-color: colors.$white-color;
+  border: 1px solid colors.$main-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+
+  span {
+    color: colors.$main-color;
+    font-size: 28px;
+  }
+}

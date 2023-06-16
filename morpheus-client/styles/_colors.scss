@@ -1,0 +1,65 @@
+// -----------------------------------------------------
+// COLORS
+// -----------------------------------------------------
+$main-color: #B3005E;
+$main-color-accent: #FF5F9E;
+$secondary-color: #17183b;
+$success-color: #70cc6e;
+$danger-color: #da4444;
+$info-color: #01c2c2;
+$warning-color: #ea940d;
+$white-color: #ffffff;
+$shadow-color: rgba(0, 0, 0, 0.4);
+$black-color: #222732;
+$grey-color: #979797;
+$grey-color-2: #DFDFDF;
+$grey-color-light: #f1f1f1;
+$disabled-color: #CDAED2;
+
+// -----------------------------------------------------
+// Backgrounds
+// -----------------------------------------------------
+$background-primary: #14172D;
+$background-primary-2: #252238;
+$background-primary-3: #312E47;
+$background-primary-4: #6D6D94;
+$background-secondary: #252238;
+$background-white: #FFFFFF;
+$background-white-2: #F1F1F5;
+$background-icons: #6D6D94;
+$background-border: #312E47;
+
+// -----------------------------------------------------
+// Gradients
+// -----------------------------------------------------
+$radial-gradient-1: radial-gradient(
+                145.87% 314.2% at 137.23% 142.92%,
+                #7000ff 0%,
+                #d76ae9 100%
+);
+$linear-gradiant-1: linear-gradient(
+                29.58deg,
+                rgba(48, 168, 255, 0.5) -5.91%,
+                rgba(22, 225, 160, 0.5) 92.88%
+);
+
+// -----------------------------------------------------
+// Box Shadow
+// -----------------------------------------------------
+$box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.04);
+$box-shadow-left: -10px 24px 24px rgba(0, 0, 0, 0.04);
+$box-shadow-2: 0px 16px 56px rgba(0, 0, 0, 0.4);
+
+// -----------------------------------------------------
+// Typography
+// -----------------------------------------------------
+$text-main: $main-color;
+$text-secondary: $secondary-color;
+$text-white: $white-color;
+$text-black: $black-color;
+$text-success: $success-color;
+$text-info: $info-color;
+$text-danger: $danger-color;
+
+$typography-primary: #FFFFFF;
+$typography-secondary: #8B90B2;

@@ -1,0 +1,74 @@
+@use "../colors";
+@use "../media";
+
+.homeContent {
+  width: 100vw;
+  height: 100vh;
+  background-image: url("/images/redesign/landing.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+
+  .overlay {
+    padding: 32px;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(60.94% 60.94% at 50% 50%, rgba(20, 23, 45, 0) 0%, #14172D 100%);
+    overflow-y: auto;
+
+    @include media.mobile {
+      padding: 0;
+    }
+
+    @include media.tablet {
+      justify-content: center;
+    }
+
+    .textContainer {
+      min-width: 490px;
+      max-width: 490px;
+      margin-top: 48px;
+      margin-left: 80px;
+
+      @include media.mobile {
+        display: none;
+        min-width: auto;
+        max-width: 100%
+      }
+
+      @include media.tablet {
+        display: none;
+      }
+
+      .textContent {
+        height: auto;
+        width: auto;
+      }
+    }
+
+    .authContainer {
+      width: 746px;
+      min-width: 340px;
+      max-width: 100%;
+      height: 100%;
+      min-height: 700px;
+      padding: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      background: colors.$background-secondary;
+
+      @include media.mobile {
+        width: 100%;
+        padding: 32px;
+      }
+    }
+  }
+}

@@ -1,0 +1,148 @@
+@use "styles/colors";
+@use "styles/media";
+
+.userImage {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.userCardWrapper {
+  z-index: 50;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+
+  @include media.mobile {
+    z-index: auto;
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+.userCardContainer {
+  width: 228px;
+  min-width: 228px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  background-color: colors.$background-secondary;
+  border-radius: 0 0 8px 8px;
+
+  @include media.mobile {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 0;
+    background-color: colors.$background-primary;
+  }
+
+  .userHeader {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 144px;
+    position: relative;
+
+    .imageFilter {
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(4.5px);
+      object-fit: cover;
+    }
+
+    .userInfo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      background: rgba(20, 23, 45, 0.68);
+
+      p:first-of-type {
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .actionsContainer {
+    display: flex;
+    flex-direction: column;
+    padding-top: 24px;
+
+    @include media.mobile {
+      padding-top: 16px;
+    }
+
+    .profileItem {
+      margin-bottom: 16px;
+
+      @include media.mobile {
+        margin-bottom: 0;
+      }
+    }
+
+    .profileItem, .logoutItem {
+      width: 100%;
+      height: 48px;
+      padding: 8px 16px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: colors.$background-border;
+        color: colors.$main-color !important;
+      }
+
+      .icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: colors.$background-border;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .logoutItem {
+      border-radius: 0 0 8px 8px;
+      border-top: 1px solid colors.$background-icons;
+
+      @include media.mobile {
+        border-radius: 0;
+        border-top: none;
+      }
+    }
+  }
+}

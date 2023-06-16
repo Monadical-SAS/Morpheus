@@ -1,0 +1,165 @@
+name: CI Test and deploy backend
+on:
+  workflow_dispatch:
+  workflow_call:
+env:
+  MAX_LINE_LENGTH: 120
+  WORKING_DIR_BACKEND: morpheus-server
+jobs:
+  ci-backend:
+    uses: ./.github/workflows/ci-api.yaml
+    with:
+      called: true
+    secrets: inherit
+  deploy-api-k8s:
+    runs-on: ubuntu-latest
+    needs:
+      - ci-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Create kube config
+        run: |
+          aws eks --region ${{secrets.AWS_REGION}} update-kubeconfig --name ${{secrets.AWS_CLUSTER_NAME}}
+      - name: Deploy
+        run: |
+          # Running migrations by a pod
+          kubectl run morpheus-migrations --pod-running-timeout=15m --rm -i --image monadicalsas/morpheus:${{ github.run_id }} --overrides="{
+            \"spec\": {
+              \"imagePullSecrets\": [
+                {
+                  \"name\": \"regcred\"
+                }
+              ],
+              \"containers\": [
+                {
+                  \"name\": \"morpheus\",
+                  \"image\": \"monadicalsas/morpheus:${{ github.run_id }}\",
+                  \"imagePullPolicy\": \"Always\",
+                  \"command\": [
+                    \"alembic\", \"upgrade\", \"head\"
+                  ],
+                  \"env\": [
+                    {
+                      \"name\": \"POSTGRES_USER\",
+                      \"valueFrom\": {
+                        \"secretKeyRef\": {
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"POSTGRES_USER\",
+                          \"optional\": false
+                        }
+                      }
+                    },
+                    {
+                      \"name\": \"POSTGRES_DB\",
+                      \"valueFrom\": {
+                        \"secretKeyRef\": {
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"POSTGRES_DB\",
+                          \"optional\": false
+                        }
+                      }
+                    },
+                    {
+                      \"name\": \"POSTGRES_PASSWORD\",
+                      \"valueFrom\": {
+                        \"secretKeyRef\": {
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"POSTGRES_PASSWORD\",
+                          \"optional\": false
+                        }
+                      }
+                    },
+                    {
+                      \"name\": \"POSTGRES_HOST\",
+                      \"valueFrom\": {
+                        \"secretKeyRef\": {
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"POSTGRES_HOST\",
+                          \"optional\": false
+                          }                            
+                      }             
+                    },                   
+                    {                               
+                      \"name\": \"FIREBASE_PROJECT_ID\",    
+                      \"valueFrom\": {      
+                        \"secretKeyRef\": {
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"FIREBASE_PROJECT_ID\",
+                          \"optional\": true
+                        }                             
+                      }             
+                    },                   
+                    {                               
+                      \"name\": \"FIREBASE_PRIVATE_KEY\",    
+                      \"valueFrom\": {      
+                        \"secretKeyRef\": {              
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"FIREBASE_PRIVATE_KEY\",
+                          \"optional\": true       
+                        }                  
+                      }                              
+                    },
+                    {                               
+                      \"name\": \"FIREBASE_WEB_API_KEY\",    
+                      \"valueFrom\": {      
+                        \"secretKeyRef\": {              
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"FIREBASE_WEB_API_KEY\",
+                          \"optional\": true       
+                        }                  
+                      }                              
+                    },                               
+                    {                    
+                      \"name\": \"FIREBASE_CLIENT_EMAIL\",
+                      \"valueFrom\": {                    
+                        \"secretKeyRef\": {               
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"FIREBASE_CLIENT_EMAIL\",
+                          \"optional\": true
+                        }                             
+                      }             
+                    },
+                    {                               
+                      \"name\": \"IMAGES_BUCKET\",    
+                      \"valueFrom\": {      
+                        \"secretKeyRef\": {              
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"IMAGES_BUCKET\",
+                          \"optional\": true       
+                        }                  
+                      }                              
+                    },
+                    {                               
+                      \"name\": \"IMAGES_TEMP_BUCKET\",    
+                      \"valueFrom\": {      
+                        \"secretKeyRef\": {              
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"IMAGES_TEMP_BUCKET\",
+                          \"optional\": true       
+                        }                  
+                      }                              
+                    },
+                    {                               
+                      \"name\": \"MODELS_BUCKET\",    
+                      \"valueFrom\": {      
+                        \"secretKeyRef\": {              
+                          \"name\": \"morpheus-secret\",
+                          \"key\": \"MODELS_BUCKET\",
+                          \"optional\": true       
+                        }                  
+                      }                              
+                    }                                 
+                  ]                                 
+                }                                        
+              ]                                                                                                                                                           
+            }                                            
+          }"                                
+          helm upgrade --timeout 15m0s --install --atomic morpheus ./morpheus-server/helm/charts/morpheus/ \
+            --set image.tag=${{ github.run_id }} --set domain=${{secrets.FRONTEND_DOMAIN}}

@@ -1,0 +1,36 @@
+@use "styles/colors";
+@use "styles/media";
+
+.actionButtons {
+  height: 32px;
+  width: auto;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 24px;
+
+  @include media.mobile {
+    height: auto;
+    justify-content: flex-start;
+  }
+
+  .artworkActions, .imagineActions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  span {
+    margin-right: 16px;
+    color: colors.$background-icons;
+    cursor: pointer;
+    font-size: 28px;
+  }
+
+  .artworkActions span {
+    margin-right: 12px;
+  }
+}

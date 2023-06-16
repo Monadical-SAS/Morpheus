@@ -1,0 +1,44 @@
+@use "styles/media";
+@import "../Input.module";
+
+.textAreaContainer {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: 10px;
+  }
+
+  .textArea {
+    @extend .input;
+    width: 100%;
+    padding: 12px 20px;
+    overflow: hidden;
+    flex: inherit;
+    min-height: 48px !important;
+    max-height: 300px;
+    resize: vertical;
+    transition: border-color 150ms ease;
+
+    @include media.mobile {
+      height: 100px;
+    }
+
+    &.pRight {
+      padding-right: 48px !important;
+    }
+  }
+
+  .rightIcon {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+  }
+
+  .count {
+    align-self: flex-end;
+  }
+}

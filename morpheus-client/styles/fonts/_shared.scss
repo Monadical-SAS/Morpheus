@@ -1,0 +1,93 @@
+@use "../colors";
+
+%fontColor {
+  color: colors.$text-black;
+
+  &.main {
+    color: colors.$main-color;
+  }
+
+  &.accent {
+    color: colors.$main-color-accent;
+  }
+
+  &.primary {
+    color: colors.$typography-primary;
+  }
+
+  &.secondary {
+    color: colors.$typography-secondary;
+  }
+
+  &.success {
+    color: colors.$text-success;
+  }
+
+  &.info {
+    color: colors.$text-info;
+  }
+
+  &.danger {
+    color: colors.$text-danger;
+  }
+
+  &.white {
+    color: colors.$white-color;
+  }
+
+  &.grey {
+    color: colors.$grey-color;
+  }
+
+  &.black {
+    color: colors.$black-color;
+  }
+
+  &.mainColor {
+    color: colors.$main-color;
+  }
+}
+
+%fontDecorators {
+  &.upper {
+    text-transform: uppercase;
+  }
+
+  &.capitalize {
+    text-transform: capitalize;
+  }
+
+  &.underline {
+    text-decoration: underline;
+  }
+
+  &.lineThrough {
+    text-decoration: line-through;
+  }
+
+  &.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.pointer {
+    cursor: pointer;
+  }
+
+  &.shadow {
+    text-shadow: 2px 2px colors.$black-color;
+  }
+
+  &.center {
+    text-align: center !important;
+  }
+
+  &.left {
+    text-align: left !important;
+  }
+
+  &.right {
+    text-align: right !important;
+  }
+}

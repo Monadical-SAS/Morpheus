@@ -1,0 +1,48 @@
+@use "styles/colors";
+@use "styles/media";
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+
+  .loadingOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    border-radius: 8px;
+  }
+
+  .loadingOverlay::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 40px;
+    border: 2px solid colors.$main-color;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  img {
+    transition: opacity 0.5s ease-in-out;
+    position: absolute;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+}

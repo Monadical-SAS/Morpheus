@@ -1,0 +1,6 @@
+models:
+  - name: "Gustavosta/MagicPrompt-Stable-Diffusion"
+    description: "This is a model from the MagicPrompt series of models, which are GPT-2 models intended to generate prompt texts for imaging AIs, in this case: Stable Diffusion."
+    source: "Gustavosta/MagicPrompt-Stable-Diffusion"
+    is_active: true
+    url_docs: "https://huggingface.co/Gustavosta/MagicPrompt-Stable-Diffusion"

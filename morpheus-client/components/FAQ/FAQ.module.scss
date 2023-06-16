@@ -1,0 +1,61 @@
+@use "styles/colors";
+@use "styles/media";
+
+.accordion {
+  padding: 24px;
+  border-bottom: 1px solid colors.$background-border;
+
+  &:first-of-type {
+    border-top: 1px solid colors.$background-border;
+  }
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+  .accordionHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s ease-in-out;
+
+    p {
+      margin-left: 32px;
+      text-align: left;
+    }
+  }
+
+  .accordionContent {
+    padding: 10px;
+    text-align: left;
+    margin-left: 48px;
+  }
+}
+
+.FAQContainer {
+  width: 100%;
+  height: auto;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 24px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  ul {
+    margin-top: 24px;
+
+    li {
+      margin-bottom: 16px;
+
+      b {
+        color: colors.$main-color;
+      }
+    }
+  }
+}

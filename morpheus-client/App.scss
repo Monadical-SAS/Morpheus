@@ -1,0 +1,130 @@
+@use "styles/colors";
+@import "styles/buttons";
+
+//-------------------------------------------------------------------//
+// Global custom styles
+//--------------------------------------------------------------------//
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: LatoRegular, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p, span {
+  &::selection {
+    background-color: colors.$main-color;
+    color: colors.$white-color;
+  }
+}
+
+code {
+  font-family: source-code-pro, Consolas, 'Courier New', monospace;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-link {
+  text-decoration: none;
+  cursor: pointer !important;
+}
+
+//-------------------------------------------------------------------//
+// Scrollbar custom styles
+//--------------------------------------------------------------------//
+html {
+  scroll-behavior: smooth;
+}
+
+/* The scrollbar itself */
+::-webkit-scrollbar {
+  width: 8px; /* width of the entire scrollbar */
+}
+
+/* Track of the scrollbar */
+::-webkit-scrollbar-track {
+  background: colors.$background-primary; /* color of the tracking area */
+}
+
+/* Handle of the scrollbar */
+::-webkit-scrollbar-thumb {
+  border-radius: 16px; /* roundness of the scroll thumb */
+  background-color: colors.$background-primary-4; /* color of the scroll thumb */
+  border: 3px solid colors.$background-primary-4; /* creates padding around scroll thumb */
+}
+
+* {
+  scrollbar-width: thin; /* "auto" or "thin"  */
+  scrollbar-color: colors.$background-white colors.$background-primary; /* thumb and track color */
+}
+
+//-------------------------------------------------------------------//
+// Burger menu custom styles
+//--------------------------------------------------------------------//
+.bm-burger-button {
+  position: absolute;
+  width: 32px;
+  height: 24px;
+  left: 24px;
+  top: 20px;
+  z-index: 40 !important;
+}
+
+// Outline for burger button focus state
+.bm-burger-button button:focus {
+  outline: 2px solid colors.$main-color;
+  outline-offset: 8px;
+}
+
+// Background color for burger bars focus state
+.bm-burger-button {
+  button:focus + span {
+    span.bm-burger-bars {
+      background-color: colors.$main-color;
+    }
+  }
+}
+
+.right .bm-burger-button {
+  left: initial;
+  right: 36px;
+}
+
+.bm-burger-bars {
+  background: #fff;
+}
+
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+.bm-menu {
+  background: colors.$background-primary;
+}
+
+#__next {
+  height: 100%;
+}
+
+
+//-------------------------------------------------------------------//
+// Excalidraw custom styles
+//--------------------------------------------------------------------//
+.custom-styles .excalidraw .excalidraw.theme--dark {
+  --color-primary: #a11692;
+  --color-primary-darker: darken(#a11692, 10%);
+  --color-primary-darkest: darken(#a11692, 20%);
+  --color-primary-light: lighten(#a11692, 10%);
+}

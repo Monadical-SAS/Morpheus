@@ -1,0 +1,52 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: {{ .Values.proxyBodySize }}
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/websocket-services: morpheus-collaborative
+  name: morpheus-nginx-ingress
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.apiHost }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: morpheus
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: worker-monitor
+            port:
+              number: 80
+        path: /worker-monitor
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: morpheus-collaborative
+            port:
+              number: 80
+        path: /socket.io/
+        pathType: ImplementationSpecific
+  - host: {{ .Values.clientHost }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: morpheus-client
+            port:
+              number: 3000
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - {{ .Values.clientHost }}
+    - {{ .Values.apiHost }}
+    secretName: {{ .Values.tlsSecretName }}

@@ -1,0 +1,113 @@
+name: CI backend
+on:
+  workflow_call:
+    inputs:
+      called:
+        required: false
+        type: string
+  workflow_dispatch:
+    inputs:
+      called:
+        required: false
+        type: string
+env:
+  MAX_LINE_LENGTH: 120
+  WORKING_DIR: morpheus-server
+jobs:
+  linters:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        id: python-cache
+        with:
+          python-version: '3.10'
+          cache: pip
+          cache-dependency-path: ./${{ env.WORKING_DIR }}/requirements.lint.txt
+      - name: Install packages
+        run: |
+          pip install -r requirements.lint.txt
+      - name: Black
+        run: |
+          black --line-length $MAX_LINE_LENGTH --exclude app/migrations/ .
+      - name: Flake8
+        run: |
+          flake8 --max-line-length $MAX_LINE_LENGTH --exclude app/migrations/ .
+  ci-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: morpheus
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+            - 5432:5432
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        id: python-cache
+        with:
+          python-version: '3.10'
+          cache: pip
+      - name: Install packages
+        run: |
+          pip install pipenv
+          pip install pytest
+      - name: Install dependencies
+        run: |
+          pipenv requirements > requirements.txt
+          pip install -r requirements.txt
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Run tests
+        env:
+          POSTGRES_HOST: localhost
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+          FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          IMAGES_BUCKET: ${{ secrets.IMAGES_BUCKET }}
+          IMAGES_TEMP_BUCKET: ${{ secrets.IMAGES_TEMP_BUCKET }}
+          MODELS_BUCKET: ${{ secrets.MODELS_BUCKET }}
+        run: |
+          pytest
+          echo ${{ inputs.called }}
+      -
+        name: Set up QEMU
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to DockerHub
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      -
+        name: Build and push
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/build-push-action@v3
+        with:
+          context: "{{defaultContext}}:morpheus-server"
+          build-args: |
+            BUILD_ENV=copy
+          push: true
+          tags: monadicalsas/morpheus:${{ github.run_id }}

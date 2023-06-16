@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: morpheus-worker-cloudwatch-monitor
+  labels:
+    name: morpheus-worker-cloudwatch-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: morpheus-worker-cloudwatch-monitor
+  template:
+    metadata:
+      labels:
+        name: morpheus-worker-cloudwatch-monitor
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: celery-cw-monitor
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - python3
+            - monitor/cloudwatch.py
+          env:
+          - name: CELERY_BROKER_URL
+            value: redis://redis:6379/0
+          - name: CELERY_RESULT_BACKEND
+            value: redis://redis:6379/0
+          - name: ENVIRONMENT
+            value: prod
+          - name: CLOUDWATCH_REGION
+            valueFrom:
+              secretKeyRef:
+                key: CLOUDWATCH_REGION
+                name: morpheus-secret
+                optional: true
+          - name: CLOUDWATCH_NAMESPACE
+            valueFrom:
+              secretKeyRef:
+                key: CLOUDWATCH_NAMESPACE
+                name: morpheus-secret
+                optional: true
+          - name: FIREBASE_PROJECT_ID
+            valueFrom:
+              secretKeyRef:
+                key: FIREBASE_PROJECT_ID
+                name: morpheus-secret
+                optional: true
+          - name: FIREBASE_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                key: FIREBASE_PRIVATE_KEY
+                name: morpheus-secret
+                optional: true
+          - name: FIREBASE_WEB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: FIREBASE_WEB_API_KEY
+                optional: true
+          - name: FIREBASE_CLIENT_EMAIL
+            valueFrom:
+              secretKeyRef:
+                key: FIREBASE_CLIENT_EMAIL
+                name: morpheus-secret
+                optional: true
+          - name: IMAGES_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: IMAGES_BUCKET
+                optional: true
+          - name: IMAGES_TEMP_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: IMAGES_TEMP_BUCKET
+                optional: true
+          - name: MODELS_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: MODELS_BUCKET
+                optional: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: morpheus-type
+                operator: In
+                values:
+                - web

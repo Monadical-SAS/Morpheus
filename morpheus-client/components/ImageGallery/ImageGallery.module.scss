@@ -1,0 +1,42 @@
+@use "styles/colors";
+@use "styles/media";
+
+.galleryContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .promptResults {
+    width: 100%;
+    margin-bottom: 48px;
+
+    .galleryRow {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-gap: 24px;
+
+      @include media.mobile {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+        padding: 0;
+      }
+    }
+  }
+}
+
+.centeredContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  min-height: 420px;
+  flex: 1;
+
+  &.small {
+    height: 300px;
+  }
+
+  &.hide {
+    display: none;
+  }
+}

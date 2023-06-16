@@ -1,0 +1,131 @@
+@use "styles/colors";
+@use "styles/media";
+@use "styles/typography";
+
+.navbarContainer {
+  height: 80px;
+  min-height: 80px;
+  max-height: 80px;
+  width: 100%;
+  padding: 0 32px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1 auto;
+  background-color: colors.$background-primary;
+  box-shadow: inset 0px -1px 0px colors.$background-border;
+
+  @include media.mobile {
+    height: 60px;
+    min-height: 60px;
+    max-height: 60px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  .brand {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    @include media.mobile {
+      width: 100%;
+      margin-top: 24px;
+      padding-left: 24px;
+    }
+
+    h2 {
+      cursor: pointer;
+    }
+  }
+
+  .links {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @include media.mobile {
+      width: 100%;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      margin-top: 24px;
+    }
+
+    a {
+      width: auto;
+      height: 100%;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease-in;
+      margin: 0 6px;
+
+      &:hover {
+        color: colors.$white-color;
+      }
+
+      &.activeLink {
+        color: colors.$white-color;
+        border-bottom: 2px solid colors.$main-color;
+      }
+
+      @include media.mobile {
+        width: 100%;
+        padding: 12px 24px;
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+    }
+  }
+
+  .auth {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+
+    @include media.mobile {
+      width: 100%;
+      justify-content: flex-start;
+      align-items: flex-start;
+
+      span {
+        display: none;
+      }
+
+      .userCardContainer {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+}
+
+.burgerMenuContent {
+  display: flex !important;
+  flex-direction: column-reverse;
+}
+
+.closeIcon {
+  position: absolute;
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 6px;
+  background-color: #a11692;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  right: 0;
+  font-size: 20px !important;
+}

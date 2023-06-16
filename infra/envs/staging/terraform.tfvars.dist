@@ -1,0 +1,12 @@
+AWS_ACCESS_KEY = ""
+AWS_SECRET_KEY = ""
+ACCOUNT_ID = "xxxxxxxxxxx"
+db_password_secret_manager_name = "morpheus_db_password"
+vpc_cidr = "172.21.0.0/16"
+vpc_public_subnets = ["172.21.0.10/24", "172.21.0.11/24"]
+vpc_private_subnets = ["172.21.0.12/24", "172.21.0.13/24"]
+db_allocated_storage = 20
+self_managed_gpu_nodes_device_size = 30
+region = "us-east-1"
+api_hostname = "api.morpheus.com"
+client_hostname = "morpheus.com"

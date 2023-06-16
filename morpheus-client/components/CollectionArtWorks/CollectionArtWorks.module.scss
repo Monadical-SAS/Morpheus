@@ -1,0 +1,30 @@
+@use "../../styles/colors";
+@use "../../styles/variables";
+
+.artworksContainer {
+  width: 100%;
+  max-width: variables.$max-width-landing;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 96px;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .artworksList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 48px;
+
+    .noArts {
+      margin-top: -48px;
+    }
+  }
+}

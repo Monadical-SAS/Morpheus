@@ -1,0 +1,105 @@
+version: "3.3"
+services:
+  postgres:
+    image: postgres:15-alpine
+    env_file:
+      - morpheus-server/secrets.env
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - morpheus-server/secrets.env
+    ports: 
+        - "8002:80"
+    depends_on: 
+      postgres:
+        condition: service_healthy
+
+  api:
+    build:
+      context: morpheus-server
+      dockerfile: ./Dockerfile
+    image: morpheus-server:latest
+    env_file:
+      - morpheus-server/secrets.env
+    command: python3 main.py
+    volumes:
+      - ./morpheus-server:/opt/api
+    environment:
+      - NODE_ENV=development
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "8001:8001"
+    stdin_open: true
+    tty: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  client:
+    build:
+      context: morpheus-client
+      dockerfile: ./Dockerfile
+    image: morpheus-client:latest
+    entrypoint: ./bin/entrypoint.sh
+    volumes:
+      - ./morpheus-client:/app
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+
+  collaborative:
+    build:
+      context: morpheus-collaborative
+      dockerfile: ./Dockerfile
+    image: morpheus-collaborative:latest
+    entrypoint: ./bin/entrypoint.sh
+    volumes:
+      - ./morpheus-collaborative:/app
+    ports:
+      - "3002:3002"
+    stdin_open: true
+    tty: true
+
+  redis:
+    expose:
+      - 6379
+    ports:
+      - "6379:6379"
+    image: redis:6-alpine
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  model-script:
+    build:
+      context: morpheus-server
+      dockerfile: ./scripts/models/Dockerfile
+    image: morpheus-script-model:latest
+    profiles: [ "manage" ]
+    env_file:
+      - morpheus-server/secrets.env
+    volumes:
+      - ./morpheus-server:/opt/api
+    stdin_open: true
+    tty: true
+
+volumes:
+  pg_data:
+  sd_model:
+    name: "models"

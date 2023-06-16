@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: morpheus-collaborative
+  labels:
+    name: morpheus-collaborative
+spec:
+  replicas: {{ .Values.collaborative.replicas }}
+  selector:
+    matchLabels:
+      name: morpheus-collaborative
+  template:
+    metadata:
+      labels:
+        name: morpheus-collaborative
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: morpheus-collaborative
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: 
+            - bash
+            - bin/entrypoint.sh
+          ports:
+            - name: http
+              containerPort: {{ .Values.collaborative.container.port }}
+              protocol: TCP
+          env:
+          - name: ENVIRONMENT
+            value: prod
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: morpheus-type
+                operator: In
+                values:
+                - web

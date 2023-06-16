@@ -1,0 +1,7 @@
+models:
+  - name: "Canny edges"
+    type: "canny"
+    description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Canny edges."
+    source: "lllyasviel/sd-controlnet-canny"
+    is_active: true
+    url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-canny"

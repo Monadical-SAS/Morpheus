@@ -1,0 +1,91 @@
+@use "styles/colors";
+@use "styles/media";
+
+.artworkInfo {
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+
+  @include media.mobile {
+    margin-left: 0;
+    margin-top: 24px;
+  }
+
+  @include media.tablet {
+    max-width: 600px;
+    margin-left: 0;
+    margin-top: 24px;
+  }
+
+  .title {
+    margin-bottom: 24px;
+  }
+
+  .prompt {
+    width: 100%;
+    border-radius: 16px;
+  }
+
+  .copyContent {
+    width: auto;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid colors.$background-icons;
+    cursor: pointer;
+    flex: 1;
+
+    @include media.mobile {
+      max-width: 100%;
+    }
+
+    &:hover {
+      color: colors.$white-color;
+    }
+
+    p {
+      margin-left: 16px;
+    }
+  }
+
+  .configuration {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    @include media.mobile {
+      flex-direction: column;
+    }
+
+    .configItem {
+      width: 50%;
+      margin-top: 16px;
+    }
+  }
+
+  .quickActions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 48px;
+
+    @include media.mobile {
+      margin-top: 24px;
+      justify-content: center;
+    }
+  }
+
+  .artworkActions {
+    margin-top: 24px;
+
+    button {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+  }
+}

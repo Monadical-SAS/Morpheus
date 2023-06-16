@@ -1,0 +1,113 @@
+@use "styles/colors";
+@use "styles/variables";
+@use "styles/media";
+
+.mainContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 24px;
+
+  @include media.mobile {
+    * {
+      color: colors.$white-color;
+    }
+  }
+}
+
+.collectionContainer {
+  width: 100%;
+  max-width: variables.$max-width-landing;
+  height: auto;
+
+  .collectionInfo {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    @include media.mobile {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .imageContainer {
+      width: 250px;
+      height: 250px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      @include media.mobile {
+        width: 150px;
+        height: 150px;
+      }
+
+      img {
+        width: 200px;
+        height: 200px;
+        padding: 8px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid colors.$main-color;
+        box-shadow: colors.$box-shadow;
+
+        @include media.mobile {
+          width: 150px;
+          height: 150px;
+        }
+      }
+    }
+
+    .textContainer {
+      width: 100%;
+      height: 100%;
+      padding: 24px;
+
+      @include media.mobile {
+        text-align: center;
+      }
+
+      h2 {
+        text-shadow: colors.$box-shadow-2;
+        text-transform: capitalize;
+
+        @include media.mobile {
+          font-size: 48px;
+        }
+      }
+    }
+
+    .actionIcons {
+      width: 100px;
+      height: auto;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      span {
+        cursor: pointer;
+        color: colors.$background-icons;
+        font-size: 28px;
+        margin-left: 16px;
+      }
+    }
+  }
+}
+
+.artworksContent {
+  width: 100%;
+  max-width: variables.$max-width-landing;
+  margin-top: 48px;
+
+  @include media.mobile {
+    margin-top: 24px;
+    padding: 24px;
+
+    p[class*="bold64"] {
+      font-size: 48px;
+    }
+  }
+}

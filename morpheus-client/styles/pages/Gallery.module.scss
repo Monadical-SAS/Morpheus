@@ -1,0 +1,30 @@
+@use "../colors";
+@use "../media";
+@use "../variables";
+
+.container {
+  width: 100%;
+  padding: 120px 72px 72px 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: calc(100vw - 144px);
+
+  @include media.tablet {
+    padding: 64px 32px;
+    max-width: calc(100vw - 64px);
+  }
+
+  @include media.mobile {
+    padding: 48px 0;
+    max-width: calc(100vw - 48px);
+  }
+
+  .imagesContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+}

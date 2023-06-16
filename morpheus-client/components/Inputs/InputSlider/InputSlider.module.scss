@@ -1,0 +1,77 @@
+@use "../../../styles/colors";
+
+.inputSlider {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+
+  label {
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+
+  .sliderNumber {
+    -webkit-appearance: none;
+    margin-top: 5px;
+    width: 15%;
+    height: 30px;
+    border: 1px solid colors.$grey-color-light;
+    border-radius: 5px;
+    font: 16px LatoRegular, sans-serif;
+
+    &.dark {
+      background: rgba(colors.$secondary-color, 1);
+      color: colors.$text-white;
+    }
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: colors.$main-color;
+    cursor: pointer;
+    border: none;
+    box-shadow: colors.$box-shadow;
+  }
+
+  .slider::-webkit-slider-thumb:hover {
+    box-shadow: rgba(colors.$main-color, 0.6) 0 0 0 8px;
+  }
+
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: colors.$main-color;
+    cursor: pointer;
+    border: none;
+    box-shadow: colors.$box-shadow;
+  }
+
+  %slider-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: colors.$main-color;
+    cursor: pointer;
+    border: none;
+    box-shadow: colors.$box-shadow;
+  }
+}

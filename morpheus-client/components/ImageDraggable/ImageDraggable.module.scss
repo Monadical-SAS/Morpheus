@@ -1,0 +1,103 @@
+@use "styles/colors";
+@use "styles/media";
+
+.formFileUpload {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 368px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23312E47FF' stroke-width='4' stroke-dasharray='10%2c 10' stroke-dashoffset='53' stroke-linecap='round'/%3e%3c/svg%3e");
+  border-radius: 8px;
+  padding: 48px 24px;
+
+  @include media.mobile {
+    width: 100%;
+    height: auto;
+    padding: 16px;
+  }
+
+  .inputFileUpload {
+    display: none;
+  }
+
+  .labelFileUpload {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-width: 2px;
+    border-radius: 1rem;
+    border-style: dashed;
+    border-color: transparent;
+    background-color: transparent;
+  }
+
+  .labelFileUpload.dragActive {
+    background-color: transparent;
+  }
+
+  .dragInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    a {
+      text-decoration-line: underline;
+    }
+  }
+
+  .uploadButton:hover {
+    text-decoration-line: underline;
+  }
+
+  .dragFileElement {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+.selectedFile {
+  width: 100%;
+  position: relative;
+  background-color: colors.$background-secondary;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+
+  .header {
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px;
+
+    span {
+      margin-left: 8px;
+      cursor: pointer;
+    }
+  }
+
+  img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: colors.$box-shadow;
+  }
+}

@@ -1,0 +1,76 @@
+@use "colors";
+@use "typography";
+
+%button {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-transform: uppercase;
+  user-select: none;
+  transition: all .2s ease-in-out;
+  border: none;
+  text-shadow: none;
+}
+
+%disabled {
+  &.disabled {
+    background-color: colors.$grey-color;
+    cursor: not-allowed;
+  }
+}
+
+.buttonSubmit {
+  @extend %button;
+  @extend .bodyBold;
+  font-size: 16px;
+  line-height: 16px;
+  width: auto;
+  min-width: 178px !important;
+  height: 48px !important;
+  padding: 12px 24px !important;
+  background: colors.$main-color !important;
+  color: colors.$white-color !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  span {
+    margin-right: 8px;
+  }
+
+  &.disabled {
+    background-color: colors.$disabled-color !important;
+    cursor: not-allowed;
+  }
+
+  &.secondary {
+    border: 2px solid colors.$white-color;
+    background-color: transparent !important;
+  }
+
+  &.borderMain {
+    border: 2px solid colors.$main-color;
+    color: colors.$main-color !important;
+    background-color: transparent !important;
+
+    &.disabled {
+      border: 2px solid colors.$disabled-color;
+      color: colors.$disabled-color !important;
+      background-color: colors.$white-color;
+    }
+  }
+}
+
+.buttonDisabled {
+  @extend .buttonSubmit;
+  background-color: colors.$disabled-color !important;
+  cursor: not-allowed;
+}
+
+.buttonDanger {
+  @extend .buttonSubmit;
+  background-color: colors.$danger-color !important;
+}

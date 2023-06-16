@@ -1,0 +1,81 @@
+name: CI frontend
+on:
+  workflow_call:
+    inputs:
+      called:
+        required: false
+        type: string
+  workflow_dispatch:
+    inputs:
+      called:
+        required: false
+        type: string
+env:
+  WORKING_DIR: morpheus-client
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+    env:
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      SENTRY_URL: ${{ secrets.SENTRY_URL }}
+      SENTRY_DSN_CLIENT: ${{ secrets.SENTRY_DSN_CLIENT }}
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: yarn
+          cache-dependency-path: ./${{ env.WORKING_DIR }}/yarn.lock
+      - name: install
+        run: |
+          yarn install
+      - name: lint
+        run: |
+          yarn run lint
+      - name: build
+        run: |
+          yarn run build
+  ci-frontend:
+    runs-on: ubuntu-latest
+    needs:
+      - test-frontend
+    env:
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      SENTRY_URL: ${{ secrets.SENTRY_URL }}
+      SENTRY_DSN_CLIENT: ${{ secrets.SENTRY_DSN_CLIENT }}
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+    steps:
+      -
+        name: Set up QEMU
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to DockerHub
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      -
+        name: Build and push
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/build-push-action@v3
+        with:
+          context: "{{defaultContext}}:morpheus-client"
+          build-args: |
+            BUILD_ENV=copy
+          push: true
+          tags: monadicalsas/morpheus:client-${{ github.run_id }}

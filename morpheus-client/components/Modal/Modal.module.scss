@@ -1,0 +1,59 @@
+@use "styles/variables";
+@use "styles/media";
+@use "styles/colors";
+
+.modalContainer {
+  z-index: 40;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalBody {
+  width: 50vw;
+  max-width: variables.$max-width-landing;
+  height: 50vh;
+  max-height: 90vh;
+  padding: 48px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  background: colors.$background-secondary;
+  border: 1px solid colors.$background-border;
+  overflow-y: auto;
+
+  @include media.mobile {
+    width: 80vw;
+    max-width: 90vw;
+    height: auto;
+    max-height: 90vh;
+    padding: 24px;
+  }
+
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+
+    .headerContent {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .closeIcon {
+      justify-self: flex-end;
+      cursor: pointer;
+    }
+  }
+}

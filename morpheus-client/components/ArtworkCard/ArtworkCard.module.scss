@@ -1,0 +1,43 @@
+@use "styles/colors";
+@use "styles/media";
+
+.artworkCard {
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+
+  .smallActions {
+    height: 60px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    visibility: hidden;
+    background: transparent;
+    transition: all 0.5s ease-in-out;
+  }
+
+  &:hover {
+    border: 1px solid colors.$background-border;
+
+    .smallActions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: visible;
+      background: colors.$background-primary;
+      border-bottom: 1px solid colors.$background-border;
+
+      @include media.mobile {
+        display: none;
+      }
+    }
+  }
+}
+
+.modalContent {
+  flex: 1;
+}

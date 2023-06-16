@@ -1,0 +1,79 @@
+@use "styles/colors";
+@use "styles/media";
+
+%item {
+  width: 80px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: colors.$background-primary-3;
+  }
+
+  &.active {
+    background-color: colors.$background-primary-3;
+  }
+
+  &.expanded {
+    width: 100%;
+    padding: 0 24px;
+    justify-content: flex-start;
+
+    p {
+      margin-left: 16px;
+    }
+  }
+}
+
+
+.imagineMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: colors.$background-secondary;
+  border: 1px solid colors.$background-border;
+  z-index: 40;
+
+  @include media.mobile {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: 66px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  &.barExpanded {
+    width: 320px;
+  }
+
+  .menuIcon {
+    @extend %item;
+    margin-top: 8px;
+    margin-bottom: 32px;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    @include media.mobile {
+      display: none;
+    }
+
+    .closeTitle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .menuItem {
+    @extend %item;
+  }
+}

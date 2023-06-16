@@ -1,0 +1,92 @@
+@use "styles/colors";
+@use "styles/typography";
+
+.inputContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+
+  label {
+    margin-bottom: 10px;
+  }
+
+  input {
+    @extend .input;
+  }
+}
+
+.inputIconContainer {
+  @extend .inputContainer;
+  flex-direction: column;
+
+  .pLeft {
+    padding-left: 44px !important;
+  }
+
+  .pRight {
+    padding-right: 44px !important;
+  }
+
+  .iconLeft {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+
+    + input {
+      padding-left: 44px !important;
+    }
+  }
+
+  .iconRight {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    cursor: pointer;
+
+    i {
+      cursor: pointer;
+      color: colors.$typography-secondary;
+
+      &.active {
+        color: colors.$main-color;
+      }
+    }
+  }
+}
+
+.input {
+  @extend .body-3;
+  width: 100%;
+  flex: 1;
+  outline: none;
+  height: 48px;
+  min-height: 48px;
+  padding: 0 20px 0 20px;
+  border-radius: 8px;
+  color: colors.$typography-secondary;
+  border: 1px solid colors.$background-border;
+  background-color: colors.$background-secondary;
+  text-shadow: none;
+
+  &:focus {
+    border: 1px solid lighten(colors.$main-color, 30%) !important;
+    transition: all 0.5s;
+
+    .inputContainer > span {
+      color: lighten(colors.$main-color, 30%) !important;
+    }
+  }
+
+  &::placeholder {
+    @extend .body-3;
+    color: colors.$typography-secondary !important;
+    text-shadow: none;
+  }
+}
+
+.error {
+  @extend .caption-1;
+  color: colors.$text-danger !important;
+}

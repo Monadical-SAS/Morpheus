@@ -1,0 +1,23 @@
+@use "../../styles/colors";
+@use "../../styles/media";
+
+.sliderContainer {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: colors.$secondary-color !important;
+
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    @include media.mobile {
+      height: 100%;
+    }
+  }
+}

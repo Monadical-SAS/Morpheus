@@ -1,0 +1,35 @@
+@use "styles/colors";
+@use "styles/media";
+@use "styles/variables";
+
+.collectionsContainer {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 48px 0;
+
+  @include media.mobile {
+    margin: 48px 24px;
+    max-width: 100%;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .collectionList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 32px;
+
+    .noCollections {
+      margin-top: -24px;
+    }
+  }
+}

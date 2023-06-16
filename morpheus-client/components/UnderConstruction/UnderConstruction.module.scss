@@ -1,0 +1,38 @@
+@use "styles/colors";
+@use "styles/media";
+
+.textContent {
+  height: auto;
+  width: auto;
+  display: flex;
+  padding: 48px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+
+  @include media.mobile {
+    padding: 24px;
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 40px;
+    color: white;
+    text-shadow: 2px 2px colors.$secondary-color;
+  }
+
+  hr {
+    width: 100%;
+  }
+
+  h2 + p {
+    margin: 40px 0;
+    text-align: center;
+    text-shadow: 2px 2px 2px colors.$secondary-color;
+  }
+
+  button {
+    margin-top: 24px;
+  }
+}

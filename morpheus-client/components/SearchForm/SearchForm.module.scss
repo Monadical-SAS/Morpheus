@@ -1,0 +1,16 @@
+@use "styles/variables";
+
+.searchFormContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 48px;
+
+  .searchContent {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+  }
+}

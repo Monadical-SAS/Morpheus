@@ -1,0 +1,67 @@
+
+models:
+  - name: "Stable Diffusion v2"
+    description: "This is a model that can be used to generate and modify images based on text prompts. It is a Latent Diffusion Model that uses a fixed, pretrained text encoder (OpenCLIP-ViT/H)."
+    source: "stabilityai/stable-diffusion-2"
+    is_active: true
+    url_docs: "https://huggingface.co/stabilityai/stable-diffusion-2"
+    text2img: true
+    img2img: true
+    inpainting: false
+    controlnet: false
+    pix2pix: false
+
+  - name: "Openjourney"
+    description: "Openjourney is an open source Stable Diffusion fine tuned model on Midjourney images, by PromptHero."
+    source: "prompthero/openjourney"
+    is_active: true
+    url_docs: "https://huggingface.co/prompthero/openjourney"
+    text2img: true
+    img2img: true
+    inpainting: false
+    controlnet: false
+    pix2pix: false
+
+  - name: "Stable Diffusion v1.5"
+    description: "Stable Diffusion is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input. he Stable-Diffusion-v1-5 checkpoint was initialized with the weights of the Stable-Diffusion-v1-2 checkpoint and subsequently fine-tuned on 595k steps at resolution 512x512 on 'laion-aesthetics v2 5+' and 10% dropping of the text-conditioning to improve classifier-free guidance sampling."
+    source: "runwayml/stable-diffusion-v1-5"
+    is_active: true
+    url_docs: "https://huggingface.co/runwayml/stable-diffusion-v1-5"
+    text2img: true
+    img2img: true
+    inpainting: false
+    controlnet: true
+    pix2pix: false
+
+  - name: "Instruct Pix2Pix"
+    description: "Modify an existing image with a text prompt."
+    source: "timbrooks/instruct-pix2pix"
+    is_active: true
+    url_docs: "https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/pix2pix"
+    text2img: false
+    img2img: false
+    inpainting: false
+    controlnet: false
+    pix2pix: true
+
+  - name: "Stable Diffusion Inpaint"
+    description: "Modify an existing image with a text prompt and an image mask."
+    source: "runwayml/stable-diffusion-inpainting"
+    is_active: true
+    url_docs: "https://huggingface.co/runwayml/stable-diffusion-inpainting"
+    text2img: false
+    img2img: false
+    inpainting: true
+    controlnet: false
+    pix2pix: false
+
+  - name: "Stable Diffusion x4 Upscaler"
+    description: "Stable Diffusion x4 Upscaler can be used to enhance the resolution of input images by a factor of 4."
+    source: "stabilityai/stable-diffusion-x4-upscaler"
+    is_active: true
+    url_docs: "https://huggingface.co/stabilityai/stable-diffusion-x4-upscaler"
+    text2img: false
+    img2img: false
+    inpainting: false
+    controlnet: false
+    pix2pix: false

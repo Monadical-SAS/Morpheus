@@ -1,0 +1,19 @@
+@use "styles/colors";
+
+.creatorContainer {
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  img {
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    border: 1px solid colors.$background-border;
+  }
+
+  .creatorInfo {
+    margin-left: 16px;
+  }
+}

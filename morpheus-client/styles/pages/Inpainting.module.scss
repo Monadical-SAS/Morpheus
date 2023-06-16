@@ -1,0 +1,15 @@
+@use "styles/colors";
+
+.mainContent {
+  flex: 1;
+  width: 100%;
+  background-image: url("/images/paint/inpainting.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

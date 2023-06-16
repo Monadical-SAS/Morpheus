@@ -1,0 +1,111 @@
+@use "styles/colors";
+@use "styles/media";
+
+.title {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .infoIcon {
+    position: relative;
+    cursor: pointer;
+    margin-left: 16px;
+
+    &:hover > .cardInfo {
+      display: flex;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cardInfo {
+      display: none;
+      position: absolute;
+      bottom: 28px;
+      left: 144px;
+      width: 300px;
+      max-width: 300px;
+      height: auto;
+      max-height: 200px;
+      padding: 8px;
+      transform: translateX(-50%);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      background-color: colors.$background-icons;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in, visibility 0.3s ease-in;
+    }
+  }
+}
+
+.settingsContainer {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  border-radius: 8px;
+  background-color: colors.$background-secondary;
+
+  h2 {
+    margin-bottom: 32px;
+  }
+
+  .optionsContainer {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+
+    @include media.tablet {
+      justify-content: space-between;
+    }
+
+    .settingItem {
+      width: 22%;
+      max-width: 22%;
+      display: flex;
+      flex-direction: column;
+
+      @include media.tablet {
+        width: 46%;
+        max-width: 46%;
+      }
+
+      @include media.mobile {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+
+    .settingItemNegativePrompt {
+      width: 100%;
+    }
+  }
+}
+
+.rightBarIcon {
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: colors.$main-color;
+  z-index: 10;
+}
+
+.rightBarIconClose {
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

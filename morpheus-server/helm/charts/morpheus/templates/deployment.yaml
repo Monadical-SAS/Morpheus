@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "morpheus.fullname" . }}
+  labels:
+    {{- include "morpheus.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "morpheus.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "morpheus.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: 
+          - python3
+          - main.py
+          ports:
+            - name: http
+              containerPort: {{ .Values.container.port }}
+              protocol: TCP
+          env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: POSTGRES_USER
+                optional: false
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: POSTGRES_DB
+                optional: false
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: POSTGRES_PASSWORD
+                optional: false
+          - name: POSTGRES_HOST
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: POSTGRES_HOST
+                optional: false
+          - name: FIREBASE_PROJECT_ID
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: FIREBASE_PROJECT_ID
+                optional: true
+          - name: FIREBASE_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: FIREBASE_PRIVATE_KEY
+                optional: true
+          - name: FIREBASE_WEB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: FIREBASE_WEB_API_KEY
+                optional: true
+          - name: FIREBASE_CLIENT_EMAIL
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: FIREBASE_CLIENT_EMAIL
+                optional: true
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: AWS_ACCESS_KEY_ID
+                optional: true
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: AWS_SECRET_ACCESS_KEY
+                optional: true
+          - name: SENTRY_DSN
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: SENTRY_DSN
+                optional: true
+          - name: IMAGES_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: IMAGES_BUCKET
+                optional: true
+          - name: IMAGES_TEMP_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: IMAGES_TEMP_BUCKET
+                optional: true
+          - name: MODELS_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: MODELS_BUCKET
+                optional: true
+          - name: ALLOWED_ORIGINS
+            value: {{ .Values.domain }}
+          - name: CELERY_BROKER_URL
+            value: redis://redis:6379/0
+          - name: CELERY_RESULT_BACKEND
+            value: redis://redis:6379/0
+          - name: ENVIRONMENT
+            value: prod
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: morpheus-type
+                operator: In
+                values:
+                - web

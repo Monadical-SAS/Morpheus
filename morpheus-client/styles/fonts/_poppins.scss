@@ -1,0 +1,137 @@
+@import "shared";
+
+@font-face {
+  font-family: "PoppinsRegular";
+  src: url("../../public/fonts/Poppins-Regular.ttf");
+  font-display: swap;
+}
+
+%base {
+  @extend %fontColor;
+  @extend %fontDecorators;
+  font-style: normal;
+  margin: 0;
+}
+
+.headline-1 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 72px;
+  letter-spacing: -0.04em;
+}
+
+.headline-2 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 56px;
+}
+
+.headline-3 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.04em;
+}
+
+.headline-4 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 40px;
+  letter-spacing: -0.02em;
+}
+
+.headline-5 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 40px;
+  letter-spacing: -0.03em;
+}
+
+.headline-6 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+}
+
+.body-1 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.body-2 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.body-3 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+}
+
+.base-1 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.03em;
+}
+
+.base-2 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+}
+
+.caption-1 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+}
+
+.caption-2 {
+  @extend %base;
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: -0.01em;
+}
+
+.button {
+  @extend %base;
+  font-family: LatoBold, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: uppercase;
+}

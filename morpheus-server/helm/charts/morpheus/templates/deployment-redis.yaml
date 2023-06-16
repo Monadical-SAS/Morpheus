@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: redis
+  template:
+    metadata:
+      labels:
+        name: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:5.0.4
+          ports:
+            - name: redis
+              containerPort: 6379
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: morpheus-type
+                operator: In
+                values:
+                - svc

@@ -1,0 +1,27 @@
+@use "../../styles/colors";
+
+.helpContent {
+  width: 100%;
+  height: max-content;
+  padding: 0 24px 24px 24px;
+
+  h1 {
+    margin-bottom: 24px;
+  }
+
+  p[class*="heading"] {
+    margin-top: 24px;
+  }
+
+  .highlight {
+    width: fit-content;
+    color: colors.$main-color;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+  }
+
+  a {
+    color: colors.$main-color;
+  }
+}

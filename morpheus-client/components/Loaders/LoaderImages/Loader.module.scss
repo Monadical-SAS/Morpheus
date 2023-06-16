@@ -1,0 +1,51 @@
+@use "styles/colors";
+
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  p {
+    margin-top: 24px;
+  }
+}
+
+.loaderLayers {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: colors.$main-color;
+  transform: rotateX(65deg) rotate(45deg);
+  color: colors.$grey-color;
+  animation: layers1 1s linear infinite alternate;
+
+
+  &:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(colors.$white-color, 0.9);
+    animation: layerTr 1s linear infinite alternate;
+  }
+
+  @keyframes layers1 {
+    0% {
+      box-shadow: 0 0 0 0
+    }
+    90%, 100% {
+      box-shadow: 20px 20px 0 -4px
+    }
+  }
+
+  @keyframes layerTr {
+    0% {
+      transform: translate(0, 0) scale(1)
+    }
+    100% {
+      transform: translate(-25px, -25px) scale(1)
+    }
+  }
+}

@@ -1,0 +1,48 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "==0.86.0"
+pydantic = {extras = ["dotenv"], version = "*"}
+uvicorn = "==0.19.0"
+httpx = "==0.23.0"
+firebase-admin = "==6.0.1"
+sqlalchemy = "==1.4.43"
+black = "==22.10.0"
+flake8 = "==5.0.4"
+psycopg2 = "*"
+pytest = "*"
+alembic = "*"
+pytest-faulthandler = "*"
+trio = "*"
+loguru = "*"
+pyyaml = "*"
+boto3 = "*"
+pillow = "*"
+python-multipart = "*"
+requests = "*"
+celery = "*"
+redis = "*"
+diffusers = "*"
+transformers = "*"
+ftfy = "*"
+scipy = "*"
+accelerate = "*"
+torch = "==1.13.1"
+torchvision = "*"
+sentry-sdk = {extras = ["fastapi"], version = "*"}
+rich = "*"
+typer = "*"
+omegaconf = "*"
+xformers = "==0.0.16"
+controlnet-aux = "==0.0.1"
+opencv-contrib-python-headless = "*"
+flower = "*"
+dynamicprompts = {extras = ["attentiongrabber", "magicprompt"], version = "*"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

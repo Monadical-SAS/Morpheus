@@ -1,0 +1,44 @@
+@use "styles/colors";
+
+.magicPrompt {
+  width: 35px;
+  height: 35px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 22px;
+  transition: all 0.2s ease-in;
+  outline: none;
+  user-select: none;
+
+  &.enabled {
+    @extend %icon-hover;
+  }
+
+  &.inactive {
+    background-color: colors.$grey-color;
+    color: colors.$white-color;
+    @extend %icon-hover;
+  }
+
+  &.disabled {
+    background-color: colors.$grey-color;
+    color: colors.$white-color;
+  }
+
+  span {
+    cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+%icon-hover {
+  &:hover {
+    color: colors.$main-color;
+    border: 1px solid colors.$main-color;
+    background-color: colors.$white-color;
+  }
+}

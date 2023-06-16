@@ -1,0 +1,111 @@
+@import "shared";
+
+@font-face {
+  font-family: "LatoRegular";
+  src: url("../../public/fonts/Lato-Regular.ttf");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "LatoBold";
+  src: url("../../public/fonts/Lato-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+%base {
+  @extend %fontColor;
+  @extend %fontDecorators;
+  margin: 0;
+}
+
+.small {
+  @extend %base;
+  font-family: LatoRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 8px;
+  line-height: 8px;
+}
+
+.boldSmall {
+  @extend %base;
+  font-family: LatoBold, sans-serif;
+  font-size: 8px;
+  line-height: 14px;
+}
+
+.bold12 {
+  @extend %base;
+  font-family: LatoBold, sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+
+.body {
+  @extend %base;
+  font-family: LatoRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.bigBody {
+  @extend %base;
+  font-family: LatoRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.bodyBold {
+  @extend %base;
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.heading {
+  @extend %base;
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.bold40 {
+  @extend %base;
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 56px;
+}
+
+.bold64 {
+  @extend %base;
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 72px;
+}
+
+.button {
+  @extend %base;
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: uppercase;
+}

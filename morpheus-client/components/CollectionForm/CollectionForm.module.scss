@@ -1,0 +1,62 @@
+@use "styles/colors";
+@use "styles/media";
+
+.collectionFormContainer {
+  width: 100%;
+  max-width: 800px;
+
+  .imageContainer {
+    margin-top: 32px;
+
+    .imageLabel {
+      margin-bottom: 10px;
+    }
+
+    .imageInput {
+      display: flex;
+      margin-top: 10px;
+
+      @include media.mobile {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      img {
+        width: 108px;
+        height: 108px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .inputContent {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-left: 16px;
+
+        @include media.mobile {
+          width: 100%;
+          margin-left: 0;
+          margin-top: 16px;
+        }
+
+        p {
+          margin-top: 16px;
+        }
+      }
+    }
+  }
+
+  .buttonsContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 32px;
+
+    @include media.mobile {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}

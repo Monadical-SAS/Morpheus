@@ -1,0 +1,14 @@
+@use "styles/colors";
+
+.mainContent {
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/paint/training.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

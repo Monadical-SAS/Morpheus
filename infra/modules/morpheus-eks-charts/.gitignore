@@ -1,0 +1,6 @@
+.terraform*
+kubectl
+terraform.tfstate*
+tls*
+kubeconfig*
+terraform.tfvars*

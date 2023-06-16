@@ -1,0 +1,234 @@
+version: "3.3"
+services:
+  postgres:
+    image: postgres:15-alpine
+    env_file:
+      - morpheus-server/secrets.env
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - morpheus-server/secrets.env
+    ports:
+        - "8002:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+  api:
+    build:
+      context: morpheus-server
+      dockerfile: ./Dockerfile
+    image: morpheus-server:latest
+    env_file:
+      - morpheus-server/secrets.env
+    command: python3 main.py
+    volumes:
+      - ./morpheus-server:/opt/api
+    environment:
+      - NODE_ENV=development
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "8001:8001"
+    stdin_open: true
+    tty: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  client:
+    build:
+      context: morpheus-client
+      dockerfile: ./Dockerfile
+    image: morpheus-client:latest
+    entrypoint: ./bin/entrypoint.sh
+    volumes:
+      - ./morpheus-client:/app
+    environment:
+      - NEXT_TELEMETRY_DISABLED=1
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+
+  collaborative:
+    build:
+      context: morpheus-collaborative
+      dockerfile: ./Dockerfile
+    image: morpheus-collaborative:latest
+    entrypoint: ./bin/entrypoint.sh
+    volumes:
+      - ./morpheus-collaborative:/app
+    ports:
+      - "3002:3002"
+    stdin_open: true
+    tty: true
+
+  cloudflare-api:
+    image: cloudflare/cloudflared
+    profiles: ["staging-old"]
+    network_mode: 'service:api'
+    command: tunnel --url http://api:8001 run morpheus-staging-api-tunnel
+    depends_on:
+    - api
+    volumes:
+    - ./etc/cloudflare/api/config.yml:/home/nonroot/.cloudflared/config.yml
+    - ./etc/cloudflare/api/credentials.json:/home/nonroot/.cloudflared/credentials.json
+
+  cloudflare-client:
+    image: cloudflare/cloudflared
+    profiles: ["staging-old"]
+    network_mode: 'service:client'
+    command: tunnel --url http://client:3000 run morpheus-staging-client-tunnel
+    depends_on:
+    - client
+    volumes:
+    - ./etc/cloudflare/client/config.yml:/home/nonroot/.cloudflared/config.yml
+    - ./etc/cloudflare/client/credentials.json:/home/nonroot/.cloudflared/credentials.json
+
+  worker:
+    build: ./morpheus-server
+    command: celery -A app.celery.workers.stable_diffusion_app worker --max-tasks-per-child=1 --loglevel=info -Q stable_diffusion
+    profiles: ["staging"]
+    volumes:
+      - ./morpheus-server:/opt/api
+      - sd_model:/mnt/
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      api:
+        condition: service_started
+      redis:
+        condition: service_started
+      worker-init:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
+  magicprompt_worker:
+    build: ./morpheus-server
+    command: celery -A app.celery.workers.magic_prompt_app worker --max-tasks-per-child=1 --loglevel=info -Q magic_prompt
+    profiles: [ "staging" ]
+    volumes:
+      - ./morpheus-server:/opt/api
+      - sd_model:/mnt/
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      api:
+        condition: service_started
+      redis:
+        condition: service_started
+      worker-init:
+        condition: service_completed_successfully
+
+  flower:
+    build: ./morpheus-server
+    command: celery flower --basic_auth=admin:password
+    profiles: [ "staging", "local" ]
+    volumes:
+      - ./morpheus-server:/opt/api
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      api:
+        condition: service_started
+      redis:
+        condition: service_started
+      worker-init:
+        condition: service_completed_successfully
+
+  worker_local:
+    build: ./morpheus-server
+    command: celery -A app.celery.workers.stable_diffusion_app worker --max-tasks-per-child=1 --loglevel=info -Q stable_diffusion
+    profiles: [ "local" ]
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./morpheus-server:/opt/api
+      - sd_model:/mnt/
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      api:
+        condition: service_started
+      redis:
+        condition: service_started
+      worker-init:
+        condition: service_completed_successfully
+
+  magicprompt_worker_local:
+    build: ./morpheus-server
+    command: celery -A app.celery.workers.magic_prompt_app worker --max-tasks-per-child=1 --loglevel=info -Q magic_prompt
+    profiles: [ "local" ]
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./morpheus-server:/opt/api
+      - sd_model:/mnt/
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      api:
+        condition: service_started
+      redis:
+        condition: service_started
+      worker-init:
+        condition: service_completed_successfully
+
+  worker-init:
+    image: ubuntu
+    user: "root"
+    group_add:
+      - '1000'
+    volumes:
+      - sd_model:/mnt/
+    command: chown -R 1000:1000 /mnt/
+
+  redis:
+    image: redis:6-alpine
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  model-script:
+    build:
+      context: morpheus-server
+      dockerfile: ./scripts/models/Dockerfile
+    image: morpheus-script-model:latest
+    profiles: [ "manage" ]
+    env_file:
+      - morpheus-server/secrets.env
+    volumes:
+      - ./morpheus-server:/opt/api
+    stdin_open: true
+    tty: true
+
+
+volumes:
+  pg_data:
+  sd_model:
+    name: "models"

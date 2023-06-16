@@ -1,0 +1,16 @@
+@use "styles/media";
+
+.authContainer {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 526px;
+
+  @include media.mobile {
+    width: 100%;
+    height: 100%;
+  }
+}
