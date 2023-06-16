@@ -82,6 +82,42 @@ variable "self_managed_gpu_iam_role_name" {
   default = "self-managed-node-group-gpu"
 }
 
+variable "self_managed_gpu_adv_node_group_name" {
+  default = "self-mng-gpu-adv"
+}
+
+variable "self_managed_gpu_adv_node_min_size" {
+  default = 0
+}
+
+variable "self_managed_gpu_adv_node_max_size" {
+  default = 2
+}
+
+variable "self_managed_gpu_adv_node_desired_size" {
+  default = 0
+}
+
+variable "self_managed_gpu_adv_nodes_instance_type" {
+  default = "g4dn.xlarge"
+}
+
+variable "self_managed_gpu_adv_nodes_ami" {
+  default = "ami-05f233de75731a6a4"
+}
+
+variable "self_managed_gpu_adv_nodes_device_name" {
+  default = "/dev/sdh"
+}
+
+variable "self_managed_gpu_adv_nodes_device_size" {
+  default = 20
+}
+
+variable "self_managed_gpu_adv_iam_role_name" {
+  default = "self-managed-node-group-gpu-adv"
+}
+
 variable "vpc_name" {
   default = "morpheus-vpc"
 }

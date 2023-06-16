@@ -1,0 +1,48 @@
+name: CI worker ray
+on:
+  workflow_call:
+    inputs:
+      called:
+        required: false
+        type: string
+  workflow_dispatch:
+    inputs:
+      called:
+        required: false
+        type: string
+env:
+  WORKING_DIR: morpheus-worker/ray
+jobs:
+  ci-worker-ray:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run echo
+        run: |
+          echo "Running worker ray ci process"
+      -
+        name: Set up QEMU
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to DockerHub
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      -
+        name: Build and push
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/build-push-action@v3
+        with:
+          context: "{{defaultContext}}:morpheus-collaborative/ray"
+          push: true
+          tags: monadicalsas/morpheus:worker-ray-${{ github.run_id }}
