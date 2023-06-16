@@ -1,11 +1,11 @@
 import { NextPage } from "next";
-import ImageDraggable from "../../components/ImageDraggable/ImageDraggable";
-import ImageGallery from "../../components/ImageGallery/ImageGallery";
-import { UploadMaskIcon } from "../../components/icons/uploadMask";
-import ImagineInput from "../../components/ImagineInput/ImagineInput";
-import PrivateRoute from "../../components/Auth/PrivateRoute/PrivateRoute";
-import { useDiffusion } from "../../context/SDContext";
-import { useImagine } from "../../context/ImagineContext";
+import ImageDraggable from "@/components/ImageDraggable/ImageDraggable";
+import ImageGallery from "@/components/ImageGallery/ImageGallery";
+import { UploadMaskIcon } from "@/components/icons/uploadMask";
+import ImagineInput from "@/components/ImagineInput/ImagineInput";
+import PrivateRoute from "@/components/Auth/PrivateRoute/PrivateRoute";
+import { useDiffusion } from "@/context/SDContext";
+import { useImagine } from "@/context/ImagineContext";
 import styles from "../../styles/pages/StableDiffusion.module.scss";
 
 const Inpainting: NextPage = () => {

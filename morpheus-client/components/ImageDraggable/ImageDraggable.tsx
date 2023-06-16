@@ -157,8 +157,8 @@ const DragDropFile = (props: DragDropFileProps) => {
       >
         <MaskPaintingCanvas
           src={imgSrc}
-          width={isMobile ? width - 64 : 512}
-          height={isMobile ? width - 64 : 512}
+          width={isMobile ? width - 88 : 512}
+          height={isMobile ? width - 88 : 512}
           closeModal={() => setShowEditModal(false)}
         />
       </Modal>

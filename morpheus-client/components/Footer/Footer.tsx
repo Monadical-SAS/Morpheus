@@ -13,11 +13,8 @@ const Footer = () => {
       </div>
 
       <div className={styles.middleContent}>
-        <a className="base-1 secondary" href="">
-          Terms of service
-        </a>
-        <a className="base-1 secondary" href="">
-          Policy Service
+        <a className="body-1 main underline" href="mailto:hello@monadical.com">
+          Contact us
         </a>
       </div>
 

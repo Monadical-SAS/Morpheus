@@ -97,23 +97,23 @@ export const FAQ = () => {
           <ul>
             <li>
               <b>Text To Image:</b>{" "}
-              <Text2ImgDescription className="body-1 secondary" />
+              <Text2ImgDescription className="body-2 secondary" />
             </li>
             <li>
               <b>Image To Image:</b>{" "}
-              <Img2ImgDescription className="body-1 secondary" />
+              <Img2ImgDescription className="body-2 secondary" />
             </li>
             <li>
               <b>Pix To Pix:</b>{" "}
-              <Pix2PixDescription className="body-1 secondary" />
+              <Pix2PixDescription className="body-2 secondary" />
             </li>
             <li>
               <b>ControlNet:</b>{" "}
-              <ControlNetDescription className="body-1 secondary" />
+              <ControlNetDescription className="body-2 secondary" />
             </li>
             <li>
               <b>Inpainting:</b>{" "}
-              <InpaintingDescription className="body-1 secondary" />
+              <InpaintingDescription className="body-2 secondary" />
             </li>
           </ul>
         </Fragment>
