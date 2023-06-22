@@ -43,6 +43,6 @@ jobs:
         if: ${{ inputs.called == 'true' }}
         uses: docker/build-push-action@v3
         with:
-          context: "{{defaultContext}}:morpheus-collaborative/ray"
+          context: "{{defaultContext}}:morpheus-worker/ray"
           push: true
           tags: monadicalsas/morpheus:worker-ray-${{ github.run_id }}
