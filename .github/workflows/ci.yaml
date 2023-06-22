@@ -12,6 +12,7 @@ jobs:
       api: ${{ steps.api-step.outputs.api }}
       collaborative: ${{ steps.collaborative-step.outputs.collaborative }}
       frontend: ${{ steps.frontend-step.outputs.frontend }}
+      workerray: ${{ steps.worker-ray-step.outputs.workerray }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -40,6 +41,12 @@ jobs:
         run: |
           frontend=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-client)
           echo "frontend=$frontend" >> "$GITHUB_OUTPUT"
+      - id: worker-ray-step
+        name: Check change in worker ray
+        run: |
+          workerray=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-worker-ray)
+          echo "workerray=$workerray" >> "$GITHUB_OUTPUT"
+
 
   ci-api:
     if: needs.ci.outputs.api == 'true'
@@ -59,6 +66,12 @@ jobs:
       - ci
     uses: ./.github/workflows/ci-frontend.yaml
     secrets: inherit
+  ci-worker-ray:
+    if: needs.ci.outputs.workerray == 'true'
+    needs:
+      - ci
+    uses: ./.github/workflows/ci-worker-ray.yaml
+    secrets: inherit
   
 #############################################################################################################
 ### CD - jobs
@@ -70,6 +83,7 @@ jobs:
       api: ${{ steps.api-step.outputs.api }}
       collaborative: ${{ steps.collaborative-step.outputs.collaborative }}
       frontend: ${{ steps.frontend-step.outputs.frontend }}
+      workerray: ${{ steps.worker-ray-step.outputs.workerray }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -95,6 +109,11 @@ jobs:
         run: |
           frontend=$(python ./monorepo/cicd.py --project morpheus-client)
           echo "frontend=$frontend" >> "$GITHUB_OUTPUT"
+      - id: worker-ray-step
+        name: Check change in worker ray
+        run: |
+          workerray=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-worker-ray)
+          echo "workerray=$workerray" >> "$GITHUB_OUTPUT"
 
   cd-api:
     if: needs.cd.outputs.api == 'true'
@@ -113,4 +132,10 @@ jobs:
     needs:
       - cd
     uses: ./.github/workflows/cd-collaborative.yaml
+    secrets: inherit
+  cd-worker-ray:
+    if: needs.cd.outputs.workerray == 'true'
+    needs:
+      - cd
+    uses: ./.github/workflows/cd-worker-ray.yaml
     secrets: inherit
