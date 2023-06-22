@@ -1,0 +1,97 @@
+apiVersion: ray.io/v1alpha1
+kind: RayCluster
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+    # A unique identifier for the head node and workers of this cluster.
+  name: raycluster
+spec:
+  # The version of Ray you are using. Make sure all Ray containers are running this version of Ray.
+  rayVersion: {{ .Values.worker.ray-version }}
+  ######################headGroupSpec#################################
+  # head group template and specs, (perhaps 'group' is not needed in the name)
+  headGroupSpec:
+    # logical group name, for this called head-group, also can be functional
+    # pod type head or worker
+    # rayNodeType: head # Not needed since it is under the headgroup
+    # the following params are used to complete the ray start: ray start --head --block ...
+    rayStartParams:
+      dashboard-host: '0.0.0.0'
+    #pod template
+    template:
+      spec:
+        {{- with .Values.imagePullSecrets }}
+        imagePullSecrets:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        nodeSelector:
+          morpheus-type: "gpu-adv"
+        containers:
+        # The Ray head pod
+        - name: ray-head
+          imagePullPolicy: Always
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","ray stop"]
+          resources:
+            limits:
+              cpu: "{{ .Values.worker.head.resources.limits.cpu }}"
+              memory: "{{ .Values.worker.head.resources.limits.memory }}"
+            requests:
+              cpu: "{{ .Values.worker.head.resources.requests.cpu }}"
+              memory: "{{ .Values.worker.head.resources.requests.memory }}"
+          volumeMounts:
+            - name: models
+              mountPath: /mnt
+        volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: models-claim
+            readOnly: true
+  workerGroupSpecs:
+  # the pod replicas in this group typed worker
+  - replicas: {{ .Values.worker.worker-group.replicas }}
+    minReplicas: {{ .Values.worker.worker-group.minReplicas }}
+    maxReplicas: {{ .Values.worker.worker-group.maxReplicas }}
+    # logical group name, for this called small-group, also can be functional
+    groupName: ray-worker-group
+    rayStartParams:
+      num-gpus: "{{ .Values.worker.worker-group.rayStartParams.num-gpus }}"
+    #pod template
+    template:
+      metadata:
+        labels:
+          key: value
+        # annotations for pod
+        annotations:
+          key: value
+      spec:
+        nodeSelector:
+          morpheus-type: "gpu-adv"
+        containers:
+        - name: machine-learning # must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc'
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","ray stop"]
+          resources:
+            limits:
+              cpu: "{{ .Values.worker.worker-group.resources.limits.cpu }}"
+              memory: "{{ .Values.worker.worker-group.resources.limits.memory }}"
+              nvidia.com/gpu: "{{ .Values.worker.worker-group.resources.limits.gpu }}"
+            requests:
+              cpu: "{{ .Values.worker.worker-group.resources.requests.cpu }}"
+              memory: "{{ .Values.worker.worker-group.resources.requests.memory }}"
+              nvidia.com/gpu: "{{ .Values.worker.worker-group.resources.requests.gpu }}"
+          volumeMounts:
+            - name: models
+              mountPath: /mnt
+        volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: models-claim
+            readOnly: true

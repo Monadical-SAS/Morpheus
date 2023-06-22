@@ -183,6 +183,75 @@ module "eks" {
         "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
       ]
     }
+
+    self-managed-gpu-adv = {
+      name            = var.self_managed_gpu_adv_node_group_name
+      use_name_prefix = true
+
+      key_name = aws_key_pair.cluster_key.key_name
+
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=morpheus-type=gpu-adv'"
+
+      post_bootstrap_user_data = <<-EOT
+        MODEL_DISK="sdh"
+        MOUNT_POINT="/opt/data"
+        DEPLOYMENT_BUCKET="${local.s3_deployment_bucket_name}"
+        CLOUDWATCH_ETC_FOLDER="/etc/morpheus"
+        CLOUDWATCH_ETC_FILENAME="morpheus-cloudwatch-agent-config.json"
+        mkdir "$MOUNT_POINT"
+        DEV_DIR=$(ls /dev)
+        mkfs -t xfs "/dev/$MODEL_DISK"
+        DISK_UUID=$(blkid "/dev/$MODEL_DISK" -s UUID -o value)
+        echo "UUID=$DISK_UUID  $MOUNT_POINT  xfs  defaults,nofail  0  2" >> /etc/fstab
+        mount "$MOUNT_POINT"
+        aws s3 cp s3://$DEPLOYMENT_BUCKET/deploy-models.sh /bin/
+        chmod +x /bin/deploy-models.sh
+        sudo deploy-models.sh
+        echo "PATH=/usr/bin:/bin:/usr/local/bin" > /etc/cron.d/morpheus
+        echo "0 * * * * root deploy-models.sh" >> /etc/cron.d/morpheus
+        mkdir -p "$CLOUDWATCH_ETC_FOLDER"
+        aws s3 cp s3://$DEPLOYMENT_BUCKET/$CLOUDWATCH_ETC_FILENAME "$CLOUDWATCH_ETC_FOLDER"
+        sudo yum install -y amazon-cloudwatch-agent
+        ./opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:$CLOUDWATCH_ETC_FOLDER/$CLOUDWATCH_ETC_FILENAME
+      EOT
+
+      block_device_mappings = {
+        xvda = {
+          device_name = var.self_managed_gpu_adv_nodes_device_name
+          ebs = {
+            volume_size           = var.self_managed_gpu_adv_nodes_device_size
+            volume_type           = "gp3"
+            iops                  = 3000
+            delete_on_termination = true
+          }
+        }
+      }
+
+      subnet_ids = module.vpc.private_subnets
+
+      min_size     = var.self_managed_gpu_adv_node_min_size
+      max_size     = var.self_managed_gpu_adv_node_max_size
+      desired_size = var.self_managed_gpu_adv_node_desired_size
+      ami_id       = var.self_managed_gpu_adv_nodes_ami
+
+      instance_type = var.self_managed_gpu_adv_nodes_instance_type
+
+      metadata_options = {
+        http_endpoint               = "enabled"
+        http_tokens                 = "required"
+        http_put_response_hop_limit = 2
+        instance_metadata_tags      = "disabled"
+      }
+
+      create_iam_role          = true
+      iam_role_name            = local.self_managed_gpu_adv_iam_role_name
+      iam_role_use_name_prefix = false
+      iam_role_description     = "Self managed node group gpu advanced"
+      iam_role_additional_policies = [
+        "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
+        "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+      ]
+    }
   }
 }
 

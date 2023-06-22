@@ -48,6 +48,25 @@ variable "self_managed_gpu_node_desired_size" {
   default = 1
 }
 
+variable "self_managed_gpu_adv_nodes_device_size" {
+}
+
+variable "self_managed_gpu_adv_nodes_instance_type" {
+  default = "g4dn.xlarge"
+}
+
+variable "self_managed_gpu_adv_node_min_size" {
+  default = 0
+}
+
+variable "self_managed_gpu_adv_node_max_size" {
+  default = 2
+}
+
+variable "self_managed_gpu_adv_node_desired_size" {
+  default = 1
+}
+
 variable "scale_up_queue_threshold" {
   default = "4"
 }

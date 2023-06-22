@@ -7,6 +7,7 @@ locals {
   vpc_name                       = "${var.vpc_name}-${random_integer.suffix.result}"
   self_managed_web_iam_role_name = "${var.self_managed_web_iam_role_name}-${random_integer.suffix.result}"
   self_managed_gpu_iam_role_name = "${var.self_managed_gpu_iam_role_name}-${random_integer.suffix.result}"
+  self_managed_gpu_adv_iam_role_name = "${var.self_managed_gpu_adv_iam_role_name}-${random_integer.suffix.result}"
   s3_deployment_bucket_name      = "${var.s3_deployment_bucket_name}-${var.env}-${random_integer.suffix.result}"
   s3_models_bucket_name          = "${var.s3_models_bucket_name}-${var.env}-${random_integer.suffix.result}"
   s3_results_bucket_name         = "${var.s3_results_bucket_name}-${var.env}-${random_integer.suffix.result}"

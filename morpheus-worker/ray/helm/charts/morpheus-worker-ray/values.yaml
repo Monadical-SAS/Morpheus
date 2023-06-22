@@ -1,0 +1,40 @@
+# Default values for Morpheus.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: monadicalsas/morpheus
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "worker-ray-latest"
+
+worker:
+  ray-version: 2.2.0
+  head:
+    resources:
+      limits:
+        cpu: "2"
+        memory: "6G"
+      requests:
+        cpu: "1"
+        memory: "4G"
+  worker-group:
+    replicas: 1
+    minReplicas: 1
+    maxReplicas: 1
+    rayStartParams:
+      num-gpus: "1"
+    resources:
+      limits:
+        cpu: "4"
+        memory: "8G"
+        gpu: 1
+      requests:
+        cpu: "2"
+        memory: "6G"
+        gpu: 1
+
+imagePullSecrets:
+  - name: regcred
