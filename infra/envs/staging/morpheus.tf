@@ -8,6 +8,11 @@ module "morpheus_cluster" {
   self_managed_gpu_node_min_size = var.self_managed_gpu_node_min_size
   self_managed_gpu_node_max_size = var.self_managed_gpu_node_max_size
   self_managed_gpu_nodes_device_size = var.self_managed_gpu_nodes_device_size
+  self_managed_gpu_adv_nodes_instance_type = var.self_managed_gpu_adv_nodes_instance_type
+  self_managed_gpu_adv_node_min_size = var.self_managed_gpu_adv_node_min_size
+  self_managed_gpu_adv_node_max_size = var.self_managed_gpu_adv_node_max_size
+  self_managed_gpu_adv_nodes_device_size = var.self_managed_gpu_adv_nodes_device_size
+  self_managed_gpu_adv_node_desired_size = var.self_managed_gpu_adv_node_desired_size
   scale_up_queue_threshold = var.scale_up_queue_threshold
   scale_up_period = var.scale_up_period
   scale_up_evaluation_period = var.scale_up_evaluation_period
