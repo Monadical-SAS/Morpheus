@@ -11,7 +11,7 @@ image:
   tag: "worker-ray-latest"
 
 worker:
-  ray-version: 2.2.0
+  rayVersion: 2.2.0
   head:
     resources:
       limits:
@@ -20,7 +20,7 @@ worker:
       requests:
         cpu: "1"
         memory: "4G"
-  worker-group:
+  workerGroup:
     replicas: 1
     minReplicas: 1
     maxReplicas: 1
