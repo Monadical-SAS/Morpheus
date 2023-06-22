@@ -5,7 +5,7 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: raycluster
 spec:
-  rayVersion: {{ .Values.worker.ray-version }}
+  rayVersion: {{ .Values.worker.rayVersion }}
   headGroupSpec:
     rayStartParams:
       dashboard-host: '0.0.0.0'
