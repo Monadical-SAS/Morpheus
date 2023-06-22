@@ -28,6 +28,7 @@ spec:
           operator: In
           values:
           - gpu
+          - gpu-adv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
