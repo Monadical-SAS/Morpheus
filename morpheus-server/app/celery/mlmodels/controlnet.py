@@ -50,7 +50,7 @@ def generate_seg_image(original_image):
     with torch.no_grad():
         outputs = image_segmentor(pixel_values)
 
-    seg = image_processor.post_process_semantic_segmentation(outputs, targenerate_sizes=[original_image.size[::-1]])[0]
+    seg = image_processor.post_process_semantic_segmentation(outputs, target_sizes=[original_image.size[::-1]])[0]
     color_seg = np.zeros((seg.shape[0], seg.shape[1], 3), dtype=np.uint8)  # height, width, 3
     palette = np.array(ade_palette())
 
