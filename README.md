@@ -659,3 +659,20 @@ git merge upstream/main
 git push origin main
 ```
 
+### Commit style
+
+To enhance collaboration, we have adopted the conventional commit specification to facilitate the creation of an "explicit commit history." This practice not only assists in achieving a clearer understanding of changes made but also streamlines the release process for Morpheus versions.
+
+Some examples:
+
+* feat: Implement user authentication feature
+* fix: Resolve issue with data not saving correctly
+* chore: Update dependencies to latest versions
+* docs: Add documentation for API endpoints
+* refactor: Simplify code structure for improved readability
+* test: Add unit tests for new validation logic
+* style: Format code according to style guidelines
+* perf: Optimize database queries for faster performance
+
+For additional information see: [conventional commits](https://www.conventionalcommits.org/)
+
