@@ -1,3 +1,8 @@
 {
-  "branches": ["afreydev/semantic-release-impl"]
+  "branches": ["afreydev/semantic-release-impl"],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/git"
+  ]
 }
