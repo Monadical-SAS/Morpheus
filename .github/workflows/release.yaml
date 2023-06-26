@@ -25,4 +25,8 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GH_TOKEN }}
-        run: npx semantic-release
+        run: npx semantic-release -d | tee version.txt
+      - name: Show version
+        run: |
+          VERSION=$(cat version.txt)
+          echo $VERSION
