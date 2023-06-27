@@ -30,16 +30,24 @@ jobs:
         run: |
           VERSION=$(cat version.txt)
           echo $VERSION
+
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "RELEASE_BRANCH=release-$VERSION" >> $GITHUB_ENV
       - name: Clean repo
         if: ${{ steps.set_var.outputs.VERSION != 'na' }}
         run: |
           git checkout -- .
           git clean -df
-      - name: Push to master empty commit
+      - name: Configure git
         if: ${{ steps.set_var.outputs.VERSION != 'na' }}
         run: |
           git config --local user.email "ci@monadical.com"
           git config --local user.name "CI monadical.com"
-          git checkout -b release-$VERSION
-          git push origin release-$VERSION
+      - name: Checkout release branch
+        run: |
+          git checkout -b release-$RELEASE_BRANCH
+      - name: Push changes to repo
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.SEMANTIC_RELEASE_GH_TOKEN }}
+          branch: ${{ steps.set_var.outputs.RELEASE_BRANCH }}
