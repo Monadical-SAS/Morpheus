@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Install
-        run: npm install @semantic-release/changelog @semantic-release/git
+        run: npm install conventional-recommended-bump
       #- name: Release
       #  env:
       #    GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GH_TOKEN }}
