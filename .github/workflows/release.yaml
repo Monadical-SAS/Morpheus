@@ -22,15 +22,13 @@ jobs:
           node-version: "lts/*"
       - name: Install dependencies
         run: npm clean-install
-      - name: Install
-        run: npm install conventional-recommended-bump
-      #- name: Release
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GH_TOKEN }}
-      #  run: npx semantic-release -d | tee version.txt
-      #- name: Show version
-      #  run: |
-      #    VERSION=$(cat version.txt)
-      #    echo $VERSION
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GH_TOKEN }}
+        run: npx semantic-release -d
+      - name: Show version
+        run: |
+          VERSION=$(cat version.txt)
+          echo $VERSION
       - name: Get release
         run: node --experimental-modules release.mjs
