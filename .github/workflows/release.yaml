@@ -22,11 +22,13 @@ jobs:
           node-version: "lts/*"
       - name: Install dependencies
         run: npm clean-install
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GH_TOKEN }}
-        run: npx semantic-release -d | tee version.txt
-      - name: Show version
-        run: |
-          VERSION=$(cat version.txt)
-          echo $VERSION
+      #- name: Release
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GH_TOKEN }}
+      #  run: npx semantic-release -d | tee version.txt
+      #- name: Show version
+      #  run: |
+      #    VERSION=$(cat version.txt)
+      #    echo $VERSION
+      - name: Get release
+        run: node monorepo/getNextVersion.js
