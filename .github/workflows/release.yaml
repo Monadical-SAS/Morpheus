@@ -33,4 +33,4 @@ jobs:
       #    VERSION=$(cat version.txt)
       #    echo $VERSION
       - name: Get release
-        run: node release.js
+        run: node --experimental-modules release.mjs
