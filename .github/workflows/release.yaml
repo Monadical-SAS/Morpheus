@@ -22,6 +22,8 @@ jobs:
           node-version: "lts/*"
       - name: Install dependencies
         run: npm clean-install
+      - name: Install
+        run: npm install @semantic-release/changelog @semantic-release/git
       #- name: Release
       #  env:
       #    GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GH_TOKEN }}
@@ -31,4 +33,4 @@ jobs:
       #    VERSION=$(cat version.txt)
       #    echo $VERSION
       - name: Get release
-        run: node monorepo/getNextVersion.js
+        run: node getNextVersion.js
