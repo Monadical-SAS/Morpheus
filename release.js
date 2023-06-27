@@ -1,17 +1,25 @@
-const semanticRelease = require('semantic-release');
+const { getRecommendation } = require('conventional-recommended-bump');
 
 const getNextVersion = async () => {
   const options = {
-    // Configuration options for semantic-release
-    // Add your specific configuration here if needed
+    preset: 'angular', // The conventional commits preset you are using
+    whatBump: (commits) => {
+      return getRecommendation(commits);
+    },
   };
 
-  const result = await semanticRelease(options);
+  try {
+    const recommendation = await getRecommendation(options);
+    const { releaseType } = recommendation;
 
-  if (result.nextRelease) {
-    console.log(`Next version: ${result.nextRelease.version}`);
-  } else {
-    console.log('No release version found.');
+    if (releaseType) {
+      console.log(`Next version: ${releaseType}`);
+    } else {
+      console.log('No release version found.');
+    }
+  } catch (error) {
+    console.error('Failed to get the next version:', error);
+    process.exit(1);
   }
 };
 
