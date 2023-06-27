@@ -39,5 +39,7 @@ jobs:
       - name: Push to master empty commit
         if: ${{ steps.set_var.outputs.VERSION != 'na' }}
         run: |
+          git config --local user.email "ci@monadical.com"
+          git config --local user.name "CI monadical.com"
           git checkout -b release-$VERSION
           git push origin release-$VERSION
