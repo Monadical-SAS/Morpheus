@@ -33,4 +33,4 @@ jobs:
       #    VERSION=$(cat version.txt)
       #    echo $VERSION
       - name: Get release
-        run: node getNextVersion.js
+        run: node release.js
