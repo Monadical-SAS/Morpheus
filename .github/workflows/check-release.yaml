@@ -1,0 +1,43 @@
+name: Release
+on:
+  push:
+    branches:
+      - afreydev/semantic-release-impl
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Create version file
+        run: |
+          echo "na" > version.txt
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GH_TOKEN }}
+        run: npx semantic-release -d
+      - name: Show version
+        id: set_var
+        run: |
+          VERSION=$(cat version.txt)
+          echo $VERSION
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Clean repo
+        if: ${{ steps.set_var.outputs.VERSION != 'na' }}
+        run: |
+          git checkout -- .
+          git clean -df
+      - name: Push to master empty commit
+        if: ${{ steps.set_var.outputs.VERSION != 'na' }}
+        run: |
+          git checkout -b release-$VERSION
+          git push origin release-$VERSION
