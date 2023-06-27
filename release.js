@@ -1,5 +1,8 @@
-const { getNextVersion } = require('semantic-release/lib/get-next-version');
-const { getConfig } = require('semantic-release/lib/get-config');
+import { getNextVersion } from 'semantic-release/lib/get-next-version';
+import { getConfig } from 'semantic-release/lib/get-config';
+
+// Rest of the code...
+
 
 async function getNextReleaseVersion() {
   const config = await getConfig();
