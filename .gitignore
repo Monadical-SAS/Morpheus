@@ -5,3 +5,4 @@ secrets.env
 etc/cloudflare/**/*.yml
 etc/cloudflare/**/*.json
 *.pyc
+node_modules
