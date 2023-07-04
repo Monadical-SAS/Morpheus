@@ -11,7 +11,7 @@ collaborative:
   replicas: 1
 
 image:
-  repository: monadicalsas/morpheus
+  repository: monadicalsas/morpheus-collaborative
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"

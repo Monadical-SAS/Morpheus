@@ -78,4 +78,4 @@ jobs:
           build-args: |
             BUILD_ENV=copy
           push: true
-          tags: monadicalsas/morpheus:client-${{ github.run_id }}
+          tags: monadicalsas/morpheus-client:${{ github.run_id }}

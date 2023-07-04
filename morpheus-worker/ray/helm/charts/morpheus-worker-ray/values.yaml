@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: monadicalsas/morpheus
+  repository: monadicalsas/morpheus-worker
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "worker-ray-latest"
