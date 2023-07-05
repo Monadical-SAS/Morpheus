@@ -87,13 +87,13 @@ class StableDiffusionAbstract(ABC):
             if enable
             else model.disable_xformers_memory_efficient_attention()
         )
-    
+
     @staticmethod
     def add_lora_to_model(model, lora_path):
         download_dir = lora_ti_utils.create_lora_ti_folder()
         if "civitai.com" in lora_path:
             lora_info = lora_ti_utils.get_civitai_model_info(lora_path)
-            lora_filename = lora_ti_utils.download_from_civitai(lora_info['download_link'], download_dir)
+            lora_filename = lora_ti_utils.download_from_civitai(lora_info["download_link"], download_dir)
             model.load_lora_weights(lora_filename)
         else:
             model.load_lora_weights(lora_path, cache_dir=download_dir)
@@ -105,7 +105,7 @@ class StableDiffusionAbstract(ABC):
             download_dir = lora_ti_utils.create_lora_ti_folder()
             if "civitai.com" in embedding_path:
                 embedding_info = lora_ti_utils.get_civitai_model_info(embedding_path)
-                embedding_filename = lora_ti_utils.download_from_civitai(embedding_info['download_link'], download_dir)
+                embedding_filename = lora_ti_utils.download_from_civitai(embedding_info["download_link"], download_dir)
                 if embedding_info["trigger_words"] is not None:
                     model.load_textual_inversion(embedding_filename, token=embedding_info["trigger_words"])
                 else:
@@ -115,15 +115,10 @@ class StableDiffusionAbstract(ABC):
             lora_ti_utils.delete_lora_ti_folder(download_dir)
         except ValueError:
             logger.info("Embedding is already loaded")
-        
+
 
 class StableDiffusionBaseClassic(StableDiffusionAbstract):
-    def __init__(
-        self,
-        model_name: str,
-        sampler: str = "PNDMScheduler",
-        pipeline_name: str = "StableDiffusionPipeline"
-    ):
+    def __init__(self, model_name: str, sampler: str = "PNDMScheduler", pipeline_name: str = "StableDiffusionPipeline"):
         super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
 
         classic_pipeline = StableDiffusionPipeline.from_pretrained(
@@ -215,7 +210,7 @@ class StableDiffusionText2Image(StableDiffusionBaseClassic):
         logger.info("generating image in Text2Image pipeline")
         prompt: Prompt = kwargs.get("prompt")
         generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
-        attention_params={}
+        attention_params = {}
 
         # LoRA
         if prompt.use_lora:
@@ -223,10 +218,10 @@ class StableDiffusionText2Image(StableDiffusionBaseClassic):
             self.loaded_lora = True
         else:
             prompt.lora_scale = 0.0
-        
+
         # Use scale param only if a lora has been loaded
         if self.loaded_lora:
-            attention_params['scale'] = prompt.lora_scale
+            attention_params["scale"] = prompt.lora_scale
 
         # Textual Inversion Embeddings
         if prompt.use_embedding:
@@ -241,7 +236,7 @@ class StableDiffusionText2Image(StableDiffusionBaseClassic):
             generator=generator,
             width=prompt.width,
             height=prompt.height,
-            cross_attention_kwargs=attention_params
+            cross_attention_kwargs=attention_params,
         ).images
 
         if len(images) == 0:
@@ -266,7 +261,7 @@ class StableDiffusionImage2Image(StableDiffusionBaseClassic):
         prompt: Prompt = kwargs.get("prompt")
         image = kwargs.get("image")
         generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
-        attention_params={}
+        attention_params = {}
 
         # LoRA
         if prompt.use_lora:
@@ -274,11 +269,11 @@ class StableDiffusionImage2Image(StableDiffusionBaseClassic):
             self.loaded_lora = True
         else:
             prompt.lora_scale = 0.0
-        
+
         # Use scale param only if a lora has been loaded
         if self.loaded_lora:
-            attention_params['scale'] = prompt.lora_scale
-        
+            attention_params["scale"] = prompt.lora_scale
+
         # Textual Inversion Embeddings
         if prompt.use_embedding:
             self.add_embedding_to_model(self.model, prompt.embedding_path)
@@ -292,7 +287,7 @@ class StableDiffusionImage2Image(StableDiffusionBaseClassic):
             guidance_scale=prompt.guidance_scale,
             num_images_per_prompt=prompt.num_images_per_prompt,
             strength=prompt.strength,
-            cross_attention_kwargs=attention_params
+            cross_attention_kwargs=attention_params,
         ).images
 
         if len(images) == 0:
@@ -323,20 +318,20 @@ class StableDiffusionControlNet(StableDiffusionBaseControlNet):
         prompt: PromptControlNet = kwargs.get("prompt")
         image = kwargs.get("image")
         generator = torch.Generator(device="cpu").manual_seed(prompt.generator)
-        attention_params={}
+        attention_params = {}
 
         # LoRA
         if prompt.use_lora:
             # At the moment, civitai lora with cpu offload is not supported by Huggingface
             # https://github.com/huggingface/diffusers/issues/3958
-            if not "civitai.com" in prompt.lora_path:
+            if "civitai.com" not in prompt.lora_path:
                 self.add_lora_to_model(self.model, prompt.lora_path)
                 self.loaded_lora = True
         else:
             prompt.lora_scale = 0.0
 
         if self.loaded_lora:
-            attention_params['scale'] = prompt.lora_scale
+            attention_params["scale"] = prompt.lora_scale
 
         # Textual Inversion Embeddings
         if prompt.use_embedding:
@@ -353,7 +348,7 @@ class StableDiffusionControlNet(StableDiffusionBaseControlNet):
             num_inference_steps=prompt.num_inference_steps,
             guidance_scale=prompt.guidance_scale,
             num_images_per_prompt=prompt.num_images_per_prompt,
-            cross_attention_kwargs=attention_params
+            cross_attention_kwargs=attention_params,
         ).images
 
         if len(images) == 0:

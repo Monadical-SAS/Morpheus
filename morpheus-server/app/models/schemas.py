@@ -150,7 +150,7 @@ class Prompt(BaseModel):
                 "lora_path": "",
                 "lora_scale": 1.0,
                 "use_embedding": False,
-                "embedding_path": ""
+                "embedding_path": "",
             }
         }
 
