@@ -40,7 +40,7 @@ jobs:
               \"containers\": [
                 {
                   \"name\": \"morpheus\",
-                  \"image\": \"monadicalsas/morpheus:${{ github.run_id }}\",
+                  \"image\": \"monadicalsas/morpheus-api:${{ github.run_id }}\",
                   \"imagePullPolicy\": \"Always\",
                   \"command\": [
                     \"alembic\", \"upgrade\", \"head\"
