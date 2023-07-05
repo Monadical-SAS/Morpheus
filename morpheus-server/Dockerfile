@@ -1,5 +1,5 @@
 ARG BUILD_ENV="no_copy"
-FROM nvidia/cuda:11.7.0-base-ubuntu22.04 as base
+FROM nvidia/cuda:11.7.1-base-ubuntu22.04 as base
 
 # Configuration defaults
 ENV API_ROOT "/opt/api"
