@@ -8,7 +8,6 @@ from diffusers import (
     StableDiffusionPipeline,
     StableDiffusionUpscalePipeline,
 )
-from diffusers.models.attention_processor import AttnProcessor
 from loguru import logger
 
 from app.celery.mlmodels.controlnet import preprocessing_image
