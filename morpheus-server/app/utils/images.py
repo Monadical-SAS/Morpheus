@@ -11,6 +11,7 @@ def remove_alpha_channel(img: Image):
 
 
 def from_image_to_bytes(img):
+    print("Received image bytes")
     img_byte_arr = BytesIO()
     img.save(img_byte_arr, format="png")
     img_byte_arr = img_byte_arr.getvalue()
@@ -32,11 +33,11 @@ def get_image_size(image: Image):
 def resize_image_aspect_ratio(img, width):
     aspect_ratio = img.width / img.height
     height = int(width / aspect_ratio)
-    return img.resize((width, height), Image.ANTIALIAS)
+    return img.resize((width, height), Image.LANCZOS)
 
 
 def resize_image_fixed_size(img, width, height):
-    return img.resize((width, height), Image.ANTIALIAS)
+    return img.resize((width, height), Image.LANCZOS)
 
 
 def resize_image(image: Image, width: int, height: int):
