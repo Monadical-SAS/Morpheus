@@ -36,7 +36,6 @@ jobs:
           --data '{"purge_everything":true}' || echo "Failed to clear caches"
       -
         name: Login to DockerHub
-        if: ${{ inputs.called == 'true' }}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
