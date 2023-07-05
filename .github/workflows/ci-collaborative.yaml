@@ -47,4 +47,4 @@ jobs:
           build-args: |
             BUILD_ENV=copy
           push: true
-          tags: monadicalsas/morpheus:collab-${{ github.run_id }}
+          tags: monadicalsas/morpheus-collaborative:${{ github.run_id }}

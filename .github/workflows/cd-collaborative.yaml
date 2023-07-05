@@ -30,4 +30,16 @@ jobs:
       - name: Deploy using helm
         run: |
           helm upgrade --timeout 15m0s --install --atomic morpheus-collaborative ./morpheus-collaborative/helm/charts/morpheus-collaborative/ \
-            --set image.tag=collab-${{ github.run_id }} --set domain=${{secrets.FRONTEND_DOMAIN}}
+            --set image.tag=${{ github.run_id }} --set domain=${{secrets.FRONTEND_DOMAIN}}
+      -
+        name: Login to DockerHub
+        if: ${{ inputs.called == 'true' }}
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Push Docker Image
+        run: |
+          docker pull monadicalsas/morpheus-collaborative:${{ github.run_id }}
+          docker tag monadicalsas/morpheus-collaborative:${{ github.run_id }} monadicalsas/morpheus-collaborative:latest
+          docker push monadicalsas/morpheus-collaborative:latest

@@ -45,4 +45,4 @@ jobs:
         with:
           context: "{{defaultContext}}:morpheus-worker/ray"
           push: true
-          tags: monadicalsas/morpheus:worker-ray-${{ github.run_id }}
+          tags: monadicalsas/morpheus-worker:${{ github.run_id }}
