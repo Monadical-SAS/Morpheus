@@ -4,11 +4,10 @@ from functools import wraps
 
 from loguru import logger
 
-from app.config import get_settings
-from app.repository.files.s3_files_repository import S3ImagesRepository
+from app.config import get_file_handlers, get_settings
 
 settings = get_settings()
-files_repository = S3ImagesRepository()
+files_repository = get_file_handlers()
 
 
 def simulate_generation():

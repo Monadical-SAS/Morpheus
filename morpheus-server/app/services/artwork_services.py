@@ -6,16 +6,16 @@ from sqlalchemy.orm import Session
 from app.models.schemas import ArtWork, ArtWorkCreate
 from app.repository.artwork_repository import ArtWorkRepository
 from app.repository.collection_repository import CollectionRepository
-from app.repository.files.s3_files_repository import S3ImagesRepository
+from app.repository.files.files_interface import FileRepositoryInterface
 from app.repository.prompt_repository import PromptRepository
 from app.repository.user_repository import UserRepository
 
 
 class ArtWorkService:
-    def __init__(self):
+    def __init__(self, files_repository: FileRepositoryInterface):
         self.artwork_repository = ArtWorkRepository()
         self.user_repository = UserRepository()
-        self.files_repository = S3ImagesRepository()
+        self.files_repository = files_repository
         self.collection_repository = CollectionRepository()
         self.prompt_repository = PromptRepository()
 
