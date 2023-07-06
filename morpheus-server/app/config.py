@@ -1,3 +1,4 @@
+import importlib
 from enum import Enum
 from functools import lru_cache
 
@@ -25,6 +26,7 @@ class Settings(BaseSettings):
     firebase_client_email: str
     firebase_web_api_key: str
 
+    bucket_type: str = "S3"
     images_bucket: str
     images_temp_bucket: str
     models_bucket: str
@@ -81,3 +83,16 @@ def read_available_samplers(file: str):
 
 
 samplers = read_available_samplers("config/sd-schedulers.yaml")
+
+file_handlers = {"S3": {"module": "app.repositories.files.s3_files_repository", "handler": "S3ImagesRepository"}}
+
+
+@lru_cache()
+def get_file_handlers():
+    settings = get_settings()
+    try:
+        module_import = importlib.import_module(file_handlers[settings.bucket_type]["module"])
+        file_handler = getattr(module_import, file_handlers[settings.bucket_type]["handler"])
+        return file_handler()
+    except Exception:
+        return None

@@ -7,9 +7,11 @@ from app.database import get_db
 from app.integrations.firebase import get_user
 from app.models.schemas import Response
 from app.services.files_services import FilesService
+from app.repository.files.s3_files_repository import S3ImagesRepository
 
 router = APIRouter()
-file_service = FilesService()
+FilesHandler = S3ImagesRepository()
+file_service = FilesService(files_repository=FilesHandler)
 
 
 @router.post("/upload", response_model=Union[Response, str])

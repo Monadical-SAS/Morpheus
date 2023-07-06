@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.models.schemas import Collection, CollectionCreate
 from app.repository.collection_repository import CollectionRepository
-from app.repository.files_repository import FilesRepository
+from app.repository.files.s3_files_repository import S3ImagesRepository
 from app.repository.user_repository import UserRepository
 
 
@@ -13,7 +13,7 @@ class CollectionService:
     def __init__(self):
         self.collection_repository = CollectionRepository()
         self.user_repository = UserRepository()
-        self.files_repository = FilesRepository()
+        self.files_repository = S3ImagesRepository()
 
     async def add_collection(self, *, db: Session, collection: CollectionCreate, email: str) -> Union[Collection, None]:
         db_user = self.user_repository.get_user_by_email(db=db, email=email)

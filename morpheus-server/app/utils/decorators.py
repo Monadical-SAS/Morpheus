@@ -5,14 +5,14 @@ from functools import wraps
 from loguru import logger
 
 from app.config import get_settings
-from app.repository.files_repository import FilesRepository
+from app.repository.files.s3_files_repository import S3ImagesRepository
 
 settings = get_settings()
-files_repository = FilesRepository()
+files_repository = S3ImagesRepository()
 
 
 def simulate_generation():
-    input_images = files_repository.get_last_10_images()
+    input_images = files_repository.get_files(max_keys=10)
     random_number = random.randint(1, settings.max_num_images)
     final_images = []
     for i in range(random_number):
