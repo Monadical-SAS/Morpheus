@@ -1,5 +1,5 @@
 accelerate==0.14.0
-diffusers==0.15.1
+diffusers==0.17.1
 matplotlib>=3.5.3,<=3.7.1
 numpy>=1.21.6,<=1.23.5
 Pillow==9.3.0
