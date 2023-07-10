@@ -25,11 +25,10 @@ RUN pip3 install virtualenv && \
     virtualenv "/opt/$VENV_NAME"
 ENV PATH="/opt/$VENV_NAME/bin:${PATH}"
 
-# Install & use pipenv
-RUN pip install --upgrade pip pipenv
-COPY Pipfile.lock .
-RUN pip install torch==1.13.1 && jq -r '.default,.develop | to_entries[] | .key + .value.version' "./Pipfile.lock" | \
-    pip install --no-cache-dir -r /dev/stdin && rm ./Pipfile.lock
+# Install dependencies
+RUN pip install --upgrade pip
+COPY requirements.txt .
+RUN pip install torch==1.13.1 && pip install -r requirements.txt
 
 # Create api user
 RUN userdel "$API_USER" && addgroup --system --gid "$API_USER_ID" "$API_USER" && \
