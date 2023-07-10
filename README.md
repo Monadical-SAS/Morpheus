@@ -114,13 +114,21 @@ locally:
 # Move to the morpheus-server directory
 cd morpheus-server
 
-# Install the dependencies
-# If you encounter a problem with torch try installing torch first
-# pipenv install torch && pipenv install
-pipenv install
+# Check your python version
+python --version
+
+# If you have python 3.10 or higher installed, run the following commands
+# create a virtual environmen.
+python3 -m venv venv
 
 # Activate the virtual environment
-pipenv shell
+source venv/bin/activate
+
+# Install the dependencies
+pip install -r requirements.txt
+
+# If you encounter a problem with torch try installing torch first
+pip install torch && pip install -r requirements.txt
 
 # And then run the celery locally in other terminals or in separate tabs within a terminal
 
@@ -263,37 +271,17 @@ PGADMIN_DEFAULT_PASSWORD=password
 
 ### Adding a new dependency to the backend
 
-```shell
-# Add a new dependency to the requirements.txt file
-docker-compose run --rm api pipenv install <dependency>
+1. Add the new dependency directly to the respective requirements.txt file
+2. Update the docker image
+   ```shell
+    docker-compose build api
+   ```
+3. Run the image
+   ```shell
+    docker-compose up
+   ```
 
-# Update the lock file
-docker-compose run --rm api pipenv lock 
-
-# Update the docker image
-docker-compose build api
-
-# Run the image
-docker-compose up
-```
-
-Or in case you are using the pipenv command directly, you can update the dependencies as follows (in the
-morpheus-server directory):
-
-```shell
-# Add a new dependency
-pipenv install <dependency>
-
-# Update the lock file
-pipenv lock
-
-# Update the requirements.txt
-jq -r '.default | to_entries[] | .key + .value.version' Pipfile.lock > requirements.txt
-
-```
-
-**Note:** This project doesn't use requirements.txt to manage dependencies. requirements.lint.txt is only used for using
-cache in ci workflow linting job.
+**Note:** This project uses requirements.lint.txt only for caching in ci workflow linting job.
 
 ### Adding a new dependency to the frontend
 

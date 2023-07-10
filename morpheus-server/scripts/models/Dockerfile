@@ -25,7 +25,7 @@ RUN dir -s
 # Install & use pipenv
 RUN pip install --upgrade pip pipenv
 COPY Pipfile.lock .
-RUN pip install torch==1.13.1 && jq -r '.default,.develop | to_entries[] | .key + .value.version' "./Pipfile.lock" | \
-    pip install --no-cache-dir -r /dev/stdin && rm ./Pipfile.lock
+COPY requirements.txt .
+RUN pip install torch==1.13.1 && pip install -r requirements.txt
 COPY . .
 ENTRYPOINT ["python", "scripts/models/cli.py"]
