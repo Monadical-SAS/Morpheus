@@ -32,11 +32,11 @@ def get_image_size(image: Image):
 def resize_image_aspect_ratio(img, width):
     aspect_ratio = img.width / img.height
     height = int(width / aspect_ratio)
-    return img.resize((width, height), Image.ANTIALIAS)
+    return img.resize((width, height), Image.LANCZOS)
 
 
 def resize_image_fixed_size(img, width, height):
-    return img.resize((width, height), Image.ANTIALIAS)
+    return img.resize((width, height), Image.LANCZOS)
 
 
 def resize_image(image: Image, width: int, height: int):
