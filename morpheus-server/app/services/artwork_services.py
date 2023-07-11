@@ -6,16 +6,16 @@ from sqlalchemy.orm import Session
 from app.models.schemas import ArtWork, ArtWorkCreate
 from app.repository.artwork_repository import ArtWorkRepository
 from app.repository.collection_repository import CollectionRepository
-from app.repository.files_repository import FilesRepository
+from app.repository.files.files_interface import FileRepositoryInterface
 from app.repository.prompt_repository import PromptRepository
 from app.repository.user_repository import UserRepository
 
 
 class ArtWorkService:
-    def __init__(self):
+    def __init__(self, files_repository: FileRepositoryInterface):
         self.artwork_repository = ArtWorkRepository()
         self.user_repository = UserRepository()
-        self.files_repository = FilesRepository()
+        self.files_repository = files_repository
         self.collection_repository = CollectionRepository()
         self.prompt_repository = PromptRepository()
 
@@ -41,7 +41,7 @@ class ArtWorkService:
         if not prompt_db:
             raise ValueError("Error creating prompt")
 
-        new_image = self.files_repository.move_image_to_folder(s3_file_url=artwork.image, target_folder=email)
+        new_image = self.files_repository.move_file(source=artwork.image, target=email)
         artwork.image = new_image
         artwork_db = self.artwork_repository.create_artwork(db=db, artwork=artwork, prompt=prompt_db)
         if not artwork_db:

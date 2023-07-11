@@ -1,17 +1,19 @@
-from typing import Union, List
+from typing import List, Union
 from uuid import UUID
 
 from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from app.config import get_file_handlers
 from app.database import get_db
 from app.integrations.firebase import get_user
-from app.models.schemas import ArtWork, Response, ArtWorkCreate
+from app.models.schemas import ArtWork, ArtWorkCreate, Response
 from app.services.artwork_services import ArtWorkService
 
 router = APIRouter()
-artwork_service = ArtWorkService()
+files_repository = get_file_handlers()
+artwork_service = ArtWorkService(files_repository=files_repository)
 
 
 @router.post("/multiple", response_model=Union[Response, List[ArtWork]])

@@ -1,17 +1,19 @@
-from typing import Union, List
+from typing import List, Union
 from uuid import UUID
 
 from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from app.config import get_file_handlers
 from app.database import get_db
 from app.integrations.firebase import get_user
-from app.models.schemas import Collection, Response, CollectionCreate
+from app.models.schemas import Collection, CollectionCreate, Response
 from app.services.collection_services import CollectionService
 
 router = APIRouter()
-collection_service = CollectionService()
+files_repository = get_file_handlers()
+collection_service = CollectionService(files_repository=files_repository)
 
 
 @router.post("", response_model=Union[Response, Collection])

@@ -6,7 +6,7 @@ from loguru import logger
 from torch.cuda import OutOfMemoryError
 
 from app.celery.workers.stable_diffusion_app import app
-from app.config import get_settings
+from app.config import get_settings, get_file_handlers
 from app.error.error import ModelLoadError, OutOfMemoryGPUError
 from app.models.schemas import Prompt, PromptControlNet
 from app.services.files_services import FilesService
@@ -15,7 +15,8 @@ from app.utils.decorators import (
     run_as_per_environment,
 )
 
-file_service = FilesService()
+files_repository = get_file_handlers()
+file_service = FilesService(files_repository=files_repository)
 settings = get_settings()
 
 MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.model_default}"

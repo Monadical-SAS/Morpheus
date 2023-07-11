@@ -4,20 +4,20 @@ from typing import Any
 from PIL import Image
 from sqlalchemy.orm import Session
 
-from app.repository.files_repository import FilesRepository
+from app.repository.files.files_interface import FileRepositoryInterface
 from app.repository.user_repository import UserRepository
 
 logger = logging.getLogger(__name__)
 
 
 class FilesService:
-    def __init__(self):
-        self.files_repository = FilesRepository()
+    def __init__(self, files_repository: FileRepositoryInterface):
+        self.files_repository = files_repository
         self.user_repository = UserRepository()
 
     def get_user_images(self, *, db: Session, email: str):
         self.user_repository.get_user_data(db=db, email=email)
-        return self.files_repository.get_user_images(folder_name=email)
+        return self.files_repository.get_files(folder_name=email)
 
     def upload_file_to_s3(
         self, *, db: Session, file: Any, email: str, folder: str = None, skip_validation: bool = False
@@ -29,7 +29,7 @@ class FilesService:
             if folder not in ["avatars", "collections"]:
                 raise ValueError(f"Folder {folder} not allowed")
             final_dest = f"{folder}/{email}"
-            return self.files_repository.upload_file_to_s3(file=file, folder_name=final_dest)
+            return self.files_repository.upload_file(file=file, folder_name=final_dest)
         else:
             logger.error("File extension not allowed")
 
@@ -44,7 +44,7 @@ class FilesService:
 
     def upload_image_to_s3(self, *, image: Image.Image, user_bucket: str):
         if isinstance(image, Image.Image):
-            return self.files_repository.upload_pil_image_to_s3(image=image, folder_name=user_bucket)
+            return self.files_repository.upload_image(image=image, folder_name=user_bucket)
         else:
             logger.error("File type not allowed")
 
@@ -57,7 +57,7 @@ class FilesService:
         return image_urls
 
     def get_image_urls(self, *, filenames: list[str]):
-        return self.files_repository.get_image_urls(filenames=filenames)
+        return self.files_repository.get_file_urls(filenames=filenames)
 
     @staticmethod
     def validate_file_extension(file: Any):

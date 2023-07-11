@@ -2,7 +2,7 @@ import urllib
 
 import pytest
 
-from app.repository.files_repository import FilesRepository
+from app.repository.files.s3_files_repository import S3ImagesRepository
 
 COLLECTION_PATH = "collections"
 AVATAR_PATH = "avatars"
@@ -37,14 +37,14 @@ async def test_upload_collection_avatar_file_to_s3(async_app_client, auth_header
 
 
 def test_delete_user_avatar_from_s3(demo_user):
-    files_repository = FilesRepository()
+    files_repository = S3ImagesRepository()
     folder_name = f"{AVATAR_PATH}/{demo_user.email}"
-    response = files_repository.delete_files_from_s3_folder(folder_name=folder_name)
+    response = files_repository.delete_files(folder_name=folder_name)
     assert response is True
 
 
 def test_delete_collection_avatar_from_s3(demo_user):
-    files_repository = FilesRepository()
+    files_repository = S3ImagesRepository()
     folder_name = f"{COLLECTION_PATH}/{demo_user.email}"
-    response = files_repository.delete_files_from_s3_folder(folder_name=folder_name)
+    response = files_repository.delete_files(folder_name=folder_name)
     assert response is True
