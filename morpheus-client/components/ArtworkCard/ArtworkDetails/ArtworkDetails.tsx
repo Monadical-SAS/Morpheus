@@ -14,11 +14,27 @@ interface ArtworkDetailProps {
   refreshArtworks?: () => void;
 }
 
+interface ImageResolution {
+  width: number;
+  height: number;
+}
+
 const ArtworkDetails = (props: ArtworkDetailProps) => {
   const { copyToClipboard } = useCopyToClipboard();
   const { showInfoAlert } = useToastContext();
 
   const [config, setConfig] = useState<any[]>([]);
+  const [imageResolution, setImageResolution] = useState<ImageResolution>({ width: 0, height: 0 });
+
+  const imageUrl = props.artwork?.image || "";
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => {
+      setImageResolution({ width: img.width, height: img.height });
+    };
+    img.src = imageUrl;
+  }, [imageUrl]);
 
   useEffect(() => {
     if (props.artwork && props.artwork.prompt) {
@@ -26,14 +42,14 @@ const ArtworkDetails = (props: ArtworkDetailProps) => {
       const promptConfig = [
         { key: "Model", value: prompt.model },
         { key: "Sampler", value: prompt.sampler },
-        { key: "size", value: `${prompt.width}x${prompt.height}` },
+        { key: "size", value: `${imageResolution.width}x${imageResolution.height}` },
         { key: "Steps", value: prompt.num_inference_steps },
         { key: "Guidance Scale", value: prompt.guidance_scale },
         { key: "Seed", value: prompt.generator },
       ];
       setConfig(promptConfig);
     }
-  }, [props.artwork]);
+  }, [props.artwork, imageResolution]);
 
   const handleCopy = async () => {
     await copyToClipboard(props.artwork?.prompt?.prompt || "");

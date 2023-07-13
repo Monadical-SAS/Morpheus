@@ -61,3 +61,13 @@ export const InpaintingDescription = (props: DescriptionProps) => (
     />
   </p>
 );
+
+export const UpscalingDescription = (props: DescriptionProps) => (
+  <p className={props.className}>
+    Upscaling refers to the process of increasing the size or resolution of an
+    image while preserving or improving its quality. Upscaling takes an existing
+    image and enhances its details, making it appear clearer and sharper. It can
+    take a low-resolution image and intelligently upscale it by adding noise in
+    a controlled manner, resulting in a higher-quality and more detailed image.
+  </p>
+);

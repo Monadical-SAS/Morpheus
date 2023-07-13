@@ -235,6 +235,7 @@ class SDModelCreate(BaseModel):
     inpainting: bool | None = False
     controlnet: bool | None = False
     pix2pix: bool | None = False
+    upscaling: bool | None = False
 
     class Config:
         schema_extra = {

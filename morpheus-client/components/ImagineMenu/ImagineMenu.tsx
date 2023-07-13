@@ -18,8 +18,10 @@ import {
   InpaintingDescription,
   Pix2PixDescription,
   Text2ImgDescription,
+  UpscalingDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
 import styles from "./ImagineMenu.module.scss";
+import { Scaling } from 'lucide-react';
 
 interface LongItemProps {
   active?: boolean;
@@ -132,6 +134,14 @@ const ImagineMenu = () => {
         active={getItemActive(SDOption.Inpainting)}
         icon={<InpaintingIcon color={getIconColor(SDOption.Inpainting)} />}
         option={SDOption.Inpainting}
+      />
+      <ImagineMenuItem
+        title={"Upscaling"}
+        description={<UpscalingDescription className="body-2 white" />}
+        expanded={expanded}
+        active={getItemActive(SDOption.Upscaling)}
+        icon={<Scaling color={getIconColor(SDOption.Upscaling)}  width={"24"} height={"24"} />}
+        option={SDOption.Upscaling}
       />
       <ImagineMenuItem
         title={"Help"}

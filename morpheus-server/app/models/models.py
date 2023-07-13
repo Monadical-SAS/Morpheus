@@ -89,6 +89,7 @@ class SDModel(Base):
     inpainting = Column(Boolean, nullable=True, default=False)
     controlnet = Column(Boolean, nullable=True, default=False)
     pix2pix = Column(Boolean, nullable=True, default=False)
+    upscaling = Column(Boolean, nullable=True, default=False)
 
 
 class SDControlNetModel(Base):

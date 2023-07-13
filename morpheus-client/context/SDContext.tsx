@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from "next/router";
 import {
   createContext,
@@ -9,21 +10,21 @@ import {
 import {
   CheckboxState,
   initializeCheckbox,
-} from "../components/Inputs/InputCheckbox/InputCheckbox";
+} from "@/components/Inputs/InputCheckbox/InputCheckbox";
 import {
   initializeNumber,
   NumberState,
-} from "../components/Inputs/InputNumber/InputNumber";
+} from "@/components/Inputs/InputNumber/InputNumber";
 import {
   initializeText,
   TextState,
-} from "../components/Inputs/InputText/InputText";
-import { Prompt } from "../models/models";
-import { getAvailableModels } from "../services/models";
-import { getAvailableSamplers } from "../services/samplers";
-import { getRandomStringFromArray } from "../utils/arrays";
-import { checkIfValueInEnum, filterObjectsByProperty } from "../utils/object";
-import { generateRandomNumber } from "../utils/random";
+} from "@/components/Inputs/InputText/InputText";
+import { Prompt } from "@/models/models";
+import { getAvailableModels } from "@/services/models";
+import { getAvailableSamplers } from "@/services/samplers";
+import { getRandomStringFromArray } from "@/utils/arrays";
+import { checkIfValueInEnum, filterObjectsByProperty } from "@/utils/object";
+import { generateRandomNumber } from "@/utils/random";
 
 export enum SDOption {
   Empty = "",
@@ -32,6 +33,7 @@ export enum SDOption {
   Inpainting = "inpainting",
   ControlNet = "controlnet",
   Pix2Pix = "pix2pix",
+  Upscaling = "upscaling",
 }
 
 export interface IDiffusionContext {
