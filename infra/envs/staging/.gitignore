@@ -3,5 +3,4 @@
 *.pem
 *.tfstate
 *.tfstate.backup
-.terraform.lock.hcl
 backend.conf
