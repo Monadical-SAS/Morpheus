@@ -60,6 +60,10 @@ export interface IDiffusionContext {
   setSeed: (seed: TextState) => void;
   randomizeSeed: CheckboxState;
   setRandomizeSeed: (randomize: CheckboxState) => void;
+  colorPalette: string;
+  setColorPalette: (colorPalette: string) => void;
+  controlNetType: string
+  setControlNetType: (controlNetType: string) => void;
   buildPrompt: () => any;
   restartSDSettings: () => void;
 }
@@ -129,6 +133,8 @@ const initialConfig = {
   seed: initializeText(String(generateRandomNumber(20))),
   randomizeSeed: initializeCheckbox(true),
   strength: initializeNumber(0.5),
+  colorPalette: "None",
+  controlNetType: "Text-to-Image"
 };
 
 const defaultState = {
@@ -159,6 +165,10 @@ const defaultState = {
   setRandomizeSeed: () => {},
   buildPrompt: () => {},
   restartSDSettings: () => {},
+  colorPalette: initialConfig.colorPalette,
+  setColorPalette: () => {},
+  controlNetType: initialConfig.controlNetType,
+  setControlNetType: () => {}
 };
 
 const DiffusionContext = createContext<IDiffusionContext>(defaultState);
@@ -194,6 +204,8 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
   const [randomizeSeed, setRandomizeSeed] = useState<CheckboxState>(
     initialConfig.randomizeSeed
   );
+  const [colorPalette, setColorPalette] = useState<string>(initialConfig.colorPalette);
+  const [controlNetType, setControlNetType] = useState<string>(initialConfig.controlNetType);
 
   useEffect(() => {
     // Fetch Stable Diffusion models
@@ -260,6 +272,8 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
       generator: Number(seed.value),
       strength: strength.value,
       negative_prompt: negativePrompt.value,
+      color_palette: colorPalette,
+      controlnet_input_type: controlNetType
     };
   };
 
@@ -297,6 +311,10 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
         setSeed,
         randomizeSeed,
         setRandomizeSeed,
+        colorPalette,
+        setColorPalette,
+        controlNetType,
+        setControlNetType,
         buildPrompt,
         restartSDSettings,
       }}

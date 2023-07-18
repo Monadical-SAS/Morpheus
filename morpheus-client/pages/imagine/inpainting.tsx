@@ -29,12 +29,14 @@ const Inpainting: NextPage = () => {
                 imageFile={img2imgFile}
                 setImageFile={setImg2imgFile}
                 showEditImage={true}
+                title="Input Image"
               />
               <ImageDraggable
                 imageFile={maskFile}
                 setImageFile={setMaskFile}
                 styles={{ marginTop: "24px" }}
                 icon={<UploadMaskIcon />}
+                title="Mask Image"
               />
             </div>
 

@@ -8,8 +8,8 @@ import { useImagine } from "@/context/ImagineContext";
 import styles from "@/styles/pages/StableDiffusion.module.scss";
 
 const Img2Img: NextPage = () => {
-  const { prompt } = useDiffusion();
-  const { img2imgFile, setImg2imgFile, generateImages } = useImagine();
+  const { prompt, colorPalette } = useDiffusion();
+  const { img2imgFile, setImg2imgFile, generateImages, colorPaletteFile, setColorPaletteFile } = useImagine();
   const isFormValid = prompt.value.length > 0 && img2imgFile !== null;
 
   const handleGenerate = () => {
@@ -25,9 +25,19 @@ const Img2Img: NextPage = () => {
               <ImageDraggable
                 imageFile={img2imgFile}
                 setImageFile={setImg2imgFile}
+                title="Input Image"
               />
+              {colorPalette != "None" && (
+                <div className={styles.inputImage}>
+                  <ImageDraggable
+                    imageFile={colorPaletteFile}
+                    setImageFile={setColorPaletteFile}
+                    styles={{ marginTop: "24px" }}
+                    title="Color Palette"
+                  />
+                </div>
+              )}
             </div>
-
             <div className={styles.SDResults}>
               <ImageGallery />
             </div>

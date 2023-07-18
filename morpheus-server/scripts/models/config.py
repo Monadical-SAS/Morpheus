@@ -44,7 +44,7 @@ def get_settings() -> Settings:
 api_server_urls = {
     "local": "http://api:8001",
     "staging": "http://216.153.52.83:8001",
-    'production': "https://api-morpheus.monadical.io",
+    "production": "https://api-morpheus.monadical.io",
 }
 
 # API service endpoints

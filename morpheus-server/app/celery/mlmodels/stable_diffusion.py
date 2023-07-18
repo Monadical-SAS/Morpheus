@@ -26,6 +26,7 @@ class StableDiffusionAbstract(ABC):
         self.model_name = model_name if Path(model_name).exists() else hf_model_name
         self.token = settings.hf_auth_token
         self.sampler = sampler
+        self.pipeline_name = pipeline_name
 
         # Check the environment variable/settings file to determine if we should
         # be using 16 bit or 32 bit precision when generating images.  16 bit
@@ -65,7 +66,7 @@ class StableDiffusionAbstract(ABC):
         logger.info("Floating point precision during image generation: " + str(self.dtype))
 
         self._module_import = importlib.import_module("diffusers")
-        self._pipeline = getattr(self._module_import, pipeline_name)
+        self._pipeline = getattr(self._module_import, self.pipeline_name)
 
     @abstractmethod
     def generate_images(self, *args, **kwargs):
@@ -252,23 +253,51 @@ class StableDiffusionControlNet(StableDiffusionBaseControlNet):
         logger.info("generating image in Controlnet pipeline")
         prompt: PromptControlNet = kwargs.get("prompt")
         image = kwargs.get("image")
+        conditioning_image = kwargs.get("conditioning_image")
         generator = torch.Generator(device="cpu").manual_seed(prompt.generator)
 
         # preprocessing image
         base_image = preprocessing_image.get(prompt.controlnet_type)(image)
 
-        images = self.model(
-            prompt=prompt.prompt,
-            negative_prompt=prompt.negative_prompt,
-            image=base_image,
-            generator=generator,
-            num_inference_steps=prompt.num_inference_steps,
-            guidance_scale=prompt.guidance_scale,
-            num_images_per_prompt=prompt.num_images_per_prompt,
-        ).images
+        if prompt.controlnet_input_type == "Image-to-Image":
+            if conditioning_image is not None:
+                images = self.model(
+                    prompt=prompt.prompt,
+                    negative_prompt=prompt.negative_prompt,
+                    image=conditioning_image,
+                    control_image=base_image,
+                    strength=prompt.strength,
+                    generator=generator,
+                    num_inference_steps=prompt.num_inference_steps,
+                    guidance_scale=prompt.guidance_scale,
+                    num_images_per_prompt=prompt.num_images_per_prompt,
+                ).images
+            else:
+                images = self.model(
+                    prompt=prompt.prompt,
+                    negative_prompt=prompt.negative_prompt,
+                    image=image,
+                    control_image=base_image,
+                    strength=prompt.strength,
+                    generator=generator,
+                    num_inference_steps=prompt.num_inference_steps,
+                    guidance_scale=prompt.guidance_scale,
+                    num_images_per_prompt=prompt.num_images_per_prompt,
+                ).images
+
+        else:
+            images = self.model(
+                prompt=prompt.prompt,
+                negative_prompt=prompt.negative_prompt,
+                image=base_image,
+                generator=generator,
+                num_inference_steps=prompt.num_inference_steps,
+                guidance_scale=prompt.guidance_scale,
+                num_images_per_prompt=prompt.num_images_per_prompt,
+            ).images
 
         if len(images) == 0:
-            logger.info("No text2img images generated")
+            logger.info("No controlnet images generated")
             return None
 
         # add base processed image

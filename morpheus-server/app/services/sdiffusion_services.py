@@ -24,17 +24,23 @@ class StableDiffusionService:
         prompt.model = f"{self.settings.model_parent_path}{prompt.model}"
         return self.sd_repository.generate_text2img_images(prompt)
 
-    def generate_img2img_images(self, db: Session, prompt: Prompt, image: Any, email: str) -> str:
+    def generate_img2img_images(self, db: Session, prompt: Prompt, image: Any, palette_image: Any, email: str) -> str:
         self.validate_request(db=db, model=prompt.model, email=email)
         image = self.validate_and_clean_image(image=image, width=prompt.width)
+        if palette_image:
+            palette_image = self.validate_and_clean_image(image=palette_image, width=prompt.width)
         prompt.model = f"{self.settings.model_parent_path}{prompt.model}"
-        return self.sd_repository.generate_img2img_images(prompt, image)
+        return self.sd_repository.generate_img2img_images(prompt, image, palette_image)
 
-    def generate_controlnet_images(self, db: Session, prompt: PromptControlNet, image: Any, email: str) -> str:
+    def generate_controlnet_images(
+        self, db: Session, prompt: PromptControlNet, image: Any, palette_image: Any, email: str
+    ) -> str:
         self.validate_request(db=db, model=prompt.model, email=email)
         image = self.validate_and_clean_image(image=image, width=prompt.width)
+        if palette_image:
+            palette_image = self.validate_and_clean_image(image=palette_image, width=prompt.width)
         prompt.model = f"{self.settings.model_parent_path}{prompt.model}"
-        return self.sd_repository.generate_controlnet_images(prompt, image)
+        return self.sd_repository.generate_controlnet_images(prompt, image, palette_image)
 
     def generate_pix2pix_images(self, db: Session, prompt: Prompt, image: Any, email: str) -> str:
         self.validate_request(db=db, model=prompt.model, email=email)

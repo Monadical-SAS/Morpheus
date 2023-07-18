@@ -50,6 +50,8 @@ class Prompt(Base):
     num_images_per_prompt = Column(Integer, nullable=True)
     generator = Column(Numeric, nullable=True)
     strength = Column(Float, nullable=True)
+    color_palette = Column(String(64), nullable=True)
+    controlnet_input_type = Column(String(32), nullable=True)
     owner_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
     owner = relationship("User", back_populates="prompts")
     artworks = relationship("ArtWork", back_populates="prompt")

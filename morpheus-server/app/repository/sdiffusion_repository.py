@@ -1,3 +1,4 @@
+from typing import Optional
 from PIL import Image
 from loguru import logger
 
@@ -21,15 +22,21 @@ class StableDiffusionRepository:
         return str(task_id)
 
     @staticmethod
-    def generate_img2img_images(prompt: Prompt, image: Image) -> str:
+    def generate_img2img_images(prompt: Prompt, image: Image, palette_image: Image) -> str:
         logger.info(f"Running Stable Diffusion Img2Img process with prompt: {prompt}")
-        task_id = generate_stable_diffusion_img2img_output_task.delay(prompt=prompt, image=image)
+        task_id = generate_stable_diffusion_img2img_output_task.delay(
+            prompt=prompt, image=image, palette_image=palette_image
+        )
         return str(task_id)
 
     @staticmethod
-    def generate_controlnet_images(prompt: PromptControlNet, image: Image) -> str:
+    def generate_controlnet_images(
+        prompt: PromptControlNet, image: Image, palette_image: Optional[Image.Image] = None
+    ) -> str:
         logger.info(f"Running stable diffusion process with prompt: {prompt}")
-        task_id = generate_stable_diffusion_controlnet_output_task.delay(prompt=prompt, image=image)
+        task_id = generate_stable_diffusion_controlnet_output_task.delay(
+            prompt=prompt, image=image, palette_image=palette_image
+        )
         return str(task_id)
 
     @staticmethod

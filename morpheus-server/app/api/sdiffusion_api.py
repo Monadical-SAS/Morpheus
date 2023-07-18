@@ -1,5 +1,6 @@
 from celery.result import AsyncResult
 from fastapi import APIRouter, Depends, File, UploadFile
+from typing import Optional
 
 from app.database import get_db
 from app.error.error import ImageNotProvidedError, ModelNotFoundError, UserNotFoundError
@@ -42,12 +43,16 @@ async def generate_text2img_images(prompt: Prompt = Depends(), db=Depends(get_db
 async def generate_img2img_images(
     prompt: Prompt = Depends(),
     image: UploadFile = File(...),
+    palette_image: Optional[UploadFile] = File(None),
     db=Depends(get_db),
     user=Depends(get_user),
 ):
     try:
         image = await image.read()
-        task_id = sd_services.generate_img2img_images(db=db, prompt=prompt, image=image, email=user["email"])
+        palette_image = await palette_image.read() if palette_image else None
+        task_id = sd_services.generate_img2img_images(
+            db=db, prompt=prompt, image=image, palette_image=palette_image, email=user["email"]
+        )
         return Response(message="Img2Img request queued successfully", data=task_id)
     except UserNotFoundError as e:
         return Response(success=False, message=str(e), data=None)
@@ -67,12 +72,16 @@ async def generate_img2img_images(
 async def generate_image_from_prompt_image_controlnet(
     prompt: PromptControlNet = Depends(),
     image: UploadFile = File(...),
+    palette_image: Optional[UploadFile] = File(None),
     db=Depends(get_db),
     user=Depends(get_user),
 ):
     try:
         image = await image.read()
-        task_id = sd_services.generate_controlnet_images(db=db, prompt=prompt, image=image, email=user["email"])
+        palette_image = await palette_image.read() if palette_image else None
+        task_id = sd_services.generate_controlnet_images(
+            db=db, prompt=prompt, image=image, palette_image=palette_image, email=user["email"]
+        )
         return Response(message="ControlNet request queued successfully", data=task_id)
     except UserNotFoundError as e:
         return Response(success=False, message=str(e), data=None)

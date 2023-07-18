@@ -25,6 +25,7 @@ const Img2Img: NextPage = () => {
               <ImageDraggable
                 imageFile={img2imgFile}
                 setImageFile={setImg2imgFile}
+                title="Input Image"
               />
             </div>
 

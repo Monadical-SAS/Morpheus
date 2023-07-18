@@ -55,6 +55,10 @@ const ImagineSettings = () => {
     setAmount,
     negativePrompt,
     setNegativePrompt,
+    colorPalette,
+    setColorPalette,
+    controlNetType,
+    setControlNetType
   } = useDiffusion();
 
   const SettingsContent = (
@@ -97,6 +101,24 @@ const ImagineSettings = () => {
           </div>
         )}
 
+        {selectedOption === SDOption.ControlNet && (
+          <div className={styles.settingItem}>
+            <OptionInfo
+            title={"ControlNet Type"}
+            description={"Select the input type: text only (text-to-image) or text and image (image-to-image)."}
+            />
+
+            <InputSelect
+              options={[
+                "Text-to-Image",
+                "Image-to-Image",
+              ]}
+              selected={controlNetType}
+              setSelected={setControlNetType}
+            />
+          </div>
+        )}
+
         <div className={styles.settingItem}>
           <OptionInfo
             title={"Sampler"}
@@ -125,7 +147,7 @@ const ImagineSettings = () => {
         </div>
 
         {(selectedOption === SDOption.Image2Image ||
-          selectedOption === SDOption.ControlNet) && (
+          selectedOption === SDOption.ControlNet && controlNetType === "Image-to-Image") && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"Strength"}
@@ -195,6 +217,63 @@ const ImagineSettings = () => {
 
           <InputSeed />
         </div>
+
+        {(selectedOption === SDOption.Image2Image) && (
+          <div className={styles.settingItem}>
+            <OptionInfo
+              title={"Color Palette"}
+              description={"Add a color palette image to generate images with these colors. Different techniques for " +
+              "coloring the images before being applied to the model can be selected."}
+            />
+            <InputSelect
+              options={[
+                "None",
+                "Quantization - Blend",
+                "Quantization - Contours",
+                "Quantization Gray - Blend",
+                "Quantization Gray - Contours",
+                "Random Polygons - Blend",
+                "Random Polygons - Contours",
+                "Random Color Blocks Small - Blend",
+                "Random Color Blocks Small - Contours",
+                "Random Color Blocks Large - Blend",
+                "Random Color Blocks Large - Contours",
+                "Color Matching - PCA",
+                "Color Matching - Cholesky",
+                "Color Matching - Symmetric",
+                "Linear Color Transfer"
+              ]}
+              selected={colorPalette}
+              setSelected={setColorPalette}
+            />
+          </div>
+        )}
+
+        {(selectedOption === SDOption.ControlNet && controlNetType === "Image-to-Image") && (
+          <div className={styles.settingItem}>
+            <OptionInfo
+              title={"Color Palette"}
+              description={"Add a color palette image to generate images with these colors. Different techniques for " +
+              "coloring the images before being applied to the model can be selected."}
+            />
+            <InputSelect
+              options={[
+                "None",
+                "Quantization",
+                "Quantization Gray",
+                "Random Polygons",
+                "Random Color Blocks Small",
+                "Random Color Blocks Large",
+                "Color Matching - PCA",
+                "Color Matching - Cholesky",
+                "Color Matching - Symmetric",
+                "Linear Color Transfer"
+              ]}
+              selected={colorPalette}
+              setSelected={setColorPalette}
+            />
+          </div>
+        )}
 
         <div className={styles.settingItemNegativePrompt}>
           <OptionInfo

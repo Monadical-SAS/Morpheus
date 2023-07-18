@@ -24,6 +24,7 @@ interface DragDropFileProps {
   icon?: ReactNode;
   styles?: CSSProperties;
   showEditImage?: boolean;
+  title?: string;
 }
 
 const DragDropFile = (props: DragDropFileProps) => {
@@ -110,13 +111,12 @@ const DragDropFile = (props: DragDropFileProps) => {
         }`}
       >
         <div className={styles.dragInfo}>
+          {props.title && <span className="body-1 white">{props.title}</span>}
           {props.icon ? props.icon : <UploadImageIcon />}
           <a className="body-1 main" onClick={onButtonClick}>
             Click to upload
           </a>
-
           <span className="body-1 white">or drag and drop</span>
-
           <p className="body-2 secondary">Maximum file size 50 MB</p>
         </div>
       </label>

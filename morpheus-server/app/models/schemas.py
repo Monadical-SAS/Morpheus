@@ -104,6 +104,8 @@ class Prompt(BaseModel):
     num_images_per_prompt: int = 1
     generator: int = -1
     strength: Optional[float] = 0.75
+    color_palette: Optional[str] = "None"
+    controlnet_input_type: Optional[str] = "None"
 
     @validator("model")
     def check_if_empty_model(cls, model):
@@ -141,6 +143,8 @@ class Prompt(BaseModel):
                 "num_images_per_prompt": 1,
                 "generator": -1,
                 "strength": 0.75,
+                "color_palette": "None",
+                "controlnet_input_type": "Text-to-Image",
             }
         }
 

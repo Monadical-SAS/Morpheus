@@ -41,6 +41,8 @@ export interface Prompt {
   generator: number;
   strength: number;
   negative_prompt: string;
+  color_palette: string;
+  controlnet_input_type?: string;
 }
 
 export interface ArtWork {
