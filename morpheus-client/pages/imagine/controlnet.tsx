@@ -8,7 +8,7 @@ import { useImagine } from "../../context/ImagineContext";
 import styles from "../../styles/pages/StableDiffusion.module.scss";
 
 const ControlNetImg: NextPage = () => {
-  const { prompt, colorPalette } = useDiffusion();
+  const { prompt, colorPalette, controlNetType } = useDiffusion();
   const { img2imgFile, setImg2imgFile, generateImages, colorPaletteFile, setColorPaletteFile } = useImagine();
   const isFormValid = prompt.value.length > 0 && img2imgFile !== null;
 
@@ -27,7 +27,7 @@ const ControlNetImg: NextPage = () => {
                 setImageFile={setImg2imgFile}
                 title="Input Image"
               />
-              {colorPalette != "None" && (
+              {colorPalette != "None" && controlNetType == "Image-to-Image" && (
                 <div className={styles.inputImage}>
                   <ImageDraggable
                     imageFile={colorPaletteFile}

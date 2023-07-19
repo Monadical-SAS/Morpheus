@@ -255,6 +255,11 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
       }
       setSelectedSDModel(validModels[0].source);
     }
+
+    if (selectedOption === SDOption.ControlNet || selectedOption === SDOption.Image2Image) {
+      setColorPalette("None");
+    }
+    
   }, [SDModels, selectedOption]);
 
   const buildPrompt = (): Prompt => {
