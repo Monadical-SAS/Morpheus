@@ -4,8 +4,8 @@ from ray.job_submission import JobSubmissionClient
 client = JobSubmissionClient("http://127.0.0.1:8265")
 job_id = client.submit_job(
     # Entrypoint shell command to execute
-    entrypoint="python test-cu.py",
+    entrypoint="python example.py",
     # Path to the local directory that contains the script.py file
-    runtime_env={"working_dir": "./", "env_vars": {"PROMPT": "cucu"}}
+    runtime_env={"working_dir": "./", "env_vars": {"PROMPT": "This is a prompt"}}
 )
 print(job_id)
