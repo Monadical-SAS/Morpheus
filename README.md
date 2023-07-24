@@ -70,8 +70,9 @@ cp -p morpheus-server/secrets.env.dist morpheus-server/secrets.env
 cp -p morpheus-client/env.local.dist morpheus-client/.env.local
 
 # Edit the secrets file with your values
-nano morpheus-server/secrets.env
 # Make sure to replace the firebase variables with the ones from the firebase-admin-dk.json file from your firebase account
+nano morpheus-server/secrets.env
+nano morpheus-client/.env.local
 
 # Build the docker images
 docker-compose build
