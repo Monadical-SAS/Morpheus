@@ -24,7 +24,7 @@ spec:
             morpheus-type: "gpu-adv"
           containers:
             - name: ray-head
-              image: monadicalsas/morpheus-worker:latest
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               imagePullPolicy: IfNotPresent
               ports:
                 - containerPort: 6379
@@ -62,7 +62,7 @@ spec:
                 command: ['sh', '-c', "until nslookup $RAY_IP.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for K8s Service $RAY_IP; sleep 2; done"]
             containers:
               - name: ray-worker
-                image: monadicalsas/morpheus-worker:latest
+                image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
                 imagePullPolicy: IfNotPresent
                 lifecycle:
                   preStop:
