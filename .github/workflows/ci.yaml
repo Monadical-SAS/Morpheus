@@ -112,7 +112,7 @@ jobs:
       - id: worker-ray-step
         name: Check change in worker ray
         run: |
-          workerray=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-worker-ray)
+          workerray=$(python ./monorepo/cicd.py --project morpheus-worker-ray)
           echo "workerray=$workerray" >> "$GITHUB_OUTPUT"
 
   cd-api:
