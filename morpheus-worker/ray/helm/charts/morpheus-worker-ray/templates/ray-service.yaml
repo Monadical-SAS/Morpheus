@@ -1,0 +1,79 @@
+apiVersion: ray.io/v1alpha1
+kind: RayService
+metadata:
+  name: morpheus-rayservice
+spec:
+  serviceUnhealthySecondThreshold: 300 # Config for the health check threshold for service. Default value is 60.
+  deploymentUnhealthySecondThreshold: 300 # Config for the health check threshold for deployments. Default value is 60.
+  serveConfig:
+    importPath: models.deployment
+  rayClusterConfig:
+    rayVersion: '2.3.0' # should match the Ray version in the image of the containers
+    ######################headGroupSpecs#################################
+    # Ray head pod template.
+    headGroupSpec:
+      serviceType: ClusterIP # optional
+      rayStartParams:
+        port: '6379' # should match container port named gcs-server
+        dashboard-host: '0.0.0.0'
+        num-cpus: '2' # can be auto-completed from the limits
+        block: 'true'
+      template:
+        spec:
+          nodeSelector:
+            morpheus-type: "gpu-adv"
+          containers:
+            - name: ray-head
+              image: monadicalsas/morpheus-worker:latest
+              imagePullPolicy: IfNotPresent
+              ports:
+                - containerPort: 6379
+                  name: gcs-server
+                - containerPort: 8265 # Ray dashboard
+                  name: dashboard
+                - containerPort: 10001
+                  name: client
+                - containerPort: 8000
+                  name: serve
+              volumeMounts:
+                - name: models
+                  mountPath: /mnt
+          volumes:
+          - name: models
+            persistentVolumeClaim:
+              claimName: models-claim
+              readOnly: true
+    workerGroupSpecs:
+      # the pod replicas in this group typed worker
+      - replicas: 1
+        minReplicas: 1
+        maxReplicas: 5
+        # logical group name, for this called small-group, also can be functional
+        groupName: small-group
+        rayStartParams:
+          block: 'true'
+        template:
+          spec:
+            nodeSelector:
+              morpheus-type: "gpu-adv"
+            initContainers:
+              - name: init
+                image: busybox:1.28
+                command: ['sh', '-c', "until nslookup $RAY_IP.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for K8s Service $RAY_IP; sleep 2; done"]
+            containers:
+              - name: ray-worker
+                image: monadicalsas/morpheus-worker:latest
+                imagePullPolicy: IfNotPresent
+                lifecycle:
+                  preStop:
+                    exec:
+                      command: ["/bin/sh","-c","ray stop"]
+                volumeMounts:
+                - name: models
+                  mountPath: /mnt
+            volumes:
+            - name: models
+              persistentVolumeClaim:
+                claimName: models-claim
+                readOnly: true
+    headServiceAnnotations: {}
