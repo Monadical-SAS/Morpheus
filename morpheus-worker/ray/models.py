@@ -8,7 +8,7 @@ from ray import serve
 
 app = FastAPI()
 
-@ray.remote
+@ray.remote(num_gpus=1)
 def image(prompt, task_uuid):
     task_id = ray.get_runtime_context().get_task_id()
     print(f"task: {task_id}")
