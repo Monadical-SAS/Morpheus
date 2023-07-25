@@ -9,7 +9,8 @@ META_FILE_NAME = "meta.json"
 LAST_COMMIT = "HEAD~1"
 CICD_REPO_PATH = os.getenv("CICD_REPO_PATH", "/home/runner/work/Morpheus/Morpheus")
 
-def get_status(repo, path, commit = LAST_COMMIT):
+
+def get_status(repo, path, commit=LAST_COMMIT):
     changed = [item.a_path for item in repo.index.diff(commit)]
     if path in repo.untracked_files:
         return "untracked"
@@ -17,6 +18,7 @@ def get_status(repo, path, commit = LAST_COMMIT):
         return "modified"
     else:
         return "na"
+
 
 def search_meta(repo_path, path):
     meta_file = os.path.join(path, META_FILE_NAME)
@@ -28,12 +30,14 @@ def search_meta(repo_path, path):
             return None
         return search_meta(repo_path, os.path.dirname(path))
 
+
 def load_json(meta_file):
     f = open(meta_file)
     data = json.load(f)
     return data
 
-def search_in_updated_projects(project_name, repo_path, commit = LAST_COMMIT):
+
+def search_in_updated_projects(project_name, repo_path, commit=LAST_COMMIT):
     repo = Repo(repo_path)
     for item in repo.index.diff(commit):
         status = get_status(repo, item.a_path)
@@ -47,9 +51,11 @@ def search_in_updated_projects(project_name, repo_path, commit = LAST_COMMIT):
                     return "true"
     return "false"
 
+
 def get_current_branch(repo_path):
     repo = Repo(repo_path)
     return str(repo.active_branch)
+
 
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
 parser.add_argument("-c", "--commit", help="Commit or branch name", default=LAST_COMMIT)

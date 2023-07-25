@@ -2,8 +2,8 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from app.models.models import User, Prompt
-from app.models.schemas import Prompt as PromptCreate
+from morpheus_data.models.models import User, Prompt
+from morpheus_data.models.schemas import Prompt as PromptCreate
 
 
 class PromptRepository:

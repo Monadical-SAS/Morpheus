@@ -3,12 +3,12 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.models.schemas import ArtWork, ArtWorkCreate
-from app.repository.artwork_repository import ArtWorkRepository
-from app.repository.collection_repository import CollectionRepository
-from app.repository.files.files_interface import FileRepositoryInterface
-from app.repository.prompt_repository import PromptRepository
-from app.repository.user_repository import UserRepository
+from morpheus_data.models.schemas import ArtWork, ArtWorkCreate
+from morpheus_data.repository.artwork_repository import ArtWorkRepository
+from morpheus_data.repository.collection_repository import CollectionRepository
+from morpheus_data.repository.files.files_interface import FileRepositoryInterface
+from morpheus_data.repository.prompt_repository import PromptRepository
+from morpheus_data.repository.user_repository import UserRepository
 
 
 class ArtWorkService:

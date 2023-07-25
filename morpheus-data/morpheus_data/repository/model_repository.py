@@ -3,8 +3,8 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.models.models import SDModel
-from app.models.schemas import SDModelCreate
+from morpheus_data.models.models import SDModel
+from morpheus_data.models.schemas import SDModelCreate
 
 
 class ModelRepository:

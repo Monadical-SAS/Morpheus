@@ -5,8 +5,10 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app.models.schemas import Response, SDModel, SDModelCreate
+from morpheus_data.database import get_db
+from morpheus_data.models.schemas import SDModel, SDModelCreate
+
+from app.models.schemas import Response
 from app.services.models_services import ModelService
 
 router = APIRouter()

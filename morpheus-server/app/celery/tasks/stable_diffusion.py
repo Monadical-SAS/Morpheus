@@ -5,10 +5,11 @@ from celery import Task
 from loguru import logger
 from torch.cuda import OutOfMemoryError
 
+from morpheus_data.models.schemas import Prompt, PromptControlNet
+
 from app.celery.workers.stable_diffusion_app import app
 from app.config import get_settings, get_file_handlers
 from app.error.error import ModelLoadError, OutOfMemoryGPUError
-from app.models.schemas import Prompt, PromptControlNet
 from app.services.files_services import FilesService
 from app.utils.decorators import (
     check_environment,

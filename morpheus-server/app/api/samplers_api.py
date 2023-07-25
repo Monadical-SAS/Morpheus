@@ -1,10 +1,12 @@
-from typing import Union, List
+from typing import List, Union
 
 from fastapi import APIRouter
-from omegaconf import OmegaConf, DictConfig
+from omegaconf import DictConfig, OmegaConf
+
+from morpheus_data.models.schemas import SamplerModel
 
 from app.config import samplers
-from app.models.schemas import SamplerModel, Response
+from app.models.schemas import Response
 
 router = APIRouter()
 

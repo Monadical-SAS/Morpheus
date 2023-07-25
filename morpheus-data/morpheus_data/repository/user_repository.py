@@ -2,8 +2,8 @@ from typing import Union, List
 
 from sqlalchemy.orm import Session
 
-from app.models.models import User
-from app.repository.files.s3_files_repository import IMAGES_BUCKET
+from morpheus_data.models.models import User
+from morpheus_data.repository.files.s3_files_repository import IMAGES_BUCKET
 
 
 class UserRepository:
