@@ -21,4 +21,3 @@ typer
 omegaconf
 opencv-contrib-python-headless
 flower
-dynamicprompts[attentiongrabber,magicprompt]
