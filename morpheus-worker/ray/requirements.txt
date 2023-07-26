@@ -21,3 +21,4 @@ typer
 omegaconf
 opencv-contrib-python-headless
 flower
+ray[default]
