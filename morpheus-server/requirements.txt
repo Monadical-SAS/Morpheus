@@ -35,3 +35,4 @@ controlnet-aux==0.0.1
 opencv-contrib-python-headless
 flower
 dynamicprompts[attentiongrabber,magicprompt]
+beautifulsoup4
