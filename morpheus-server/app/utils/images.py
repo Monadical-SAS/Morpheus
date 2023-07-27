@@ -11,7 +11,6 @@ def remove_alpha_channel(img: Image):
 
 
 def from_image_to_bytes(img):
-    print("Received image bytes")
     img_byte_arr = BytesIO()
     img.save(img_byte_arr, format="png")
     img_byte_arr = img_byte_arr.getvalue()
