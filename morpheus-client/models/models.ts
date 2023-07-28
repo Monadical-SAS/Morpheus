@@ -41,6 +41,11 @@ export interface Prompt {
   generator: number;
   strength: number;
   negative_prompt: string;
+  use_lora: boolean;
+  lora_path: string;
+  lora_scale: number;
+  use_embedding: boolean;
+  embedding_path: string;
 }
 
 export interface ArtWork {

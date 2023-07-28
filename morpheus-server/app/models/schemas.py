@@ -104,6 +104,11 @@ class Prompt(BaseModel):
     num_images_per_prompt: int = 1
     generator: int = -1
     strength: Optional[float] = 0.75
+    use_lora: Optional[bool] = False
+    lora_path: Optional[str] = ""
+    lora_scale: Optional[float] = 1.0
+    use_embedding: Optional[bool] = False
+    embedding_path: Optional[str] = ""
 
     @validator("model")
     def check_if_empty_model(cls, model):
@@ -141,6 +146,11 @@ class Prompt(BaseModel):
                 "num_images_per_prompt": 1,
                 "generator": -1,
                 "strength": 0.75,
+                "use_lora": False,
+                "lora_path": "",
+                "lora_scale": 1.0,
+                "use_embedding": False,
+                "embedding_path": "",
             }
         }
 

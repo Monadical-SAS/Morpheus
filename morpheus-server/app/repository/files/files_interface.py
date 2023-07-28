@@ -78,4 +78,3 @@ class ModelRepositoryInterface(ABC):
     @abstractmethod
     def delete_file(self, *, filepath: str):
         raise NotImplementedError("This method is not implemented")
-
