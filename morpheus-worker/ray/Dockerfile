@@ -18,3 +18,4 @@ RUN pip install --upgrade pip pipenv
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY models.py .
+COPY models.yaml .

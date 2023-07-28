@@ -124,7 +124,7 @@ services:
   worker-ray:
     build: ./morpheus-worker/ray
     image: morpheus-worker:latest
-    command: serve run --host 0.0.0.0 models.deployment
+    command: ray start --head --dashboard-host 0.0.0.0 --block
     ports:
       - "8000:8000"
       - "8265:8265"
@@ -132,6 +132,15 @@ services:
       - sd_model:/mnt/
     depends_on:
       api:
+        condition: service_started
+
+  worker-ray-deployer:
+    image: morpheus-worker:latest
+    command: bash -c "sleep 5 && ray job submit -- serve deploy models.yaml"
+    environment:
+      - RAY_ADDRESS=http://worker-ray:8265
+    depends_on:
+      worker-ray:
         condition: service_started
 
   magicprompt_worker:
