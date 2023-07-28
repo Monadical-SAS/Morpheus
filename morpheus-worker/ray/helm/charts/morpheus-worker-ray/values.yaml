@@ -11,29 +11,27 @@ image:
   tag: "worker-ray-latest"
 
 worker:
-  rayVersion: 2.2.0
+  nodeSelector: "gpu-adv"
+  rayVersion: 2.3.0
   head:
+    rayStartParams:
+      numCpus: "2"
+      numGpus: "0"
     resources:
       limits:
         cpu: "2"
         memory: "6G"
-      requests:
-        cpu: "1"
-        memory: "4G"
   workerGroup:
     replicas: 1
     minReplicas: 1
     maxReplicas: 1
     rayStartParams:
+      numCpus: "2"
       numGpus: "1"
     resources:
       limits:
         cpu: "4"
         memory: "8G"
-        gpu: 1
-      requests:
-        cpu: "2"
-        memory: "6G"
         gpu: 1
 
 imagePullSecrets:

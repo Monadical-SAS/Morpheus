@@ -3,30 +3,31 @@ kind: RayService
 metadata:
   name: morpheus-rayservice
 spec:
-  serviceUnhealthySecondThreshold: 300 # Config for the health check threshold for service. Default value is 60.
-  deploymentUnhealthySecondThreshold: 300 # Config for the health check threshold for deployments. Default value is 60.
   serveConfig:
     importPath: models.deployment
   rayClusterConfig:
-    rayVersion: '2.3.0' # should match the Ray version in the image of the containers
-    ######################headGroupSpecs#################################
-    # Ray head pod template.
+    rayVersion: "{{ .Values.worker.rayVersion }}"
+    enableInTreeAutoscaling: true
     headGroupSpec:
-      serviceType: ClusterIP # optional
+      serviceType: ClusterIP
       rayStartParams:
-        port: '6379' # should match container port named gcs-server
+        port: '6379'
         dashboard-host: '0.0.0.0'
-        num-cpus: '2' # can be auto-completed from the limits
-        num-gpus: '0'
+        num-cpus: "{{ .Values.worker.workerGroup.rayStartParams.numCpus }}"
+        num-gpus: "{{ .Values.worker.workerGroup.rayStartParams.numGpus }}"
         block: 'true'
       template:
         spec:
           nodeSelector:
-            morpheus-type: "gpu-adv"
+            morpheus-type: "{{ .Values.worker.nodeSelector }}"
           containers:
             - name: ray-head
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               imagePullPolicy: IfNotPresent
+              resources:
+                limits:
+                  cpu: "{{ .Values.worker.head.resources.limits.cpu }}"
+                  memory: "{{ .Values.worker.head.resources.limits.memory }}"
               ports:
                 - containerPort: 6379
                   name: gcs-server
@@ -45,19 +46,18 @@ spec:
               claimName: models-claim
               readOnly: true
     workerGroupSpecs:
-      # the pod replicas in this group typed worker
-      - replicas: 1
-        minReplicas: 1
-        maxReplicas: 5
-        # logical group name, for this called small-group, also can be functional
-        groupName: small-group
+      - replicas: {{ .Values.worker.workerGroup.replicas }}
+        minReplicas: {{ .Values.worker.workerGroup.minReplicas }}
+        maxReplicas: {{ .Values.worker.workerGroup.maxReplicas }}
+        groupName: ray-worker-group
         rayStartParams:
           block: 'true'
-          num-gpus: '1'
+          num-cpus: "{{ .Values.worker.workerGroup.rayStartParams.numCpus }}"
+          num-gpus: "{{ .Values.worker.workerGroup.rayStartParams.numGpus }}"
         template:
           spec:
             nodeSelector:
-              morpheus-type: "gpu-adv"
+              morpheus-type: "{{ .Values.worker.nodeSelector }}"
             initContainers:
               - name: init
                 image: busybox:1.28
@@ -70,6 +70,11 @@ spec:
                   preStop:
                     exec:
                       command: ["/bin/sh","-c","ray stop"]
+                resources:
+                  limits:
+                    cpu: "{{ .Values.worker.workerGroup.resources.limits.cpu }}"
+                    memory: "{{ .Values.worker.workerGroup.resources.limits.memory }}"
+                    nvidia.com/gpu: "{{ .Values.worker.workerGroup.resources.limits.gpu }}"
                 volumeMounts:
                 - name: models
                   mountPath: /mnt
