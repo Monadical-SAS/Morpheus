@@ -60,7 +60,7 @@ const ImagineSettings = () => {
     colorPalette,
     setColorPalette,
     controlNetType,
-    setControlNetType
+    setControlNetType,
     loraScale,
     setLoraScale
   } = useDiffusion();
