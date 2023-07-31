@@ -277,6 +277,8 @@ const ImagineSettings = () => {
               selected={colorPalette}
               setSelected={setColorPalette}
             />
+          </div>
+        )}
 
         {(selectedOption === SDOption.Text2Image || selectedOption === SDOption.Image2Image || 
         selectedOption === SDOption.ControlNet) && (
