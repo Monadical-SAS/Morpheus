@@ -43,6 +43,11 @@ export interface Prompt {
   negative_prompt: string;
   color_palette: string;
   controlnet_input_type?: string;
+  use_lora: boolean;
+  lora_path: string;
+  lora_scale: number;
+  use_embedding: boolean;
+  embedding_path: string;
 }
 
 export interface ArtWork {

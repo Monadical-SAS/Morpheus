@@ -13,6 +13,7 @@ from loguru import logger
 from app.celery.mlmodels.controlnet import preprocessing_image
 from app.config import get_settings
 from app.models.schemas import Prompt, PromptControlNet
+import app.utils.lora_ti_utils as lora_ti_utils
 
 settings = get_settings()
 
@@ -88,6 +89,34 @@ class StableDiffusionAbstract(ABC):
             else model.disable_xformers_memory_efficient_attention()
         )
 
+    @staticmethod
+    def add_lora_to_model(model, lora_path):
+        download_dir = lora_ti_utils.create_lora_ti_folder()
+        if "civitai.com" in lora_path:
+            lora_info = lora_ti_utils.get_civitai_model_info(lora_path)
+            lora_filename = lora_ti_utils.download_from_civitai(lora_info["download_link"], download_dir)
+            model.load_lora_weights(lora_filename)
+        else:
+            model.load_lora_weights(lora_path, cache_dir=download_dir)
+        lora_ti_utils.delete_lora_ti_folder(download_dir)
+
+    @staticmethod
+    def add_embedding_to_model(model, embedding_path):
+        try:
+            download_dir = lora_ti_utils.create_lora_ti_folder()
+            if "civitai.com" in embedding_path:
+                embedding_info = lora_ti_utils.get_civitai_model_info(embedding_path)
+                embedding_filename = lora_ti_utils.download_from_civitai(embedding_info["download_link"], download_dir)
+                if embedding_info["trigger_words"] is not None:
+                    model.load_textual_inversion(embedding_filename, token=embedding_info["trigger_words"])
+                else:
+                    model.load_textual_inversion(embedding_filename)
+            else:
+                model.load_textual_inversion(embedding_path, cache_dir=download_dir)
+            lora_ti_utils.delete_lora_ti_folder(download_dir)
+        except ValueError:
+            logger.info("Embedding is already loaded")
+
 
 class StableDiffusionBaseClassic(StableDiffusionAbstract):
     def __init__(
@@ -119,6 +148,9 @@ class StableDiffusionBaseClassic(StableDiffusionAbstract):
 
         if not Path(model_name).exists() and settings.environment != "prod":
             self.save_model(self.pipe, model_name)
+
+        # By default, no LoRA are loaded into the model
+        self.loaded_lora = False
 
     def generate_images(self, *args, **kwargs):
         pass
@@ -163,6 +195,9 @@ class StableDiffusionBaseControlNet(StableDiffusionAbstract):
         if not Path(controlnet_model_name).exists() and settings.environment != "prod":
             self.save_model(pipe=controlnet, path=controlnet_model_name)
 
+        # By default, no LoRA are loaded into the model
+        self.loaded_lora = False
+
     def generate_images(self, *args, **kwargs):
         pass
 
@@ -180,6 +215,22 @@ class StableDiffusionText2Image(StableDiffusionBaseClassic):
         logger.info("generating image in Text2Image pipeline")
         prompt: Prompt = kwargs.get("prompt")
         generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
+        attention_params = {}
+
+        # LoRA
+        if prompt.use_lora:
+            self.add_lora_to_model(self.model, prompt.lora_path)
+            self.loaded_lora = True
+        else:
+            prompt.lora_scale = 0.0
+
+        # Use scale param only if a lora has been loaded
+        if self.loaded_lora:
+            attention_params["scale"] = prompt.lora_scale
+
+        # Textual Inversion Embeddings
+        if prompt.use_embedding:
+            self.add_embedding_to_model(self.model, prompt.embedding_path)
 
         images = self.model(
             prompt=prompt.prompt,
@@ -190,6 +241,7 @@ class StableDiffusionText2Image(StableDiffusionBaseClassic):
             generator=generator,
             width=prompt.width,
             height=prompt.height,
+            cross_attention_kwargs=attention_params,
         ).images
 
         if len(images) == 0:
@@ -214,6 +266,22 @@ class StableDiffusionImage2Image(StableDiffusionBaseClassic):
         prompt: Prompt = kwargs.get("prompt")
         image = kwargs.get("image")
         generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
+        attention_params = {}
+
+        # LoRA
+        if prompt.use_lora:
+            self.add_lora_to_model(self.model, prompt.lora_path)
+            self.loaded_lora = True
+        else:
+            prompt.lora_scale = 0.0
+
+        # Use scale param only if a lora has been loaded
+        if self.loaded_lora:
+            attention_params["scale"] = prompt.lora_scale
+
+        # Textual Inversion Embeddings
+        if prompt.use_embedding:
+            self.add_embedding_to_model(self.model, prompt.embedding_path)
 
         images = self.model(
             prompt=prompt.prompt,
@@ -224,6 +292,7 @@ class StableDiffusionImage2Image(StableDiffusionBaseClassic):
             guidance_scale=prompt.guidance_scale,
             num_images_per_prompt=prompt.num_images_per_prompt,
             strength=prompt.strength,
+            cross_attention_kwargs=attention_params,
         ).images
 
         if len(images) == 0:
@@ -255,6 +324,24 @@ class StableDiffusionControlNet(StableDiffusionBaseControlNet):
         image = kwargs.get("image")
         conditioning_image = kwargs.get("conditioning_image")
         generator = torch.Generator(device="cpu").manual_seed(prompt.generator)
+        attention_params = {}
+
+        # LoRA
+        if prompt.use_lora:
+            # At the moment, civitai lora with cpu offload is not supported by Huggingface
+            # https://github.com/huggingface/diffusers/issues/3958
+            if "civitai.com" not in prompt.lora_path:
+                self.add_lora_to_model(self.model, prompt.lora_path)
+                self.loaded_lora = True
+        else:
+            prompt.lora_scale = 0.0
+
+        if self.loaded_lora:
+            attention_params["scale"] = prompt.lora_scale
+
+        # Textual Inversion Embeddings
+        if prompt.use_embedding:
+            self.add_embedding_to_model(self.model, prompt.embedding_path)
 
         # preprocessing image
         base_image = preprocessing_image.get(prompt.controlnet_type)(image)
@@ -271,6 +358,7 @@ class StableDiffusionControlNet(StableDiffusionBaseControlNet):
                     num_inference_steps=prompt.num_inference_steps,
                     guidance_scale=prompt.guidance_scale,
                     num_images_per_prompt=prompt.num_images_per_prompt,
+                    cross_attention_kwargs=attention_params
                 ).images
             else:
                 images = self.model(
@@ -283,6 +371,7 @@ class StableDiffusionControlNet(StableDiffusionBaseControlNet):
                     num_inference_steps=prompt.num_inference_steps,
                     guidance_scale=prompt.guidance_scale,
                     num_images_per_prompt=prompt.num_images_per_prompt,
+                    cross_attention_kwargs=attention_params
                 ).images
 
         else:
@@ -294,6 +383,7 @@ class StableDiffusionControlNet(StableDiffusionBaseControlNet):
                 num_inference_steps=prompt.num_inference_steps,
                 guidance_scale=prompt.guidance_scale,
                 num_images_per_prompt=prompt.num_images_per_prompt,
+                cross_attention_kwargs=attention_params,
             ).images
 
         if len(images) == 0:

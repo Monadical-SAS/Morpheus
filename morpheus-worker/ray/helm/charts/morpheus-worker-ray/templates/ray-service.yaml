@@ -1,0 +1,86 @@
+apiVersion: ray.io/v1alpha1
+kind: RayService
+metadata:
+  name: morpheus-rayservice
+spec:
+  serveConfig:
+    importPath: models.deployment
+  rayClusterConfig:
+    rayVersion: "{{ .Values.worker.rayVersion }}"
+    enableInTreeAutoscaling: true
+    headGroupSpec:
+      serviceType: ClusterIP
+      rayStartParams:
+        port: '6379'
+        dashboard-host: '0.0.0.0'
+        num-cpus: "{{ .Values.worker.workerGroup.rayStartParams.numCpus }}"
+        num-gpus: "{{ .Values.worker.workerGroup.rayStartParams.numGpus }}"
+        block: 'true'
+      template:
+        spec:
+          nodeSelector:
+            morpheus-type: "{{ .Values.worker.nodeSelector }}"
+          containers:
+            - name: ray-head
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: IfNotPresent
+              resources:
+                limits:
+                  cpu: "{{ .Values.worker.head.resources.limits.cpu }}"
+                  memory: "{{ .Values.worker.head.resources.limits.memory }}"
+              ports:
+                - containerPort: 6379
+                  name: gcs-server
+                - containerPort: 8265 # Ray dashboard
+                  name: dashboard
+                - containerPort: 10001
+                  name: client
+                - containerPort: 8000
+                  name: serve
+              volumeMounts:
+                - name: models
+                  mountPath: /mnt
+          volumes:
+          - name: models
+            persistentVolumeClaim:
+              claimName: models-claim
+              readOnly: true
+    workerGroupSpecs:
+      - replicas: {{ .Values.worker.workerGroup.replicas }}
+        minReplicas: {{ .Values.worker.workerGroup.minReplicas }}
+        maxReplicas: {{ .Values.worker.workerGroup.maxReplicas }}
+        groupName: ray-worker-group
+        rayStartParams:
+          block: 'true'
+          num-cpus: "{{ .Values.worker.workerGroup.rayStartParams.numCpus }}"
+          num-gpus: "{{ .Values.worker.workerGroup.rayStartParams.numGpus }}"
+        template:
+          spec:
+            nodeSelector:
+              morpheus-type: "{{ .Values.worker.nodeSelector }}"
+            initContainers:
+              - name: init
+                image: busybox:1.28
+                command: ['sh', '-c', "until nslookup $RAY_IP.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for K8s Service $RAY_IP; sleep 2; done"]
+            containers:
+              - name: ray-worker
+                image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+                imagePullPolicy: IfNotPresent
+                lifecycle:
+                  preStop:
+                    exec:
+                      command: ["/bin/sh","-c","ray stop"]
+                resources:
+                  limits:
+                    cpu: "{{ .Values.worker.workerGroup.resources.limits.cpu }}"
+                    memory: "{{ .Values.worker.workerGroup.resources.limits.memory }}"
+                    nvidia.com/gpu: "{{ .Values.worker.workerGroup.resources.limits.gpu }}"
+                volumeMounts:
+                - name: models
+                  mountPath: /mnt
+            volumes:
+            - name: models
+              persistentVolumeClaim:
+                claimName: models-claim
+                readOnly: true
+    headServiceAnnotations: {}

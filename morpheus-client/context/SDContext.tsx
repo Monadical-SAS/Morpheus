@@ -64,6 +64,16 @@ export interface IDiffusionContext {
   setColorPalette: (colorPalette: string) => void;
   controlNetType: string
   setControlNetType: (controlNetType: string) => void;
+  embeddingPath: TextState;
+  setEmbeddingPath: (embeddingPath: TextState) => void;
+  useEmbedding: CheckboxState;
+  setEmbedding: (lora: CheckboxState) => void;
+  loraPath: TextState;
+  setLoraPath: (loraPath: TextState) => void;
+  useLora: CheckboxState;
+  setLora: (lora: CheckboxState) => void;
+  loraScale: NumberState;
+  setLoraScale: (loraScale: NumberState) => void;
   buildPrompt: () => any;
   restartSDSettings: () => void;
 }
@@ -134,7 +144,12 @@ const initialConfig = {
   randomizeSeed: initializeCheckbox(true),
   strength: initializeNumber(0.5),
   colorPalette: "None",
-  controlNetType: "Text-to-Image"
+  controlNetType: "Text-to-Image",
+  embeddingPath: initializeText(String("")),
+  useEmbedding: initializeCheckbox(false),
+  loraPath: initializeText(String("")),
+  useLora: initializeCheckbox(false),
+  loraScale: initializeNumber(1.0)
 };
 
 const defaultState = {
@@ -163,6 +178,16 @@ const defaultState = {
   setSeed: () => {},
   randomizeSeed: initialConfig.randomizeSeed,
   setRandomizeSeed: () => {},
+  embeddingPath: initialConfig.embeddingPath,
+  setEmbeddingPath: () => {},
+  useEmbedding: initialConfig.useEmbedding,
+  setEmbedding: () => {},
+  loraPath: initialConfig.loraPath,
+  setLoraPath: () => {},
+  useLora: initialConfig.useLora,
+  setLora: () => {},
+  loraScale: initialConfig.scale,
+  setLoraScale: () => {},
   buildPrompt: () => {},
   restartSDSettings: () => {},
   colorPalette: initialConfig.colorPalette,
@@ -206,6 +231,11 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
   );
   const [colorPalette, setColorPalette] = useState<string>(initialConfig.colorPalette);
   const [controlNetType, setControlNetType] = useState<string>(initialConfig.controlNetType);
+  const [embeddingPath, setEmbeddingPath] = useState<TextState>(initialConfig.embeddingPath);
+  const [useEmbedding, setEmbedding] = useState<CheckboxState>(initialConfig.useEmbedding);
+  const [loraPath, setLoraPath] = useState<TextState>(initialConfig.loraPath);
+  const [useLora, setLora] = useState<CheckboxState>(initialConfig.useLora);
+  const [loraScale, setLoraScale] = useState<NumberState>(initialConfig.loraScale);
 
   useEffect(() => {
     // Fetch Stable Diffusion models
@@ -278,7 +308,12 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
       strength: strength.value,
       negative_prompt: negativePrompt.value,
       color_palette: colorPalette,
-      controlnet_input_type: controlNetType
+      controlnet_input_type: controlNetType,
+      use_lora: useLora.value,
+      lora_path: loraPath.value,
+      use_embedding: useEmbedding.value,
+      embedding_path: embeddingPath.value,
+      lora_scale: loraScale.value
     };
   };
 
@@ -320,6 +355,16 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
         setColorPalette,
         controlNetType,
         setControlNetType,
+        embeddingPath,
+        setEmbeddingPath,
+        useEmbedding,
+        setEmbedding,
+        loraPath,
+        setLoraPath,
+        useLora,
+        setLora,
+        loraScale,
+        setLoraScale,
         buildPrompt,
         restartSDSettings,
       }}

@@ -35,5 +35,6 @@ controlnet-aux==0.0.1
 opencv-contrib-python-headless
 flower
 dynamicprompts[attentiongrabber,magicprompt]
-scikit-image==0.21.0
-scikit-learn==1.3.0
+scikit-image
+scikit-learn
+beautifulsoup4

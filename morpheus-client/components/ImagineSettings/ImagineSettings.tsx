@@ -14,6 +14,8 @@ import { InfoIcon } from "../icons/info";
 import { SettingsIcon } from "../icons/settings";
 import { useShowSettings } from "@/hooks/useShowSettings";
 import styles from "./ImagineSettings.module.scss";
+import InputLora from "../Inputs/InputLora/InputLora";
+import InputEmbedding from "../Inputs/InputEmbedding/InputEmbedding";
 
 interface OptionState {
   title: string;
@@ -59,6 +61,8 @@ const ImagineSettings = () => {
     setColorPalette,
     controlNetType,
     setControlNetType
+    loraScale,
+    setLoraScale
   } = useDiffusion();
 
   const SettingsContent = (
@@ -218,6 +222,7 @@ const ImagineSettings = () => {
           <InputSeed />
         </div>
 
+
         {(selectedOption === SDOption.Image2Image) && (
           <div className={styles.settingItem}>
             <OptionInfo
@@ -272,6 +277,60 @@ const ImagineSettings = () => {
               selected={colorPalette}
               setSelected={setColorPalette}
             />
+
+        {(selectedOption === SDOption.Text2Image || selectedOption === SDOption.Image2Image || 
+        selectedOption === SDOption.ControlNet) && (
+          <div className={styles.settingItem}>
+            <OptionInfo
+              title={"LoRA"}
+              description={
+                "Fill this textbox with wither the path \n of an existing LoRA from HuggingFace (ex: lora-library/dragon-ball-wufan) " +
+                "or from the url of a Civitai model (ex: https://civitai.com/models/48139/lowra). Make sure to include associated trigger words " +
+                "in the prompt."
+              }
+            />
+
+            <InputLora />
+          </div>
+        )}
+
+        {(selectedOption === SDOption.Text2Image || selectedOption === SDOption.Image2Image || 
+        selectedOption === SDOption.ControlNet) && (
+          <div className={styles.settingItem}>
+            <OptionInfo
+              title={"LoRA Scale"}
+              description={
+                "A scale value of 0 is the same as not using your LoRA weights and you’re only using the base model " +
+                "weights, and a scale value of 1 means you’re only using the fully finetuned LoRA weights. Values " +
+                "between 0 and 1 interpolates between the two weights."
+              }
+            />
+
+            <InputNumber
+              id="inputLoraScale"
+              number={loraScale}
+              setNumber={setLoraScale}
+              minValue={0}
+              maxValue={1}
+              step={0.01}
+              isRequired={true}
+            />
+          </div>
+        )}
+
+        {(selectedOption === SDOption.Text2Image || selectedOption === SDOption.Image2Image || 
+        selectedOption === SDOption.ControlNet) && (
+          <div className={styles.settingItem}>
+            <OptionInfo
+              title={"TI Embedding"}
+              description={
+                "Fill this textbox with wither the path \n of an existing textual inversion embedding from HuggingFace (ex: sd-concepts-library/cat-toy) " +
+                "or from the url of a Civitai model (ex: https://civitai.com/models/6841/adventure-diffusion). Make sure to include associated" +
+                " trigger words in the prompt."
+              }
+            />
+
+            <InputEmbedding />
           </div>
         )}
 

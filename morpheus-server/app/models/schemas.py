@@ -106,6 +106,11 @@ class Prompt(BaseModel):
     strength: Optional[float] = 0.75
     color_palette: Optional[str] = "None"
     controlnet_input_type: Optional[str] = "None"
+    use_lora: Optional[bool] = False
+    lora_path: Optional[str] = ""
+    lora_scale: Optional[float] = 1.0
+    use_embedding: Optional[bool] = False
+    embedding_path: Optional[str] = ""
 
     @validator("model")
     def check_if_empty_model(cls, model):
@@ -145,6 +150,11 @@ class Prompt(BaseModel):
                 "strength": 0.75,
                 "color_palette": "None",
                 "controlnet_input_type": "Text-to-Image",
+                "use_lora": False,
+                "lora_path": "",
+                "lora_scale": 1.0,
+                "use_embedding": False,
+                "embedding_path": "",
             }
         }
 

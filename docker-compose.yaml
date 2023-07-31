@@ -121,6 +121,28 @@ services:
               count: 1
               capabilities: [ gpu ]
 
+  worker-ray:
+    build: ./morpheus-worker/ray
+    image: morpheus-worker:latest
+    command: ray start --head --dashboard-host 0.0.0.0 --block
+    ports:
+      - "8000:8000"
+      - "8265:8265"
+    volumes:
+      - sd_model:/mnt/
+    depends_on:
+      api:
+        condition: service_started
+
+  worker-ray-deployer:
+    image: morpheus-worker:latest
+    command: bash -c "sleep 5 && ray job submit -- serve deploy models.yaml"
+    environment:
+      - RAY_ADDRESS=http://worker-ray:8265
+    depends_on:
+      worker-ray:
+        condition: service_started
+
   magicprompt_worker:
     build: ./morpheus-server
     command: celery -A app.celery.workers.magic_prompt_app worker --max-tasks-per-child=1 --loglevel=info -Q magic_prompt
