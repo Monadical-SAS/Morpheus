@@ -88,6 +88,18 @@ Follow one,
 # Run using the staging profile
 docker-compose --profile=staging up
 ```
+</details>
+
+<details>
+<summary><b><img src="https://user-images.githubusercontent.com/511499/117447182-29758200-af0b-11eb-97bd-58723fee62ab.png" alt="Docker" height="28px" align="top"/> <code>docker-compose</code></b>  (Linux/Without Nvidia GPU) &nbsp;</summary>
+<br/>
+
+It emulates the use of AI pipeline when you don't have a GPU available. It returns fixed fake images from the models.
+This is because it is mandatory to have GPU to use Generative AI. It's a good way to test the application locally 
+```bash
+# Run using the no-gpu profile
+docker-compose --profile=local up
+```
 
 </details>
 
