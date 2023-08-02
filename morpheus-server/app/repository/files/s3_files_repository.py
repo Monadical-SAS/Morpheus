@@ -85,7 +85,7 @@ class S3ImagesRepository(FileRepositoryInterface):
         try:
             params = {"Bucket": IMAGES_BUCKET, "Prefix": folder_name}
             if max_keys:
-                params.update(max_keys=max_keys)
+                params.update(MaxKeys=max_keys)
 
             response = self.s3.list_objects_v2(**params)
             images = []
