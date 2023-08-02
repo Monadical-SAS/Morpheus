@@ -1,21 +1,34 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
+import { CookiesStatus } from "@/utils/cookies";
 import FullScreenLoader from "../components/Loaders/FullScreenLoader/Loader";
 import { Auth } from "@/components/Auth/Auth";
 import { isEmptyObject } from "@/utils/object";
 import { useAuth } from "@/context/AuthContext";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import styles from "../styles/pages/Home.module.scss";
 
 const Home = () => {
   const router = useRouter();
   const { authLoading, user } = useAuth();
+  const { cookiesStatus, sendAnalyticsRecord } = useAnalytics();
 
   useEffect(() => {
     if (!isEmptyObject(user)) {
       router.push("/imagine/text2img");
     }
   }, [router, user]);
+
+  useEffect(() => {
+    if (cookiesStatus === CookiesStatus.Accepted) {
+      sendAnalyticsRecord("page_view", {
+        page_location: window.location.href,
+        page_title: document?.title,
+        page_name: "Home",
+      });
+    }
+  }, [cookiesStatus, sendAnalyticsRecord]);
 
   return authLoading ? (
     <FullScreenLoader isLoading={authLoading} />

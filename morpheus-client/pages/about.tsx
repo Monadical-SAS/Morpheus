@@ -1,3 +1,7 @@
+import { useEffect } from "react";
+
+import { CookiesStatus } from "@/utils/cookies";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import MainContainer from "../layout/MainContainer/MainContainer";
 import FAQ from "../components/FAQ/FAQ";
 import { AppLink } from "@/components/AppLink/AppLink";
@@ -12,6 +16,18 @@ import {
 import styles from "../styles/pages/About.module.scss";
 
 const About = () => {
+  const { cookiesStatus, sendAnalyticsRecord } = useAnalytics();
+
+  useEffect(() => {
+    if (cookiesStatus === CookiesStatus.Accepted) {
+      sendAnalyticsRecord("page_view", {
+        page_location: window.location.href,
+        page_title: document?.title,
+        page_name: "About",
+      });
+    }
+  }, [cookiesStatus, sendAnalyticsRecord]);
+
   return (
     <MainContainer showFooter={true} style={{ justifyContent: "center" }}>
       <div className={styles.aboutContainer}>
@@ -57,13 +73,13 @@ const About = () => {
           <p className="body-1 secondary">
             We’re hoping to get some feedback from users like you! Do you find
             this useful? Are there features missing from our{" "}
-            <a className="app-link body-1 main underline" href="#roadmap">
+            <a className="underline app-link body-1 main" href="#roadmap">
               roadmap
             </a>{" "}
             that you would like to see? Run into any problems or bugs? We want
             to hear about it! Contact us via{" "}
             <a
-              className="body-1 main underline"
+              className="underline body-1 main"
               href="mailto:hello@monadical.com"
             >
               email
