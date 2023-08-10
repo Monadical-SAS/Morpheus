@@ -123,7 +123,6 @@ services:
 
   worker-ray:
     build: ./morpheus-worker/ray
-    image: morpheus-worker:latest
     command: ray start --head --dashboard-host 0.0.0.0 --block
     ports:
       - "8000:8000"
@@ -135,7 +134,7 @@ services:
         condition: service_started
 
   worker-ray-deployer:
-    image: morpheus-worker:latest
+    build: ./morpheus-worker/ray
     command: bash -c "sleep 5 && ray job submit -- serve deploy models.yaml"
     environment:
       - RAY_ADDRESS=http://worker-ray:8265
