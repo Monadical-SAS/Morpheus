@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     model_default: str = "stabilityai/stable-diffusion-2"
     controlnet_model_default = "lllyasviel/sd-controlnet-canny"
     magicprompt_model_default = "Gustavosta/MagicPrompt-Stable-Diffusion"
+    upscaling_model_default = "stabilityai/stable-diffusion-x4-upscaler"
     sampler_default: str = "PNDMScheduler"
     hf_auth_token: str = ""
     enable_float32: bool = False

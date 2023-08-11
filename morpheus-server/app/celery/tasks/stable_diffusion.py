@@ -20,12 +20,37 @@ file_service = FilesService(files_repository=files_repository)
 settings = get_settings()
 
 MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.model_default}"
+UPSCALING_MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.upscaling_model_default}"
 
 
 class DiffusionTask(Task):
     abstract = True
 
     def __init__(self, name: str = MODEL_PATH_DEFAULT):
+        super().__init__()
+        self.model = None
+        self.name_model = name
+        print("Default model at init: ", self.name_model)
+
+    @run_as_per_environment
+    def __call__(self, *args, **kwargs):
+        if not self.model:
+            logger.info("loading model....")
+            try:
+                module_import = importlib.import_module(self.path[0])
+                model_obj = getattr(module_import, self.path[1])
+                self.model = model_obj(model_name=self.name_model)
+                logger.info("Model loaded")
+            except Exception as e:
+                logger.exception(e)
+                raise ModelLoadError from e
+        return self.run(*args, **kwargs)
+
+
+class UpscalingTask(Task):
+    abstract = True
+
+    def __init__(self, name: str = UPSCALING_MODEL_PATH_DEFAULT):
         super().__init__()
         self.model = None
         self.name_model = name
@@ -249,7 +274,7 @@ def generate_stable_diffusion_inpaint_output_task(self, prompt: Prompt, image: I
 @app.task(
     ignore_result=False,
     bind=True,
-    base=DiffusionTask,
+    base=UpscalingTask,
     path=("app.celery.mlmodels.stable_diffusion", "StableDiffusionUpscale"),
     name=f"{__name__}.stable-diffusion-upscale",
 )

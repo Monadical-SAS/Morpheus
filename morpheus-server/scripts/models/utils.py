@@ -7,6 +7,8 @@ from dynamicprompts.generators import RandomPromptGenerator
 from dynamicprompts.generators.magicprompt import MagicPromptGenerator
 from omegaconf import OmegaConf
 
+from decorators import validate_stable_diffusion_upscaler
+
 sys.path.append(".")
 from app.config import get_settings  # noqa: E402
 
@@ -17,6 +19,7 @@ def load_config_from_file(filename):
     return OmegaConf.load(filename)
 
 
+@validate_stable_diffusion_upscaler
 def download_model_from_huggingface(params):
     output = params.source.replace(" ", "_")
     path = f"./tmp/{output}"

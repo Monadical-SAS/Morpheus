@@ -1,3 +1,5 @@
+import json
+
 import httpx
 import typer
 from omegaconf import OmegaConf
@@ -32,7 +34,7 @@ def _register_model_on_db(*, server_url, models_info=None):
 
 def _update_model_on_db(*, server_url, models_info=None):
     response = make_http_request(method="PUT", url=server_url, json=models_info)
-    print_json(json=str(response.json(), "utf-8"))
+    print_json(json=json.dumps(response.json()))
 
 
 def get_models_from_db(server_url):

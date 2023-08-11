@@ -10,10 +10,11 @@ from diffusers import (
 )
 from loguru import logger
 
+import app.utils.lora_ti_utils as lora_ti_utils
 from app.celery.mlmodels.controlnet import preprocessing_image
 from app.config import get_settings
 from app.models.schemas import Prompt, PromptControlNet
-import app.utils.lora_ti_utils as lora_ti_utils
+from app.utils.decorators import validate_stable_diffusion_upscaler
 
 settings = get_settings()
 
@@ -73,6 +74,7 @@ class StableDiffusionAbstract(ABC):
         pass
 
     @staticmethod
+    @validate_stable_diffusion_upscaler
     def save_model(pipe, path: str):
         pipe.save_pretrained(save_directory=path)
 
@@ -146,7 +148,8 @@ class StableDiffusionBaseClassic(StableDiffusionAbstract):
         self.model.scheduler = scheduler.from_config(self.model.scheduler.config)
 
         if not Path(model_name).exists() and settings.environment != "prod":
-            self.save_model(self.pipe, model_name)
+            logger.info(f"saving model in {model_name}")
+            self.save_model(pipe=self.pipe, path=model_name)
 
         # By default, no LoRA are loaded into the model
         self.loaded_lora = False
@@ -189,9 +192,11 @@ class StableDiffusionBaseControlNet(StableDiffusionAbstract):
         self.model.scheduler = scheduler.from_config(self.model.scheduler.config)
 
         if not Path(model_name).exists() and settings.environment != "prod":
+            logger.info(f"saving model in {model_name}")
             self.save_model(pipe=self.pipe, path=model_name)
 
         if not Path(controlnet_model_name).exists() and settings.environment != "prod":
+            logger.info(f"saving model in {model_name}")
             self.save_model(pipe=controlnet, path=controlnet_model_name)
 
         # By default, no LoRA are loaded into the model
@@ -465,7 +470,8 @@ class StableDiffusionUpscale(StableDiffusionAbstract):
         self.model.scheduler = scheduler.from_config(self.model.scheduler.config)
 
         if not Path(model_name).exists() and settings.environment != "prod":
-            self.save_model(self.pipe, model_name)
+            logger.info(f"saving model in {model_name}")
+            self.save_model(pipe=self.pipe, path=model_name)
 
     def generate_images(self, **kwargs):
         logger.info("Generating image in Upscale pipeline.")
@@ -484,7 +490,7 @@ class StableDiffusionUpscale(StableDiffusionAbstract):
         ).images
 
         if len(images) == 0:
-            logger.info("No text2img images generated")
+            logger.info("No upscaled images generated")
             return None
 
         logger.info("upscale task completed successfully")
