@@ -16,6 +16,11 @@ class EnvironmentEnum(str, Enum):
     prod = "prod"
 
 
+class GenerativeAIBackendEnum(str, Enum):
+    celery = "celery"
+    ray = "ray"
+
+
 class Settings(SettingsData):
     environment: EnvironmentEnum = EnvironmentEnum.local
 
@@ -28,6 +33,8 @@ class Settings(SettingsData):
     hf_auth_token: str = ""
     enable_float32: bool = False
     max_num_images: int = 4
+
+    generative_ai_backend: str = GenerativeAIBackendEnum.celery
 
     celery_broker_url: str = "redis://redis:6379/0"
     celery_result_backend: str = "redis://redis:6379/0"
@@ -65,7 +72,17 @@ def read_available_samplers(file: str):
 samplers = read_available_samplers("config/sd-schedulers.yaml")
 
 file_handlers = {
-    "S3": {"module": "morpheus_data.repository.files.s3_files_repository", "handler": "S3ImagesRepository"}
+    "S3": {
+        "module": "morpheus_data.repository.files.s3_files_repository",
+        "handler": "S3ImagesRepository",
+    }
+}
+
+backend_handlers = {
+    "celery": {
+        "module": "app.integrations.generative_ai_engine.sdiffusion_celery",
+        "handler": "GenerativeAIStableDiffusionCelery",
+    }
 }
 
 
@@ -73,9 +90,28 @@ file_handlers = {
 def get_file_handlers():
     settings = get_settings()
     try:
-        module_import = importlib.import_module(file_handlers[settings.bucket_type]["module"])
-        file_handler = getattr(module_import, file_handlers[settings.bucket_type]["handler"])
+        module_import = importlib.import_module(
+            file_handlers[settings.bucket_type]["module"]
+        )
+        file_handler = getattr(
+            module_import, file_handlers[settings.bucket_type]["handler"]
+        )
         return file_handler()
     except Exception as e:
         print("Error getting file handler", e)
+        return None
+
+
+def get_generative_ai_backend():
+    settings = get_settings()
+    try:
+        module_import = importlib.import_module(
+            backend_handlers[settings.generative_ai_backend]["module"]
+        )
+        backend = getattr(
+            module_import, backend_handlers[settings.generative_ai_backend]["handler"]
+        )
+        return backend()
+    except Exception as e:
+        print("Error getting generative ai backend", e)
         return None
