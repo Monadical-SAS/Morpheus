@@ -10,44 +10,38 @@ import {
 
 import { auth } from "../lib/firebaseClient";
 
-export const signUpWithEmailAndPasswordFirebase = async (
-  user: any
-): Promise<any> => {
+export const signUpWithEmailAndPasswordFirebase = async (user: any): Promise<any> => {
   return new Promise((resolve, reject) => {
     createUserWithEmailAndPassword(auth, user.email, user.password)
       .then((userCredential) => {
         resolve(userCredential.user);
       })
       .catch((error) => {
-        reject(mapAuthCodeToMessage(error.code));
+        reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your sign up process"));
       });
   });
 };
 
-export const loginWithEmailAndPasswordFirebase = async (
-  user: any
-): Promise<any> => {
+export const loginWithEmailAndPasswordFirebase = async (user: any): Promise<any> => {
   return new Promise((resolve, reject) => {
     signInWithEmailAndPassword(auth, user.email, user.password)
       .then((userCredential) => {
         resolve(userCredential.user);
       })
       .catch((error) => {
-        reject(mapAuthCodeToMessage(error.code));
+        reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your authentication process"));
       });
   });
 };
 
-export const sendUserPasswordResetEmail = async (
-  email: string
-): Promise<any> => {
+export const sendUserPasswordResetEmail = async (email: string): Promise<any> => {
   return new Promise((resolve, reject) => {
     sendPasswordResetEmail(auth, email)
       .then(() => {
         resolve(true);
       })
       .catch((error) => {
-        reject(mapAuthCodeToMessage(error.code));
+        reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your password reset process"));
       });
   });
 };
@@ -62,7 +56,7 @@ export const loginWithGoogleFirebase = async (): Promise<any> => {
         resolve({ user, additionalInfo });
       })
       .catch((error) => {
-        reject(mapAuthCodeToMessage(error.code));
+        reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your authentication process"));
       });
   });
 };
@@ -74,44 +68,20 @@ export const signOutFirebase = async (): Promise<any> => {
         resolve(true);
       })
       .catch((error) => {
-        reject(mapAuthCodeToMessage(error.code));
+        reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your sign out process"));
       });
   });
 };
 
-const mapAuthCodeToMessage = (authCode: string) => {
-  switch (authCode) {
-    case "auth/wrong-password":
-      return "Password provided is not correct";
-
-    case "auth/invalid-password":
-      return "Password provided is not correct";
-
-    case "auth/invalid-email":
-      return "Email provided is invalid";
-
-    case "auth/invalid-display-name":
-      return "Display name provided is invalid";
-
-    case "auth/invalid-phone-number":
-      return "Phone number provided is invalid";
-
-    case "auth/invalid-photo-url":
-      return "Photo URL provided is invalid";
-
-    case "auth/invalid-uid":
-      return "UID provided is invalid";
-
-    case "auth/invalid-provider-id":
-      return "Provider ID provided is invalid";
-
-    case "auth/email-already-in-use":
-      return "Email provided is already in use";
-
-    case "auth/user-not-found":
-      return "User not found";
-
-    default:
-      return "Something went wrong with your authentication process";
-  }
+const mapAuthCodeToMessage: { [key: string]: string } = {
+  "auth/wrong-password": "Password provided is not correct",
+  "auth/invalid-password": "Password provided is not correct",
+  "auth/invalid-email": "Email provided is invalid",
+  "auth/invalid-display-name": "Display name provided is invalid",
+  "auth/invalid-phone-number": "Phone number provided is invalid",
+  "auth/invalid-photo-url": "Photo URL provided is invalid",
+  "auth/invalid-uid": "UID provided is invalid",
+  "auth/invalid-provider-id": "Provider ID provided is invalid",
+  "auth/email-already-in-use": "Email provided is already in use",
+  "auth/user-not-found": "User not found",
 };
