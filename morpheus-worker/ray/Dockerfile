@@ -1,4 +1,5 @@
-FROM rayproject/ray:latest-gpu
+ARG RAY_IMAGE_TAG="latest-gpu"
+FROM rayproject/ray:$RAY_IMAGE_TAG
 
 # Configuration defaults
 ENV VENV_NAME ".venv-docker"
