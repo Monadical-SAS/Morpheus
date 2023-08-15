@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.database import get_db
+from app.database.database import get_db
 from app.integrations.firebase import get_user
 from app.models.schemas import User, Response
 from app.services.user_services import UserService

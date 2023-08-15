@@ -1,0 +1,62 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Poppins, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1::selection, h2::selection, h3::selection, h4::selection, h5::selection, h6::selection, p::selection, span::selection {
+  background-color: #B3005E;
+  color: white;
+}
+
+code {
+  font-family: source-code-pro, Consolas, "Courier New", monospace;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-link {
+  text-decoration: none;
+  cursor: pointer !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* The scrollbar itself */
+::-webkit-scrollbar {
+  width: 8px; /* width of the entire scrollbar */
+}
+
+/* Track of the scrollbar */
+::-webkit-scrollbar-track {
+  background: #14172D; /* color of the tracking area */
+}
+
+/* Handle of the scrollbar */
+::-webkit-scrollbar-thumb {
+  border-radius: 16px; /* roundness of the scroll thumb */
+  background-color: #6D6D94; /* color of the scroll thumb */
+  border: 3px solid #6D6D94; /* creates padding around scroll thumb */
+}
+
+* {
+  scrollbar-width: thin; /* "auto" or "thin"  */
+  scrollbar-color: #FFFFFF #14172D; /* thumb and track color */
+}
+
+/*# sourceMappingURL=App.css.map */

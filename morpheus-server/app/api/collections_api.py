@@ -6,7 +6,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.config import get_file_handlers
-from app.database import get_db
+from app.database.database import get_db
 from app.integrations.firebase import get_user
 from app.models.schemas import Collection, CollectionCreate, Response
 from app.services.collection_services import CollectionService

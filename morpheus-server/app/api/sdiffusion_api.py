@@ -1,7 +1,7 @@
 from celery.result import AsyncResult
 from fastapi import APIRouter, Depends, File, UploadFile
 
-from app.database import get_db
+from app.database.database import get_db
 from app.error.error import ImageNotProvidedError, ModelNotFoundError, UserNotFoundError
 from app.integrations.firebase import get_user
 from app.models.schemas import (

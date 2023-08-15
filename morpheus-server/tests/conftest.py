@@ -2,7 +2,7 @@ import pytest
 from httpx import AsyncClient
 
 from app.app import app
-from app.database import get_db
+from app.database.database import get_db
 from app.models.schemas import User
 from app.repository.firebase_repository import FirebaseRepository
 from app.repository.user_repository import UserRepository

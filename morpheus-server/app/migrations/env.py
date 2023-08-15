@@ -65,7 +65,7 @@ def run_migrations_online() -> None:
     #     prefix="sqlalchemy.",
     #     poolclass=pool.NullPool,
     # )
-    from app.database import engine
+    from app.database.database import engine
 
     connectable = engine
     with connectable.connect() as connection:

@@ -1,0 +1,512 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+.button, .buttonSubmit, .buttonDisabled, .buttonDanger, .caption-2, .caption-1, .base-2, .base-1, .body-3, .body-2, .body-1, .headline-6, .headline-5, .headline-4, .headline-3, .headline-2, .headline-1 {
+  color: #222732;
+}
+
+.main.buttonSubmit, .main.buttonDisabled, .main.buttonDanger, .main.button, .main.caption-2, .main.caption-1, .main.base-2, .main.base-1, .main.body-3, .main.body-2, .main.body-1, .main.headline-6, .main.headline-5, .main.headline-4, .main.headline-3, .main.headline-2, .main.headline-1 {
+  color: #B3005E;
+}
+
+.accent.buttonSubmit, .accent.buttonDisabled, .accent.buttonDanger, .accent.button, .accent.caption-2, .accent.caption-1, .accent.base-2, .accent.base-1, .accent.body-3, .accent.body-2, .accent.body-1, .accent.headline-6, .accent.headline-5, .accent.headline-4, .accent.headline-3, .accent.headline-2, .accent.headline-1 {
+  color: #FF5F9E;
+}
+
+.primary.buttonSubmit, .primary.buttonDisabled, .primary.buttonDanger, .primary.button, .primary.caption-2, .primary.caption-1, .primary.base-2, .primary.base-1, .primary.body-3, .primary.body-2, .primary.body-1, .primary.headline-6, .primary.headline-5, .primary.headline-4, .primary.headline-3, .primary.headline-2, .primary.headline-1 {
+  color: #FFFFFF;
+}
+
+.secondary.buttonSubmit, .secondary.buttonDisabled, .secondary.buttonDanger, .secondary.button, .secondary.caption-2, .secondary.caption-1, .secondary.base-2, .secondary.base-1, .secondary.body-3, .secondary.body-2, .secondary.body-1, .secondary.headline-6, .secondary.headline-5, .secondary.headline-4, .secondary.headline-3, .secondary.headline-2, .secondary.headline-1 {
+  color: #8B90B2;
+}
+
+.success.buttonSubmit, .success.buttonDisabled, .success.buttonDanger, .success.button, .success.caption-2, .success.caption-1, .success.base-2, .success.base-1, .success.body-3, .success.body-2, .success.body-1, .success.headline-6, .success.headline-5, .success.headline-4, .success.headline-3, .success.headline-2, .success.headline-1 {
+  color: #70cc6e;
+}
+
+.info.buttonSubmit, .info.buttonDisabled, .info.buttonDanger, .info.button, .info.caption-2, .info.caption-1, .info.base-2, .info.base-1, .info.body-3, .info.body-2, .info.body-1, .info.headline-6, .info.headline-5, .info.headline-4, .info.headline-3, .info.headline-2, .info.headline-1 {
+  color: #01c2c2;
+}
+
+.danger.buttonSubmit, .danger.buttonDisabled, .danger.buttonDanger, .danger.button, .danger.caption-2, .danger.caption-1, .danger.base-2, .danger.base-1, .danger.body-3, .danger.body-2, .danger.body-1, .danger.headline-6, .danger.headline-5, .danger.headline-4, .danger.headline-3, .danger.headline-2, .danger.headline-1 {
+  color: #da4444;
+}
+
+.white.buttonSubmit, .white.buttonDisabled, .white.buttonDanger, .white.button, .white.caption-2, .white.caption-1, .white.base-2, .white.base-1, .white.body-3, .white.body-2, .white.body-1, .white.headline-6, .white.headline-5, .white.headline-4, .white.headline-3, .white.headline-2, .white.headline-1 {
+  color: #ffffff;
+}
+
+.grey.buttonSubmit, .grey.buttonDisabled, .grey.buttonDanger, .grey.button, .grey.caption-2, .grey.caption-1, .grey.base-2, .grey.base-1, .grey.body-3, .grey.body-2, .grey.body-1, .grey.headline-6, .grey.headline-5, .grey.headline-4, .grey.headline-3, .grey.headline-2, .grey.headline-1 {
+  color: #979797;
+}
+
+.black.buttonSubmit, .black.buttonDisabled, .black.buttonDanger, .black.button, .black.caption-2, .black.caption-1, .black.base-2, .black.base-1, .black.body-3, .black.body-2, .black.body-1, .black.headline-6, .black.headline-5, .black.headline-4, .black.headline-3, .black.headline-2, .black.headline-1 {
+  color: #222732;
+}
+
+.mainColor.buttonSubmit, .mainColor.buttonDisabled, .mainColor.buttonDanger, .mainColor.button, .mainColor.caption-2, .mainColor.caption-1, .mainColor.base-2, .mainColor.base-1, .mainColor.body-3, .mainColor.body-2, .mainColor.body-1, .mainColor.headline-6, .mainColor.headline-5, .mainColor.headline-4, .mainColor.headline-3, .mainColor.headline-2, .mainColor.headline-1 {
+  color: #B3005E;
+}
+
+.upper.buttonSubmit, .upper.buttonDisabled, .upper.buttonDanger, .upper.button, .upper.caption-2, .upper.caption-1, .upper.base-2, .upper.base-1, .upper.body-3, .upper.body-2, .upper.body-1, .upper.headline-6, .upper.headline-5, .upper.headline-4, .upper.headline-3, .upper.headline-2, .upper.headline-1 {
+  text-transform: uppercase;
+}
+
+.capitalize.buttonSubmit, .capitalize.buttonDisabled, .capitalize.buttonDanger, .capitalize.button, .capitalize.caption-2, .capitalize.caption-1, .capitalize.base-2, .capitalize.base-1, .capitalize.body-3, .capitalize.body-2, .capitalize.body-1, .capitalize.headline-6, .capitalize.headline-5, .capitalize.headline-4, .capitalize.headline-3, .capitalize.headline-2, .capitalize.headline-1 {
+  text-transform: capitalize;
+}
+
+.underline.buttonSubmit, .underline.buttonDisabled, .underline.buttonDanger, .underline.button, .underline.caption-2, .underline.caption-1, .underline.base-2, .underline.base-1, .underline.body-3, .underline.body-2, .underline.body-1, .underline.headline-6, .underline.headline-5, .underline.headline-4, .underline.headline-3, .underline.headline-2, .underline.headline-1 {
+  text-decoration: underline;
+}
+
+.lineThrough.buttonSubmit, .lineThrough.buttonDisabled, .lineThrough.buttonDanger, .lineThrough.button, .lineThrough.caption-2, .lineThrough.caption-1, .lineThrough.base-2, .lineThrough.base-1, .lineThrough.body-3, .lineThrough.body-2, .lineThrough.body-1, .lineThrough.headline-6, .lineThrough.headline-5, .lineThrough.headline-4, .lineThrough.headline-3, .lineThrough.headline-2, .lineThrough.headline-1 {
+  text-decoration: line-through;
+}
+
+.ellipsis.buttonSubmit, .ellipsis.buttonDisabled, .ellipsis.buttonDanger, .ellipsis.button, .ellipsis.caption-2, .ellipsis.caption-1, .ellipsis.base-2, .ellipsis.base-1, .ellipsis.body-3, .ellipsis.body-2, .ellipsis.body-1, .ellipsis.headline-6, .ellipsis.headline-5, .ellipsis.headline-4, .ellipsis.headline-3, .ellipsis.headline-2, .ellipsis.headline-1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pointer.buttonSubmit, .pointer.buttonDisabled, .pointer.buttonDanger, .pointer.button, .pointer.caption-2, .pointer.caption-1, .pointer.base-2, .pointer.base-1, .pointer.body-3, .pointer.body-2, .pointer.body-1, .pointer.headline-6, .pointer.headline-5, .pointer.headline-4, .pointer.headline-3, .pointer.headline-2, .pointer.headline-1 {
+  cursor: pointer;
+}
+
+.shadow.buttonSubmit, .shadow.buttonDisabled, .shadow.buttonDanger, .shadow.button, .shadow.caption-2, .shadow.caption-1, .shadow.base-2, .shadow.base-1, .shadow.body-3, .shadow.body-2, .shadow.body-1, .shadow.headline-6, .shadow.headline-5, .shadow.headline-4, .shadow.headline-3, .shadow.headline-2, .shadow.headline-1 {
+  text-shadow: 2px 2px #222732;
+}
+
+.center.buttonSubmit, .center.buttonDisabled, .center.buttonDanger, .center.button, .center.caption-2, .center.caption-1, .center.base-2, .center.base-1, .center.body-3, .center.body-2, .center.body-1, .center.headline-6, .center.headline-5, .center.headline-4, .center.headline-3, .center.headline-2, .center.headline-1 {
+  text-align: center !important;
+}
+
+.left.buttonSubmit, .left.buttonDisabled, .left.buttonDanger, .left.button, .left.caption-2, .left.caption-1, .left.base-2, .left.base-1, .left.body-3, .left.body-2, .left.body-1, .left.headline-6, .left.headline-5, .left.headline-4, .left.headline-3, .left.headline-2, .left.headline-1 {
+  text-align: left !important;
+}
+
+.right.buttonSubmit, .right.buttonDisabled, .right.buttonDanger, .right.button, .right.caption-2, .right.caption-1, .right.base-2, .right.base-1, .right.body-3, .right.body-2, .right.body-1, .right.headline-6, .right.headline-5, .right.headline-4, .right.headline-3, .right.headline-2, .right.headline-1 {
+  text-align: right !important;
+}
+
+@font-face {
+  font-family: "PoppinsRegular";
+  src: url("../../public/fonts/Poppins-Regular.ttf");
+  font-display: swap;
+}
+.button, .buttonSubmit, .buttonDisabled, .buttonDanger, .caption-2, .caption-1, .base-2, .base-1, .body-3, .body-2, .body-1, .headline-6, .headline-5, .headline-4, .headline-3, .headline-2, .headline-1 {
+  font-style: normal;
+  margin: 0;
+}
+
+.headline-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 72px;
+  letter-spacing: -0.04em;
+}
+
+.headline-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 56px;
+}
+
+.headline-3 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.04em;
+}
+
+.headline-4 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 40px;
+  letter-spacing: -0.02em;
+}
+
+.headline-5 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 40px;
+  letter-spacing: -0.03em;
+}
+
+.headline-6 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+}
+
+.body-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.body-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.body-3 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+}
+
+.base-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.03em;
+}
+
+.base-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+}
+
+.caption-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+}
+
+.caption-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: -0.01em;
+}
+
+.button, .buttonSubmit, .buttonDisabled, .buttonDanger {
+  font-family: LatoBold, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: uppercase;
+}
+
+.buttonSubmit, .buttonDanger, .buttonDisabled {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-transform: uppercase;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  text-shadow: none;
+}
+
+.buttonSubmit, .buttonDanger, .buttonDisabled {
+  font-size: 16px;
+  line-height: 16px;
+  width: auto;
+  min-width: 178px !important;
+  height: 48px !important;
+  padding: 12px 24px !important;
+  background: #B3005E !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.buttonSubmit span, .buttonDanger span, .buttonDisabled span {
+  margin-right: 8px;
+}
+.buttonSubmit.disabled, .disabled.buttonDanger, .disabled.buttonDisabled {
+  background-color: #CDAED2 !important;
+  cursor: not-allowed;
+}
+.buttonSubmit.secondary, .secondary.buttonDanger, .secondary.buttonDisabled {
+  border: 2px solid #ffffff;
+  background-color: transparent !important;
+}
+.buttonSubmit.borderMain, .borderMain.buttonDanger, .borderMain.buttonDisabled {
+  border: 2px solid #B3005E;
+  color: #B3005E !important;
+  background-color: transparent !important;
+}
+.buttonSubmit.borderMain.disabled, .borderMain.disabled.buttonDanger, .borderMain.disabled.buttonDisabled {
+  border: 2px solid #CDAED2;
+  color: #CDAED2 !important;
+  background-color: #ffffff;
+}
+
+.buttonDisabled {
+  background-color: #CDAED2 !important;
+  cursor: not-allowed;
+}
+
+.buttonDanger {
+  background-color: #da4444 !important;
+}
+
+.button, .buttonSubmit, .buttonDisabled, .buttonDanger, .caption-2, .caption-1, .base-2, .base-1, .body-3, .body-2, .body-1, .headline-6, .headline-5, .headline-4, .headline-3, .headline-2, .headline-1 {
+  color: #222732;
+}
+.main.button, .main.buttonSubmit, .main.buttonDisabled, .main.buttonDanger, .main.caption-2, .main.caption-1, .main.base-2, .main.base-1, .main.body-3, .main.body-2, .main.body-1, .main.headline-6, .main.headline-5, .main.headline-4, .main.headline-3, .main.headline-2, .main.headline-1 {
+  color: #B3005E;
+}
+.accent.button, .accent.buttonSubmit, .accent.buttonDisabled, .accent.buttonDanger, .accent.caption-2, .accent.caption-1, .accent.base-2, .accent.base-1, .accent.body-3, .accent.body-2, .accent.body-1, .accent.headline-6, .accent.headline-5, .accent.headline-4, .accent.headline-3, .accent.headline-2, .accent.headline-1 {
+  color: #FF5F9E;
+}
+.primary.button, .primary.buttonSubmit, .primary.buttonDisabled, .primary.buttonDanger, .primary.caption-2, .primary.caption-1, .primary.base-2, .primary.base-1, .primary.body-3, .primary.body-2, .primary.body-1, .primary.headline-6, .primary.headline-5, .primary.headline-4, .primary.headline-3, .primary.headline-2, .primary.headline-1 {
+  color: #FFFFFF;
+}
+.secondary.button, .secondary.buttonSubmit, .secondary.buttonDisabled, .secondary.buttonDanger, .secondary.caption-2, .secondary.caption-1, .secondary.base-2, .secondary.base-1, .secondary.body-3, .secondary.body-2, .secondary.body-1, .secondary.headline-6, .secondary.headline-5, .secondary.headline-4, .secondary.headline-3, .secondary.headline-2, .secondary.headline-1 {
+  color: #8B90B2;
+}
+.success.button, .success.buttonSubmit, .success.buttonDisabled, .success.buttonDanger, .success.caption-2, .success.caption-1, .success.base-2, .success.base-1, .success.body-3, .success.body-2, .success.body-1, .success.headline-6, .success.headline-5, .success.headline-4, .success.headline-3, .success.headline-2, .success.headline-1 {
+  color: #70cc6e;
+}
+.info.button, .info.buttonSubmit, .info.buttonDisabled, .info.buttonDanger, .info.caption-2, .info.caption-1, .info.base-2, .info.base-1, .info.body-3, .info.body-2, .info.body-1, .info.headline-6, .info.headline-5, .info.headline-4, .info.headline-3, .info.headline-2, .info.headline-1 {
+  color: #01c2c2;
+}
+.danger.button, .danger.buttonSubmit, .danger.buttonDisabled, .danger.buttonDanger, .danger.caption-2, .danger.caption-1, .danger.base-2, .danger.base-1, .danger.body-3, .danger.body-2, .danger.body-1, .danger.headline-6, .danger.headline-5, .danger.headline-4, .danger.headline-3, .danger.headline-2, .danger.headline-1 {
+  color: #da4444;
+}
+.white.button, .white.buttonSubmit, .white.buttonDisabled, .white.buttonDanger, .white.caption-2, .white.caption-1, .white.base-2, .white.base-1, .white.body-3, .white.body-2, .white.body-1, .white.headline-6, .white.headline-5, .white.headline-4, .white.headline-3, .white.headline-2, .white.headline-1 {
+  color: #ffffff;
+}
+.grey.button, .grey.buttonSubmit, .grey.buttonDisabled, .grey.buttonDanger, .grey.caption-2, .grey.caption-1, .grey.base-2, .grey.base-1, .grey.body-3, .grey.body-2, .grey.body-1, .grey.headline-6, .grey.headline-5, .grey.headline-4, .grey.headline-3, .grey.headline-2, .grey.headline-1 {
+  color: #979797;
+}
+.black.button, .black.buttonSubmit, .black.buttonDisabled, .black.buttonDanger, .black.caption-2, .black.caption-1, .black.base-2, .black.base-1, .black.body-3, .black.body-2, .black.body-1, .black.headline-6, .black.headline-5, .black.headline-4, .black.headline-3, .black.headline-2, .black.headline-1 {
+  color: #222732;
+}
+.mainColor.button, .mainColor.buttonSubmit, .mainColor.buttonDisabled, .mainColor.buttonDanger, .mainColor.caption-2, .mainColor.caption-1, .mainColor.base-2, .mainColor.base-1, .mainColor.body-3, .mainColor.body-2, .mainColor.body-1, .mainColor.headline-6, .mainColor.headline-5, .mainColor.headline-4, .mainColor.headline-3, .mainColor.headline-2, .mainColor.headline-1 {
+  color: #B3005E;
+}
+
+.upper.button, .upper.buttonSubmit, .upper.buttonDisabled, .upper.buttonDanger, .upper.caption-2, .upper.caption-1, .upper.base-2, .upper.base-1, .upper.body-3, .upper.body-2, .upper.body-1, .upper.headline-6, .upper.headline-5, .upper.headline-4, .upper.headline-3, .upper.headline-2, .upper.headline-1 {
+  text-transform: uppercase;
+}
+.capitalize.button, .capitalize.buttonSubmit, .capitalize.buttonDisabled, .capitalize.buttonDanger, .capitalize.caption-2, .capitalize.caption-1, .capitalize.base-2, .capitalize.base-1, .capitalize.body-3, .capitalize.body-2, .capitalize.body-1, .capitalize.headline-6, .capitalize.headline-5, .capitalize.headline-4, .capitalize.headline-3, .capitalize.headline-2, .capitalize.headline-1 {
+  text-transform: capitalize;
+}
+.underline.button, .underline.buttonSubmit, .underline.buttonDisabled, .underline.buttonDanger, .underline.caption-2, .underline.caption-1, .underline.base-2, .underline.base-1, .underline.body-3, .underline.body-2, .underline.body-1, .underline.headline-6, .underline.headline-5, .underline.headline-4, .underline.headline-3, .underline.headline-2, .underline.headline-1 {
+  text-decoration: underline;
+}
+.lineThrough.button, .lineThrough.buttonSubmit, .lineThrough.buttonDisabled, .lineThrough.buttonDanger, .lineThrough.caption-2, .lineThrough.caption-1, .lineThrough.base-2, .lineThrough.base-1, .lineThrough.body-3, .lineThrough.body-2, .lineThrough.body-1, .lineThrough.headline-6, .lineThrough.headline-5, .lineThrough.headline-4, .lineThrough.headline-3, .lineThrough.headline-2, .lineThrough.headline-1 {
+  text-decoration: line-through;
+}
+.ellipsis.button, .ellipsis.buttonSubmit, .ellipsis.buttonDisabled, .ellipsis.buttonDanger, .ellipsis.caption-2, .ellipsis.caption-1, .ellipsis.base-2, .ellipsis.base-1, .ellipsis.body-3, .ellipsis.body-2, .ellipsis.body-1, .ellipsis.headline-6, .ellipsis.headline-5, .ellipsis.headline-4, .ellipsis.headline-3, .ellipsis.headline-2, .ellipsis.headline-1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pointer.button, .pointer.buttonSubmit, .pointer.buttonDisabled, .pointer.buttonDanger, .pointer.caption-2, .pointer.caption-1, .pointer.base-2, .pointer.base-1, .pointer.body-3, .pointer.body-2, .pointer.body-1, .pointer.headline-6, .pointer.headline-5, .pointer.headline-4, .pointer.headline-3, .pointer.headline-2, .pointer.headline-1 {
+  cursor: pointer;
+}
+.shadow.button, .shadow.buttonSubmit, .shadow.buttonDisabled, .shadow.buttonDanger, .shadow.caption-2, .shadow.caption-1, .shadow.base-2, .shadow.base-1, .shadow.body-3, .shadow.body-2, .shadow.body-1, .shadow.headline-6, .shadow.headline-5, .shadow.headline-4, .shadow.headline-3, .shadow.headline-2, .shadow.headline-1 {
+  text-shadow: 2px 2px #222732;
+}
+.center.button, .center.buttonSubmit, .center.buttonDisabled, .center.buttonDanger, .center.caption-2, .center.caption-1, .center.base-2, .center.base-1, .center.body-3, .center.body-2, .center.body-1, .center.headline-6, .center.headline-5, .center.headline-4, .center.headline-3, .center.headline-2, .center.headline-1 {
+  text-align: center !important;
+}
+.left.button, .left.buttonSubmit, .left.buttonDisabled, .left.buttonDanger, .left.caption-2, .left.caption-1, .left.base-2, .left.base-1, .left.body-3, .left.body-2, .left.body-1, .left.headline-6, .left.headline-5, .left.headline-4, .left.headline-3, .left.headline-2, .left.headline-1 {
+  text-align: left !important;
+}
+.right.button, .right.buttonSubmit, .right.buttonDisabled, .right.buttonDanger, .right.caption-2, .right.caption-1, .right.base-2, .right.base-1, .right.body-3, .right.body-2, .right.body-1, .right.headline-6, .right.headline-5, .right.headline-4, .right.headline-3, .right.headline-2, .right.headline-1 {
+  text-align: right !important;
+}
+
+@font-face {
+  font-family: "PoppinsRegular";
+  src: url("../../public/fonts/Poppins-Regular.ttf");
+  font-display: swap;
+}
+.button, .buttonSubmit, .buttonDisabled, .buttonDanger, .caption-2, .caption-1, .base-2, .base-1, .body-3, .body-2, .body-1, .headline-6, .headline-5, .headline-4, .headline-3, .headline-2, .headline-1 {
+  font-style: normal;
+  margin: 0;
+}
+
+.headline-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 72px;
+  letter-spacing: -0.04em;
+}
+
+.headline-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 56px;
+}
+
+.headline-3 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.04em;
+}
+
+.headline-4 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 40px;
+  letter-spacing: -0.02em;
+}
+
+.headline-5 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 40px;
+  letter-spacing: -0.03em;
+}
+
+.headline-6 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+}
+
+.body-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.body-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.body-3 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+}
+
+.base-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.03em;
+}
+
+.base-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+}
+
+.caption-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+}
+
+.caption-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: -0.01em;
+}
+
+.button, .buttonSubmit, .buttonDisabled, .buttonDanger {
+  font-family: LatoBold, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: uppercase;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  --border: #f1f1f1;
+  --input: #252238;
+  --ring: #f1f1f1;
+  --background: #14172D;
+  --background-secondary: #252238;
+  --foreground: #FFFFFF;
+  --foreground-secondarydar: #8B90B2;
+  --primary: #B3005E;
+  --primary-foreground: #FFFFFF;
+  --secondary: #17183b;
+  --secondary-foreground: #FFFFFF;
+  --destructive: #da4444;
+  --destructive-foreground: #FFFFFF;
+  --muted: #CDAED2;
+  --muted-foreground: #FFFFFF;
+  --accent: #FF5F9E;
+  --accent-foreground: #FFFFFF;
+  --popover: #252238;
+  --popover-foreground: #FFFFFF;
+  --card: #252238;
+  --card-foreground: #FFFFFF;
+  --radius: 24px;
+  --radix-accordion-content-height: 100px;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+/*# sourceMappingURL=globals.css.map */

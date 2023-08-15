@@ -6,7 +6,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.config import get_file_handlers
-from app.database import get_db
+from app.database.database import get_db
 from app.integrations.firebase import get_user
 from app.models.schemas import ArtWork, ArtWorkCreate, Response
 from app.services.artwork_services import ArtWorkService

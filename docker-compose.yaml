@@ -61,6 +61,19 @@ services:
     stdin_open: true
     tty: true
 
+  admin:
+    build:
+      context: morpheus-admin
+      dockerfile: ./Dockerfile
+    image: morpheus-admin:latest
+    entrypoint: ./bin/entrypoint.sh
+    volumes:
+      - ./morpheus-admin:/app
+    ports:
+      - "3001:3001"
+    stdin_open: true
+    tty: true
+
   collaborative:
     build:
       context: morpheus-collaborative

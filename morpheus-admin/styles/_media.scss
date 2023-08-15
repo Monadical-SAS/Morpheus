@@ -1,0 +1,77 @@
+// -----------------------------------------------------
+// Media query
+// -----------------------------------------------------
+$media-query-xsmall: "(max-width: 576px)";
+$media-query-small: "(min-width: 576px) and (max-width: 767px)";
+$media-query-larger-than-mobile: "(min-width: 768px)";
+$media-query-medium: "(min-width: 768px) and (max-width: 1025px)";
+$media-query-large: "(min-width: 1026px) and (max-width: 1280px)";
+$media-query-xlarge: "(min-width: 1400px)";
+$media-query-screen-1024: "(min-width: 900px) and (max-width: 1100px) and (min-height: 750px) and (max-height: 1367px)";
+$media-query-mobile-large: "(min-width: 359px) and (max-width: 759px) and (min-height: 739px) and (max-height: 1100px)";
+$media-query-mobile-small: "(min-width: 360px) and (max-width: 575px) and (min-height: 639px) and (max-height: 738px)";
+
+@mixin xsmall {
+  @media #{$media-query-xsmall} {
+    @content;
+  }
+}
+
+@mixin small {
+  @media #{$media-query-small} {
+    @content;
+  }
+}
+
+@mixin medium {
+  @media #{$media-query-medium} {
+    @content;
+  }
+}
+
+@mixin large {
+  @media #{$media-query-large} {
+    @content;
+  }
+}
+
+@mixin xlarge {
+  @media #{$media-query-xlarge} {
+    @content;
+  }
+}
+
+// ----------------------------------------------------------
+// devices
+// ----------------------------------------------------------
+@mixin mobile {
+  @include xsmall {
+    @content;
+  }
+
+  @include small {
+    @content;
+  }
+}
+
+@mixin largerThanMobile {
+  @media #{$media-query-larger-than-mobile} {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @include medium {
+    @content;
+  }
+
+  @include large {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @include xlarge {
+    @content;
+  }
+}
