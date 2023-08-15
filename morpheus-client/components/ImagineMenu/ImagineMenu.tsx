@@ -8,9 +8,9 @@ import { Img2ImgIcon } from "../icons/img2img";
 import { ControlNetIcon } from "../icons/controlnet";
 import { Pix2PixIcon } from "../icons/pix2pix";
 import { InpaintingIcon } from "../icons/inpainting";
-import { HelpIcon } from "../icons/help";
 import { HamburgerMenuIcon } from "../icons/hamburgerMenu";
 import { CloseIcon } from "../icons/close";
+import { EnhanceIcon } from "../icons/enhance";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
 import {
   ControlNetDescription,
@@ -21,7 +21,6 @@ import {
   UpscalingDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
 import styles from "./ImagineMenu.module.scss";
-import { Scaling } from 'lucide-react';
 
 interface LongItemProps {
   active?: boolean;
@@ -140,16 +139,8 @@ const ImagineMenu = () => {
         description={<UpscalingDescription className="body-2 white" />}
         expanded={expanded}
         active={getItemActive(SDOption.Upscaling)}
-        icon={<Scaling color={getIconColor(SDOption.Upscaling)}  width={"24"} height={"24"} />}
+        icon={<EnhanceIcon color={getIconColor(SDOption.Upscaling)}  width={"24"} height={"24"} />}
         option={SDOption.Upscaling}
-      />
-      <ImagineMenuItem
-        title={"Help"}
-        description={"Get help and support"}
-        expanded={expanded}
-        active={getItemActive("help")}
-        icon={<HelpIcon color={getIconColor("help")} />}
-        option={"help"}
       />
     </div>
   );
