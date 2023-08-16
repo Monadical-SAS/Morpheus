@@ -315,6 +315,34 @@ class ControlNetModel(ControlNetModelCreate):
         }
 
 
+
+class SettingCreate(BaseModel):
+    key: str
+    value: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "key": "setting_name",
+                "value": "{\"id\": \"any_value\"}",
+            }
+        }
+
+
+class Setting(SettingCreate):
+    id: UUID
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
+                "key": "setting_name",
+                "value": "{\"id\": \"any_value\"}",
+            }
+        }
+
+
 class SamplerModel(BaseModel):
     id: str
     name: str

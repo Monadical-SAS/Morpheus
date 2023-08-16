@@ -3,6 +3,7 @@ import uuid
 from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import JSONB
 
 from app.database import Base
 
@@ -101,3 +102,10 @@ class SDControlNetModel(Base):
     description = Column(String(512), nullable=True)
     is_active = Column(Boolean, default=True)
     url_docs = Column(String(512), nullable=True)
+
+
+class Setting(Base):
+    __tablename__ = "settings"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    key = Column(String(64), nullable=True)
+    value = Column(JSONB)
