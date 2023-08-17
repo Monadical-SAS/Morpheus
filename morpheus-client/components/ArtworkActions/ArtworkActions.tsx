@@ -115,12 +115,6 @@ const ArtworkActions = (props: ImageActionsProps) => {
           )}
 
           <ShareButton artwork={props.artwork} />
-
-          <AppTooltip content={"Open gallery"} direction={"top"}>
-            <span onClick={redirectToGallery}>
-              <GalleryIcon width={"24"} height={"24"} />
-            </span>
-          </AppTooltip>
         </div>
 
         <div className={styles.imagineActions}>
