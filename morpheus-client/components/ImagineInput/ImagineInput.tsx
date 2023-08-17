@@ -1,5 +1,8 @@
+import { useState } from "react";
+
 import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
+import { initialText } from "../Inputs/InputText/InputText";
 import MagicPrompt from "../MagicPrompt/MagicPrompt";
 import ImagineSettings from "../ImagineSettings/ImagineSettings";
 import { useDiffusion } from "@/context/SDContext";
@@ -11,9 +14,23 @@ interface ImagineInputProps {
   handleGenerate: () => void;
 }
 
+interface PromptProps {
+  isPromptEmpty: boolean;
+  setIsPromptEmpty: (value: boolean) => void;
+  setPrompt: (value: any) => void;
+}
+
+const clearPrompt = (props: PromptProps) => {
+  if (!props.isPromptEmpty) {
+    props.setIsPromptEmpty(true);
+    props.setPrompt(initialText);
+  }
+};
+
 const ImagineInput = (props: ImagineInputProps) => {
   const { prompt, setPrompt } = useDiffusion();
   const { isLoading } = useImagine();
+  const [isPromptEmpty, setIsPromptEmpty] = useState(false);
 
   return (
     <div className={styles.imagineInputWrapper}>
@@ -28,6 +45,8 @@ const ImagineInput = (props: ImagineInputProps) => {
             isRequired={true}
             rightIcon={<MagicPrompt />}
             disableGrammarly={true}
+            onClick={() => clearPrompt({ isPromptEmpty, setIsPromptEmpty, setPrompt })}
+            automaticValidation={false}
           />
         </div>
 

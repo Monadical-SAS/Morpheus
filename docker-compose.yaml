@@ -122,8 +122,13 @@ services:
               capabilities: [ gpu ]
 
   worker-ray:
-    build: ./morpheus-worker/ray
-    command: ray start --head --dashboard-host 0.0.0.0 --block
+    build: 
+      context: ./morpheus-worker/ray
+      # if you are using a mac, uncomment this arg
+      # args:
+      #   RAY_IMAGE_TAG: latest-gpu-aarch64
+    image: morpheus-worker:latest
+    command: ray start --head --num-gpus 1 --dashboard-host 0.0.0.0 --block
     ports:
       - "8000:8000"
       - "8265:8265"
@@ -134,7 +139,7 @@ services:
         condition: service_started
 
   worker-ray-deployer:
-    build: ./morpheus-worker/ray
+    image: morpheus-worker:latest
     command: bash -c "sleep 5 && ray job submit -- serve deploy models.yaml"
     environment:
       - RAY_ADDRESS=http://worker-ray:8265
