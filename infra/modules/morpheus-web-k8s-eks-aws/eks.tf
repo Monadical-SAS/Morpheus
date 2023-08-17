@@ -165,6 +165,12 @@ module "eks" {
       desired_size = var.self_managed_gpu_node_desired_size
       ami_id       = var.self_managed_gpu_nodes_ami
 
+      warm_pool = {
+        pool_state                  = "Stopped"
+        min_size                    = var.self_managed_gpu_node_warm_pool_min_size
+        max_group_prepared_capacity = var.self_managed_gpu_node_warm_pool_max_group_prepared_capacity
+      }
+
       instance_type = var.self_managed_gpu_nodes_instance_type
 
       metadata_options = {

@@ -77,4 +77,4 @@ while True:
             print("Metric wasn't sent to cloudwatch correctly")
     except Exception as e:
         print("Error sending the metric:" + str(e))
-    time.sleep(30)
+    time.sleep(15)
