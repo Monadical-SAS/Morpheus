@@ -4,21 +4,51 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from app.models.models import Setting
-from app.models.schemas import SDModelCreate
+from app.models.schemas import SettingCreate
 
 
 class SettingRepository:
-    def __init__(self):
-        self.AWS_ACCESS_KEY_ID = settings.aws_access_key_id
-        self.AWS_SECRETS_ACCESS_KEY = settings.aws_secret_access_key
 
-    def update_autoscaling_group_size(self, autoscaling_group_name, min_size, max_size, desired_size):
-        autoscaling_client = boto3.client('autoscaling')
-        response = autoscaling_client.update_auto_scaling_group(
-            AutoScalingGroupName=autoscaling_group_name,
-            MinSize=min_size,
-            DesiredCapacity=max_size
+    @classmethod
+    def create_model(cls, *, db: Session, setting: SettingCreate) -> Setting:
+        setting = Setting(
+            key=setting.key,
+            value=setting.value,
         )
-        if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
+        db.add(setting)
+        db.commit()
+        db.refresh(setting)
+        return setting
+    
+    @classmethod
+    def get_setting_by_id(cls, *, db: Session, setting_id: UUID) -> Setting:
+        return db.query(Setting).filter(Setting.id == setting_id, Setting.is_active).first()
+    
+    @classmethod
+    def get_setting_by_key(cls, *, db: Session, setting_key: UUID) -> Setting:
+        return db.query(Setting).filter(Setting.id == setting_key, Setting.is_active).first()
+
+    @classmethod
+    def update_setting(cls, *, db: Session, setting: SettingCreate) -> Setting:
+        query = db.query(Setting).filter(Setting.source == setting.source)
+        query.update(setting.dict(), synchronize_session="fetch")
+        db.commit()
+        return query.first()
+
+    @classmethod
+    def delete_setting(cls, *, db: Session, setting_id: UUID) -> bool:
+        setting = SettingRepository.get_setting_by_id(db=db, setting_id=setting_id)
+        if not setting:
             return True
-        return False
+
+        db.delete(setting)  # Physical deletion
+        db.commit()
+        return True
+
+    @classmethod
+    def delete_setting_by_key(cls, *, db: Session, setting_key: str) -> Setting:
+        print(f"{setting_key=}")
+        record = cls.get_setting_by_key(db=db, setting_key=setting_key)
+        db.delete(record)
+        db.commit()
+        return record
