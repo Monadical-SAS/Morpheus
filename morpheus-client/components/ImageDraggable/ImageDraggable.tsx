@@ -1,4 +1,11 @@
-import React, { CSSProperties, Fragment, ReactNode, useEffect, useRef, useState } from "react";
+import React, {
+  CSSProperties,
+  Fragment,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
 
 import AppImage from "@/components/AppImage/AppImage";
@@ -28,20 +35,23 @@ interface formWrapperProps {
 }
 
 const FormWrapper = (props: formWrapperProps) => {
-  const childrenWithSeparator = React.Children.toArray(props.children).reduce((childrenList: any[], child, index, array) => {
-    if (index < array.length - 1) {
-      childrenList.push(child);
-      childrenList.push(<div className={styles.separator} />);
-    } else {
-      childrenList.push(child);
-    }
-    return childrenList;
-  }, []);
+  const childrenWithSeparator = React.Children.toArray(props.children).reduce(
+    (childrenList: any[], child, index, array) => {
+      if (index < array.length - 1) {
+        childrenList.push(child);
+        childrenList.push(<div className={styles.separator} />);
+      } else {
+        childrenList.push(child);
+      }
+      return childrenList;
+    },
+    []
+  );
 
   return <div className={styles.formWrapper}>{childrenWithSeparator}</div>;
 };
 
-const PaintImageLink = (props: any) => {
+const PaintImageLink = () => {
   return (
     <div className={styles.paintInfo}>
       <PaintImageIcon />
@@ -123,8 +133,19 @@ const DragDropFile = (props: DragDropFileProps) => {
         onSubmit={(e) => e.preventDefault()}
         style={props.styles}
       >
-        <input ref={inputRef} type="file" className={styles.inputFileUpload} multiple={false} onChange={handleChange} />
-        <label htmlFor="input-file-upload" className={`${styles.labelFileUpload} ${dragActive && styles.dragActive}`}>
+        <input
+          ref={inputRef}
+          type="file"
+          className={styles.inputFileUpload}
+          multiple={false}
+          onChange={handleChange}
+        />
+        <label
+          htmlFor="input-file-upload"
+          className={`${styles.labelFileUpload} ${
+            dragActive && styles.dragActive
+          }`}
+        >
           <div className={styles.dragInfo}>
             {props.icon ? props.icon : <UploadImageIcon />}
             <a className="body-1 main" onClick={onButtonClick}>
