@@ -49,17 +49,19 @@
 
     .inputImage {
       max-width: 368px;
-      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       flex: 1;
+      gap:30px;
+      margin-bottom: 100px;
 
       @include media.mobile {
         flex: 0 1 50%;
         width: 100%;
         max-width: 100%;
         margin-right: 0;
+        margin-bottom: 0;
       }
     }
 

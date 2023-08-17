@@ -5,7 +5,6 @@ import ShareButton from "../ShareButton/ShareButton";
 import ButtonSetImage2 from "../buttons/ButtonImg2Img/ButtonSetImage2";
 import { DownloadIcon } from "@/components/icons/download";
 import { PencilIcon } from "@/components/icons/pencil";
-import { GalleryIcon } from "@/components/icons/gallery";
 import { DeleteIcon } from "@/components/icons/delete";
 import { SaveIcon } from "lucide-react";
 import { InpaintingIcon } from "../icons/inpainting";
@@ -71,10 +70,6 @@ const ArtworkActions = (props: ImageActionsProps) => {
           "An error occurred while deleting artwork, please try again later"
         );
       });
-  };
-
-  const redirectToGallery = () => {
-    router.push(`/gallery`);
   };
 
   const showForm = () => {

@@ -39,6 +39,7 @@ const Inpainting: NextPage = () => {
                 imageFile={img2imgFile}
                 setImageFile={setImg2imgFile}
                 showEditImage={true}
+                showPaintImageLink={true}
               />
               <ImageDraggable
                 imageFile={maskFile}
