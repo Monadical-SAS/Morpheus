@@ -41,8 +41,7 @@ const Home = () => {
               Morpheus - <br /> AI Art Generator
             </h1>
             <p className="body-2 secondary">
-              Unleash your imagination and use the power of AI to create the
-              most extraordinary scenarios you can envision. 🧙
+              Explore visual AI and easily add new models, extending Morpheus for your own project needs. 🧙
             </p>
           </div>
         </div>
