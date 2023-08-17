@@ -25,6 +25,7 @@ const Upscale: NextPage = () => {
               <ImageDraggable
                 imageFile={img2imgFile}
                 setImageFile={setImg2imgFile}
+                showPaintImageLink={true}
               />
             </div>
 

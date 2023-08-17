@@ -47,9 +47,6 @@ const NavMenu = (props: NavMenuProps) => {
       </div>
 
       <div className={styles.links}>
-        <Link className={getLinkStyles("paint")} href={"/paint"}>
-          Paint
-        </Link>
         <Link className={getLinkStyles("imagine")} href={"/imagine/text2img"}>
           Imagine
         </Link>

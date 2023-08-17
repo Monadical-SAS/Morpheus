@@ -1,17 +1,13 @@
-import React, {
-  CSSProperties,
-  Fragment,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { CSSProperties, Fragment, ReactNode, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+
 import AppImage from "@/components/AppImage/AppImage";
 import Modal from "../Modal/Modal";
 import MaskPaintingCanvas from "../MaskPaintingCanvas/MaskPaintingCanvas";
 import { CloseIcon } from "../icons/close";
 import { InpaintingIcon } from "../icons/inpainting";
 import { UploadImageIcon } from "../icons/uploadImage";
+import { PaintImageIcon } from "../icons/paintImage";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./ImageDraggable.module.scss";
@@ -24,7 +20,37 @@ interface DragDropFileProps {
   icon?: ReactNode;
   styles?: CSSProperties;
   showEditImage?: boolean;
+  showPaintImageLink?: boolean;
 }
+
+interface formWrapperProps {
+  children: ReactNode;
+}
+
+const FormWrapper = (props: formWrapperProps) => {
+  const childrenWithSeparator = React.Children.toArray(props.children).reduce((childrenList: any[], child, index, array) => {
+    if (index < array.length - 1) {
+      childrenList.push(child);
+      childrenList.push(<div className={styles.separator} />);
+    } else {
+      childrenList.push(child);
+    }
+    return childrenList;
+  }, []);
+
+  return <div className={styles.formWrapper}>{childrenWithSeparator}</div>;
+};
+
+const PaintImageLink = (props: any) => {
+  return (
+    <div className={styles.paintInfo}>
+      <PaintImageIcon />
+      <Link className="underline body-1 main" href={"/paint"}>
+        Paint an image
+      </Link>
+    </div>
+  );
+};
 
 const DragDropFile = (props: DragDropFileProps) => {
   const inputRef = useRef<any>(null);
@@ -90,47 +116,39 @@ const DragDropFile = (props: DragDropFileProps) => {
   };
 
   return !imgSrc ? (
-    <form
-      className={styles.formFileUpload}
-      onDragEnter={handleDrag}
-      onSubmit={(e) => e.preventDefault()}
-      style={props.styles}
-    >
-      <input
-        ref={inputRef}
-        type="file"
-        className={styles.inputFileUpload}
-        multiple={false}
-        onChange={handleChange}
-      />
-      <label
-        htmlFor="input-file-upload"
-        className={`${styles.labelFileUpload} ${
-          dragActive && styles.dragActive
-        }`}
+    <FormWrapper>
+      <form
+        className={styles.formFileUpload}
+        onDragEnter={handleDrag}
+        onSubmit={(e) => e.preventDefault()}
+        style={props.styles}
       >
-        <div className={styles.dragInfo}>
-          {props.icon ? props.icon : <UploadImageIcon />}
-          <a className="body-1 main" onClick={onButtonClick}>
-            Click to upload
-          </a>
+        <input ref={inputRef} type="file" className={styles.inputFileUpload} multiple={false} onChange={handleChange} />
+        <label htmlFor="input-file-upload" className={`${styles.labelFileUpload} ${dragActive && styles.dragActive}`}>
+          <div className={styles.dragInfo}>
+            {props.icon ? props.icon : <UploadImageIcon />}
+            <a className="body-1 main" onClick={onButtonClick}>
+              Click to upload
+            </a>
 
-          <span className="body-1 white">or drag and drop</span>
+            <span className="body-1 white">or drag and drop</span>
 
-          <p className="body-2 secondary">Maximum file size 50 MB</p>
-        </div>
-      </label>
+            <p className="body-2 secondary">Maximum file size 50 MB</p>
+          </div>
+        </label>
 
-      {dragActive && (
-        <div
-          className={styles.dragFileElement}
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-        />
-      )}
-    </form>
+        {dragActive && (
+          <div
+            className={styles.dragFileElement}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          />
+        )}
+      </form>
+      {props.showPaintImageLink && <PaintImageLink />}
+    </FormWrapper>
   ) : (
     <Fragment>
       <div className={styles.selectedFile} style={props.styles}>
