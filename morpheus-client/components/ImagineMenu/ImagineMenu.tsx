@@ -67,7 +67,7 @@ const ImagineMenuItem = (props: LongItemProps) => {
 const ImagineMenu = () => {
   const router = useRouter();
   const currentPath = router.pathname;
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   const getItemActive = (option: SDOption | string) => {
     const lastPath = currentPath.split("/").pop();
