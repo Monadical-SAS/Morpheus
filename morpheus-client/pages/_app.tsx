@@ -8,7 +8,9 @@ import { AuthProvider } from "@/context/AuthContext";
 import { DiffusionProvider } from "@/context/SDContext";
 import { ControlNetProvider } from "@/context/CNContext";
 import { ImagineProvider } from "@/context/ImagineContext";
+import { FirebaseTrackingProvider } from "@/context/GoogleAnalyticsContext";
 import { Toaster } from "@/components/ui/toaster";
+import CookiesConsent from "@/components/CookiesConsent/CookiesConsent";
 
 import "../App.scss";
 import "../styles/globals.css";
@@ -123,18 +125,21 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         <meta name="google-site-verification" content="" />
       </Head>
 
-      <ToastProvider>
-        <AuthProvider>
-          <DiffusionProvider>
-            <ControlNetProvider>
-              <ImagineProvider>
-                <Component {...pageProps} />
-                <Toaster />
-              </ImagineProvider>
-            </ControlNetProvider>
-          </DiffusionProvider>
-        </AuthProvider>
-      </ToastProvider>
+      <FirebaseTrackingProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <DiffusionProvider>
+              <ControlNetProvider>
+                <ImagineProvider>
+                  <Component {...pageProps} />
+                  <CookiesConsent />
+                  <Toaster />
+                </ImagineProvider>
+              </ControlNetProvider>
+            </DiffusionProvider>
+          </AuthProvider>
+        </ToastProvider>
+      </FirebaseTrackingProvider>
     </Fragment>
   );
 };
