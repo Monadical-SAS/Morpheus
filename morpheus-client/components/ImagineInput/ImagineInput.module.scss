@@ -2,14 +2,9 @@
 @use "styles/colors";
 
 .imagineInputWrapper {
-  position: fixed;
-  left: 104px;
-  bottom: 0;
   width: 100%;
-  max-width: calc(100vw - 128px);
-  height: auto;
-  padding: 8px 0 32px 0;
-  background-color: colors.$background-primary;
+  padding: 0 24px 24px 0;
+  background-color: colors.$background-secondary;
 
   @include media.mobile {
     position: initial;

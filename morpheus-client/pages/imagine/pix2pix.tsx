@@ -1,14 +1,13 @@
 import { NextPage } from "next";
 
-import { CookiesStatus } from "../../utils/cookies";
-import ImageGallery from "../../components/ImageGallery/ImageGallery";
-import ImageDraggable from "../../components/ImageDraggable/ImageDraggable";
-import ImagineInput from "../../components/ImagineInput/ImagineInput";
-import PrivateRoute from "../../components/Auth/PrivateRoute/PrivateRoute";
-import { useDiffusion } from "../../context/SDContext";
-import { useImagine } from "../../context/ImagineContext";
-import { useAnalytics } from "../../context/GoogleAnalyticsContext";
-import styles from "../../styles/pages/StableDiffusion.module.scss";
+import ImagineContainer from "@/layout/ImagineContainer/ImagineContainer";
+import ImageGallery from "@/components/ImageGallery/ImageGallery";
+import ImageDraggable from "@/components/ImageDraggable/ImageDraggable";
+import { CookiesStatus } from "@/utils/cookies";
+import { useDiffusion } from "@/context/SDContext";
+import { useImagine } from "@/context/ImagineContext";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
+import styles from "@/styles/pages/StableDiffusion.module.scss";
 
 const Img2Img: NextPage = () => {
   const { prompt } = useDiffusion();
@@ -27,30 +26,21 @@ const Img2Img: NextPage = () => {
   };
 
   return (
-    <PrivateRoute showLeftBar={true}>
-      <div className={styles.imagineContainer}>
-        <div className={styles.SDOutputContainer}>
-          <div className={styles.imagesContent}>
-            <div className={styles.inputImage}>
-              <ImageDraggable
-                imageFile={img2imgFile}
-                setImageFile={setImg2imgFile}
-                showPaintImageLink={true}
-              />
-            </div>
-
-            <div className={styles.SDResults}>
-              <ImageGallery />
-            </div>
-          </div>
+    <ImagineContainer formValid={isFormValid} handleGenerate={handleGenerate}>
+      <div className={styles.imagesContent}>
+        <div className={styles.inputImage}>
+          <ImageDraggable
+            imageFile={img2imgFile}
+            setImageFile={setImg2imgFile}
+            showPaintImageLink={true}
+          />
         </div>
 
-        <ImagineInput
-          isFormValid={isFormValid}
-          handleGenerate={handleGenerate}
-        />
+        <div className={styles.results}>
+          <ImageGallery />
+        </div>
       </div>
-    </PrivateRoute>
+    </ImagineContainer>
   );
 };
 

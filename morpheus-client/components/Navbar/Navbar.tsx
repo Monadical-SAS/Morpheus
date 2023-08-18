@@ -21,6 +21,7 @@ type NavMenuProps = {
   handleAuthActionClick: (authOption: AuthOption) => Promise<void>;
   isMobile?: boolean;
   closeMenu?: () => void;
+  showBrand?: boolean;
 };
 
 const NavMenu = (props: NavMenuProps) => {
@@ -42,9 +43,11 @@ const NavMenu = (props: NavMenuProps) => {
 
   return (
     <Fragment>
-      <div className={styles.brand}>
-        <Brand onClick={props.redirectToHome} styles={{ fontSize: "20px" }} />
-      </div>
+      {props.showBrand && (
+        <div className={styles.brand}>
+          <Brand onClick={props.redirectToHome} styles={{ fontSize: "20px" }} />
+        </div>
+      )}
 
       <div className={styles.links}>
         <Link className={getLinkStyles("imagine")} href={"/imagine/text2img"}>
