@@ -36,12 +36,14 @@ const Inpainting: NextPage = () => {
           <div className={styles.imagesContent}>
             <div className={styles.inputImage}>
               <ImageDraggable
+                label={"Base Image"}
                 imageFile={img2imgFile}
                 setImageFile={setImg2imgFile}
                 showEditImage={true}
                 showPaintImageLink={true}
               />
               <ImageDraggable
+                label={"Base Mask"}
                 imageFile={maskFile}
                 setImageFile={setMaskFile}
                 styles={{ marginTop: "24px" }}

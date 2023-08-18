@@ -33,6 +33,7 @@ const ControlNetImg: NextPage = () => {
           <div className={styles.imagesContent}>
             <div className={styles.inputImage}>
               <ImageDraggable
+                label={"Base Image"}
                 imageFile={img2imgFile}
                 setImageFile={setImg2imgFile}
                 showPaintImageLink={true}
