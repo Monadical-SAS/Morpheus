@@ -1,6 +1,7 @@
 import { ReactNode, useState } from "react";
 import { useRouter } from "next/router";
 
+import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
 import Brand from "../Typography/Brand/Brand";
 import { SDOption } from "@/context/SDContext";
 import { Text2ImgIcon } from "../icons/text2img";
@@ -21,7 +22,7 @@ import {
   UpscalingDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
 import styles from "./ImagineMenu.module.scss";
-import { Scaling } from 'lucide-react';
+import { Scaling } from "lucide-react";
 
 interface LongItemProps {
   active?: boolean;
@@ -32,13 +33,27 @@ interface LongItemProps {
   option: string;
 }
 
+const OpenSource = () => {
+  return (
+    <div className={styles.openSource}>
+      <p className="font-bold base-1 main">Morpheus is open source!</p>
+      <p className="base-1 primary">
+        Easily add your own AI models or functionality, extending Morpheus for your own project needs.
+      </p>
+      <ButtonPrimary
+        loading={false}
+        onClick={() => window.open("https://github.com/Monadical-SAS/Morpheus/fork")}
+        text={"Fork on GitHub"}
+      />
+    </div>
+  );
+};
+
 const ImagineMenuItem = (props: LongItemProps) => {
   const router = useRouter();
 
   const getItemStyles = () => {
-    return `${styles.menuItem} ${props.expanded && styles.expanded} ${
-      props.active && styles.active
-    }`;
+    return `${styles.menuItem} ${props.expanded && styles.expanded} ${props.active && styles.active}`;
   };
 
   const handleOnClick = () => {
@@ -46,19 +61,11 @@ const ImagineMenuItem = (props: LongItemProps) => {
   };
 
   return (
-    <AppTooltip
-      title={props.title}
-      content={props.description}
-      direction={"right"}
-    >
+    <AppTooltip title={props.title} content={props.description} direction={"right"}>
       <div className={getItemStyles()} onClick={handleOnClick}>
         <span className={styles.icon}>{props.icon}</span>
 
-        {props.expanded && (
-          <p className={`base-1 ${props.active ? "primary" : "secondary"}`}>
-            {props.title}
-          </p>
-        )}
+        {props.expanded && <p className={`base-1 ${props.active ? "primary" : "secondary"}`}>{props.title}</p>}
       </div>
     </AppTooltip>
   );
@@ -81,10 +88,7 @@ const ImagineMenu = () => {
 
   return (
     <div className={`${styles.imagineMenu} ${expanded && styles.barExpanded}`}>
-      <div
-        onClick={() => setExpanded(!expanded)}
-        className={`${styles.menuIcon} ${expanded && styles.expanded}`}
-      >
+      <div onClick={() => setExpanded(!expanded)} className={`${styles.menuIcon} ${expanded && styles.expanded}`}>
         {!expanded ? (
           <HamburgerMenuIcon color={"white"} />
         ) : (
@@ -140,7 +144,7 @@ const ImagineMenu = () => {
         description={<UpscalingDescription className="body-2 white" />}
         expanded={expanded}
         active={getItemActive(SDOption.Upscaling)}
-        icon={<Scaling color={getIconColor(SDOption.Upscaling)}  width={"24"} height={"24"} />}
+        icon={<Scaling color={getIconColor(SDOption.Upscaling)} width={"24"} height={"24"} />}
         option={SDOption.Upscaling}
       />
       <ImagineMenuItem
@@ -151,6 +155,7 @@ const ImagineMenu = () => {
         icon={<HelpIcon color={getIconColor("help")} />}
         option={"help"}
       />
+      {expanded && <OpenSource />}
     </div>
   );
 };

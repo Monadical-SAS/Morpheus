@@ -49,8 +49,27 @@
     justify-content: center;
   }
 
+  .openSource {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    border: 2px solid colors.$white-color;
+    margin: 0px 24px;
+    padding:19px 17px;
+    gap:14px;
+
+    @include media.mobile {
+      display: none;
+    }
+  }
+
   &.barExpanded {
     width: 320px;
+
+    @include media.mobile {
+      width: 100%;
+    }
   }
 
   .menuIcon {
