@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
-import { useRouter } from "next/router";
+import { Scaling } from "lucide-react";
 
+import { useRouter } from "next/router";
 import Brand from "../Typography/Brand/Brand";
 import { SDOption } from "@/context/SDContext";
 import { Text2ImgIcon } from "../icons/text2img";
@@ -18,7 +19,8 @@ import {
   UpscalingDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
 import styles from "./ImagineMenu.module.scss";
-import { Scaling } from "lucide-react";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 interface LongItemProps {
   active?: boolean;
@@ -30,6 +32,8 @@ interface LongItemProps {
 
 const ImagineMenuItem = (props: LongItemProps) => {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
 
   const getItemStyles = () => {
     return `${styles.menuItem}  ${props.active && styles.active}`;
@@ -43,7 +47,7 @@ const ImagineMenuItem = (props: LongItemProps) => {
     <AppTooltip
       title={props.title}
       content={props.description}
-      direction={"right"}
+      direction={isMobile ? "bottom" : "right"}
     >
       <div className={getItemStyles()} onClick={handleOnClick}>
         <span className={styles.icon}>{props.icon}</span>
