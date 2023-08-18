@@ -160,7 +160,14 @@ jobs:
                 }                                        
               ]                                                                                                                                                           
             }                                            
-          }"                                
+          }"
+          # Remove stuck pods
+          kubectl get pods --all-namespaces | grep Terminating | while read line; do
+            pod_name=$(echo $line | awk '{print $2}' ) \
+            name_space=$(echo $line | awk '{print $1}' ); \
+            kubectl delete pods $pod_name -n $name_space --grace-period=0 --force
+          done
+          # Helm upgrade 
           helm upgrade --timeout 15m0s --install --atomic morpheus ./morpheus-server/helm/charts/morpheus/ \
             --set image.tag=${{ github.run_id }} --set domain=${{secrets.FRONTEND_DOMAIN}}
       -
