@@ -4,9 +4,9 @@ import ImageDraggable from "@/components/ImageDraggable/ImageDraggable";
 import ImageGallery from "@/components/ImageGallery/ImageGallery";
 import { useDiffusion } from "@/context/SDContext";
 import { useImagine } from "@/context/ImagineContext";
-import styles from "@/styles/pages/StableDiffusion.module.scss";
 import { CookiesStatus } from "@/utils/cookies";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
+import styles from "@/styles/pages/StableDiffusion.module.scss";
 
 const Upscale: NextPage = () => {
   const { prompt } = useDiffusion();
@@ -29,6 +29,7 @@ const Upscale: NextPage = () => {
       <div className={styles.imagesContent}>
         <div className={styles.inputImage}>
           <ImageDraggable
+            label={"Base Image"}
             imageFile={img2imgFile}
             setImageFile={setImg2imgFile}
             showPaintImageLink={true}

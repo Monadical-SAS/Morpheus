@@ -1,11 +1,4 @@
-import React, {
-  CSSProperties,
-  Fragment,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { CSSProperties, Fragment, ReactNode, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import AppImage from "@/components/AppImage/AppImage";
@@ -28,6 +21,7 @@ interface DragDropFileProps {
   styles?: CSSProperties;
   showEditImage?: boolean;
   showPaintImageLink?: boolean;
+  id?: string;
 }
 
 interface formWrapperProps {
@@ -48,7 +42,7 @@ const FormWrapper = (props: formWrapperProps) => {
     []
   );
 
-  return <div className={styles.formWrapper}>{childrenWithSeparator}</div>;
+  return <div className={styles.formContainer}>{childrenWithSeparator}</div>;
 };
 
 const PaintImageLink = () => {
@@ -126,50 +120,52 @@ const DragDropFile = (props: DragDropFileProps) => {
   };
 
   return !imgSrc ? (
-    <FormWrapper>
-      <form
-        className={styles.formFileUpload}
-        onDragEnter={handleDrag}
-        onSubmit={(e) => e.preventDefault()}
-        style={props.styles}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          className={styles.inputFileUpload}
-          multiple={false}
-          onChange={handleChange}
-        />
-        <label
-          htmlFor="input-file-upload"
-          className={`${styles.labelFileUpload} ${
-            dragActive && styles.dragActive
-          }`}
-        >
-          <div className={styles.dragInfo}>
-            {props.icon ? props.icon : <UploadImageIcon />}
-            <a className="body-1 main" onClick={onButtonClick}>
-              Click to upload
-            </a>
-
-            <span className="body-1 white">or drag and drop</span>
-
-            <p className="body-2 secondary">Maximum file size 50 MB</p>
-          </div>
+    <div className={styles.formWrapper}>
+      {props.label && (
+        <label htmlFor={props.id} className="base-2 white">
+          {props.label}
         </label>
-
-        {dragActive && (
-          <div
-            className={styles.dragFileElement}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
+      )}
+      <FormWrapper>
+        <form
+          className={styles.formFileUpload}
+          onDragEnter={handleDrag}
+          onSubmit={(e) => e.preventDefault()}
+          style={props.styles}
+        >
+          <input
+            ref={inputRef}
+            type="file"
+            className={styles.inputFileUpload}
+            multiple={false}
+            onChange={handleChange}
           />
-        )}
-      </form>
-      {props.showPaintImageLink && <PaintImageLink />}
-    </FormWrapper>
+          <label htmlFor="input-file-upload" className={`${styles.labelFileUpload} ${dragActive && styles.dragActive}`}>
+            <div className={styles.dragInfo}>
+              {props.icon ? props.icon : <UploadImageIcon />}
+              <a className="body-1 main" onClick={onButtonClick}>
+                Click to upload
+              </a>
+
+              <span className="body-1 white">or drag and drop</span>
+
+              <p className="body-2 secondary">Maximum file size 50 MB</p>
+            </div>
+          </label>
+
+          {dragActive && (
+            <div
+              className={styles.dragFileElement}
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+            />
+          )}
+        </form>
+        {props.showPaintImageLink && <PaintImageLink />}
+      </FormWrapper>
+    </div>
   ) : (
     <Fragment>
       <div className={styles.selectedFile} style={props.styles}>
