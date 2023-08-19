@@ -10,6 +10,10 @@
     width: 100%;
     margin-bottom: 48px;
 
+    &:last-child {
+      margin-bottom: 8px;
+    }
+
     .galleryRow {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

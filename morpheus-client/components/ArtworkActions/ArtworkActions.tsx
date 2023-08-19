@@ -5,7 +5,6 @@ import ShareButton from "../ShareButton/ShareButton";
 import ButtonSetImage2 from "../buttons/ButtonImg2Img/ButtonSetImage2";
 import { DownloadIcon } from "@/components/icons/download";
 import { PencilIcon } from "@/components/icons/pencil";
-import { GalleryIcon } from "@/components/icons/gallery";
 import { DeleteIcon } from "@/components/icons/delete";
 import { SaveIcon } from "lucide-react";
 import { InpaintingIcon } from "../icons/inpainting";
@@ -29,7 +28,6 @@ interface ImageActionsProps {
 }
 
 const ArtworkActions = (props: ImageActionsProps) => {
-  const router = useRouter();
   const { showSuccessAlert, showWarningAlert, showErrorAlert } =
     useToastContext();
 
@@ -73,10 +71,6 @@ const ArtworkActions = (props: ImageActionsProps) => {
       });
   };
 
-  const redirectToGallery = () => {
-    router.push(`/gallery`);
-  };
-
   const showForm = () => {
     props.setShowForm && props.setShowForm(true);
   };
@@ -115,12 +109,6 @@ const ArtworkActions = (props: ImageActionsProps) => {
           )}
 
           <ShareButton artwork={props.artwork} />
-
-          <AppTooltip content={"Open gallery"} direction={"top"}>
-            <span onClick={redirectToGallery}>
-              <GalleryIcon width={"24"} height={"24"} />
-            </span>
-          </AppTooltip>
         </div>
 
         <div className={styles.imagineActions}>

@@ -22,12 +22,14 @@ export interface InputTextProps {
   isRequired?: boolean;
   disabled?: boolean;
   styles?: CSSProperties;
-  classNames?: { container?: string; textarea?: string };
+  inputStyles?: CSSProperties;
   showCount?: boolean;
   rightIcon?: React.ReactNode;
   color?: string;
   numRows?: number;
   disableGrammarly?: boolean;
+  onClick?: () => void;
+  automaticValidation?: boolean;
 }
 
 const grammarlyAttributes = {
@@ -36,7 +38,10 @@ const grammarlyAttributes = {
   "data-enable-grammarly": "false",
 };
 
-const InputTextArea = (props: InputTextProps) => {
+const InputTextArea = ({
+  automaticValidation = true,
+  ...props
+}: InputTextProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textareaHeight, setTextareaHeight] = useState("auto");
   const extraAttributes = props.disableGrammarly ? grammarlyAttributes : {};
@@ -48,12 +53,14 @@ const InputTextArea = (props: InputTextProps) => {
     props.setText &&
       props.setText({
         value: value,
-        validators: getInputValidators(
-          value,
-          props.isRequired,
-          props.minValueLength,
-          props.maxValueLength
-        ),
+        validators: automaticValidation
+          ? getInputValidators(
+              value,
+              props.isRequired,
+              props.minValueLength,
+              props.maxValueLength
+            )
+          : [],
       });
   };
 
@@ -87,9 +94,10 @@ const InputTextArea = (props: InputTextProps) => {
           disabled={props.disabled}
           onChange={handleChange}
           {...extraAttributes}
-          style={{ height: textareaHeight }}
+          style={{ height: textareaHeight, ...props.inputStyles }}
           ref={textareaRef}
           rows={1}
+          onClick={props.onClick}
         />
 
         {props.rightIcon && (
