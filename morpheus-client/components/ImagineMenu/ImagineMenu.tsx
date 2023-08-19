@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { useRouter } from "next/router";
-import { Scaling } from "lucide-react";
 
 import Brand from "../Typography/Brand/Brand";
 import { SDOption } from "@/context/SDContext";
@@ -10,6 +9,7 @@ import { ControlNetIcon } from "../icons/controlnet";
 import { Pix2PixIcon } from "../icons/pix2pix";
 import { InpaintingIcon } from "../icons/inpainting";
 import { OpenSource } from "@/components/OpenSource/OpenSource";
+import { EnhanceIcon } from "../icons/enhance";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
 import {
   ControlNetDescription,
@@ -123,7 +123,7 @@ const ImagineMenu = () => {
         description={<UpscalingDescription className="body-2 white" />}
         active={getItemActive(SDOption.Upscaling)}
         icon={
-          <Scaling
+          <EnhanceIcon
             color={getIconColor(SDOption.Upscaling)}
             width={"24"}
             height={"24"}

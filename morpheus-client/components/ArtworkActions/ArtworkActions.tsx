@@ -28,7 +28,6 @@ interface ImageActionsProps {
 }
 
 const ArtworkActions = (props: ImageActionsProps) => {
-  const router = useRouter();
   const { showSuccessAlert, showWarningAlert, showErrorAlert } =
     useToastContext();
 
