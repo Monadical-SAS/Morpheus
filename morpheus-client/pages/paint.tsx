@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
-import { CookiesStatus } from "../utils/cookies";
-import MainContainer from "../layout/MainContainer/MainContainer";
 import Excalidraw from "../components/Excalidraw/Excalidraw";
-import { useAnalytics } from "../context/GoogleAnalyticsContext";
-import styles from "../styles/pages/Paint.module.scss";
+import { CookiesStatus } from "@/utils/cookies";
+import { MainContainer } from "@/layout/MainContainer/MainContainer";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
+import styles from "@/styles/pages/Paint.module.scss";
 
 const Paint = () => {
   const { cookiesStatus, sendAnalyticsRecord } = useAnalytics();

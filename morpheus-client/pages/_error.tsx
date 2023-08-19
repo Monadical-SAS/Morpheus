@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
-import MainContainer from "../layout/MainContainer/MainContainer";
+import { MainContainer } from "@/layout/MainContainer/MainContainer";
 import styles from "../styles/pages/Error.module.scss";
 
 const Page500 = () => {

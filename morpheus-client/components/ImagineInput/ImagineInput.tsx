@@ -45,8 +45,11 @@ const ImagineInput = (props: ImagineInputProps) => {
             isRequired={true}
             rightIcon={<MagicPrompt />}
             disableGrammarly={true}
-            onClick={() => clearPrompt({ isPromptEmpty, setIsPromptEmpty, setPrompt })}
+            onClick={() =>
+              clearPrompt({ isPromptEmpty, setIsPromptEmpty, setPrompt })
+            }
             automaticValidation={false}
+            inputStyles={{ backgroundColor: "#14172D" }}
           />
         </div>
 
