@@ -66,21 +66,6 @@
     }
   }
 
-  .openSource {
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    border-radius: 18px;
-    border: 2px solid colors.$white-color;
-    margin: 0 24px;
-    padding: 19px 17px;
-    gap: 14px;
-
-    @include media.mobile {
-      display: none;
-    }
-  }
-
   p[class^="base-1 white"] {
     margin: 0 24px 24px 24px;
 

@@ -1,9 +1,7 @@
 import { ReactNode } from "react";
+import { useRouter } from "next/router";
 import { Scaling } from "lucide-react";
 
-import { useRouter } from "next/router";
-
-import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
 import Brand from "../Typography/Brand/Brand";
 import { SDOption } from "@/context/SDContext";
 import { Text2ImgIcon } from "../icons/text2img";
@@ -11,6 +9,7 @@ import { Img2ImgIcon } from "../icons/img2img";
 import { ControlNetIcon } from "../icons/controlnet";
 import { Pix2PixIcon } from "../icons/pix2pix";
 import { InpaintingIcon } from "../icons/inpainting";
+import { OpenSource } from "@/components/OpenSource/OpenSource";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
 import {
   ControlNetDescription,
@@ -20,9 +19,9 @@ import {
   Text2ImgDescription,
   UpscalingDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
-import styles from "./ImagineMenu.module.scss";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
+import styles from "./ImagineMenu.module.scss";
 
 interface LongItemProps {
   active?: boolean;
@@ -31,22 +30,6 @@ interface LongItemProps {
   description: ReactNode;
   option: string;
 }
-
-const OpenSource = () => {
-  return (
-    <div className={styles.openSource}>
-      <p className="font-bold base-1 main">Morpheus is open source!</p>
-      <p className="base-1 primary">
-        Easily add your own AI models or functionality, extending Morpheus for your own project needs.
-      </p>
-      <ButtonPrimary
-        loading={false}
-        onClick={() => window.open("https://github.com/Monadical-SAS/Morpheus/fork")}
-        text={"Fork on GitHub"}
-      />
-    </div>
-  );
-};
 
 const ImagineMenuItem = (props: LongItemProps) => {
   const router = useRouter();
@@ -149,7 +132,7 @@ const ImagineMenu = () => {
         option={SDOption.Upscaling}
       />
 
-        <OpenSource />
+      <OpenSource />
     </div>
   );
 };
