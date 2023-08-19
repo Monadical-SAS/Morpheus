@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { Scaling } from "lucide-react";
 
 import { useRouter } from "next/router";
+
+import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
 import Brand from "../Typography/Brand/Brand";
 import { SDOption } from "@/context/SDContext";
 import { Text2ImgIcon } from "../icons/text2img";
@@ -29,6 +31,22 @@ interface LongItemProps {
   description: ReactNode;
   option: string;
 }
+
+const OpenSource = () => {
+  return (
+    <div className={styles.openSource}>
+      <p className="font-bold base-1 main">Morpheus is open source!</p>
+      <p className="base-1 primary">
+        Easily add your own AI models or functionality, extending Morpheus for your own project needs.
+      </p>
+      <ButtonPrimary
+        loading={false}
+        onClick={() => window.open("https://github.com/Monadical-SAS/Morpheus/fork")}
+        text={"Fork on GitHub"}
+      />
+    </div>
+  );
+};
 
 const ImagineMenuItem = (props: LongItemProps) => {
   const router = useRouter();
@@ -130,6 +148,8 @@ const ImagineMenu = () => {
         }
         option={SDOption.Upscaling}
       />
+
+        <OpenSource />
     </div>
   );
 };
