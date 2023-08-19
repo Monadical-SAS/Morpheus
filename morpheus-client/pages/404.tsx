@@ -2,8 +2,8 @@ import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { CookiesStatus } from "@/utils/cookies";
+import { MainContainer } from "@/layout/MainContainer/MainContainer";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
-import MainContainer from "../layout/MainContainer/MainContainer";
 import styles from "../styles/pages/Error.module.scss";
 
 const Page400 = () => {
@@ -22,7 +22,7 @@ const Page400 = () => {
       });
     }
   }, [cookiesStatus, sendAnalyticsRecord]);
-  
+
   return (
     <MainContainer>
       <div className={styles.mainContent}>

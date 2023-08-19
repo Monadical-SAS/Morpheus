@@ -1,4 +1,10 @@
-import React, { CSSProperties, Fragment, useEffect, useRef, useState } from "react";
+import React, {
+  CSSProperties,
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { buildStringFromArray } from "@/utils/strings";
 import { TextState } from "../InputText/InputText";
 import { getInputValidators } from "../validators";
@@ -16,7 +22,7 @@ export interface InputTextProps {
   isRequired?: boolean;
   disabled?: boolean;
   styles?: CSSProperties;
-  classNames?: { container?: string; textarea?: string };
+  inputStyles?: CSSProperties;
   showCount?: boolean;
   rightIcon?: React.ReactNode;
   color?: string;
@@ -32,7 +38,10 @@ const grammarlyAttributes = {
   "data-enable-grammarly": "false",
 };
 
-const InputTextArea = ({ automaticValidation = true, ...props}: InputTextProps) => {
+const InputTextArea = ({
+  automaticValidation = true,
+  ...props
+}: InputTextProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textareaHeight, setTextareaHeight] = useState("auto");
   const extraAttributes = props.disableGrammarly ? grammarlyAttributes : {};
@@ -45,7 +54,12 @@ const InputTextArea = ({ automaticValidation = true, ...props}: InputTextProps) 
       props.setText({
         value: value,
         validators: automaticValidation
-          ? getInputValidators(value, props.isRequired, props.minValueLength, props.maxValueLength)
+          ? getInputValidators(
+              value,
+              props.isRequired,
+              props.minValueLength,
+              props.maxValueLength
+            )
           : [],
       });
   };
@@ -80,13 +94,15 @@ const InputTextArea = ({ automaticValidation = true, ...props}: InputTextProps) 
           disabled={props.disabled}
           onChange={handleChange}
           {...extraAttributes}
-          style={{ height: textareaHeight }}
+          style={{ height: textareaHeight, ...props.inputStyles }}
           ref={textareaRef}
           rows={1}
           onClick={props.onClick}
         />
 
-        {props.rightIcon && <span className={styles.rightIcon}>{props.rightIcon}</span>}
+        {props.rightIcon && (
+          <span className={styles.rightIcon}>{props.rightIcon}</span>
+        )}
 
         {props.showCount && (
           <span className={`base-2 ${props.color} ${styles.count}`}>
@@ -96,7 +112,11 @@ const InputTextArea = ({ automaticValidation = true, ...props}: InputTextProps) 
         )}
       </div>
 
-      {props.text.validators && <small className={styles.error}>{buildStringFromArray(props.text.validators)}</small>}
+      {props.text.validators && (
+        <small className={styles.error}>
+          {buildStringFromArray(props.text.validators)}
+        </small>
+      )}
     </Fragment>
   );
 };

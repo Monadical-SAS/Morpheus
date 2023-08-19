@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 
 import { CookiesStatus } from "@/utils/cookies";
-import { useAnalytics } from "@/context/GoogleAnalyticsContext";
-import MainContainer from "../layout/MainContainer/MainContainer";
+import ImagePrompt from "@/components/ImagePrompt/ImagePrompt";
 import FAQ from "../components/FAQ/FAQ";
 import { AppLink } from "@/components/AppLink/AppLink";
-import ImagePrompt from "@/components/ImagePrompt/ImagePrompt";
+import { MainContainer } from "@/layout/MainContainer/MainContainer";
 import {
   ControlNetDescription,
   Img2ImgDescription,
@@ -13,6 +12,7 @@ import {
   Pix2PixDescription,
   Text2ImgDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import styles from "../styles/pages/About.module.scss";
 
 const About = () => {
@@ -29,7 +29,7 @@ const About = () => {
   }, [cookiesStatus, sendAnalyticsRecord]);
 
   return (
-    <MainContainer showFooter={true} style={{ justifyContent: "center" }}>
+    <MainContainer showFooter={true}>
       <div className={styles.aboutContainer}>
         <section className={styles.header}>
           <div className={styles.headerInfo}>

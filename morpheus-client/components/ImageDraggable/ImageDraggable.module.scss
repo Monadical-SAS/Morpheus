@@ -4,6 +4,7 @@
 .formWrapper {
   width: 100%;
   max-width: 100%;
+  min-width: 244px;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -24,8 +25,12 @@
     width: 100%;
     border-bottom: 5px;
     border-style: solid;
-    margin: 80px 0;
+    margin: 48px 0;
     border-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100' fill='none' rx='8' ry='8' stroke='%23312E47FF' stroke-width='4' stroke-dasharray='10%2c 10' stroke-dashoffset='53' stroke-linecap='round'/%3e%3c/svg%3e") 30 round;
+
+    @include media.mobile {
+      margin: 16px 0;
+    }
   }
 }
 
@@ -33,6 +38,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 48px;
+
+  @include media.mobile {
+    padding-bottom: 0;
+  }
 }
 
 .formFileUpload {
@@ -45,7 +55,7 @@
   @include media.mobile {
     width: 100%;
     height: auto;
-    padding: 16px;
+    padding: 0;
   }
 
   .inputFileUpload {

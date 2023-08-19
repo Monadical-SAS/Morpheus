@@ -138,16 +138,16 @@ const ArtworkForm = (props: ArtworkFormProps) => {
       />
 
       <div className={styles.buttonsContainer}>
-        <span className={styles.cancelIcon} onClick={handleCancel}>
-          <CloseIcon />
-        </span>
-
         <ButtonPrimary
           text={`${props.artwork.id ? "Update" : "Save"}`}
           loading={isLoading}
           onClick={handleFormSubmit}
           disabled={!isFormValid}
         />
+
+        <span className={styles.cancelIcon} onClick={handleCancel}>
+          <CloseIcon />
+        </span>
       </div>
     </div>
   ) : null;
