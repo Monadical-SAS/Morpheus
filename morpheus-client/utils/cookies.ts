@@ -14,4 +14,12 @@ const deleteAllCookies = () => {
   }
 };
 
-export { deleteAllCookies };
+const clearStorageExceptCookies = () => {
+  const cookieKey = "cp:cookies";
+  
+  Object.keys(window.localStorage)
+    .filter(key => key !== cookieKey)
+    .forEach(key => window.localStorage.removeItem(key));
+};
+
+export { deleteAllCookies, clearStorageExceptCookies };

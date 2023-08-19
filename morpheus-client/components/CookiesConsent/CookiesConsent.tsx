@@ -7,7 +7,7 @@ import styles from "./CookiesConsent.module.scss";
 
 
 const CookiesConsent = () => {
-  const [finalStatus, setFinalStatus] = useState("");
+  const [isHydrated, setIsHydrated] = useState(false);
   const { cookiesStatus, setCookiesStatus } = useAnalytics();
 
   const [localCookies, setLocalCookies] = useLocalStorage<string | null>("cp:cookies", null);
@@ -15,10 +15,10 @@ const CookiesConsent = () => {
 
   useEffect(() => {
     const newStatus = localCookies || cookiesStatus || "";
-    setFinalStatus(newStatus);
     if (newStatus !== "") {
       if (localCookies && localCookies !== "") setCookiesStatus(localCookies);
     }
+    setIsHydrated(true)
   }, [localCookies, setCookiesStatus, cookiesStatus]);
 
   const handleActionCookies = (event: any, status: string) => {
@@ -32,7 +32,7 @@ const CookiesConsent = () => {
     setLocalCookies(status);
   };
 
-  return finalStatus === "" ? (
+  return isHydrated && localCookies === null ? (
     <div className={styles.cookiesContainer}>
       <div className={styles.textContainer}>
         <p className="body-1 secondary">

@@ -1,10 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   loginWithEmailAndPasswordFirebase,
@@ -17,6 +11,7 @@ import { User, UserRegistration } from "@/models/models";
 import { getUserInfo, loadOrCreateUserInfo } from "@/services/users";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToastContext } from "@/context/ToastContext";
+import { clearStorageExceptCookies } from "@/utils/cookies";
 
 export enum AuthOption {
   Login = "login",
@@ -24,7 +19,7 @@ export enum AuthOption {
   Reset = "reset",
 }
 
-const USER = "user"
+const USER = "user";
 
 export interface IAuthContext {
   authLoading: boolean;
@@ -85,9 +80,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
     }
   }, [user]);
 
-  const registerWithEmailAndPassword = (
-    user: UserRegistration
-  ): Promise<void> => {
+  const registerWithEmailAndPassword = (user: UserRegistration): Promise<void> => {
     return signUpWithEmailAndPasswordFirebase(user)
       .then((response) => {
         loadOrCreateMorpheusUser({ ...response, displayName: user.name });
@@ -169,7 +162,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
   const logout = () => {
     return signOutFirebase()
       .then(() => {
-        localStorage.clear();
+        clearStorageExceptCookies();
         sessionStorage.clear();
         router.push("/");
         setUser({} as User);
