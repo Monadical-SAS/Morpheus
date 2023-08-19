@@ -7,11 +7,12 @@
   background-color: colors.$background-secondary;
 
   @include media.mobile {
-    position: initial;
-    width: 100%;
+    width: calc(100% - 48px);
     height: auto;
-    max-width: 100%;
     padding: 0;
+    margin: 0 24px 24px 24px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
   }
 
   .imagineInputContainer {
@@ -23,7 +24,7 @@
     @include media.mobile {
       height: auto;
       flex-direction: column;
-      margin-top: 32px;
+      margin-top: 0;
       padding: 24px;
     }
 

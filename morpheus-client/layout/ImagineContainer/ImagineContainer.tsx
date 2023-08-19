@@ -2,9 +2,9 @@ import { ReactNode } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import ImagineMenu from "../../components/ImagineMenu/ImagineMenu";
 import ImagineInput from "@/components/ImagineInput/ImagineInput";
-import styles from "./ImagineContainer.module.scss";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
+import styles from "./ImagineContainer.module.scss";
 
 interface MainContainerProps {
   children: ReactNode;
@@ -16,22 +16,27 @@ const ImagineContainer = (props: MainContainerProps) => {
   const { width } = useWindowDimensions();
   const isMobile = width < MOBILE_SCREEN_WIDTH;
 
+  const ImagineInputInstance = (
+    <ImagineInput
+      isFormValid={props.formValid}
+      handleGenerate={props.handleGenerate}
+    />
+  );
+
   return (
-    <div className={styles.mainContainer}>
+    <div className={styles.imagineContainer}>
       {!isMobile && <ImagineMenu />}
 
-      <div className={styles.container}>
+      <div className={styles.imagineContent}>
         <Navbar />
 
-        <main className={styles.main}>
+        <main className={styles.mainContent}>
           {isMobile && <ImagineMenu />}
+          {isMobile && ImagineInputInstance}
           {props.children}
         </main>
 
-        <ImagineInput
-          isFormValid={props.formValid}
-          handleGenerate={props.handleGenerate}
-        />
+        {!isMobile && ImagineInputInstance}
       </div>
     </div>
   );
