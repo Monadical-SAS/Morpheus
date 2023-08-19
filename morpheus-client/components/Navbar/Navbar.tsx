@@ -1,8 +1,8 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-
 import { slide as BurgerMenu } from "react-burger-menu";
+
 import Brand from "../Typography/Brand/Brand";
 import UserCard, { UserImage } from "../UserCard/UserCard";
 import { AuthOption, useAuth } from "@/context/AuthContext";
@@ -77,7 +77,11 @@ const NavMenu = (props: NavMenuProps) => {
   );
 };
 
-const Navbar = () => {
+interface NavbarProps {
+  showBrand?: boolean;
+}
+
+const Navbar = (props: NavbarProps) => {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { user, setAuthOption } = useAuth();
@@ -123,7 +127,7 @@ const Navbar = () => {
               redirectToHome={redirectToHome}
               redirectToProfile={redirectToProfile}
               handleAuthActionClick={handleAuthActionClick}
-              isMobile
+              isMobile={true}
               closeMenu={() => setShowMobileMenu(false)}
             />
           </div>
@@ -135,7 +139,8 @@ const Navbar = () => {
           redirectToHome={redirectToHome}
           redirectToProfile={redirectToProfile}
           handleAuthActionClick={handleAuthActionClick}
-          isMobile={isMobile}
+          isMobile={false}
+          showBrand={props.showBrand}
         />
       )}
     </div>

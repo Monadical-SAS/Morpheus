@@ -15,7 +15,7 @@
   flex: 1 auto;
   background-color: colors.$background-primary;
   box-shadow: inset 0px -1px 0px colors.$background-border;
-  z-index: 999;
+  z-index: 20;
 
   @include media.mobile {
     height: 64px;
