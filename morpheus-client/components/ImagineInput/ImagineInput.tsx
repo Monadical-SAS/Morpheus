@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
+import Button from "../buttons/Button/Button";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
 import { initialText } from "../Inputs/InputText/InputText";
 import MagicPrompt from "../MagicPrompt/MagicPrompt";
@@ -45,13 +45,16 @@ const ImagineInput = (props: ImagineInputProps) => {
             isRequired={true}
             rightIcon={<MagicPrompt />}
             disableGrammarly={true}
-            onClick={() => clearPrompt({ isPromptEmpty, setIsPromptEmpty, setPrompt })}
+            onClick={() =>
+              clearPrompt({ isPromptEmpty, setIsPromptEmpty, setPrompt })
+            }
             automaticValidation={false}
+            inputStyles={{ backgroundColor: "#14172D" }}
           />
         </div>
 
         <div className={styles.ImagineActions}>
-          <ButtonPrimary
+          <Button
             loading={isLoading}
             onClick={props.handleGenerate}
             disabled={!props.isFormValid}

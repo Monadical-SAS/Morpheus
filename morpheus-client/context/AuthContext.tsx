@@ -1,10 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   loginWithEmailAndPasswordFirebase,
@@ -17,6 +11,7 @@ import { User, UserRegistration } from "@/models/models";
 import { getUserInfo, loadOrCreateUserInfo } from "@/services/users";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToastContext } from "@/context/ToastContext";
+import { clearStorageExceptCookies } from "@/utils/cookies";
 
 export enum AuthOption {
   Login = "login",
@@ -24,7 +19,7 @@ export enum AuthOption {
   Reset = "reset",
 }
 
-const USER = "user"
+const USER = "user";
 
 export interface IAuthContext {
   authLoading: boolean;
@@ -85,12 +80,10 @@ const AuthProvider = (props: { children: ReactNode }) => {
     }
   }, [user]);
 
-  const registerWithEmailAndPassword = (
-    user: UserRegistration
-  ): Promise<void> => {
+  const registerWithEmailAndPassword = (user: UserRegistration): Promise<void> => {
     return signUpWithEmailAndPasswordFirebase(user)
       .then((response) => {
-        loadOrCreateMorpheusUser({ ...response, displayName: user.name });
+        loadOrCreateMorpheusUser({ ...response.user, displayName: user.name });
       })
       .catch((error) => {
         showErrorAlert(error.message);
@@ -98,10 +91,10 @@ const AuthProvider = (props: { children: ReactNode }) => {
   };
 
   const loginWithEmailAndPassword = (user: UserRegistration): Promise<User> => {
-    return new Promise((resolve, reject) => {
+    return new Promise((reject) => {
       loginWithEmailAndPasswordFirebase(user)
         .then((response: any) => {
-          loadOrCreateMorpheusUser(response);
+          loadOrCreateMorpheusUser(response.user);
         })
         .catch((error) => {
           showErrorAlert(error.message);
@@ -129,6 +122,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
       name: firebaseUser.displayName,
       email: firebaseUser.email,
       phone: firebaseUser.phoneNumber,
+      is_new_user: firebaseUser.isNewUser,
     };
     if (!user.email) {
       showErrorAlert("Email is required");
@@ -169,7 +163,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
   const logout = () => {
     return signOutFirebase()
       .then(() => {
-        localStorage.clear();
+        clearStorageExceptCookies();
         sessionStorage.clear();
         router.push("/");
         setUser({} as User);

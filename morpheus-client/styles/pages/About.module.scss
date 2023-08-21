@@ -9,9 +9,11 @@
   flex-direction: column;
   padding: 100px 24px;
   max-width: variables.$max-width-landing;
+  align-self: center;
 
   @include media.mobile {
     padding: 48px 24px;
+    margin-top: 48px;
   }
 
   .header {
@@ -19,6 +21,10 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
+    @include media.tablet {
+      flex-direction: column;
+    }
 
     @include media.mobile {
       flex-direction: column;
@@ -31,9 +37,16 @@
       flex-direction: column;
       justify-content: center;
 
-      @include media.mobile {
+      @include media.tablet {
         max-width: 100%;
-        margin-top: 48px;
+        height: auto;
+      }
+
+      @include media.mobile {
+        h2 {
+          font-size: 48px;
+          line-height: 52px;
+        }
       }
     }
 
@@ -42,6 +55,11 @@
       margin-left: 48px;
       width: 100%;
       height: auto;
+
+      @include media.tablet {
+        margin-left: 0;
+        max-width: 100%;
+      }
 
       @include media.mobile {
         margin-left: 0;

@@ -1,5 +1,4 @@
 import React, { CSSProperties, Fragment } from "react";
-import { useRouter } from "next/router";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
 import ShareButton from "../ShareButton/ShareButton";
 import ButtonSetImage2 from "../buttons/ButtonImg2Img/ButtonSetImage2";
@@ -28,12 +27,11 @@ interface ImageActionsProps {
 }
 
 const ArtworkActions = (props: ImageActionsProps) => {
-  const router = useRouter();
   const { showSuccessAlert, showWarningAlert, showErrorAlert } =
     useToastContext();
 
   const handleImageDownload = async () => {
-    downloadImage(props.artwork.image)
+    downloadImage(props.artwork.image, props.artwork.prompt?.prompt)
       .then(() => {
         showSuccessAlert("Image downloaded successfully");
       })

@@ -1,0 +1,19 @@
+@use "styles/media";
+
+.container {
+  width: auto;
+  height: auto;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  gap: 24px;
+
+  @include media.mobile {
+    width: calc(100% - 48px);
+  }
+
+  button {
+    max-width: 250px;
+  }
+}

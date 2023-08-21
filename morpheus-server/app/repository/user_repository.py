@@ -38,6 +38,7 @@ class UserRepository:
             email=user.email,
             bio=user.bio,
             avatar=f"https://ui-avatars.com/api/?name={avatar_seed}&background=random&size=128",
+            is_new_user=user.is_new_user,
         )
         db.add(db_user)
         db.commit()
@@ -53,6 +54,7 @@ class UserRepository:
         db_user.phone = user.phone
         db_user.bio = user.bio
         db_user.avatar = user.avatar
+        db_user.is_new_user = user.is_new_user
         db.commit()
         return db_user
 

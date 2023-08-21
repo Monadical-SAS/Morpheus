@@ -1,8 +1,8 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-
 import { slide as BurgerMenu } from "react-burger-menu";
+
 import Brand from "../Typography/Brand/Brand";
 import UserCard, { UserImage } from "../UserCard/UserCard";
 import { AuthOption, useAuth } from "@/context/AuthContext";
@@ -21,6 +21,7 @@ type NavMenuProps = {
   handleAuthActionClick: (authOption: AuthOption) => Promise<void>;
   isMobile?: boolean;
   closeMenu?: () => void;
+  showBrand?: boolean;
 };
 
 const NavMenu = (props: NavMenuProps) => {
@@ -42,9 +43,11 @@ const NavMenu = (props: NavMenuProps) => {
 
   return (
     <Fragment>
-      <div className={styles.brand}>
-        <Brand onClick={props.redirectToHome} styles={{ fontSize: "20px" }} />
-      </div>
+      {props.showBrand && (
+        <div className={styles.brand}>
+          <Brand onClick={props.redirectToHome} styles={{ fontSize: "20px" }} />
+        </div>
+      )}
 
       <div className={styles.links}>
         <Link className={getLinkStyles("imagine")} href={"/imagine/text2img"}>
@@ -74,7 +77,11 @@ const NavMenu = (props: NavMenuProps) => {
   );
 };
 
-const Navbar = () => {
+interface NavbarProps {
+  showBrand?: boolean;
+}
+
+const Navbar = (props: NavbarProps) => {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { user, setAuthOption } = useAuth();
@@ -120,7 +127,7 @@ const Navbar = () => {
               redirectToHome={redirectToHome}
               redirectToProfile={redirectToProfile}
               handleAuthActionClick={handleAuthActionClick}
-              isMobile
+              isMobile={true}
               closeMenu={() => setShowMobileMenu(false)}
             />
           </div>
@@ -132,7 +139,8 @@ const Navbar = () => {
           redirectToHome={redirectToHome}
           redirectToProfile={redirectToProfile}
           handleAuthActionClick={handleAuthActionClick}
-          isMobile={isMobile}
+          isMobile={false}
+          showBrand={props.showBrand}
         />
       )}
     </div>

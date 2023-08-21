@@ -14,14 +14,13 @@ import InputNumber, {
 import styles from "./MaskPaintingCanvas.module.scss";
 
 type MaskedCanvasProps = {
-  src: string;
   width: number;
   height: number;
   closeModal: () => void;
 };
 
 const MaskPaintingCanvas = (props: MaskedCanvasProps) => {
-  const { maskFile, setMaskFile } = useImagine();
+  const { img2imgFile, maskFile, setMaskFile } = useImagine();
 
   const imageCanvasRef = useRef<HTMLCanvasElement>(null);
   const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -33,7 +32,7 @@ const MaskPaintingCanvas = (props: MaskedCanvasProps) => {
 
   useEffect(() => {
     renderInitialSetup();
-  }, [props.src, props.width, props.height]);
+  }, [props.width, props.height]);
 
   const renderInitialSetup = () => {
     const imageCanvas = imageCanvasRef.current;
@@ -43,7 +42,7 @@ const MaskPaintingCanvas = (props: MaskedCanvasProps) => {
     const ctx = imageCanvas.getContext("2d");
 
     const image = new Image();
-    image.src = props.src;
+    image.src = URL.createObjectURL(img2imgFile as File);
     image.onload = () => {
       if (!imageCanvas || !drawingCanvas || !ctx) return;
       imageCanvas.width = props.width;

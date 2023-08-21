@@ -3,10 +3,10 @@ import { NextPage } from "next";
 
 import { CookiesStatus } from "@/utils/cookies";
 import Loader from "@/components/Loaders/LoaderCircle/Loader";
-import PrivateRoute from "@/components/Auth/PrivateRoute/PrivateRoute";
 import SearchForm from "@/components/SearchForm/SearchForm";
 import ArtWorkList from "@/components/ArtWorkList/ArtWorkList";
 import Collections from "@/components/Collections/Collections";
+import { MainLayoutPrivate } from "@/layout/MainLayout/MainLayout";
 import { useAuth } from "@/context/AuthContext";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import { getUserArtWorks } from "@/services/artworks";
@@ -53,7 +53,7 @@ const Gallery: NextPage = () => {
   };
 
   return (
-    <PrivateRoute>
+    <MainLayoutPrivate>
       {isLoading ? (
         <Loader
           isLoading={isLoading}
@@ -74,7 +74,7 @@ const Gallery: NextPage = () => {
           <Collections />
         </div>
       )}
-    </PrivateRoute>
+    </MainLayoutPrivate>
   );
 };
 

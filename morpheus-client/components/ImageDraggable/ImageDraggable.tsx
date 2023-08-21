@@ -6,18 +6,17 @@ import React, {
   useRef,
   useState,
 } from "react";
-import Link from "next/link";
 
 import AppImage from "@/components/AppImage/AppImage";
 import Modal from "../Modal/Modal";
 import MaskPaintingCanvas from "../MaskPaintingCanvas/MaskPaintingCanvas";
 import { CloseIcon } from "../icons/close";
-import { InpaintingIcon } from "../icons/inpainting";
 import { UploadImageIcon } from "../icons/uploadImage";
 import { PaintImageIcon } from "../icons/paintImage";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./ImageDraggable.module.scss";
+import Link from "next/link";
 
 interface DragDropFileProps {
   imageFile: File | null;
@@ -28,39 +27,9 @@ interface DragDropFileProps {
   styles?: CSSProperties;
   showEditImage?: boolean;
   showPaintImageLink?: boolean;
+  showPaintMask?: boolean;
+  id?: string;
 }
-
-interface formWrapperProps {
-  children: ReactNode;
-}
-
-const FormWrapper = (props: formWrapperProps) => {
-  const childrenWithSeparator = React.Children.toArray(props.children).reduce(
-    (childrenList: any[], child, index, array) => {
-      if (index < array.length - 1) {
-        childrenList.push(child);
-        childrenList.push(<div className={styles.separator} />);
-      } else {
-        childrenList.push(child);
-      }
-      return childrenList;
-    },
-    []
-  );
-
-  return <div className={styles.formWrapper}>{childrenWithSeparator}</div>;
-};
-
-const PaintImageLink = () => {
-  return (
-    <div className={styles.paintInfo}>
-      <PaintImageIcon />
-      <Link className="underline body-1 main" href={"/paint"}>
-        Paint an image
-      </Link>
-    </div>
-  );
-};
 
 const DragDropFile = (props: DragDropFileProps) => {
   const inputRef = useRef<any>(null);
@@ -125,8 +94,8 @@ const DragDropFile = (props: DragDropFileProps) => {
     props.setImageFile(null);
   };
 
-  return !imgSrc ? (
-    <FormWrapper>
+  const ImageInputForm = (
+    <div className={styles.formContainer}>
       <form
         className={styles.formFileUpload}
         onDragEnter={handleDrag}
@@ -148,12 +117,10 @@ const DragDropFile = (props: DragDropFileProps) => {
         >
           <div className={styles.dragInfo}>
             {props.icon ? props.icon : <UploadImageIcon />}
-            <a className="body-1 main" onClick={onButtonClick}>
+            <a className="body-1 main pointer" onClick={onButtonClick}>
               Click to upload
             </a>
-
             <span className="body-1 white">or drag and drop</span>
-
             <p className="body-2 secondary">Maximum file size 50 MB</p>
           </div>
         </label>
@@ -168,24 +135,59 @@ const DragDropFile = (props: DragDropFileProps) => {
           />
         )}
       </form>
-      {props.showPaintImageLink && <PaintImageLink />}
-    </FormWrapper>
-  ) : (
-    <Fragment>
-      <div className={styles.selectedFile} style={props.styles}>
-        <div className={styles.header}>
-          {props.showEditImage && (
-            <span onClick={() => setShowEditModal(true)}>
-              <InpaintingIcon width={"24"} height={"24"} />
-            </span>
-          )}
 
-          <span onClick={clearImage}>
-            <CloseIcon width={"24"} height={"24"} />
+      {props.showPaintImageLink || props.showPaintMask ? (
+        <Fragment>
+          <div className={styles.separator} />
+          <div className={styles.verticalSeparator} />
+        </Fragment>
+      ) : null}
+
+      {props.showPaintImageLink && (
+        <div className={styles.paintInfo}>
+          <PaintImageIcon />
+          <Link className="underline body-1 main" href={"/paint"}>
+            Paint an image
+          </Link>
+        </div>
+      )}
+
+      {props.showPaintMask && (
+        <div className={styles.paintInfo}>
+          <PaintImageIcon />
+          <span
+            className="underline body-1 main pointer"
+            onClick={() => setShowEditModal(true)}
+          >
+            Paint a mask
           </span>
         </div>
+      )}
+    </div>
+  );
 
-        <AppImage src={imgSrc} alt={"Base image"} />
+  const ImageResultDetail = (
+    <div className={styles.selectedFile} style={props.styles}>
+      <div className={styles.header}>
+        <span onClick={clearImage}>
+          <CloseIcon width={"24"} height={"24"} />
+        </span>
+      </div>
+
+      <AppImage src={imgSrc} alt={"Base image"} />
+    </div>
+  );
+
+  return (
+    <Fragment>
+      <div className={styles.imageDraggable}>
+        {props.label && (
+          <label htmlFor={props.id} className="base-2 white">
+            {props.label}
+          </label>
+        )}
+
+        {imgSrc ? ImageResultDetail : ImageInputForm}
       </div>
 
       <Modal
@@ -195,7 +197,6 @@ const DragDropFile = (props: DragDropFileProps) => {
         toggleModal={() => setShowEditModal(!showEditModal)}
       >
         <MaskPaintingCanvas
-          src={imgSrc}
           width={isMobile ? width - 88 : 512}
           height={isMobile ? width - 88 : 512}
           closeModal={() => setShowEditModal(false)}

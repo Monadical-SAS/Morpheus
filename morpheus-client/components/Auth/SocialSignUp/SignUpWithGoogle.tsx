@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import ButtonSecondary from "../../buttons/ButtonSecondary/ButtonSecondary";
+import Button from "@/components/buttons/Button/Button";
 import { GoogleIcon } from "../../icons/google";
 
 export const SignUpWithGoogle = () => {
@@ -19,12 +19,13 @@ export const SignUpWithGoogle = () => {
   };
 
   return (
-    <ButtonSecondary
+    <Button
       className="base-1 white"
       loading={loading}
       text={"Continue with Google"}
       onClick={handleGoogleLogin}
       icon={<GoogleIcon />}
+      variant="secondary"
     />
   );
 };

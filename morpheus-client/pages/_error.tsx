@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
-import MainContainer from "../layout/MainContainer/MainContainer";
+import { MainLayout } from "@/layout/MainLayout/MainLayout";
 import styles from "../styles/pages/Error.module.scss";
 
 const Page500 = () => {
@@ -11,7 +11,7 @@ const Page500 = () => {
   }, [router]);
 
   return (
-    <MainContainer>
+    <MainLayout>
       <div className={styles.mainContent}>
         <div className={styles.textContent}>
           <h2 className="bold40 white">Internal Server Error</h2>
@@ -27,7 +27,7 @@ const Page500 = () => {
           </button>
         </div>
       </div>
-    </MainContainer>
+    </MainLayout>
   );
 };
 

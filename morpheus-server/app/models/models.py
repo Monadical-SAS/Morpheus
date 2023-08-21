@@ -15,6 +15,7 @@ class User(Base):
     name = Column(String(64), nullable=True)
     bio = Column(String(512), nullable=True)
     avatar = Column(String(512), nullable=True)
+    is_new_user = Column(Boolean, default=True)
     phone = Column(String(16), nullable=True)
     is_active = Column(Boolean, default=True)
     collections = relationship("Collection", back_populates="owner")

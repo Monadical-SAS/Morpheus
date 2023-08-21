@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { isAllTrue } from "@/utils/arrays";
-import ButtonPrimary from "../../buttons/ButtonPrimary/ButtonPrimary";
+import Button from "../../buttons/Button/Button";
 import { UserIcon } from "../../icons/user";
 import InputEmail from "../../Inputs/InputEmail/InputEmail";
 import InputPassword from "../../Inputs/InputPassword/InputPassword";
@@ -83,7 +83,7 @@ export const RegisterForm = () => {
           disabled={false}
         />
 
-        <ButtonPrimary
+        <Button
           disabled={!formValid}
           loading={loading}
           text={"Create account"}

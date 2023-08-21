@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
 import InputFile from "../Inputs/InputFile/InputFile";
-import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
+import Button from "../buttons/Button/Button";
 import { ImageIcon } from "@/components/icons/image";
 import { useToastContext } from "@/context/ToastContext";
 import { saveCollection, updateCollection } from "@/services/collection";
@@ -176,7 +176,7 @@ const CollectionForm = (props: CollectionFormProps) => {
       </div>
 
       <div className={styles.buttonsContainer}>
-        <ButtonPrimary
+        <Button
           text={"Save"}
           loading={isLoading}
           onClick={handleFormSubmit}

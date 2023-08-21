@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { useRouter } from "next/router";
 
 import Brand from "../Typography/Brand/Brand";
@@ -8,9 +8,8 @@ import { Img2ImgIcon } from "../icons/img2img";
 import { ControlNetIcon } from "../icons/controlnet";
 import { Pix2PixIcon } from "../icons/pix2pix";
 import { InpaintingIcon } from "../icons/inpainting";
-import { HelpIcon } from "../icons/help";
-import { HamburgerMenuIcon } from "../icons/hamburgerMenu";
-import { CloseIcon } from "../icons/close";
+import { OpenSource } from "@/components/OpenSource/OpenSource";
+import { EnhanceIcon } from "../icons/enhance";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
 import {
   ControlNetDescription,
@@ -20,12 +19,12 @@ import {
   Text2ImgDescription,
   UpscalingDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./ImagineMenu.module.scss";
-import { Scaling } from 'lucide-react';
 
 interface LongItemProps {
   active?: boolean;
-  expanded: boolean;
   icon: ReactNode;
   title: string;
   description: ReactNode;
@@ -34,11 +33,11 @@ interface LongItemProps {
 
 const ImagineMenuItem = (props: LongItemProps) => {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
 
   const getItemStyles = () => {
-    return `${styles.menuItem} ${props.expanded && styles.expanded} ${
-      props.active && styles.active
-    }`;
+    return `${styles.menuItem}  ${props.active && styles.active}`;
   };
 
   const handleOnClick = () => {
@@ -49,16 +48,14 @@ const ImagineMenuItem = (props: LongItemProps) => {
     <AppTooltip
       title={props.title}
       content={props.description}
-      direction={"right"}
+      direction={isMobile ? "bottom" : "right"}
     >
       <div className={getItemStyles()} onClick={handleOnClick}>
         <span className={styles.icon}>{props.icon}</span>
 
-        {props.expanded && (
-          <p className={`base-1 ${props.active ? "primary" : "secondary"}`}>
-            {props.title}
-          </p>
-        )}
+        <p className={`base-1 ${props.active ? "primary" : "secondary"}`}>
+          {props.title}
+        </p>
       </div>
     </AppTooltip>
   );
@@ -67,7 +64,6 @@ const ImagineMenuItem = (props: LongItemProps) => {
 const ImagineMenu = () => {
   const router = useRouter();
   const currentPath = router.pathname;
-  const [expanded, setExpanded] = useState(true);
 
   const getItemActive = (option: SDOption | string) => {
     const lastPath = currentPath.split("/").pop();
@@ -80,25 +76,16 @@ const ImagineMenu = () => {
   };
 
   return (
-    <div className={`${styles.imagineMenu} ${expanded && styles.barExpanded}`}>
-      <div
-        onClick={() => setExpanded(!expanded)}
-        className={`${styles.menuIcon} ${expanded && styles.expanded}`}
-      >
-        {!expanded ? (
-          <HamburgerMenuIcon color={"white"} />
-        ) : (
-          <div className={styles.closeTitle}>
-            <CloseIcon width={"24px"} height={"24px"} />
-            <Brand styles={{ marginLeft: "16px", fontSize: "20px" }} />
-          </div>
-        )}
+    <div className={styles.imagineMenu}>
+      <div className={styles.brandContainer}>
+        <Brand />
       </div>
+
+      <p className="base-1 white">Models</p>
 
       <ImagineMenuItem
         title={"Text To Image"}
         description={<Text2ImgDescription className="body-2 white" />}
-        expanded={expanded}
         active={getItemActive(SDOption.Text2Image)}
         icon={<Text2ImgIcon color={getIconColor(SDOption.Text2Image)} />}
         option={SDOption.Text2Image}
@@ -106,7 +93,6 @@ const ImagineMenu = () => {
       <ImagineMenuItem
         title={"Image to Image"}
         description={<Img2ImgDescription className="body-2 white" />}
-        expanded={expanded}
         active={getItemActive(SDOption.Image2Image)}
         icon={<Img2ImgIcon color={getIconColor(SDOption.Image2Image)} />}
         option={SDOption.Image2Image}
@@ -114,7 +100,6 @@ const ImagineMenu = () => {
       <ImagineMenuItem
         title={"Pix2Pix"}
         description={<Pix2PixDescription className="body-2 white" />}
-        expanded={expanded}
         active={getItemActive(SDOption.Pix2Pix)}
         icon={<Pix2PixIcon color={getIconColor(SDOption.Pix2Pix)} />}
         option={SDOption.Pix2Pix}
@@ -122,7 +107,6 @@ const ImagineMenu = () => {
       <ImagineMenuItem
         title={"ControlNet"}
         description={<ControlNetDescription className="body-2 white" />}
-        expanded={expanded}
         active={getItemActive(SDOption.ControlNet)}
         icon={<ControlNetIcon color={getIconColor(SDOption.ControlNet)} />}
         option={SDOption.ControlNet}
@@ -130,7 +114,6 @@ const ImagineMenu = () => {
       <ImagineMenuItem
         title={"In-painting"}
         description={<InpaintingDescription className="body-2 white" />}
-        expanded={expanded}
         active={getItemActive(SDOption.Inpainting)}
         icon={<InpaintingIcon color={getIconColor(SDOption.Inpainting)} />}
         option={SDOption.Inpainting}
@@ -138,19 +121,18 @@ const ImagineMenu = () => {
       <ImagineMenuItem
         title={"Upscaling"}
         description={<UpscalingDescription className="body-2 white" />}
-        expanded={expanded}
         active={getItemActive(SDOption.Upscaling)}
-        icon={<Scaling color={getIconColor(SDOption.Upscaling)}  width={"24"} height={"24"} />}
+        icon={
+          <EnhanceIcon
+            color={getIconColor(SDOption.Upscaling)}
+            width={"24"}
+            height={"24"}
+          />
+        }
         option={SDOption.Upscaling}
       />
-      <ImagineMenuItem
-        title={"Help"}
-        description={"Get help and support"}
-        expanded={expanded}
-        active={getItemActive("help")}
-        icon={<HelpIcon color={getIconColor("help")} />}
-        option={"help"}
-      />
+
+      <OpenSource />
     </div>
   );
 };

@@ -1,13 +1,10 @@
 import { NextPage } from "next";
 
-import { CookiesStatus } from "../../utils/cookies";
-import ImageGallery from "../../components/ImageGallery/ImageGallery";
-import PrivateRoute from "../../components/Auth/PrivateRoute/PrivateRoute";
-import ImagineInput from "../../components/ImagineInput/ImagineInput";
-import { useDiffusion } from "../../context/SDContext";
-import { useImagine } from "../../context/ImagineContext";
-import { useAnalytics } from "../../context/GoogleAnalyticsContext";
-import styles from "../../styles/pages/StableDiffusion.module.scss";
+import ImagineBase from "@/components/ImagineBase/ImagineBase";
+import { CookiesStatus } from "@/utils/cookies";
+import { useDiffusion } from "@/context/SDContext";
+import { useImagine } from "@/context/ImagineContext";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 
 const Text2img: NextPage = () => {
   const { prompt } = useDiffusion();
@@ -26,22 +23,12 @@ const Text2img: NextPage = () => {
   };
 
   return (
-    <PrivateRoute showLeftBar={true}>
-      <div className={styles.imagineContainer}>
-        <div className={styles.SDOutputContainer}>
-          <div className={styles.imagesContent}>
-            <div className={`${styles.SDResults} ${styles.fullWidth}`}>
-              <ImageGallery />
-            </div>
-          </div>
-        </div>
-
-        <ImagineInput
-          isFormValid={isFormValid}
-          handleGenerate={handleGenerate}
-        />
-      </div>
-    </PrivateRoute>
+    <ImagineBase
+      formValid={isFormValid}
+      showImageInput={false}
+      showMaskInput={false}
+      handleGenerate={handleGenerate}
+    />
   );
 };
 

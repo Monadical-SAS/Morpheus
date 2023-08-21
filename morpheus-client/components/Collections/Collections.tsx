@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import CollectionCard from "../CollectionCard/CollectionCard";
-import ButtonSecondary from "../buttons/ButtonSecondary/ButtonSecondary";
+import Button from "../buttons/Button/Button";
 import Modal from "../Modal/Modal";
 import CollectionForm from "../CollectionForm/CollectionForm";
 import { Collection } from "@/models/models";
@@ -57,11 +57,12 @@ const Collections = () => {
           )}
         </div>
 
-        <ButtonSecondary
+        <Button
           styles={{ marginTop: "24px", width: "220px" }}
           loading={false}
           text={"Create a new one"}
           onClick={handleAddCollection}
+          variant="secondary"
         />
       </div>
 

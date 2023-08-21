@@ -1,0 +1,36 @@
+@use "styles/colors";
+@use "styles/media";
+
+.openSource {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  border: 1px solid colors.$white-color;
+  margin: 16px;
+  padding: 19px 17px;
+  gap: 14px;
+
+  .openSourceTitle {
+    display: flex;
+    align-items: center;
+
+    .icon {
+      transform: translateX(-8px);
+    }
+
+    p {
+      color: #FF5F9E;
+    }
+  }
+
+  @include media.mobile {
+    display: none;
+  }
+
+  button {
+    padding: 0 !important;
+  }
+}

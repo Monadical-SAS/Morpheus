@@ -14,7 +14,10 @@ export const signUpWithEmailAndPasswordFirebase = async (user: any): Promise<any
   return new Promise((resolve, reject) => {
     createUserWithEmailAndPassword(auth, user.email, user.password)
       .then((userCredential) => {
-        resolve(userCredential.user);
+        const user = userCredential.user;
+        const additionalUserInfo = getAdditionalUserInfo(userCredential);
+        const newUser = { ...user, isNewUser: additionalUserInfo?.isNewUser };
+        resolve({ user: newUser });
       })
       .catch((error) => {
         reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your sign up process"));
@@ -26,7 +29,10 @@ export const loginWithEmailAndPasswordFirebase = async (user: any): Promise<any>
   return new Promise((resolve, reject) => {
     signInWithEmailAndPassword(auth, user.email, user.password)
       .then((userCredential) => {
-        resolve(userCredential.user);
+        const user = userCredential.user;
+        const additionalUserInfo = getAdditionalUserInfo(userCredential);
+        const newUser = { ...user, is_new_user: additionalUserInfo?.isNewUser };
+        resolve({ user: newUser });
       })
       .catch((error) => {
         reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your authentication process"));
@@ -50,10 +56,11 @@ export const loginWithGoogleFirebase = async (): Promise<any> => {
   return new Promise((resolve, reject) => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        const additionalInfo = getAdditionalUserInfo(result);
-        resolve({ user, additionalInfo });
+      .then((userCredential) => {
+        const user = userCredential.user;
+        const additionalUserInfo = getAdditionalUserInfo(userCredential);
+        const newUser = { ...user, is_new_user: additionalUserInfo?.isNewUser };
+        resolve({ user: newUser });
       })
       .catch((error) => {
         reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your authentication process"));

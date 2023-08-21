@@ -2,21 +2,15 @@
 @use "styles/colors";
 
 .imagineInputWrapper {
-  position: fixed;
-  left: 104px;
-  bottom: 0;
   width: 100%;
-  max-width: calc(100vw - 128px);
-  height: auto;
-  padding: 8px 0 32px 0;
-  background-color: colors.$background-primary;
+  padding: 0 24px 24px 0;
+  background-color: colors.$background-secondary;
 
   @include media.mobile {
-    position: initial;
-    width: 100%;
     height: auto;
-    max-width: 100%;
-    padding: 0;
+    padding: 0 0 8px 0;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
   }
 
   .imagineInputContainer {
@@ -28,8 +22,8 @@
     @include media.mobile {
       height: auto;
       flex-direction: column;
-      margin-top: 32px;
-      padding: 24px;
+      margin-top: 0;
+      padding: 16px;
     }
 
     .inputText {

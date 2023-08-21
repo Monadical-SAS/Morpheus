@@ -1,6 +1,12 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
-import { analytics } from "../lib/firebaseClient";
+import { analytics } from "@/lib/firebaseClient";
 import { logEvent } from "firebase/analytics";
 import { CookiesStatus } from "@/utils/cookies";
 

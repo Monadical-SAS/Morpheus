@@ -3,10 +3,10 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 
 import { CookiesStatus } from "@/utils/cookies";
-import PrivateRoute from "@/components/Auth/PrivateRoute/PrivateRoute";
 import Loader from "@/components/Loaders/LoaderCircle/Loader";
 import CollectionForm from "@/components/CollectionForm/CollectionForm";
 import Modal from "@/components/Modal/Modal";
+import { MainLayoutPrivate } from "@/layout/MainLayout/MainLayout";
 import ArtWorkList from "@/components/ArtWorkList/ArtWorkList";
 import { getCollectionArtWorks } from "@/services/artworks";
 import { deleteCollection, getCollectionDetails } from "@/services/collection";
@@ -61,7 +61,7 @@ const CollectionDetail: NextPage = () => {
       sendAnalyticsRecord("page_view", {
         page_location: window.location.href,
         page_title: document?.title,
-        page_name: `Collection ${collection?.name} detail`
+        page_name: `Collection ${collection?.name} detail`,
       });
     }
   }, [cookiesStatus, sendAnalyticsRecord, collection]);
@@ -96,7 +96,7 @@ const CollectionDetail: NextPage = () => {
   };
 
   return (
-    <PrivateRoute>
+    <MainLayoutPrivate>
       {isLoading ? (
         <Loader
           isLoading={isLoading}
@@ -165,7 +165,7 @@ const CollectionDetail: NextPage = () => {
           </Modal>
         </Fragment>
       )}
-    </PrivateRoute>
+    </MainLayoutPrivate>
   );
 };
 

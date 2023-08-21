@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
+import { MainLayout } from "@/layout/MainLayout/MainLayout";
 import { CookiesStatus } from "@/utils/cookies";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
-import MainContainer from "../layout/MainContainer/MainContainer";
 import styles from "../styles/pages/Error.module.scss";
 
 const Page400 = () => {
@@ -22,9 +22,9 @@ const Page400 = () => {
       });
     }
   }, [cookiesStatus, sendAnalyticsRecord]);
-  
+
   return (
-    <MainContainer>
+    <MainLayout>
       <div className={styles.mainContent}>
         <div className={styles.textContent}>
           <h2 className="bold40 white">Page Not Found</h2>
@@ -40,7 +40,7 @@ const Page400 = () => {
           </button>
         </div>
       </div>
-    </MainContainer>
+    </MainLayout>
   );
 };
 

@@ -12,14 +12,17 @@ const getImageBlob = async (url: string): Promise<any> => {
   }
 };
 
-export const downloadImage = async (url: string): Promise<any> => {
+export const downloadImage = async (
+  url: string,
+  name?: string
+): Promise<any> => {
   const blob = await getImageBlob(url);
   if (!blob) {
     return;
   }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = getImageFilename(url);
+  a.download = name || getImageFilename(url);
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
