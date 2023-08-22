@@ -72,6 +72,12 @@ resource "aws_s3_object" "deploy_script" {
   ]
 }
 
+resource "aws_s3_object" "check_sync_models_deploy_script" {
+  bucket = aws_s3_bucket.deployment.id
+  key    = "check-last-deploy-models.sh"
+  source = "${path.module}/scripts/deployment/check-last-deploy-models.sh"
+}
+
 resource "local_file" "deploy_models" {
   content  = templatefile("${path.module}/scripts/deployment/deploy-models.tftpl", { bucket_name = local.s3_models_bucket_name })
   filename = "${path.module}/scripts/deployment/deploy-models.sh"
