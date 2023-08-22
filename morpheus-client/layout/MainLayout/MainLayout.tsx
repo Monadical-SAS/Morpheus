@@ -1,8 +1,8 @@
 import { CSSProperties, ReactNode } from "react";
-import Footer from "../../components/Footer/Footer";
-import Navbar from "../../components/Navbar/Navbar";
+import Footer from "@/components/Footer/Footer";
+import Navbar from "@/components/Navbar/Navbar";
+import styles from "./MainLayout.module.scss";
 import PrivateRoute from "@/components/Auth/PrivateRoute/PrivateRoute";
-import styles from "./MainContainer.module.scss";
 
 interface MainContainerProps {
   children: ReactNode;
@@ -10,9 +10,9 @@ interface MainContainerProps {
   showFooter?: boolean;
 }
 
-export const MainContainer = (props: MainContainerProps) => {
+export const MainLayout = (props: MainContainerProps) => {
   return (
-    <div className={styles.mainContainer}>
+    <div className={styles.mainLayout}>
       <Navbar showBrand={true} />
 
       <main className={styles.mainContent} style={props.style}>
@@ -24,10 +24,10 @@ export const MainContainer = (props: MainContainerProps) => {
   );
 };
 
-export const MainContainerPrivate = (props: MainContainerProps) => {
+export const MainLayoutPrivate = (props: MainContainerProps) => {
   return (
     <PrivateRoute>
-      <MainContainer {...props}>{props.children}</MainContainer>
+      <MainLayout {...props}>{props.children}</MainLayout>
     </PrivateRoute>
   );
 };

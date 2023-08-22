@@ -1,12 +1,10 @@
 import { NextPage } from "next";
 
-import ImagineContainer from "@/layout/ImagineContainer/ImagineContainer";
-import ImageGallery from "@/components/ImageGallery/ImageGallery";
+import ImagineBase from "@/components/ImagineBase/ImagineBase";
 import { CookiesStatus } from "@/utils/cookies";
 import { useDiffusion } from "@/context/SDContext";
 import { useImagine } from "@/context/ImagineContext";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
-import styles from "@/styles/pages/StableDiffusion.module.scss";
 
 const Text2img: NextPage = () => {
   const { prompt } = useDiffusion();
@@ -25,13 +23,12 @@ const Text2img: NextPage = () => {
   };
 
   return (
-    <ImagineContainer formValid={isFormValid} handleGenerate={handleGenerate}>
-      <div className={styles.imagesContent}>
-        <div className={`${styles.results} ${styles.fullWidth}`}>
-          <ImageGallery />
-        </div>
-      </div>
-    </ImagineContainer>
+    <ImagineBase
+      formValid={isFormValid}
+      showImageInput={false}
+      showMaskInput={false}
+      handleGenerate={handleGenerate}
+    />
   );
 };
 

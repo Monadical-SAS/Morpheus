@@ -1,17 +1,14 @@
 import { NextPage } from "next";
-import ImagineContainer from "@/layout/ImagineContainer/ImagineContainer";
-import ImageDraggable from "@/components/ImageDraggable/ImageDraggable";
-import ImageGallery from "@/components/ImageGallery/ImageGallery";
+import ImagineBase from "@/components/ImagineBase/ImagineBase";
 import { useDiffusion } from "@/context/SDContext";
 import { useImagine } from "@/context/ImagineContext";
 import { CookiesStatus } from "@/utils/cookies";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
-import styles from "@/styles/pages/StableDiffusion.module.scss";
 
 const Upscale: NextPage = () => {
   const { prompt } = useDiffusion();
   const { cookiesStatus, sendAnalyticsRecord } = useAnalytics();
-  const { img2imgFile, setImg2imgFile, generateImages } = useImagine();
+  const { img2imgFile, generateImages } = useImagine();
   const isFormValid = prompt.value.length > 0 && img2imgFile !== null;
 
   const handleGenerate = () => {
@@ -25,22 +22,12 @@ const Upscale: NextPage = () => {
   };
 
   return (
-    <ImagineContainer formValid={isFormValid} handleGenerate={handleGenerate}>
-      <div className={styles.imagesContent}>
-        <div className={styles.inputImage}>
-          <ImageDraggable
-            label={"Base Image"}
-            imageFile={img2imgFile}
-            setImageFile={setImg2imgFile}
-            showPaintImageLink={true}
-          />
-        </div>
-
-        <div className={styles.results}>
-          <ImageGallery />
-        </div>
-      </div>
-    </ImagineContainer>
+    <ImagineBase
+      formValid={isFormValid}
+      showImageInput={true}
+      showMaskInput={false}
+      handleGenerate={handleGenerate}
+    />
   );
 };
 

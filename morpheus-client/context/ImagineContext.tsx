@@ -95,10 +95,6 @@ const ImagineProvider = (props: { children: ReactNode }) => {
   }, [img2ImgURL]);
 
   useEffect(() => {
-    maskFile && setMaskFile(null);
-  }, [img2imgFile]);
-
-  useEffect(() => {
     if (localResults.length > 0 && resultImages.length === 0) {
       setResultImages(localResults);
     }
@@ -148,7 +144,7 @@ const ImagineProvider = (props: { children: ReactNode }) => {
           img2imgFile,
           maskFile
         );
-      } else if (option === "upscaling"){
+      } else if (option === "upscaling") {
         return await generateImageWithUpscaling(request, img2imgFile);
       } else {
         return ErrorResponse("Please select a valid option");

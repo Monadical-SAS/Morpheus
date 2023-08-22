@@ -1,7 +1,7 @@
 @use "styles/colors";
 @use "styles/media";
 
-.formWrapper {
+.imageDraggable {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -12,7 +12,7 @@
     max-width: 100%;
     height: auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -23,18 +23,41 @@
     @include media.mobile {
       width: 100%;
       height: auto;
+      flex-direction: column;
       padding: 16px;
     }
 
     .separator {
+      display: none;
       width: 100%;
       border-bottom: 5px;
       border-style: solid;
-      margin: 48px 0;
+      margin: 24px 0;
       border-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100' fill='none' rx='8' ry='8' stroke='%23312E47FF' stroke-width='4' stroke-dasharray='10%2c 10' stroke-dashoffset='53' stroke-linecap='round'/%3e%3c/svg%3e") 30 round;
 
       @include media.mobile {
-        margin: 16px 0;
+        display: block;
+      }
+    }
+
+    .verticalSeparator {
+      display: block;
+      position: relative;
+      width: 2px;
+      height: 100%;
+      margin: 0 48px;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 10px, #312E47FF 10px, #312E47FF 22px);
+      }
+
+      @include media.mobile {
+        display: none;
       }
     }
   }
@@ -44,6 +67,7 @@
     flex-direction: column;
     align-items: center;
     padding-bottom: 48px;
+    position: relative;
 
     @include media.mobile {
       padding-bottom: 0;
@@ -108,37 +132,38 @@
       left: 0;
     }
   }
+}
 
-  .selectedFile {
-    width: 100%;
-    position: relative;
-    background-color: colors.$background-secondary;
-    border-radius: 8px;
+.selectedFile {
+  width: 100%;
+  min-height: 294px;
+  position: relative;
+  background-color: colors.$background-secondary;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+
+  .header {
+    height: auto;
     display: flex;
-    flex-direction: column;
-    padding: 8px;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 0 8px 0;
 
-    .header {
-      height: auto;
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 8px;
-
-      span {
-        margin-left: 8px;
-        cursor: pointer;
-      }
+    span {
+      margin-left: 8px;
+      cursor: pointer;
     }
+  }
 
-    img {
-      width: auto;
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 8px;
-      object-fit: contain;
-      box-shadow: colors.$box-shadow;
-    }
+  img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: colors.$box-shadow;
   }
 }

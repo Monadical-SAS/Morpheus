@@ -1,5 +1,6 @@
 import React from "react";
 import dynamic from "next/dynamic";
+import styles from "./Excalidraw.module.scss";
 
 const Excalidraw = () => {
   const Editor = dynamic(
@@ -11,15 +12,9 @@ const Excalidraw = () => {
   );
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-      }}
-      className="custom-styles"
-    >
+    <div className={styles.paintContainer}>
       <Editor />
     </div>
   );
 };
-export default Excalidraw;
+export default React.memo(Excalidraw);
