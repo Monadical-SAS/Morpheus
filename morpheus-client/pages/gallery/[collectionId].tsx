@@ -6,8 +6,8 @@ import { CookiesStatus } from "@/utils/cookies";
 import Loader from "@/components/Loaders/LoaderCircle/Loader";
 import CollectionForm from "@/components/CollectionForm/CollectionForm";
 import Modal from "@/components/Modal/Modal";
+import { MainLayoutPrivate } from "@/layout/MainLayout/MainLayout";
 import ArtWorkList from "@/components/ArtWorkList/ArtWorkList";
-import { MainContainerPrivate } from "@/layout/MainContainer/MainContainer";
 import { getCollectionArtWorks } from "@/services/artworks";
 import { deleteCollection, getCollectionDetails } from "@/services/collection";
 import { useToastContext } from "@/context/ToastContext";
@@ -96,7 +96,7 @@ const CollectionDetail: NextPage = () => {
   };
 
   return (
-    <MainContainerPrivate>
+    <MainLayoutPrivate>
       {isLoading ? (
         <Loader
           isLoading={isLoading}
@@ -165,7 +165,7 @@ const CollectionDetail: NextPage = () => {
           </Modal>
         </Fragment>
       )}
-    </MainContainerPrivate>
+    </MainLayoutPrivate>
   );
 };
 

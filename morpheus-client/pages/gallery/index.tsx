@@ -6,7 +6,7 @@ import Loader from "@/components/Loaders/LoaderCircle/Loader";
 import SearchForm from "@/components/SearchForm/SearchForm";
 import ArtWorkList from "@/components/ArtWorkList/ArtWorkList";
 import Collections from "@/components/Collections/Collections";
-import { MainContainerPrivate } from "@/layout/MainContainer/MainContainer";
+import { MainLayoutPrivate } from "@/layout/MainLayout/MainLayout";
 import { useAuth } from "@/context/AuthContext";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import { getUserArtWorks } from "@/services/artworks";
@@ -53,7 +53,7 @@ const Gallery: NextPage = () => {
   };
 
   return (
-    <MainContainerPrivate>
+    <MainLayoutPrivate>
       {isLoading ? (
         <Loader
           isLoading={isLoading}
@@ -74,7 +74,7 @@ const Gallery: NextPage = () => {
           <Collections />
         </div>
       )}
-    </MainContainerPrivate>
+    </MainLayoutPrivate>
   );
 };
 

@@ -1,6 +1,13 @@
+@use "styles/media";
 @import "../../css/variables.module";
 
 .excalidraw {
+  border-bottom-left-radius: 24px;
+
+  @include media.mobile {
+    border-bottom-left-radius: 0;
+  }
+
   .RoomDialog__button {
     border: 1px solid var(--default-border-color) !important;
   }
@@ -31,7 +38,6 @@
   .RoomDialog-usernameContainer {
     display: flex;
     margin: 1.5em 0;
-    display: flex;
     align-items: center;
     justify-content: center;
     @include isMobile {

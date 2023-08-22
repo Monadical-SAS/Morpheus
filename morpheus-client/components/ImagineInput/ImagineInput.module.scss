@@ -7,10 +7,8 @@
   background-color: colors.$background-secondary;
 
   @include media.mobile {
-    width: calc(100% - 48px);
     height: auto;
-    padding: 0;
-    margin: 0 24px 24px 24px;
+    padding: 0 0 8px 0;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
   }

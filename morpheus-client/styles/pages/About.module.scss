@@ -13,6 +13,7 @@
 
   @include media.mobile {
     padding: 48px 24px;
+    margin-top: 48px;
   }
 
   .header {
@@ -22,6 +23,10 @@
     justify-content: space-between;
 
     @include media.tablet {
+      flex-direction: column;
+    }
+
+    @include media.mobile {
       flex-direction: column;
     }
 
@@ -52,6 +57,11 @@
       height: auto;
 
       @include media.tablet {
+        margin-left: 0;
+        max-width: 100%;
+      }
+
+      @include media.mobile {
         margin-left: 0;
         max-width: 100%;
       }
