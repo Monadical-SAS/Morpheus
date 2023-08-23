@@ -69,6 +69,7 @@ export interface Model {
   inpainting?: boolean;
   controlnet?: boolean;
   pix2pix?: boolean;
+  upscaling?: boolean;
 }
 
 export interface ControlNetModel extends Model {

@@ -1,0 +1,30 @@
+.accordion {
+  width: 100%;
+  height: auto;
+  margin-bottom: 24px;
+
+  .accordionHeader {
+    width: 100%;
+    height: auto;
+    max-height: 32px;
+    display: flex;
+    align-self: center;
+    cursor: pointer;
+
+    p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    span {
+      margin-top: 4px;
+    }
+  }
+
+  .accordionContent {
+    width: auto;
+    height: auto;
+  }
+}
+

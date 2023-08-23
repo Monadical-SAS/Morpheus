@@ -15,6 +15,7 @@ import CookiesConsent from "@/components/CookiesConsent/CookiesConsent";
 import "../App.scss";
 import "../styles/globals.css";
 import "../excalidraw/main.scss";
+import { ModelsProvider } from "@/context/ModelsContext";
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
@@ -128,15 +129,17 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
       <FirebaseTrackingProvider>
         <ToastProvider>
           <AuthProvider>
-            <DiffusionProvider>
-              <ControlNetProvider>
-                <ImagineProvider>
-                  <Component {...pageProps} />
-                  <CookiesConsent />
-                  <Toaster />
-                </ImagineProvider>
-              </ControlNetProvider>
-            </DiffusionProvider>
+            <ModelsProvider>
+              <DiffusionProvider>
+                <ControlNetProvider>
+                  <ImagineProvider>
+                    <Component {...pageProps} />
+                    <CookiesConsent />
+                    <Toaster />
+                  </ImagineProvider>
+                </ControlNetProvider>
+              </DiffusionProvider>
+            </ModelsProvider>
           </AuthProvider>
         </ToastProvider>
       </FirebaseTrackingProvider>
