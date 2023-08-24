@@ -48,7 +48,7 @@ models:
     pix2pix: true
     upscaling: false
 
-  - name: "Stable Diffusion Inpaint"
+  - name: "SD Inpainting"
     description: "Modify an existing image with a text prompt and an image mask."
     source: "runwayml/stable-diffusion-inpainting"
     is_active: true
@@ -60,7 +60,7 @@ models:
     pix2pix: false
     upscaling: false
 
-  - name: "Stable Diffusion x4 Upscaler"
+  - name: "SD x4 Upscaler"
     description: "Stable Diffusion x4 Upscaler can be used to enhance the resolution of input images by a factor of 4."
     source: "stabilityai/stable-diffusion-x4-upscaler"
     is_active: true

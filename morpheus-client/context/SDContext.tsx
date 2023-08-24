@@ -36,6 +36,10 @@ export enum SDOption {
   Upscaling = "upscaling",
 }
 
+const DEFAULT_NEGATIVE_PROMPT =
+  "Bad proportions, cropped, bad anatomy, bad composition, bad proportions, bad shadow, blurred, blurry, " +
+  "colorless, deformed, dehydrated, disfigured, duplicate, error, gross proportions, low quality, worst quality";
+
 export interface IDiffusionContext {
   selectedOption: SDOption;
   validSDModels: any[];
@@ -75,21 +79,6 @@ export interface IDiffusionContext {
   buildPrompt: () => any;
   restartSDSettings: () => void;
 }
-
-const DEFAULT_NEGATIVE_PROMPT =
-  "(((deformed))), (extra_limb), (long body :1.3), (mutated hands and fingers:1.5), (mutation poorly drawn :1.2), " +
-  "(poorly drawn hands), (ugly), Images cut out at the top, anatomical nonsense, bad anatomy, bad anatomy, " +
-  "bad breasts, bad composition, bad ears, bad hands, bad proportions, bad shadow, blurred, blurry, blurry imag, " +
-  "bottom, broken legs, cloned face, colorless, cropped, deformed, deformed body feature, dehydrated, " +
-  "disappearing arms, disappearing calf, disappearing legs, disappearing thigh, disfigure, disfigured, " +
-  "duplicate, error, extra arms, extra breasts, extra ears, extra fingers, extra legs, extra limbs, " +
-  "fused ears, fused fingers, fused hand, gross proportions, heavy breasts, heavy ears, left, liquid body, " +
-  "liquid breasts, liquid ears, liquid tongue, long neck, low quality, low res, low resolution, lowers, " +
-  "malformed, malformed hands, malformed limbs, messy drawing, missing arms, missing breasts, missing ears, " +
-  "missing hand, missing legs, morbid, mutated, mutated body part, mutated hands, mutation, mutilated, " +
-  "old photo, out of frame, oversaturate, poor facial detail, poorly Rendered fac, poorly drawn fac, " +
-  "poorly drawn face, poorly drawn hand, poorly drawn hands, poorly rendered hand, right, signature, " +
-  "text font ui, too many fingers, ugly, uncoordinated body, unnatural body, username, watermark, worst quality";
 
 const PROMPTS = [
   "An astronaut cycling on the moon, Abstract Expressionism",
@@ -145,7 +134,7 @@ const initialConfig = {
   useEmbedding: initializeCheckbox(false),
   loraPath: initializeText(String("")),
   useLora: initializeCheckbox(false),
-  loraScale: initializeNumber(1.0)
+  loraScale: initializeNumber(1.0),
 };
 
 const defaultState = {
@@ -221,11 +210,17 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
   const [randomizeSeed, setRandomizeSeed] = useState<CheckboxState>(
     initialConfig.randomizeSeed
   );
-  const [embeddingPath, setEmbeddingPath] = useState<TextState>(initialConfig.embeddingPath);
-  const [useEmbedding, setEmbedding] = useState<CheckboxState>(initialConfig.useEmbedding);
+  const [embeddingPath, setEmbeddingPath] = useState<TextState>(
+    initialConfig.embeddingPath
+  );
+  const [useEmbedding, setEmbedding] = useState<CheckboxState>(
+    initialConfig.useEmbedding
+  );
   const [loraPath, setLoraPath] = useState<TextState>(initialConfig.loraPath);
   const [useLora, setLora] = useState<CheckboxState>(initialConfig.useLora);
-  const [loraScale, setLoraScale] = useState<NumberState>(initialConfig.loraScale);
+  const [loraScale, setLoraScale] = useState<NumberState>(
+    initialConfig.loraScale
+  );
 
   useEffect(() => {
     // Fetch Stable Diffusion models
@@ -296,7 +291,7 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
       lora_path: loraPath.value,
       use_embedding: useEmbedding.value,
       embedding_path: embeddingPath.value,
-      lora_scale: loraScale.value
+      lora_scale: loraScale.value,
     };
   };
 
