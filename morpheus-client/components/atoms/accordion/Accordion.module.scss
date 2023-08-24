@@ -25,6 +25,14 @@
   .accordionContent {
     width: auto;
     height: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 }
 

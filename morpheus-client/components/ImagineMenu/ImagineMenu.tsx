@@ -179,8 +179,14 @@ const ImagineMenuFeatures = (props: ImagineMenuFeaturesProps) => {
 };
 
 const ImagineMenu = () => {
-  const { models } = useModels();
+  const { models, setSelectedModel } = useModels();
   const [openItem, setOpenItem] = useState<string>(models[0]?.name);
+
+  const handleOnOpen = (item: string) => {
+    const selectedModel = models.find((model: Model) => model.name === item);
+    setSelectedModel(selectedModel?.source || "");
+    setOpenItem(item);
+  }
 
   return (
     <div className={styles.imagineMenu}>
@@ -194,7 +200,7 @@ const ImagineMenu = () => {
         <Accordion
           key={model.source}
           title={model.name}
-          setOpenedItem={setOpenItem}
+          setOpenedItem={handleOnOpen}
           isOpen={openItem === model.name}
         >
           <ImagineMenuFeatures model={model} />

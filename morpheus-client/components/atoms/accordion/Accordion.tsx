@@ -20,7 +20,13 @@ export const Accordion = (props: AccordionProps) => {
         <p className="headline-6 white bold">{props.title}</p>
       </div>
       {props.isOpen && (
-        <div className={styles.accordionContent}>{props.children}</div>
+        <div
+          className={`${styles.accordionContent} ${
+            props.isOpen && styles.active
+          }`}
+        >
+          {props.children}
+        </div>
       )}
     </div>
   );
