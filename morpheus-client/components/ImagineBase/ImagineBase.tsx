@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ImagineMenu from "../../components/ImagineMenu/ImagineMenu";
-import ImageDraggable from "@/components/ImageDraggable/ImageDraggable";
+import ImagineImageInput from "@/components/ImagineImageInput/ImagineImageInput";
 import ImageGallery from "@/components/ImageGallery/ImageGallery";
 import ImagineInput from "@/components/ImagineInput/ImagineInput";
 import ImagineLayout from "@/layout/ImagineLayout/ImagineLayout";
@@ -29,35 +29,42 @@ const ImagineBase = (props: MainContainerProps) => {
     />
   );
 
+  const ImageInputs = (props.showImageInput || props.showMaskInput) && (
+    <div className={styles.imageInputsContainer}>
+      {props.showImageInput && (
+        <ImagineImageInput
+          label={"Base Image"}
+          imageFile={img2imgFile}
+          setImageFile={setImg2imgFile}
+          showEditImage={props.showMaskInput}
+          showPaintImageLink={true}
+        />
+      )}
+      {props.showMaskInput && (
+        <ImagineImageInput
+          label={"Mask image"}
+          imageFile={maskFile}
+          setImageFile={setMaskFile}
+          icon={<UploadMaskIcon />}
+          showPaintMask={img2imgFile !== null}
+        />
+      )}
+    </div>
+  );
+
   return (
     <ImagineLayout>
       <main className={styles.imagineBase}>
-        {isMobile && <ImagineMenu />}
-        {isMobile && ImagineInputInstance}
+        {isMobile && (
+          <Fragment>
+            <ImagineMenu />
+            {ImageInputs}
+            {ImagineInputInstance}
+          </Fragment>
+        )}
 
         <div className={styles.imagesContent}>
-          {(props.showImageInput || props.showMaskInput) && (
-            <div className={styles.inputImage}>
-              {props.showImageInput && (
-                <ImageDraggable
-                  label={"Base Image"}
-                  imageFile={img2imgFile}
-                  setImageFile={setImg2imgFile}
-                  showEditImage={props.showMaskInput}
-                  showPaintImageLink={true}
-                />
-              )}
-              {props.showMaskInput && (
-                <ImageDraggable
-                  label={"Mask image"}
-                  imageFile={maskFile}
-                  setImageFile={setMaskFile}
-                  icon={<UploadMaskIcon />}
-                  showPaintMask={img2imgFile !== null}
-                />
-              )}
-            </div>
-          )}
+          {!isMobile && ImageInputs}
 
           <div className={styles.results}>
             <ImageGallery />

@@ -57,10 +57,6 @@
       background-color: transparent;
     }
 
-    @include media.mobile {
-      display: none;
-    }
-
     .closeTitle {
       width: 100%;
       display: flex;
@@ -72,7 +68,6 @@
     @extend %item;
   }
 }
-
 
 %item {
   width: 100%;
