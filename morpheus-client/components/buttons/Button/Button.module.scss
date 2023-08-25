@@ -1,0 +1,60 @@
+@use "styles/colors";
+@use "styles/media";
+
+@mixin buttonBase {
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 526px;
+  max-width: 100%;
+  border: none;
+  border-radius: 8px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+
+  @include media.mobile {
+    width: 100%;
+    padding: 16px 0;
+  }
+
+  span {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.buttonPrimary {
+  @include buttonBase;
+  height: 48px;
+  padding: 12px 57px;
+  background: colors.$main-color;
+
+  &.disabled {
+    background: colors.$background-primary-4;
+    cursor: not-allowed;
+  }
+}
+
+.buttonSecondary {
+  @include buttonBase;
+  height: 56px;
+  padding: 16px;
+  background: colors.$background-secondary;
+  border: 1px solid colors.$background-border;
+}
+
+.buttonTertiary {
+  @include buttonBase;
+  height: 48px;
+  padding: 16px;
+  background: colors.$background-white;
+  border: 1px solid colors.$background-primary-5;
+}

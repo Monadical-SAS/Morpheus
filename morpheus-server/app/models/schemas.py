@@ -34,6 +34,7 @@ class User(BaseModel):
     bio: str = None
     avatar: str = None
     phone: str = None
+    is_new_user: bool = True
 
     class Config:
         orm_mode = True
@@ -44,6 +45,7 @@ class User(BaseModel):
                 "bio": "Juan Arias biography",
                 "avatar": "https://upload.wikimedia.org/wikipedia/en/8/86/Avatar_Aang.png",  # noqa
                 "phone": "+573003000000",
+                "is_new_user": True,
             }
         }
 

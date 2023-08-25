@@ -1,0 +1,118 @@
+@use "styles/colors";
+@use "styles/media";
+
+.walkthroughAppWrapper {
+  width: 100%;
+  height: 100%;
+
+  .content {
+    width: 100%;
+    height: calc(100% - 48px);
+    padding-bottom: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .welcomeTitle {
+        font-size: 64px;
+        line-height: 48px;
+        background: linear-gradient(158deg, #FF5F9E 0%, #B3005E 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 72px;
+        letter-spacing: -1.28px;
+        text-align: center;
+
+
+        @include media.mobile {
+          font-size: 40px;
+          line-height: 48px;
+          letter-spacing: -0.96px;
+        }
+      }
+
+      p {
+        margin-top: 40px;
+        padding: 0 100px;
+        text-align: center;
+
+        @include media.mobile {
+          padding: 0;
+          font-size: 20px !important;
+          line-height: 24px;
+        }
+      }
+
+      img {
+        margin-top: 40px;
+        width: auto;
+        height: auto;
+        max-width: 480px;
+        border-radius: 12px;
+
+        @include media.mobile {
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+  }
+
+  .onlyRightButton {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+    height: 48px;
+  }
+
+  .allButtons {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 48px;
+  }
+
+  .indicators {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    width: 100%;
+
+    @include media.mobile {
+      display: none;
+    }
+
+    .indicatorActive {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: colors.$background-secondary;
+      cursor: pointer;
+    }
+
+    .indicatorInactive {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: colors.$background-primary-5;
+      cursor: pointer;
+    }
+  }
+
+}

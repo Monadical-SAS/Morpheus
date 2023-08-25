@@ -14,7 +14,13 @@ export const signUpWithEmailAndPasswordFirebase = async (user: any): Promise<any
   return new Promise((resolve, reject) => {
     createUserWithEmailAndPassword(auth, user.email, user.password)
       .then((userCredential) => {
-        resolve(userCredential.user);
+        resolve({
+          user: {
+            ...userCredential.user,
+            is_new_user: getAdditionalUserInfo(userCredential)?.isNewUser,
+          },
+        });
+        
       })
       .catch((error) => {
         reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your sign up process"));
@@ -26,7 +32,12 @@ export const loginWithEmailAndPasswordFirebase = async (user: any): Promise<any>
   return new Promise((resolve, reject) => {
     signInWithEmailAndPassword(auth, user.email, user.password)
       .then((userCredential) => {
-        resolve(userCredential.user);
+        resolve({
+          user: {
+            ...userCredential.user,
+            is_new_user: getAdditionalUserInfo(userCredential)?.isNewUser,
+          },
+        });
       })
       .catch((error) => {
         reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your authentication process"));
@@ -50,10 +61,14 @@ export const loginWithGoogleFirebase = async (): Promise<any> => {
   return new Promise((resolve, reject) => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        const additionalInfo = getAdditionalUserInfo(result);
-        resolve({ user, additionalInfo });
+      .then((userCredential) => {
+        resolve({
+          user: {
+            ...userCredential.user,
+            is_new_user: getAdditionalUserInfo(userCredential)?.isNewUser,
+          },
+        });
+        
       })
       .catch((error) => {
         reject(new Error(mapAuthCodeToMessage[error.code] || "Something went wrong with your authentication process"));

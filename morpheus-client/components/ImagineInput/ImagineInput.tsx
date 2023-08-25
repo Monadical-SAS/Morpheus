@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
+import Button from "../buttons/Button/Button";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
 import { initialText } from "../Inputs/InputText/InputText";
 import MagicPrompt from "../MagicPrompt/MagicPrompt";
@@ -54,7 +54,7 @@ const ImagineInput = (props: ImagineInputProps) => {
         </div>
 
         <div className={styles.ImagineActions}>
-          <ButtonPrimary
+          <Button
             loading={isLoading}
             onClick={props.handleGenerate}
             disabled={!props.isFormValid}

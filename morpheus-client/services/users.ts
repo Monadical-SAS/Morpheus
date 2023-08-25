@@ -1,11 +1,12 @@
 import axios from "./httpClient";
 import { User } from "@/models/models";
 import { signOutFirebase } from "./auth";
+import { clearStorageExceptCookies } from "@/utils/cookies";
 
 export const logout = () => {
   return signOutFirebase()
     .then(() => {
-      localStorage.clear();
+      clearStorageExceptCookies();
       sessionStorage.clear();
       setTimeout(() => {
         window.location.href = "/";

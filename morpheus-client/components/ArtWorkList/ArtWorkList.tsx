@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import ButtonSecondary from "../buttons/ButtonSecondary/ButtonSecondary";
+import Button from "../buttons/Button/Button";
 import ArtworkCard from "../ArtworkCard/ArtworkCard";
 import { ArtWork } from "@/models/models";
 import styles from "./ArtWorkList.module.scss";
@@ -34,7 +34,7 @@ const ArtWorkList = (props: ArtWorkListProps) => {
   return (
     <div className={styles.artworksContainer}>
       <div className={styles.header}>
-        <p className="body-2 white mb-3">Newest</p>
+        <p className="mb-3 body-2 white">Newest</p>
       </div>
 
       <div className={styles.artworksList}>
@@ -52,11 +52,12 @@ const ArtWorkList = (props: ArtWorkListProps) => {
         )}
       </div>
 
-      <ButtonSecondary
+      <Button
         styles={{ marginTop: "24px", width: "220px" }}
         loading={false}
         text={"Create a new artwork"}
         onClick={handleAddArtwork}
+        variant="secondary"
       />
     </div>
   );

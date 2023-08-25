@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { ArrowBackIcon } from "../../icons/arrowBack";
-import ButtonPrimary from "../../buttons/ButtonPrimary/ButtonPrimary";
+import Button from "../../buttons/Button/Button";
 import InputEmail from "../../Inputs/InputEmail/InputEmail";
 import { AuthOption, useAuth } from "@/context/AuthContext";
 import { useToastContext } from "@/context/ToastContext";
@@ -54,7 +54,7 @@ export const ResetForm = () => {
       <form>
         <InputEmail id="inputEmailReset" email={email} setEmail={setEmail} />
 
-        <ButtonPrimary
+        <Button
           disabled={!formValid}
           loading={loading}
           text={"Reset password"}

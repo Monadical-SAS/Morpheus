@@ -51,7 +51,7 @@ const AuthContext = createContext<IAuthContext>(defaultState);
 
 const AuthProvider = (props: { children: ReactNode }) => {
   const router = useRouter();
-  const { showErrorAlert } = useToastContext();
+  const { showErrorAlert, showInfoAlert } = useToastContext();
 
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [authOption, setAuthOption] = useState<AuthOption>(AuthOption.Login);
@@ -83,7 +83,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
   const registerWithEmailAndPassword = (user: UserRegistration): Promise<void> => {
     return signUpWithEmailAndPasswordFirebase(user)
       .then((response) => {
-        loadOrCreateMorpheusUser({ ...response, displayName: user.name });
+        loadOrCreateMorpheusUser({ ...response.user, displayName: user.name });
       })
       .catch((error) => {
         showErrorAlert(error.message);
@@ -94,7 +94,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
     return new Promise((resolve, reject) => {
       loginWithEmailAndPasswordFirebase(user)
         .then((response: any) => {
-          loadOrCreateMorpheusUser(response);
+          loadOrCreateMorpheusUser(response.user);
         })
         .catch((error) => {
           showErrorAlert(error.message);
@@ -122,6 +122,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
       name: firebaseUser.displayName,
       email: firebaseUser.email,
       phone: firebaseUser.phoneNumber,
+      is_new_user: firebaseUser.isNewUser,
     };
     if (!user.email) {
       showErrorAlert("Email is required");
@@ -136,7 +137,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
         if (response.success) {
           setUser(response.data);
         } else {
-          showErrorAlert(response.error || "An error occurred while loading the user data");
+          showInfoAlert("Failed to load user data. Please try again later");
         }
       })
       .catch(() => {
@@ -151,7 +152,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
           setUser(response.data);
           setLocalUser(response.data);
         } else {
-          showErrorAlert("An error occurred while loading the user data");
+          showInfoAlert("Failed to load user data. Please try again later");
         }
       })
       .catch(() => {
