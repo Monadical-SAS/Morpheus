@@ -3,11 +3,13 @@ import ImagineMenu from "../../components/ImagineMenu/ImagineMenu";
 import ImageDraggable from "@/components/ImageDraggable/ImageDraggable";
 import ImageGallery from "@/components/ImageGallery/ImageGallery";
 import ImagineInput from "@/components/ImagineInput/ImagineInput";
+import IntroductoryWalkthroughApp from "@/components/IntroductoryWalkthroughApp/IntroductoryWalkthroughApp";
 import ImagineLayout from "@/layout/ImagineLayout/ImagineLayout";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { UploadMaskIcon } from "@/components/icons/uploadMask";
 import { useImagine } from "@/context/ImagineContext";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
+import { useAuth } from "@/context/AuthContext";
 import styles from "./ImagineBase.module.scss";
 
 interface MainContainerProps {
@@ -20,6 +22,7 @@ interface MainContainerProps {
 const ImagineBase = (props: MainContainerProps) => {
   const { img2imgFile, setImg2imgFile, maskFile, setMaskFile } = useImagine();
   const { width } = useWindowDimensions();
+  const { user } = useAuth();
   const isMobile = width < MOBILE_SCREEN_WIDTH;
 
   const ImagineInputInstance = (
@@ -67,6 +70,7 @@ const ImagineBase = (props: MainContainerProps) => {
 
         {!isMobile && ImagineInputInstance}
       </main>
+      {user?.is_new_user && <IntroductoryWalkthroughApp />}
     </ImagineLayout>
   );
 };
