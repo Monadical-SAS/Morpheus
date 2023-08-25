@@ -60,7 +60,7 @@ export interface ArtWork {
 export interface Model {
   id?: string;
   name: string;
-  source?: string;
+  source: string;
   description?: string;
   is_active: boolean;
   url_docs?: string;
@@ -70,6 +70,7 @@ export interface Model {
   controlnet?: boolean;
   pix2pix?: boolean;
   upscaling?: boolean;
+  features: string[];
 }
 
 export interface ControlNetModel extends Model {

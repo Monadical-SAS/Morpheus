@@ -1,8 +1,10 @@
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import Brand from "../Typography/Brand/Brand";
 import { SDOption } from "@/context/SDContext";
+import { ModelFeature, useModels } from "@/context/ModelsContext";
+import { Accordion } from "@/components/atoms/accordion/Accordion";
 import { Text2ImgIcon } from "../icons/text2img";
 import { Img2ImgIcon } from "../icons/img2img";
 import { ControlNetIcon } from "../icons/controlnet";
@@ -20,47 +22,67 @@ import {
   UpscalingDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { Model } from "@/models/models";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./ImagineMenu.module.scss";
-import { useModels } from "@/context/ModelsContext";
-import { Model } from "@/models/models";
-import { Accordion } from "@/components/atoms/accordion/Accordion";
 
-interface LongItemProps {
-  active?: boolean;
-  icon: ReactNode;
-  title: string;
-  description: ReactNode;
-  option: string;
-}
-
-const ImagineMenuItem = (props: LongItemProps) => {
+const ImagineMenu = () => {
   const router = useRouter();
-  const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
+  const {
+    models,
+    selectedModel,
+    activeLink,
+    setActiveLink,
+    findValidModelForFeature,
+  } = useModels();
+  const imagineOptionPath = router.pathname.split("/").pop();
+  const [openItem, setOpenItem] = useState<string>();
 
-  const getItemStyles = () => {
-    return `${styles.menuItem}  ${props.active && styles.active}`;
-  };
+  useEffect(() => {
+    if (imagineOptionPath) {
+      if (!selectedModel.features.includes(imagineOptionPath)) {
+        const validModel = findValidModelForFeature(
+          imagineOptionPath as ModelFeature
+        );
 
-  const handleOnClick = () => {
-    router.push(`/imagine/${props.option}`);
-  };
+        setActiveLink({
+          model: validModel,
+          feature: imagineOptionPath as ModelFeature,
+        });
+      } else {
+        setActiveLink({
+          model: selectedModel,
+          feature: imagineOptionPath as ModelFeature,
+        });
+      }
+    }
+  }, []);
 
   return (
-    <AppTooltip
-      title={props.title}
-      content={props.description}
-      direction={isMobile ? "bottom" : "right"}
-    >
-      <div className={getItemStyles()} onClick={handleOnClick}>
-        <span className={styles.icon}>{props.icon}</span>
-
-        <p className={`base-1 ${props.active ? "main" : "secondary"}`}>
-          {props.title}
-        </p>
+    <div className={styles.imagineMenu}>
+      <div className={styles.brandContainer}>
+        <Brand />
       </div>
-    </AppTooltip>
+
+      <p className="base-1 white">Models</p>
+
+      {models.map((model: Model) => (
+        <Accordion
+          key={model.source}
+          itemId={model.source}
+          title={model.name}
+          setOpenedItem={setOpenItem}
+          isOpen={
+            openItem === model.source ||
+            activeLink.model.source === model.source
+          }
+        >
+          <ModelMenuFeatures model={model} />
+        </Accordion>
+      ))}
+
+      <OpenSource />
+    </div>
   );
 };
 
@@ -68,18 +90,18 @@ interface ImagineMenuFeaturesProps {
   model: Model;
 }
 
-const ImagineMenuFeatures = (props: ImagineMenuFeaturesProps) => {
-  const router = useRouter();
-  const currentPath = router.pathname;
+const ModelMenuFeatures = (props: ImagineMenuFeaturesProps) => {
+  const { activeLink } = useModels();
 
   const getItemActive = (option: SDOption | string) => {
-    const lastPath = currentPath.split("/").pop();
-    return lastPath === option;
+    return (
+      activeLink.model.source === props.model.source &&
+      activeLink.feature === option
+    );
   };
 
   const getIconColor = (option: SDOption | string) => {
-    const isActive = getItemActive(option);
-    return isActive ? "#B3005E" : "#6D6D94";
+    return getItemActive(option) ? "#B3005E" : "#6D6D94";
   };
 
   return (
@@ -97,6 +119,7 @@ const ImagineMenuFeatures = (props: ImagineMenuFeaturesProps) => {
             />
           }
           option={SDOption.Text2Image}
+          model={props.model}
         />
       )}
       {props.model.img2img && (
@@ -112,6 +135,7 @@ const ImagineMenuFeatures = (props: ImagineMenuFeaturesProps) => {
             />
           }
           option={SDOption.Image2Image}
+          model={props.model}
         />
       )}
       {props.model.pix2pix && (
@@ -127,6 +151,7 @@ const ImagineMenuFeatures = (props: ImagineMenuFeaturesProps) => {
             />
           }
           option={SDOption.Pix2Pix}
+          model={props.model}
         />
       )}
       {props.model.controlnet && (
@@ -142,6 +167,7 @@ const ImagineMenuFeatures = (props: ImagineMenuFeaturesProps) => {
             />
           }
           option={SDOption.ControlNet}
+          model={props.model}
         />
       )}
       {props.model.inpainting && (
@@ -157,6 +183,7 @@ const ImagineMenuFeatures = (props: ImagineMenuFeaturesProps) => {
             />
           }
           option={SDOption.Inpainting}
+          model={props.model}
         />
       )}
       {props.model.upscaling && (
@@ -172,43 +199,54 @@ const ImagineMenuFeatures = (props: ImagineMenuFeaturesProps) => {
             />
           }
           option={SDOption.Upscaling}
+          model={props.model}
         />
       )}
     </Fragment>
   );
 };
 
-const ImagineMenu = () => {
-  const { models, setSelectedModel } = useModels();
-  const [openItem, setOpenItem] = useState<string>(models[0]?.name);
+interface ImagineMenuItemProps {
+  active?: boolean;
+  icon: ReactNode;
+  title: string;
+  description: ReactNode;
+  option: string;
+  model: Model;
+}
 
-  const handleOnOpen = (item: string) => {
-    const selectedModel = models.find((model: Model) => model.name === item);
-    setSelectedModel(selectedModel?.source || "");
-    setOpenItem(item);
-  }
+const ImagineMenuItem = (props: ImagineMenuItemProps) => {
+  const router = useRouter();
+  const { width } = useWindowDimensions();
+  const { setActiveLink } = useModels();
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
+
+  const getItemStyles = () => {
+    return `${styles.menuItem}  ${props.active && styles.active}`;
+  };
+
+  const handleOnClick = () => {
+    setActiveLink({
+      model: props.model,
+      feature: props.option as ModelFeature,
+    });
+    router.push(props.option);
+  };
 
   return (
-    <div className={styles.imagineMenu}>
-      <div className={styles.brandContainer}>
-        <Brand />
+    <AppTooltip
+      title={props.title}
+      content={props.description}
+      direction={isMobile ? "bottom" : "right"}
+    >
+      <div className={getItemStyles()} onClick={handleOnClick}>
+        <span className={styles.icon}>{props.icon}</span>
+
+        <p className={`base-1 ${props.active ? "main" : "secondary"}`}>
+          {props.title}
+        </p>
       </div>
-
-      <p className="base-1 white">Models</p>
-
-      {models.map((model: Model) => (
-        <Accordion
-          key={model.source}
-          title={model.name}
-          setOpenedItem={handleOnOpen}
-          isOpen={openItem === model.name}
-        >
-          <ImagineMenuFeatures model={model} />
-        </Accordion>
-      ))}
-
-      <OpenSource />
-    </div>
+    </AppTooltip>
   );
 };
 

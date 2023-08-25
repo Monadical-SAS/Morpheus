@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getAvailableModels } from "../services/models";
+import { getAvailableModels } from "@/services/models";
 import { useDiffusion } from "./SDContext";
 
 export interface IControlNetContext {

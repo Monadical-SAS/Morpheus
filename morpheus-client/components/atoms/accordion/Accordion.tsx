@@ -4,6 +4,7 @@ import { ArrowRightIcon } from "@/components/icons/arrowRight";
 import styles from "./Accordion.module.scss";
 
 interface AccordionProps {
+  itemId: string;
   title: string;
   isOpen?: boolean;
   setOpenedItem: (item: string) => void;
@@ -11,7 +12,9 @@ interface AccordionProps {
 }
 
 export const Accordion = (props: AccordionProps) => {
-  const onToggle = () => props.setOpenedItem(props.title);
+  const onToggle = () => {
+    props.setOpenedItem(props.itemId)
+  };
 
   return (
     <div className={styles.accordion}>
