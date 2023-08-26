@@ -48,7 +48,7 @@ export const getFileFromBlob = (blob: Blob, filename: string) => {
   return new File([blob], filename, { type: "image/png" });
 };
 
-export const convertMaskToInpaintingMask = (imageData: ImageData) => {
+export const convertMaskToInpaintingMask = (imageData: any) => {
   const data = imageData.data;
   for (let i = 0; i < data.length; i += 4) {
     const r = data[i];
@@ -73,7 +73,7 @@ export const convertMaskToInpaintingMask = (imageData: ImageData) => {
   return imageData;
 };
 
-export const convertInpaintingMaskToMask = (imageData: ImageData) => {
+export const convertInpaintingMaskToMask = (imageData: any) => {
   const data = imageData.data;
 
   for (let i = 0; i < data.length; i += 4) {

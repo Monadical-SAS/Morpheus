@@ -20,7 +20,7 @@ type MaskedCanvasProps = {
 };
 
 const MaskPaintingCanvas = (props: MaskedCanvasProps) => {
-  const { img2imgFile, maskFile, setMaskFile } = useImagine();
+  const { img2imgFile, setImg2imgFile, maskFile, setMaskFile } = useImagine();
 
   const imageCanvasRef = useRef<HTMLCanvasElement>(null);
   const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -162,17 +162,28 @@ const MaskPaintingCanvas = (props: MaskedCanvasProps) => {
   };
 
   const handleCompleted = () => {
-    const canvas = drawingCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const drawingCanvas = drawingCanvasRef.current;
+    const imageCanvas = imageCanvasRef.current;
+    if (!drawingCanvas || !imageCanvas) return;
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const drawingCtx = drawingCanvas.getContext("2d");
+    if (!drawingCtx) return;
+
+    const imageData = drawingCtx.getImageData(
+      0,
+      0,
+      drawingCanvas.width,
+      drawingCanvas.height
+    );
     const invertedImageData = convertMaskToInpaintingMask(imageData);
-    ctx.putImageData(invertedImageData, 0, 0);
-    canvas.toBlob((blob) => {
+    drawingCtx.putImageData(invertedImageData, 0, 0);
+    drawingCanvas.toBlob((blob) => {
       if (!blob) return;
       setMaskFile(getFileFromBlob(blob, "mask.png"));
+      imageCanvas.toBlob((blob) => {
+        if (!blob) return;
+        setImg2imgFile(getFileFromBlob(blob, "image.png"));
+      });
       props.closeModal();
     });
   };

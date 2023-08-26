@@ -116,22 +116,32 @@ const Navbar = (props: NavbarProps) => {
   return (
     <div className={styles.navbarContainer}>
       {isMobile ? (
-        <BurgerMenu
-          isOpen={showMobileMenu}
-          onStateChange={(state) => setShowMobileMenu(state.isOpen)}
-        >
-          <div className={styles.burgerMenuContent}>
-            <NavMenu
-              user={user}
-              selectedOption={selectedOption}
-              redirectToHome={redirectToHome}
-              redirectToProfile={redirectToProfile}
-              handleAuthActionClick={handleAuthActionClick}
-              isMobile={true}
-              closeMenu={() => setShowMobileMenu(false)}
-            />
-          </div>
-        </BurgerMenu>
+        <Fragment>
+          <BurgerMenu
+            isOpen={showMobileMenu}
+            onStateChange={(state) => setShowMobileMenu(state.isOpen)}
+          >
+            <div className={styles.burgerMenuContent}>
+              <NavMenu
+                user={user}
+                selectedOption={selectedOption}
+                redirectToHome={redirectToHome}
+                redirectToProfile={redirectToProfile}
+                handleAuthActionClick={handleAuthActionClick}
+                isMobile={true}
+                closeMenu={() => setShowMobileMenu(false)}
+              />
+            </div>
+          </BurgerMenu>
+          <Brand
+            styles={{
+              width: "100%",
+              display: "flex",
+              alignSelf: "center",
+              justifyContent: "center",
+            }}
+          />
+        </Fragment>
       ) : (
         <NavMenu
           user={user}

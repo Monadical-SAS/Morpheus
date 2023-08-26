@@ -1,11 +1,31 @@
 @use "styles/colors";
 @use "styles/media";
 
-.imageDraggable {
+.imagineImageInput {
+  min-width: 244px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  min-width: 244px;
+
+  @include media.tablet {
+    min-width: auto;
+  }
+
+  @include media.mobile {
+    padding: 0 24px;
+    min-width: auto;
+    width: auto;
+    flex: 1;
+  }
+
+  @include media.xsmall {
+    max-width: 100%;
+  }
+
+  .label {
+    z-index: 9;
+    max-width: 250px;
+  }
 
   .formContainer {
     width: 100%;
@@ -23,21 +43,11 @@
     @include media.mobile {
       width: 100%;
       height: auto;
-      flex-direction: column;
-      padding: 16px;
-    }
-
-    .separator {
-      display: none;
-      width: 100%;
-      border-bottom: 5px;
-      border-style: solid;
-      margin: 24px 0;
-      border-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100' fill='none' rx='8' ry='8' stroke='%23312E47FF' stroke-width='4' stroke-dasharray='10%2c 10' stroke-dashoffset='53' stroke-linecap='round'/%3e%3c/svg%3e") 30 round;
-
-      @include media.mobile {
-        display: block;
-      }
+      background-image: none;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 0;
+      gap: 24px;
     }
 
     .verticalSeparator {
@@ -53,7 +63,13 @@
         top: 0;
         bottom: 0;
         width: 2px;
-        background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 10px, #312E47FF 10px, #312E47FF 22px);
+        background-image: repeating-linear-gradient(
+                        to bottom, transparent 0, transparent 10px, #312E47FF 10px, #312E47FF 22px
+        );
+      }
+
+      @include media.tablet {
+        margin: 0 8px;
       }
 
       @include media.mobile {
@@ -62,29 +78,36 @@
     }
   }
 
-  .paintInfo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 48px;
-    position: relative;
-
-    @include media.mobile {
-      padding-bottom: 0;
-    }
-  }
-
-  .formFileUpload {
+  .formInputItem {
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    min-width: 150px;
+    max-width: 170px;
+
+    @include media.tablet {
+      span {
+        display: none;
+      }
+    }
 
     @include media.mobile {
-      width: 100%;
-      height: auto;
-      padding: 0;
+      width: 160px;
+      height: 160px;
+      padding: 5px;
+      border-radius: 8px;
+      border: 1px solid colors.$background-border;
+      background-color: colors.$background-primary;
+
+      a {
+        font-size: 18px !important;
+      }
+
+      span {
+        display: none;
+      }
     }
 
     .inputFileUpload {
@@ -111,10 +134,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-
-      a {
-        text-decoration-line: underline;
-      }
     }
 
     .uploadButton:hover {
@@ -136,13 +155,22 @@
 
 .selectedFile {
   width: 100%;
-  min-height: 294px;
+  height: auto;
+  max-width: 300px;
+  max-height: 400px;
   position: relative;
   background-color: colors.$background-secondary;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   padding: 8px;
+
+  @include media.mobile {
+    max-width: 100%;
+    max-height: initial;
+    margin-top: -40px;
+    padding: 0;
+  }
 
   .header {
     height: auto;
@@ -159,9 +187,6 @@
   }
 
   img {
-    width: auto;
-    max-width: 100%;
-    max-height: 100%;
     border-radius: 8px;
     object-fit: contain;
     box-shadow: colors.$box-shadow;

@@ -1,0 +1,42 @@
+.accordion {
+  width: 100%;
+  height: auto;
+  margin-bottom: 24px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .accordionHeader {
+    width: 100%;
+    height: auto;
+    max-height: 32px;
+    display: flex;
+    align-self: center;
+    cursor: pointer;
+
+    p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    span {
+      margin-top: 4px;
+    }
+  }
+
+  .accordionContent {
+    width: auto;
+    height: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
