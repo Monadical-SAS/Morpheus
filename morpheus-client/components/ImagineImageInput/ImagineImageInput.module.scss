@@ -7,11 +7,15 @@
   flex-direction: column;
   gap: 12px;
 
+  @include media.tablet {
+    min-width: auto;
+  }
+
   @include media.mobile {
     padding: 0 24px;
     min-width: auto;
-    width: 100%;
-    max-width: 46%;
+    width: auto;
+    flex: 1;
   }
 
   @include media.xsmall {
@@ -64,6 +68,10 @@
         );
       }
 
+      @include media.tablet {
+        margin: 0 8px;
+      }
+
       @include media.mobile {
         display: none;
       }
@@ -76,6 +84,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    min-width: 150px;
+    max-width: 170px;
+
+    @include media.tablet {
+      span {
+        display: none;
+      }
+    }
 
     @include media.mobile {
       width: 160px;

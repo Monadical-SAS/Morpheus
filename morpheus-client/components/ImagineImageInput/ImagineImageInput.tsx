@@ -119,8 +119,8 @@ const ImagineImageInput = (props: DragDropFileProps) => {
             <a className="body-1 main underline pointer" onClick={onButtonClick}>
               {isMobile ? "Upload" : "Upload an image"}
             </a>
-            <span className="body-1 white">or drag and drop</span>
-            <span className="body-2 secondary">Maximum file size 50 MB</span>
+            <span className="body-2 white">or drag and drop</span>
+            <span className="caption-1 secondary">Maximum file size 50 MB</span>
           </div>
         </label>
 

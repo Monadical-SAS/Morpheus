@@ -4,6 +4,7 @@
 .imageInputsContainer {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   justify-content: flex-start;
   gap: 24px;
@@ -11,7 +12,6 @@
   margin-bottom: 48px;
 
   @include media.mobile {
-    flex-wrap: wrap;
     margin-bottom: 16px;
   }
 }
@@ -41,6 +41,10 @@
     overflow-y: auto;
     border-bottom-left-radius: 24px;
     background-color: colors.$background-primary;
+
+    @include media.tablet {
+      border-bottom-left-radius: 0;
+    }
 
     @include media.mobile {
       flex-direction: column;
