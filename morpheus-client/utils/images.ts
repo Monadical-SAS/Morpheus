@@ -1,4 +1,5 @@
 import { getTimestamp } from "./timer";
+import ImageData from "next/dist/server/lib/squoosh/image_data";
 
 const getImageBlob = async (url: string): Promise<any> => {
   try {

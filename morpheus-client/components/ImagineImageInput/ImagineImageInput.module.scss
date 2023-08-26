@@ -2,15 +2,20 @@
 @use "styles/media";
 
 .imagineImageInput {
+  min-width: 244px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  min-width: 244px;
 
   @include media.mobile {
     padding: 0 24px;
     min-width: auto;
     width: 100%;
+    max-width: 46%;
+  }
+
+  @include media.xsmall {
+    max-width: 100%;
   }
 
   .label {
@@ -134,7 +139,9 @@
 
 .selectedFile {
   width: 100%;
-  min-height: 294px;
+  height: auto;
+  max-width: 300px;
+  max-height: 400px;
   position: relative;
   background-color: colors.$background-secondary;
   border-radius: 8px;
@@ -143,7 +150,8 @@
   padding: 8px;
 
   @include media.mobile {
-    min-height: auto;
+    max-width: 100%;
+    max-height: initial;
     margin-top: -40px;
     padding: 0;
   }
@@ -163,9 +171,6 @@
   }
 
   img {
-    width: auto;
-    max-width: 100%;
-    max-height: 100%;
     border-radius: 8px;
     object-fit: contain;
     box-shadow: colors.$box-shadow;

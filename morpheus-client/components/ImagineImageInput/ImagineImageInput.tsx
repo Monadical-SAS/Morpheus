@@ -37,21 +37,21 @@ const ImagineImageInput = (props: DragDropFileProps) => {
 
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imgSrc, setImgSrc] = useState<any>(null);
+  const [imageSrc, setImageSrc] = useState<any>(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     if (selectedFile) {
-      setImgSrc(URL.createObjectURL(selectedFile));
+      setImageSrc(URL.createObjectURL(selectedFile));
       props.setImageFile(selectedFile);
     }
   }, [selectedFile]);
 
   useEffect(() => {
     if (props.imageFile) {
-      setImgSrc(URL.createObjectURL(props.imageFile));
+      setImageSrc(URL.createObjectURL(props.imageFile));
     } else {
-      setImgSrc(null);
+      setImageSrc(null);
     }
   }, [props.imageFile]);
 
@@ -88,7 +88,7 @@ const ImagineImageInput = (props: DragDropFileProps) => {
   };
 
   const clearImage = () => {
-    setImgSrc(null);
+    setImageSrc(null);
     setSelectedFile(null);
     props.setImageFile(null);
   };
@@ -116,10 +116,7 @@ const ImagineImageInput = (props: DragDropFileProps) => {
         >
           <div className={styles.dragInfo}>
             {props.icon ? props.icon : <UploadImageIcon />}
-            <a
-              className="body-1 main underline pointer"
-              onClick={onButtonClick}
-            >
+            <a className="body-1 main underline pointer" onClick={onButtonClick}>
               {isMobile ? "Upload" : "Upload an image"}
             </a>
             <span className="body-1 white">or drag and drop</span>
@@ -175,7 +172,7 @@ const ImagineImageInput = (props: DragDropFileProps) => {
         </span>
       </div>
 
-      <img src={imgSrc} alt={props.label}/>
+      <img src={imageSrc} alt={props.label} />
     </div>
   );
 
@@ -183,10 +180,12 @@ const ImagineImageInput = (props: DragDropFileProps) => {
     <Fragment>
       <div className={styles.imagineImageInput}>
         {props.label && (
-          <span className={`${styles.label} base-2 white`}>{props.label}</span>
+          <span className={`${styles.label} base-2 white`}>
+            {props.label}
+          </span>
         )}
 
-        {imgSrc ? ImageResultDetail : ImageInputForm}
+        {imageSrc ? ImageResultDetail : ImageInputForm}
       </div>
 
       <Modal
