@@ -3,6 +3,10 @@
   height: auto;
   margin-bottom: 24px;
 
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
   .accordionHeader {
     width: 100%;
     height: auto;

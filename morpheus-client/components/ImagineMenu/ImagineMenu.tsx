@@ -13,6 +13,8 @@ import { InpaintingIcon } from "../icons/inpainting";
 import { OpenSource } from "@/components/OpenSource/OpenSource";
 import { EnhanceIcon } from "../icons/enhance";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
+import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
+import Modal from "@/components/Modal/Modal";
 import {
   ControlNetDescription,
   Img2ImgDescription,
@@ -28,6 +30,7 @@ import styles from "./ImagineMenu.module.scss";
 
 const ImagineMenu = () => {
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const {
     models,
     selectedModel,
@@ -36,7 +39,9 @@ const ImagineMenu = () => {
     findValidModelForFeature,
   } = useModels();
   const imagineOptionPath = router.pathname.split("/").pop();
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
   const [openItem, setOpenItem] = useState<string>();
+  const [showModelsModal, setShowModelsModal] = useState(false);
 
   useEffect(() => {
     if (imagineOptionPath) {
@@ -58,28 +63,45 @@ const ImagineMenu = () => {
     }
   }, []);
 
-  return (
+  const ModelsAccordion = models.map((model: Model) => (
+    <Accordion
+      key={model.source}
+      itemId={model.source}
+      title={model.name}
+      setOpenedItem={setOpenItem}
+      isOpen={
+        openItem === model.source || activeLink.model.source === model.source
+      }
+    >
+      <ModelMenuFeatures model={model} />
+    </Accordion>
+  ));
+
+  return isMobile ? (
+    <Fragment>
+      <ButtonPrimary
+        text={`${activeLink.model.name} / ${activeLink.feature}`}
+        onClick={() => setShowModelsModal(true)}
+        loading={false}
+        className={styles.mobileButton}
+      />
+      <Modal
+        width={"610px"}
+        height={"auto"}
+        isOpen={showModelsModal}
+        toggleModal={() => setShowModelsModal(!showModelsModal)}
+      >
+        {ModelsAccordion}
+      </Modal>
+    </Fragment>
+  ) : (
     <div className={styles.imagineMenu}>
       <div className={styles.brandContainer}>
         <Brand />
       </div>
 
       <p className="base-1 white">Models</p>
-
-      {models.map((model: Model) => (
-        <Accordion
-          key={model.source}
-          itemId={model.source}
-          title={model.name}
-          setOpenedItem={setOpenItem}
-          isOpen={
-            openItem === model.source ||
-            activeLink.model.source === model.source
-          }
-        >
-          <ModelMenuFeatures model={model} />
-        </Accordion>
-      ))}
+      {ModelsAccordion}
 
       <OpenSource />
     </div>
@@ -236,15 +258,15 @@ const ImagineMenuItem = (props: ImagineMenuItemProps) => {
   return (
     <AppTooltip
       title={props.title}
-      content={props.description}
+      content={isMobile ? null : props.description}
       direction={isMobile ? "bottom" : "right"}
     >
       <div className={getItemStyles()} onClick={handleOnClick}>
         <span className={styles.icon}>{props.icon}</span>
 
-        <p className={`base-1 ${props.active ? "main" : "secondary"}`}>
+        <span className={`base-1 ${props.active ? "main" : "secondary"}`}>
           {props.title}
-        </p>
+        </span>
       </div>
     </AppTooltip>
   );

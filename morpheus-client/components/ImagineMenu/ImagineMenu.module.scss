@@ -1,6 +1,11 @@
 @use "styles/colors";
 @use "styles/media";
 
+.mobileButton {
+  margin: 96px 24px 24px 24px;
+  width: calc(100% - 48px);
+}
+
 .imagineMenu {
   flex: 0 0 300px;
   background-color: colors.$background-secondary;
@@ -47,32 +52,13 @@
       display: none;
     }
   }
-
-  .menuIcon {
-    @extend %item;
-    margin-top: 8px;
-    margin-bottom: 32px;
-
-    &:hover {
-      background-color: transparent;
-    }
-
-    .closeTitle {
-      width: 100%;
-      display: flex;
-      align-items: center;
-    }
-  }
-
-  .menuItem {
-    @extend %item;
-  }
 }
 
-%item {
+.menuItem {
   width: 100%;
   height: auto;
   display: flex;
+  flex-direction: row;
   align-items: center;
   cursor: pointer;
   margin-top: 16px;
@@ -88,12 +74,8 @@
   }
 
   @include media.mobile {
+    flex-direction: row;
     padding: 8px;
-    justify-content: center;
-
-    p {
-      display: none;
-    }
   }
 
 
@@ -101,7 +83,7 @@
     margin-right: 8px;
 
     @include media.mobile {
-      margin-right: 0;
+      margin-right: 16px;
     }
   }
 }
