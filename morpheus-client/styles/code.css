@@ -1,0 +1,146 @@
+.remark-code-title {
+  padding: 20px 15px;
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: bold;
+  color: #C0C0C0;
+  background-color: #404040;
+  border-radius: 5px 5px 0 0;
+}
+
+.remark-code-title+div>pre {
+  margin-top: 0;
+  border-radius: 0;
+}
+
+.code-highlight {
+  float: left;
+  min-width: 100%;
+  padding: 16px;
+}
+
+.code-line {
+  display: block;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-left: -16px;
+  border-left: 4px solid transparent;
+}
+
+.code-line.inserted {
+  background-color: #008000;
+  opacity: 0.2;
+}
+
+.code-line.deleted {
+  background-color: #FF0000;
+  opacity: 0.2;
+}
+
+.highlight-line {
+  margin-left: -16px;
+  background-color: #404040;
+  opacity: 0.5;
+  border-left: 4px solid #007BFF;
+}
+
+.line-number::before {
+  display: inline-block;
+  width: 16px;
+  margin-right: 16px;
+  margin-left: -8px;
+  text-align: right;
+  color: #808080;
+  content: attr(line);
+}
+
+.token.comment,
+.token.prolog,
+.token.cdata {
+  color: rgb(99, 119, 119);
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: rgb(199, 146, 234);
+}
+
+.namespace {
+  color: rgb(178, 204, 214);
+}
+
+.token.deleted {
+  color: rgba(239, 83, 80, 0.56);
+  font-style: italic;
+}
+
+.token.symbol,
+.token.property {
+  color: rgb(128, 203, 196);
+}
+
+.token.tag,
+.token.operator,
+.token.keyword {
+  color: rgb(127, 219, 202);
+}
+
+.token.boolean {
+  color: rgb(255, 88, 116);
+}
+
+.token.number {
+  color: rgb(247, 140, 108);
+}
+
+.token.constant,
+.token.function,
+.token.builtin,
+.token.char {
+  color: rgb(130, 170, 255);
+}
+
+.token.selector,
+.token.doctype {
+  color: rgb(199, 146, 234);
+  font-style: italic;
+}
+
+.token.attr-name,
+.token.inserted {
+  color: rgb(173, 219, 103);
+  font-style: italic;
+}
+
+.token.string,
+.token.url,
+.token.entity,
+.language-css .token.string,
+.style .token.string {
+  color: rgb(173, 219, 103);
+}
+
+.token.class-name,
+.token.atrule,
+.token.attr-value {
+  color: rgb(255, 203, 139);
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: rgb(214, 222, 235);
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.table {
+  display: inline;
+}
