@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import Modal from "../Modal/Modal";
-import { SDOption, useDiffusion } from "@/context/SDContext";
 import ControlNetModelSelect from "../ControlNetModelSelect/ControlNetModelSelect";
 import InputNumber from "../Inputs/InputNumber/InputNumber";
 import InputSeed from "../Inputs/InputSeed/InputSeed";
@@ -10,10 +9,12 @@ import InputEmbedding from "@/components/Inputs/InputEmbedding/InputEmbedding";
 import InputLora from "@/components/Inputs/InputLora/InputLora";
 import SamplerSelect from "../SamplerSelect/SamplerSelect";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
+import { ModelFeature, useModels } from "@/context/ModelsContext";
+import { useDiffusion } from "@/context/SDContext";
+import { useShowSettings } from "@/hooks/useShowSettings";
 import { CloseIcon } from "../icons/close";
 import { InfoIcon } from "../icons/info";
 import { SettingsIcon } from "../icons/settings";
-import { useShowSettings } from "@/hooks/useShowSettings";
 import styles from "./ImagineSettings.module.scss";
 
 interface OptionState {
@@ -41,9 +42,8 @@ const OptionInfo = (props: OptionState) => {
 
 const ImagineSettings = () => {
   const { showSettings, toggleSettings } = useShowSettings();
-
+  const { activeLink } = useModels();
   const {
-    selectedOption,
     imageSize,
     setImageSize,
     scale,
@@ -60,6 +60,7 @@ const ImagineSettings = () => {
     loraScale,
     setLoraScale,
   } = useDiffusion();
+  const activeFeature = activeLink.feature;
 
   const SettingsContent = (
     <div className={styles.settingsContainer}>
@@ -159,8 +160,8 @@ const ImagineSettings = () => {
           />
         </div>
 
-        {(selectedOption === SDOption.Image2Image ||
-          selectedOption === SDOption.ControlNet) && (
+        {(activeFeature === ModelFeature.Image2Image ||
+          activeFeature === ModelFeature.ControlNet) && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"Strength"}
@@ -198,7 +199,7 @@ const ImagineSettings = () => {
 
       <p className="headline-4 white my-10">Model settings</p>
       <div className={styles.optionsContainer}>
-        {selectedOption === SDOption.ControlNet && (
+        {activeFeature === ModelFeature.ControlNet && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"ControlNet Model"}
@@ -218,9 +219,9 @@ const ImagineSettings = () => {
           <SamplerSelect />
         </div>
 
-        {(selectedOption === SDOption.Text2Image ||
-          selectedOption === SDOption.Image2Image ||
-          selectedOption === SDOption.ControlNet) && (
+        {(activeFeature === ModelFeature.Text2Image ||
+          activeFeature === ModelFeature.Image2Image ||
+          activeFeature === ModelFeature.ControlNet) && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"LoRA"}
@@ -236,9 +237,9 @@ const ImagineSettings = () => {
         )}
 
         {useLora.value &&
-          (selectedOption === SDOption.Text2Image ||
-            selectedOption === SDOption.Image2Image ||
-            selectedOption === SDOption.ControlNet) && (
+          (activeFeature === ModelFeature.Text2Image ||
+            activeFeature === ModelFeature.Image2Image ||
+            activeFeature === ModelFeature.ControlNet) && (
             <div className={styles.settingItem}>
               <OptionInfo
                 title={"LoRA Scale"}
@@ -261,9 +262,9 @@ const ImagineSettings = () => {
             </div>
           )}
 
-        {(selectedOption === SDOption.Text2Image ||
-          selectedOption === SDOption.Image2Image ||
-          selectedOption === SDOption.ControlNet) && (
+        {(activeFeature === ModelFeature.Text2Image ||
+          activeFeature === ModelFeature.Image2Image ||
+          activeFeature === ModelFeature.ControlNet) && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"TI Embedding"}
