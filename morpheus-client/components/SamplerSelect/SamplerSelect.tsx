@@ -1,25 +1,25 @@
 import React, { Fragment, useEffect, useState } from "react";
 import InputSelect from "../Inputs/InputSelect/InputSelect";
-import { useDiffusion } from "../../context/SDContext";
-import { Sampler } from "../../models/models";
+import { Sampler } from "@/models/models";
+import { useModels } from "@/context/ModelsContext";
 
 const SamplerSelect = () => {
-  const { SDSamplers, sampler, setSampler } = useDiffusion();
+  const { samplers, sampler, setSampler } = useModels();
   const [samplerOptions, setSamplerOptions] = useState<string[]>([]);
   const [selectedSampler, setSelectedSampler] = useState<string>(
-    SDSamplers.find((s) => s.id === sampler)?.name || ""
+    samplers.find((s) => s.id === sampler)?.name || ""
   );
 
   useEffect(() => {
-    if (SDSamplers && SDSamplers.length > 0) {
-      setSamplerOptions(SDSamplers.map((s: Sampler) => s.name));
+    if (samplers && samplers.length > 0) {
+      setSamplerOptions(samplers.map((s: Sampler) => s.name));
     }
-  }, [SDSamplers]);
+  }, [samplers]);
 
   useEffect(() => {
-    if (SDSamplers && SDSamplers.length > 0) {
+    if (samplers && samplers.length > 0) {
       if (selectedSampler && selectedSampler !== sampler) {
-        const selected = SDSamplers.find(
+        const selected = samplers.find(
           (s: Sampler) => s.name === selectedSampler
         );
         setSampler(selected?.id || "");

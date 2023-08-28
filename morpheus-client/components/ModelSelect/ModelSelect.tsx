@@ -1,39 +1,39 @@
 import React, { Fragment, useEffect, useState } from "react";
 import InputSelect from "../Inputs/InputSelect/InputSelect";
-import { useDiffusion } from "../../context/SDContext";
-import { Model } from "../../models/models";
+import { Model } from "@/models/models";
+import { useModels } from "@/context/ModelsContext";
 
 const ModelSelect = () => {
-  const { validSDModels, selectedSDModel, setSelectedSDModel } = useDiffusion();
+  const { models, selectedModel, setSelectedModel } = useModels();
   const [modelOptions, setModelOptions] = useState<string[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>(
-    validSDModels.find((m) => m.source === selectedSDModel)?.name || ""
+  const [localSelectedModel, setLocalSelectedModel] = useState<string>(
+    models.find((m) => m.source === selectedModel.name)?.name || ""
   );
 
   useEffect(() => {
-    if (validSDModels && validSDModels.length > 0) {
-      setModelOptions(validSDModels.map((model: Model) => model.name) || []);
+    if (models && models.length > 0) {
+      setModelOptions(models.map((model: Model) => model.name) || []);
     }
-  }, [validSDModels]);
+  }, [models]);
 
   useEffect(() => {
-    if (validSDModels && validSDModels.length > 0) {
-      if (selectedModel && selectedModel !== selectedSDModel) {
-        const selected = validSDModels.find(
-          (m: Model) => m.name === selectedModel
+    if (models && models.length > 0) {
+      if (localSelectedModel && localSelectedModel !== selectedModel.name) {
+        const selected = models.find(
+          (m: Model) => m.name === localSelectedModel
         );
-        setSelectedSDModel(selected?.source || "");
+        setSelectedModel(selected as Model);
       }
     }
-  }, [selectedModel]);
+  }, [localSelectedModel]);
 
   return (
     <Fragment>
       {modelOptions.length > 0 && (
         <InputSelect
           options={modelOptions}
-          selected={selectedModel}
-          setSelected={setSelectedModel}
+          selected={localSelectedModel}
+          setSelected={setLocalSelectedModel}
         />
       )}
     </Fragment>

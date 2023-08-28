@@ -6,7 +6,6 @@ import { slide as BurgerMenu } from "react-burger-menu";
 import Brand from "../Typography/Brand/Brand";
 import UserCard, { UserImage } from "../UserCard/UserCard";
 import { AuthOption, useAuth } from "@/context/AuthContext";
-import { useDiffusion } from "@/context/SDContext";
 import { isEmptyObject } from "@/utils/object";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { User } from "@/models/models";
@@ -15,7 +14,6 @@ import styles from "./Navbar.module.scss";
 
 type NavMenuProps = {
   user: User;
-  selectedOption: string;
   redirectToHome: () => void;
   redirectToProfile: () => void;
   handleAuthActionClick: (authOption: AuthOption) => Promise<void>;
@@ -85,7 +83,6 @@ const Navbar = (props: NavbarProps) => {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { user, setAuthOption } = useAuth();
-  const { selectedOption } = useDiffusion();
   const isMobile = width < MOBILE_SCREEN_WIDTH;
 
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -124,7 +121,6 @@ const Navbar = (props: NavbarProps) => {
             <div className={styles.burgerMenuContent}>
               <NavMenu
                 user={user}
-                selectedOption={selectedOption}
                 redirectToHome={redirectToHome}
                 redirectToProfile={redirectToProfile}
                 handleAuthActionClick={handleAuthActionClick}
@@ -145,7 +141,6 @@ const Navbar = (props: NavbarProps) => {
       ) : (
         <NavMenu
           user={user}
-          selectedOption={selectedOption}
           redirectToHome={redirectToHome}
           redirectToProfile={redirectToProfile}
           handleAuthActionClick={handleAuthActionClick}

@@ -1,12 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { createContext, ReactNode, useContext, useState } from "react";
 import { useRouter } from "next/router";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
 import {
   CheckboxState,
   initializeCheckbox,
@@ -19,35 +13,12 @@ import {
   initializeText,
   TextState,
 } from "@/components/Inputs/InputText/InputText";
-import { Prompt } from "@/models/models";
-import { getAvailableModels } from "@/services/models";
-import { getAvailableSamplers } from "@/services/samplers";
 import { getRandomStringFromArray } from "@/utils/arrays";
-import { checkIfValueInEnum, filterObjectsByProperty } from "@/utils/object";
 import { generateRandomNumber } from "@/utils/random";
-
-export enum SDOption {
-  Empty = "",
-  Text2Image = "text2img",
-  Image2Image = "img2img",
-  Inpainting = "inpainting",
-  ControlNet = "controlnet",
-  Pix2Pix = "pix2pix",
-  Upscaling = "upscaling",
-}
-
-const DEFAULT_NEGATIVE_PROMPT =
-  "Bad proportions, cropped, bad anatomy, bad composition, bad proportions, bad shadow, blurred, blurry, " +
-  "colorless, deformed, dehydrated, disfigured, duplicate, error, gross proportions, low quality, worst quality";
+import { useModels } from "@/context/ModelsContext";
+import { Prompt } from "@/models/models";
 
 export interface IDiffusionContext {
-  selectedOption: SDOption;
-  validSDModels: any[];
-  selectedSDModel: string;
-  setSelectedSDModel: (model: string) => void;
-  SDSamplers: any[];
-  sampler: string;
-  setSampler: (sampler: string) => void;
   prompt: TextState;
   setPrompt: (value: TextState) => void;
   negativePrompt: TextState;
@@ -118,6 +89,10 @@ const PROMPTS = [
     "ultra detailed, realistic , hiperealistic , volumetric lighting , 8k",
 ];
 
+const DEFAULT_NEGATIVE_PROMPT =
+  "Bad proportions, cropped, bad anatomy, bad composition, bad proportions, bad shadow, blurred, blurry, " +
+  "colorless, deformed, dehydrated, disfigured, duplicate, error, gross proportions, low quality, worst quality";
+
 const initialConfig = {
   model: "stabilityai/stable-diffusion-2",
   sampler: "PNDMScheduler",
@@ -138,13 +113,6 @@ const initialConfig = {
 };
 
 const defaultState = {
-  selectedOption: SDOption.Text2Image,
-  validSDModels: [],
-  selectedSDModel: initialConfig.model,
-  setSelectedSDModel: () => {},
-  SDSamplers: [],
-  sampler: initialConfig.sampler,
-  setSampler: () => {},
   prompt: initialConfig.prompt,
   setPrompt: () => {},
   negativePrompt: initialConfig.negativePrompt,
@@ -180,21 +148,7 @@ const defaultState = {
 const DiffusionContext = createContext<IDiffusionContext>(defaultState);
 
 const DiffusionProvider = (props: { children: ReactNode }) => {
-  const router = useRouter();
-
-  const [selectedOption, setSelectedOption] = useState<SDOption>(
-    SDOption.Text2Image
-  );
-  // Stable Diffusion Models
-  const [SDModels, setSDModels] = useState<any[]>([]);
-  const [validSDModels, setValidSDModels] = useState<any[]>([]);
-  const [selectedSDModel, setSelectedSDModel] = useState<string>(
-    initialConfig.model
-  );
-
-  // Sampler settings
-  const [SDSamplers, setSDSamplers] = useState<any[]>([]);
-  const [sampler, setSampler] = useState<string>(initialConfig.sampler);
+  const { selectedModel, sampler } = useModels();
 
   // Common settings
   const [prompt, setPrompt] = useState<TextState>(initialConfig.prompt);
@@ -222,62 +176,12 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
     initialConfig.loraScale
   );
 
-  useEffect(() => {
-    // Fetch Stable Diffusion models
-    getAvailableModels("/models").then((response) => {
-      if (response.success && response.data) {
-        setSDModels(response.data || []);
-      }
-    });
-
-    // Fetch Stable Diffusion samplers
-    getAvailableSamplers().then((response) => {
-      if (response.success && response.data) {
-        const samplersData = response.data || [];
-        setSDSamplers(samplersData);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    const currentPath = router.pathname.split("/").pop() as SDOption;
-    if (
-      currentPath !== SDOption.Empty &&
-      checkIfValueInEnum(SDOption, currentPath)
-    ) {
-      setSelectedOption(currentPath);
-    } else {
-      setSelectedOption(SDOption.Empty);
-    }
-  }, [router.pathname]);
-
-  useEffect(() => {
-    if (SDModels.length === 0) {
-      setSelectedSDModel("No models available");
-      return;
-    }
-
-    const validModels = filterObjectsByProperty(
-      SDModels,
-      selectedOption as string,
-      true
-    );
-
-    if (validModels.length > 0) {
-      setValidSDModels(validModels);
-      if (!validModels.find((model) => model.source === selectedSDModel)) {
-        setSelectedSDModel(validModels[0].source);
-      }
-      setSelectedSDModel(validModels[0].source);
-    }
-  }, [SDModels, selectedOption]);
-
   const buildPrompt = (): Prompt => {
     const width = parseInt(imageSize.split("x")[1]);
     const height = parseInt(imageSize.split("x")[0]);
     return {
       prompt: prompt.value,
-      model: selectedSDModel,
+      model: selectedModel.source,
       sampler: sampler,
       width: width,
       height: height,
@@ -304,13 +208,6 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
   return (
     <DiffusionContext.Provider
       value={{
-        selectedOption,
-        validSDModels,
-        SDSamplers,
-        selectedSDModel,
-        setSelectedSDModel,
-        sampler,
-        setSampler,
         prompt,
         setPrompt,
         negativePrompt,

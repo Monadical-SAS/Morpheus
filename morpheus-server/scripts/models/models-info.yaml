@@ -1,5 +1,17 @@
 
 models:
+  - name: "Stable Diffusion XL"
+    description: "SDXL 1.0: A Leap Forward in AI Image Generation"
+    source: "stabilityai/stable-diffusion-xl-base-1.0"
+    is_active: true
+    url_docs: "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0"
+    text2img: true
+    img2img: false
+    inpainting: false
+    controlnet: false
+    pix2pix: false
+    upscaling: false
+
   - name: "Stable Diffusion v2"
     description: "This is a model that can be used to generate and modify images based on text prompts. It is a Latent Diffusion Model that uses a fixed, pretrained text encoder (OpenCLIP-ViT/H)."
     source: "stabilityai/stable-diffusion-2"
