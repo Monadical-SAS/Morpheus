@@ -9,6 +9,7 @@ from app.celery.tasks.stable_diffusion import (
     generate_stable_diffusion_pix2pix_output_task,
     generate_stable_diffusion_text2img_output_task,
     generate_stable_diffusion_upscale_output_task,
+    generate_stable_diffusion_xl_text2img_output_task
 )
 from app.models.schemas import MagicPrompt, Prompt, PromptControlNet
 
@@ -17,7 +18,10 @@ class StableDiffusionRepository:
     @staticmethod
     def generate_text2img_images(prompt: Prompt) -> str:
         logger.info(f" Running Stable Diffusion Text2Img process with prompt: {prompt}")
-        task_id = generate_stable_diffusion_text2img_output_task.delay(prompt=prompt)
+        if prompt.model.endswith("stabilityai/stable-diffusion-xl-base-1.0"):
+            task_id = generate_stable_diffusion_xl_text2img_output_task.delay(prompt=prompt)
+        else:
+            task_id = generate_stable_diffusion_text2img_output_task.delay(prompt=prompt)
         return str(task_id)
 
     @staticmethod

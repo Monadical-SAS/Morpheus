@@ -7,6 +7,7 @@ from diffusers import (
     DDPMScheduler,
     StableDiffusionPipeline,
     StableDiffusionUpscalePipeline,
+    DiffusionPipeline
 )
 from loguru import logger
 
@@ -121,10 +122,10 @@ class StableDiffusionAbstract(ABC):
 
 class StableDiffusionBaseClassic(StableDiffusionAbstract):
     def __init__(
-        self,
-        model_name: str,
-        sampler: str = "PNDMScheduler",
-        pipeline_name: str = "StableDiffusionPipeline",
+            self,
+            model_name: str,
+            sampler: str = "PNDMScheduler",
+            pipeline_name: str = "StableDiffusionPipeline",
     ):
         super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
 
@@ -160,11 +161,11 @@ class StableDiffusionBaseClassic(StableDiffusionAbstract):
 
 class StableDiffusionBaseControlNet(StableDiffusionAbstract):
     def __init__(
-        self,
-        model_name: str,
-        controlnet_model_name: str = CONTROLNET_MODEL_PATH_DEFAULT,
-        sampler: str = "PNDMScheduler",
-        pipeline_name: str = "StableDiffusionPipeline",
+            self,
+            model_name: str,
+            controlnet_model_name: str = CONTROLNET_MODEL_PATH_DEFAULT,
+            sampler: str = "PNDMScheduler",
+            pipeline_name: str = "StableDiffusionPipeline",
     ):
         super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
 
@@ -208,10 +209,10 @@ class StableDiffusionBaseControlNet(StableDiffusionAbstract):
 
 class StableDiffusionText2Image(StableDiffusionBaseClassic):
     def __init__(
-        self,
-        model_name: str,
-        sampler: str = "PNDMScheduler",
-        pipeline_name: str = "StableDiffusionPipeline",
+            self,
+            model_name: str,
+            sampler: str = "PNDMScheduler",
+            pipeline_name: str = "StableDiffusionPipeline",
     ):
         super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
 
@@ -258,10 +259,10 @@ class StableDiffusionText2Image(StableDiffusionBaseClassic):
 
 class StableDiffusionImage2Image(StableDiffusionBaseClassic):
     def __init__(
-        self,
-        model_name: str,
-        sampler: str = "PNDMScheduler",
-        pipeline_name: str = "StableDiffusionImg2ImgPipeline",
+            self,
+            model_name: str,
+            sampler: str = "PNDMScheduler",
+            pipeline_name: str = "StableDiffusionImg2ImgPipeline",
     ):
         super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
 
@@ -309,11 +310,11 @@ class StableDiffusionImage2Image(StableDiffusionBaseClassic):
 
 class StableDiffusionControlNet(StableDiffusionBaseControlNet):
     def __init__(
-        self,
-        model_name: str,
-        controlnet_model_name: str = CONTROLNET_MODEL_PATH_DEFAULT,
-        sampler: str = "PNDMScheduler",
-        pipeline_name: str = "StableDiffusionControlNetPipeline",
+            self,
+            model_name: str,
+            controlnet_model_name: str = CONTROLNET_MODEL_PATH_DEFAULT,
+            sampler: str = "PNDMScheduler",
+            pipeline_name: str = "StableDiffusionControlNetPipeline",
     ):
         super().__init__(
             pipeline_name=pipeline_name,
@@ -372,10 +373,10 @@ class StableDiffusionControlNet(StableDiffusionBaseControlNet):
 
 class StableDiffusionInstructPix2Pix(StableDiffusionBaseClassic):
     def __init__(
-        self,
-        model_name: str,
-        sampler: str = "PNDMScheduler",
-        pipeline_name: str = "StableDiffusionInstructPix2PixPipeline",
+            self,
+            model_name: str,
+            sampler: str = "PNDMScheduler",
+            pipeline_name: str = "StableDiffusionInstructPix2PixPipeline",
     ):
         super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
 
@@ -405,10 +406,10 @@ class StableDiffusionInstructPix2Pix(StableDiffusionBaseClassic):
 
 class StableDiffusionInpainting(StableDiffusionBaseClassic):
     def __init__(
-        self,
-        model_name: str,
-        sampler: str = "PNDMScheduler",
-        pipeline_name: str = "StableDiffusionInpaintPipeline",
+            self,
+            model_name: str,
+            sampler: str = "PNDMScheduler",
+            pipeline_name: str = "StableDiffusionInpaintPipeline",
     ):
         super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
 
@@ -440,10 +441,10 @@ class StableDiffusionInpainting(StableDiffusionBaseClassic):
 
 class StableDiffusionUpscale(StableDiffusionAbstract):
     def __init__(
-        self,
-        model_name: str,
-        sampler: str = "PNDMScheduler",
-        pipeline_name: str = "StableDiffusionUpscalePipeline",
+            self,
+            model_name: str,
+            sampler: str = "PNDMScheduler",
+            pipeline_name: str = "StableDiffusionUpscalePipeline",
     ):
         super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
 
@@ -494,4 +495,63 @@ class StableDiffusionUpscale(StableDiffusionAbstract):
             return None
 
         logger.info("upscale task completed successfully")
+        return images
+
+
+class StableDiffusionXLText2Image(StableDiffusionAbstract):
+    def __init__(
+            self,
+            model_name: str = "stabilityai/stable-diffusion-xl-base-1.0",
+            sampler: str = "PNDMScheduler",
+            pipeline_name: str = "DiffusionPipeline",
+    ):
+        super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
+        self.base = DiffusionPipeline.from_pretrained(
+            "stabilityai/stable-diffusion-xl-base-1.0",
+            use_safetensors=True
+        )
+        self.base.to(self.device)
+        self.refiner = DiffusionPipeline.from_pretrained(
+            "stabilityai/stable-diffusion-xl-refiner-1.0",
+            text_encoder_2=self.base.text_encoder_2,
+            vae=self.base.vae,
+            use_safetensors=True,
+        )
+        self.refiner.to(self.device)
+
+        # Set param optimization
+        self.base.enable_attention_slicing()
+
+        if self.enable_xformers:
+            self.base.enable_xformers_memory_efficient_attention()
+
+    def generate_images(self, **kwargs):
+        logger.info("generating image in Text2Image pipeline")
+        prompt: Prompt = kwargs.get("prompt")
+        generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
+
+        images = self.base(
+            prompt=prompt.prompt,
+            negative_prompt=prompt.negative_prompt,
+            num_images_per_prompt=prompt.num_images_per_prompt,
+            guidance_scale=prompt.guidance_scale,
+            num_inference_steps=prompt.num_inference_steps,
+            generator=generator,
+            width=prompt.width or 1024,
+            height=prompt.height or 1024,
+            denoising_end=0.8,
+            output_type="latent",
+        ).images
+        images = self.refiner(
+            prompt=prompt.prompt,
+            num_inference_steps=prompt.num_inference_steps,
+            denoising_start=0.8,
+            image=images,
+        ).images
+
+        if len(images) == 0:
+            logger.info("Unable to generate text2img images")
+            return None
+
+        logger.info("text2img task completed successfully")
         return images

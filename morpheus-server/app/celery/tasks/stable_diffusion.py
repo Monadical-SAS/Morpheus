@@ -113,6 +113,44 @@ def generate_stable_diffusion_text2img_output_task(self, prompt: Prompt) -> list
     ignore_result=False,
     bind=True,
     base=DiffusionTask,
+    path=("app.celery.mlmodels.stable_diffusion", "StableDiffusionXLText2Image"),
+    name=f"{__name__}.stable-diffusion-text2img-xl",
+)
+@check_environment
+def generate_stable_diffusion_xl_text2img_output_task(self, prompt: Prompt) -> list[str]:
+    try:
+        model_selected = prompt.model
+        sampler_selected = prompt.sampler
+
+        logger.info(f"Current model: {self.model.model_name} - Model selected: {model_selected}")
+        logger.info(f"Current sampler: {self.model.sampler} - Sampler selected: {sampler_selected}")
+
+        if self.model.model_name != model_selected or self.model.sampler != sampler_selected:
+            self.model.__init__(
+                model_name=model_selected,
+                sampler=sampler_selected,
+                pipeline_name="DiffusionPipeline",
+            )
+
+        images = self.model.generate_images(prompt=prompt)
+        # upload to s3
+        logger.info("Uploading image(s) to s3 and getting the url(s)")
+        filename = file_service.upload_multiple_images_to_s3(images=images, user_bucket=settings.images_temp_bucket)
+        url_images = file_service.get_image_urls(filenames=filename)
+
+        return url_images
+    except OutOfMemoryError as e:
+        logger.exception(e)
+        raise OutOfMemoryGPUError from e
+    except Exception as e:
+        logger.exception(e)
+        raise ModelLoadError from e
+
+
+@app.task(
+    ignore_result=False,
+    bind=True,
+    base=DiffusionTask,
     path=("app.celery.mlmodels.stable_diffusion", "StableDiffusionImage2Image"),
     name=f"{__name__}.stable-diffusion-img2img",
 )
@@ -170,9 +208,9 @@ def generate_stable_diffusion_controlnet_output_task(self, prompt: PromptControl
         )
 
         if (
-            self.model.model_name != model_selected
-            or self.model.sampler != sampler_selected
-            or self.model.controlnet_model_name != controlnet_model_selected
+                self.model.model_name != model_selected
+                or self.model.sampler != sampler_selected
+                or self.model.controlnet_model_name != controlnet_model_selected
         ):
             self.model.__init__(
                 model_name=model_selected,
