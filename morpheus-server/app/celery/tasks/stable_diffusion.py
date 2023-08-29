@@ -129,7 +129,7 @@ def generate_stable_diffusion_xl_text2img_output_task(self, prompt: Prompt) -> l
             self.model.__init__(
                 model_name=model_selected,
                 sampler=sampler_selected,
-                pipeline_name="DiffusionPipeline",
+                pipeline_name="StableDiffusionXLPipeline",
             )
 
         images = self.model.generate_images(prompt=prompt)
