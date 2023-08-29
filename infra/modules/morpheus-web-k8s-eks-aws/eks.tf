@@ -136,10 +136,13 @@ module "eks" {
         echo "UUID=$DISK_UUID  $MOUNT_POINT  xfs  defaults,nofail  0  2" >> /etc/fstab
         mount "$MOUNT_POINT"
         aws s3 cp s3://$DEPLOYMENT_BUCKET/deploy-models.sh /bin/
+        aws s3 cp s3://$DEPLOYMENT_BUCKET/check-last-deploy-models.sh /bin/
         chmod +x /bin/deploy-models.sh
+        chmod +x /bin/check-last-deploy-models.sh
         sudo deploy-models.sh
         echo "PATH=/usr/bin:/bin:/usr/local/bin" > /etc/cron.d/morpheus
-        echo "0 * * * * root deploy-models.sh" >> /etc/cron.d/morpheus
+        echo "*/15 * * * * root deploy-models.sh" >> /etc/cron.d/morpheus
+        echo "*/2 * * * * root check-last-deploy-models.sh" >> /etc/cron.d/morpheus
         mkdir -p "$CLOUDWATCH_ETC_FOLDER"
         aws s3 cp s3://$DEPLOYMENT_BUCKET/$CLOUDWATCH_ETC_FILENAME "$CLOUDWATCH_ETC_FOLDER"
         sudo yum install -y amazon-cloudwatch-agent
@@ -211,10 +214,13 @@ module "eks" {
         echo "UUID=$DISK_UUID  $MOUNT_POINT  xfs  defaults,nofail  0  2" >> /etc/fstab
         mount "$MOUNT_POINT"
         aws s3 cp s3://$DEPLOYMENT_BUCKET/deploy-models.sh /bin/
+        aws s3 cp s3://$DEPLOYMENT_BUCKET/check-last-deploy-models.sh /bin/
         chmod +x /bin/deploy-models.sh
+        chmod +x /bin/check-last-deploy-models.sh
         sudo deploy-models.sh
         echo "PATH=/usr/bin:/bin:/usr/local/bin" > /etc/cron.d/morpheus
-        echo "0 * * * * root deploy-models.sh" >> /etc/cron.d/morpheus
+        echo "*/15 * * * * root deploy-models.sh" >> /etc/cron.d/morpheus
+        echo "*/2 * * * * root check-last-deploy-models.sh" >> /etc/cron.d/morpheus
         mkdir -p "$CLOUDWATCH_ETC_FOLDER"
         aws s3 cp s3://$DEPLOYMENT_BUCKET/$CLOUDWATCH_ETC_FILENAME "$CLOUDWATCH_ETC_FOLDER"
         sudo yum install -y amazon-cloudwatch-agent
