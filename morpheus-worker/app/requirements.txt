@@ -1,0 +1,13 @@
+pydantic[dotenv]
+pytest
+pytest-faulthandler
+trio
+loguru
+boto3
+pillow
+sentry-sdk[fastapi]
+flower
+ray[default]
+torch
+diffusers
+pydantic_settings
