@@ -1,21 +1,21 @@
 import React, { Fragment } from "react";
 import Modal from "../Modal/Modal";
-import { SDOption, useDiffusion } from "@/context/SDContext";
 import ControlNetModelSelect from "../ControlNetModelSelect/ControlNetModelSelect";
 import InputNumber from "../Inputs/InputNumber/InputNumber";
 import InputSeed from "../Inputs/InputSeed/InputSeed";
 import InputSelect from "../Inputs/InputSelect/InputSelect";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
-import ModelSelect from "../ModelSelect/ModelSelect";
+import InputEmbedding from "@/components/Inputs/InputEmbedding/InputEmbedding";
+import InputLora from "@/components/Inputs/InputLora/InputLora";
 import SamplerSelect from "../SamplerSelect/SamplerSelect";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
+import { ModelFeature, useModels } from "@/context/ModelsContext";
+import { useDiffusion } from "@/context/SDContext";
+import { useShowSettings } from "@/hooks/useShowSettings";
 import { CloseIcon } from "../icons/close";
 import { InfoIcon } from "../icons/info";
 import { SettingsIcon } from "../icons/settings";
-import { useShowSettings } from "@/hooks/useShowSettings";
 import styles from "./ImagineSettings.module.scss";
-import InputLora from "../Inputs/InputLora/InputLora";
-import InputEmbedding from "../Inputs/InputEmbedding/InputEmbedding";
 
 interface OptionState {
   title: string;
@@ -42,9 +42,8 @@ const OptionInfo = (props: OptionState) => {
 
 const ImagineSettings = () => {
   const { showSettings, toggleSettings } = useShowSettings();
-
+  const { activeLink } = useModels();
   const {
-    selectedOption,
     imageSize,
     setImageSize,
     scale,
@@ -57,13 +56,52 @@ const ImagineSettings = () => {
     setAmount,
     negativePrompt,
     setNegativePrompt,
+    useLora,
     loraScale,
-    setLoraScale
+    setLoraScale,
   } = useDiffusion();
+  const activeFeature = activeLink.feature;
 
   const SettingsContent = (
     <div className={styles.settingsContainer}>
       <div className={styles.optionsContainer}>
+        <div className={styles.settingItemNegativePrompt}>
+          <OptionInfo
+            title={"Negative prompt"}
+            description={
+              "Describe what you don't want to see in the generated images."
+            }
+          />
+          <InputTextArea
+            id="textAreaNegativePrompt"
+            text={negativePrompt}
+            setText={setNegativePrompt}
+            isRequired={false}
+            placeholder={"Enter your negative prompt here."}
+            color={"white"}
+            numRows={5}
+            showCount={true}
+            disableGrammarly={true}
+          />
+        </div>
+
+        <div className={styles.settingItem}>
+          <OptionInfo
+            title={"Number of Images"}
+            description={
+              "How many images to create in a single run.  Higher values will take longer."
+            }
+          />
+
+          <InputNumber
+            id="inputNumberAmount"
+            minValue={1}
+            maxValue={4}
+            number={amount}
+            setNumber={setAmount}
+          />
+        </div>
+
         <div className={styles.settingItem}>
           <OptionInfo
             title={"Image Size"}
@@ -85,31 +123,6 @@ const ImagineSettings = () => {
         </div>
 
         <div className={styles.settingItem}>
-          <OptionInfo title={"Model"} description={"Select a model to use."} />
-          <ModelSelect />
-        </div>
-
-        {selectedOption === SDOption.ControlNet && (
-          <div className={styles.settingItem}>
-            <OptionInfo
-              title={"ControlNet Model"}
-              description={
-                "Select a ControlNet model to use. This only works with stable diffusion v1.5."
-              }
-            />
-            <ControlNetModelSelect />
-          </div>
-        )}
-
-        <div className={styles.settingItem}>
-          <OptionInfo
-            title={"Sampler"}
-            description={"Select a sampler to use."}
-          />
-          <SamplerSelect />
-        </div>
-
-        <div className={styles.settingItem}>
           <OptionInfo
             title={"CFG Scale"}
             description={
@@ -128,8 +141,27 @@ const ImagineSettings = () => {
           />
         </div>
 
-        {(selectedOption === SDOption.Image2Image ||
-          selectedOption === SDOption.ControlNet) && (
+        <div className={styles.settingItem}>
+          <OptionInfo
+            title={"Number of Steps"}
+            description={
+              "This parameter controls how many times the generated image is iteratively improved. " +
+              "Higher values are better quality but take longer, while very low values are faster but can produce " +
+              "less desirable results."
+            }
+          />
+
+          <InputNumber
+            id="inputNumberSteps"
+            minValue={0}
+            maxValue={150}
+            number={steps}
+            setNumber={setSteps}
+          />
+        </div>
+
+        {(activeFeature === ModelFeature.Image2Image ||
+          activeFeature === ModelFeature.ControlNet) && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"Strength"}
@@ -153,42 +185,6 @@ const ImagineSettings = () => {
 
         <div className={styles.settingItem}>
           <OptionInfo
-            title={"Number of Steps"}
-            description={
-              "This parameter controls how many times the generated image is iteratively improved. " +
-              "Higher values are better quality but take longer, while very low values are faster but can produce " +
-              "less desirable results."
-            }
-          />
-
-          <InputNumber
-            id="inputNumberSteps"
-            minValue={0}
-            maxValue={150}
-            number={steps}
-            setNumber={setSteps}
-          />
-        </div>
-
-        <div className={styles.settingItem}>
-          <OptionInfo
-            title={"Number of Images"}
-            description={
-              "How many images to create in a single run.  Higher values will take longer."
-            }
-          />
-
-          <InputNumber
-            id="inputNumberAmount"
-            minValue={1}
-            maxValue={4}
-            number={amount}
-            setNumber={setAmount}
-          />
-        </div>
-
-        <div className={styles.settingItem}>
-          <OptionInfo
             title={"Seed Generator"}
             description={
               "The seed value controls the output from the random number generator.  Using the same seed " +
@@ -199,9 +195,33 @@ const ImagineSettings = () => {
 
           <InputSeed />
         </div>
+      </div>
 
-        {(selectedOption === SDOption.Text2Image || selectedOption === SDOption.Image2Image || 
-        selectedOption === SDOption.ControlNet) && (
+      <p className="headline-4 white my-10">Model settings</p>
+      <div className={styles.optionsContainer}>
+        {activeFeature === ModelFeature.ControlNet && (
+          <div className={styles.settingItem}>
+            <OptionInfo
+              title={"ControlNet Model"}
+              description={
+                "Select a ControlNet model to use. This only works with stable diffusion v1.5."
+              }
+            />
+            <ControlNetModelSelect />
+          </div>
+        )}
+
+        <div className={styles.settingItem}>
+          <OptionInfo
+            title={"Sampler"}
+            description={"Select a sampler to use."}
+          />
+          <SamplerSelect />
+        </div>
+
+        {(activeFeature === ModelFeature.Text2Image ||
+          activeFeature === ModelFeature.Image2Image ||
+          activeFeature === ModelFeature.ControlNet) && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"LoRA"}
@@ -216,65 +236,49 @@ const ImagineSettings = () => {
           </div>
         )}
 
-        {(selectedOption === SDOption.Text2Image || selectedOption === SDOption.Image2Image || 
-        selectedOption === SDOption.ControlNet) && (
-          <div className={styles.settingItem}>
-            <OptionInfo
-              title={"LoRA Scale"}
-              description={
-                "A scale value of 0 is the same as not using your LoRA weights and you’re only using the base model " +
-                "weights, and a scale value of 1 means you’re only using the fully finetuned LoRA weights. Values " +
-                "between 0 and 1 interpolates between the two weights."
-              }
-            />
+        {useLora.value &&
+          (activeFeature === ModelFeature.Text2Image ||
+            activeFeature === ModelFeature.Image2Image ||
+            activeFeature === ModelFeature.ControlNet) && (
+            <div className={styles.settingItem}>
+              <OptionInfo
+                title={"LoRA Scale"}
+                description={
+                  "A scale value of 0 is the same as not using your LoRA weights and you’re only using the base model " +
+                  "weights, and a scale value of 1 means you’re only using the fully finetuned LoRA weights. Values " +
+                  "between 0 and 1 interpolates between the two weights."
+                }
+              />
 
-            <InputNumber
-              id="inputLoraScale"
-              number={loraScale}
-              setNumber={setLoraScale}
-              minValue={0}
-              maxValue={1}
-              step={0.01}
-              isRequired={true}
-            />
-          </div>
-        )}
+              <InputNumber
+                id="inputLoraScale"
+                number={loraScale}
+                setNumber={setLoraScale}
+                minValue={0}
+                maxValue={1}
+                step={0.01}
+                isRequired={true}
+              />
+            </div>
+          )}
 
-        {(selectedOption === SDOption.Text2Image || selectedOption === SDOption.Image2Image || 
-        selectedOption === SDOption.ControlNet) && (
+        {(activeFeature === ModelFeature.Text2Image ||
+          activeFeature === ModelFeature.Image2Image ||
+          activeFeature === ModelFeature.ControlNet) && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"TI Embedding"}
               description={
-                "Fill this textbox with wither the path \n of an existing textual inversion embedding from HuggingFace (ex: sd-concepts-library/cat-toy) " +
-                "or from the url of a Civitai model (ex: https://civitai.com/models/6841/adventure-diffusion). Make sure to include associated" +
-                " trigger words in the prompt."
+                "Fill this textbox with wither the path \n of an existing textual inversion embedding from " +
+                "HuggingFace (ex: sd-concepts-library/cat-toy) or from the url of a Civitai model " +
+                "(ex: https://civitai.com/models/6841/adventure-diffusion). Make sure to include associated " +
+                "trigger words in the prompt."
               }
             />
 
             <InputEmbedding />
           </div>
         )}
-
-        <div className={styles.settingItemNegativePrompt}>
-          <OptionInfo
-            title={"Negative prompt"}
-            description={
-              "Describe what you don't want to see in the generated images."
-            }
-          />
-          <InputTextArea
-            id="textAreaNegativePrompt"
-            text={negativePrompt}
-            setText={setNegativePrompt}
-            isRequired={false}
-            placeholder={"Enter your negative prompt here."}
-            color={"white"}
-            numRows={5}
-            showCount={true}
-            disableGrammarly={true}
-          />
-        </div>
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 import React from "react";
 import { MainMenu } from "../../packages/excalidraw/index";
 import { LanguageList } from "./LanguageList";
-import { SendImageTo } from "../../components/ImageSendImagine";
 
 export const AppMainMenu: React.FC<{
   setCollabDialogShown: (toggle: boolean) => any;
@@ -22,20 +21,6 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.ClearCanvas />
 
       <MainMenu.Separator />
-      <MainMenu.ItemCustom>
-        <SendImageTo redirectPath={"img2img"} />
-      </MainMenu.ItemCustom>
-      <MainMenu.ItemCustom>
-        <SendImageTo redirectPath={"controlnet"} />
-      </MainMenu.ItemCustom>
-      <MainMenu.ItemCustom>
-        <SendImageTo redirectPath={"pix2pix"} />
-      </MainMenu.ItemCustom>
-      <MainMenu.ItemCustom>
-        <SendImageTo redirectPath={"inpainting"} />
-      </MainMenu.ItemCustom>
-
-      <MainMenu.Separator />
       <MainMenu.DefaultItems.ToggleTheme />
       <MainMenu.ItemCustom>
         <LanguageList style={{ width: "100%" }} />
@@ -44,3 +29,4 @@ export const AppMainMenu: React.FC<{
     </MainMenu>
   );
 });
+AppMainMenu.displayName = "AppMainMenu";

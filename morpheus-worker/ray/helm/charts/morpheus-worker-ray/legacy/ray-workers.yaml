@@ -46,6 +46,7 @@ spec:
     maxReplicas: {{ .Values.worker.workerGroup.maxReplicas }}
     groupName: ray-worker-group
     rayStartParams:
+      num-cpus: "{{ .Values.worker.workerGroup.rayStartParams.numCpus }}"
       num-gpus: "{{ .Values.worker.workerGroup.rayStartParams.numGpus }}"
     template:
       metadata:

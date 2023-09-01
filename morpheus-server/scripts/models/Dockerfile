@@ -24,7 +24,6 @@ RUN dir -s
 
 # Install & use pipenv
 RUN pip install --upgrade pip pipenv
-COPY Pipfile.lock .
 COPY requirements.txt .
 RUN pip install torch==1.13.1 && pip install -r requirements.txt
 COPY . .

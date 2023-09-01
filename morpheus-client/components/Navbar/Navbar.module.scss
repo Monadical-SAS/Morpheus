@@ -6,6 +6,7 @@
   height: 80px;
   min-height: 80px;
   max-height: 80px;
+  min-width: 300px;
   width: 100%;
   padding: 0 32px;
   display: flex;
@@ -15,14 +16,16 @@
   flex: 1 auto;
   background-color: colors.$background-primary;
   box-shadow: inset 0px -1px 0px colors.$background-border;
+  z-index: 20;
 
   @include media.mobile {
-    height: 60px;
-    min-height: 60px;
-    max-height: 60px;
+    height: 64px;
+    min-height: 64px;
+    max-height: 64px;
+    padding: 0;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 0;
+    position: absolute;
   }
 
   .brand {
@@ -44,7 +47,6 @@
   }
 
   .links {
-    flex: 1;
     height: 100%;
     display: flex;
     justify-content: center;

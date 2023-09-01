@@ -1,12 +1,11 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-
 import { slide as BurgerMenu } from "react-burger-menu";
+
 import Brand from "../Typography/Brand/Brand";
 import UserCard, { UserImage } from "../UserCard/UserCard";
 import { AuthOption, useAuth } from "@/context/AuthContext";
-import { useDiffusion } from "@/context/SDContext";
 import { isEmptyObject } from "@/utils/object";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { User } from "@/models/models";
@@ -15,12 +14,12 @@ import styles from "./Navbar.module.scss";
 
 type NavMenuProps = {
   user: User;
-  selectedOption: string;
   redirectToHome: () => void;
   redirectToProfile: () => void;
   handleAuthActionClick: (authOption: AuthOption) => Promise<void>;
   isMobile?: boolean;
   closeMenu?: () => void;
+  showBrand?: boolean;
 };
 
 const NavMenu = (props: NavMenuProps) => {
@@ -42,14 +41,13 @@ const NavMenu = (props: NavMenuProps) => {
 
   return (
     <Fragment>
-      <div className={styles.brand}>
-        <Brand onClick={props.redirectToHome} styles={{ fontSize: "20px" }} />
-      </div>
+      {props.showBrand && (
+        <div className={styles.brand}>
+          <Brand onClick={props.redirectToHome} styles={{ fontSize: "20px" }} />
+        </div>
+      )}
 
       <div className={styles.links}>
-        <Link className={getLinkStyles("paint")} href={"/paint"}>
-          Paint
-        </Link>
         <Link className={getLinkStyles("imagine")} href={"/imagine/text2img"}>
           Imagine
         </Link>
@@ -77,11 +75,14 @@ const NavMenu = (props: NavMenuProps) => {
   );
 };
 
-const Navbar = () => {
+interface NavbarProps {
+  showBrand?: boolean;
+}
+
+const Navbar = (props: NavbarProps) => {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { user, setAuthOption } = useAuth();
-  const { selectedOption } = useDiffusion();
   const isMobile = width < MOBILE_SCREEN_WIDTH;
 
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -112,30 +113,39 @@ const Navbar = () => {
   return (
     <div className={styles.navbarContainer}>
       {isMobile ? (
-        <BurgerMenu
-          isOpen={showMobileMenu}
-          onStateChange={(state) => setShowMobileMenu(state.isOpen)}
-        >
-          <div className={styles.burgerMenuContent}>
-            <NavMenu
-              user={user}
-              selectedOption={selectedOption}
-              redirectToHome={redirectToHome}
-              redirectToProfile={redirectToProfile}
-              handleAuthActionClick={handleAuthActionClick}
-              isMobile
-              closeMenu={() => setShowMobileMenu(false)}
-            />
-          </div>
-        </BurgerMenu>
+        <Fragment>
+          <BurgerMenu
+            isOpen={showMobileMenu}
+            onStateChange={(state) => setShowMobileMenu(state.isOpen)}
+          >
+            <div className={styles.burgerMenuContent}>
+              <NavMenu
+                user={user}
+                redirectToHome={redirectToHome}
+                redirectToProfile={redirectToProfile}
+                handleAuthActionClick={handleAuthActionClick}
+                isMobile={true}
+                closeMenu={() => setShowMobileMenu(false)}
+              />
+            </div>
+          </BurgerMenu>
+          <Brand
+            styles={{
+              width: "100%",
+              display: "flex",
+              alignSelf: "center",
+              justifyContent: "center",
+            }}
+          />
+        </Fragment>
       ) : (
         <NavMenu
           user={user}
-          selectedOption={selectedOption}
           redirectToHome={redirectToHome}
           redirectToProfile={redirectToProfile}
           handleAuthActionClick={handleAuthActionClick}
-          isMobile={isMobile}
+          isMobile={false}
+          showBrand={props.showBrand}
         />
       )}
     </div>

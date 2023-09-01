@@ -78,7 +78,6 @@ import clsx from "clsx";
 import { reconcileElements } from "./collab/reconciliation";
 import { parseLibraryTokensFromUrl, useHandleLibrary } from "../data/library";
 import { AppMainMenu } from "./components/AppMainMenu";
-import { AppImagineMenu } from "./components/AppImagineMenu";
 
 import { atom, Provider, useAtom, useAtomValue } from "jotai";
 import { useAtomWithInitialValue } from "../jotai";
@@ -86,6 +85,7 @@ import { appJotaiStore } from "./app-jotai";
 import { ResolutionType } from "../utility-types";
 import { AppWelcomeScreen } from "./components/AppWelcomeScreen";
 import { AppFooter } from "./components/AppFooter";
+import { SendImageToImagine } from "@/excalidraw/components/SendToImagine/SendToImagine";
 
 polyfill();
 
@@ -649,7 +649,7 @@ const ExcalidrawWrapper = () => {
         />
         <AppWelcomeScreen setCollabDialogShown={setCollabDialogShown} />
 
-        <AppImagineMenu />
+        <SendImageToImagine />
 
         <AppFooter />
         {isCollaborating && isOffline && (

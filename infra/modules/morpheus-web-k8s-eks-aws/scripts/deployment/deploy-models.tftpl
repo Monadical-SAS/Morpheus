@@ -1,4 +1,10 @@
 #!/bin/bash
 MODELS_PATH=/opt/data/
 
+last_sync_file_path="/opt/last-deploy.txt"
+current_timestamp=$(date +%s)
+
+# Update the date in the file to the current timestamp
+echo "$current_timestamp" > "$last_sync_file_path"
+
 aws s3 sync "s3://${bucket_name}" "$MODELS_PATH" --delete

@@ -115,6 +115,17 @@ export const generateMagicPrompt = async (request: IRequest) => {
   }
 };
 
+export const generateImageWithUpscaling = async (
+  request: IRequest,
+  image: File | null
+) => {
+  return await sendImageRequestToSDBackend(
+    request,
+    image,
+    "/sdiffusion/upscale/prompt/"
+  );
+};
+
 export const fetchTaskResult = async (taskId: string) => {
   try {
     const response = await httpInstance.get(`/sdiffusion/results/${taskId}`);

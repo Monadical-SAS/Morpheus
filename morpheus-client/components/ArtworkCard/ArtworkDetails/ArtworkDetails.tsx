@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import ArtworkForm from "../ArtworkForm/ArtworkForm";
 import { CopyIcon } from "../../icons/copy";
 import useCopyToClipboard from "@/hooks/useCopyToClipboard";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { useToastContext } from "@/context/ToastContext";
 import { ArtWork } from "@/models/models";
 import styles from "./ArtworkDetails.module.scss";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 interface ArtworkDetailProps {
   artwork?: ArtWork;
@@ -14,11 +16,32 @@ interface ArtworkDetailProps {
   refreshArtworks?: () => void;
 }
 
+interface ImageResolution {
+  width: number;
+  height: number;
+}
+
 const ArtworkDetails = (props: ArtworkDetailProps) => {
   const { copyToClipboard } = useCopyToClipboard();
   const { showInfoAlert } = useToastContext();
+  const { width } = useWindowDimensions();
+  const isMobile = width <= MOBILE_SCREEN_WIDTH;
 
   const [config, setConfig] = useState<any[]>([]);
+  const [imageResolution, setImageResolution] = useState<ImageResolution>({
+    width: 0,
+    height: 0,
+  });
+
+  const imageUrl = props.artwork?.image || "";
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => {
+      setImageResolution({ width: img.width, height: img.height });
+    };
+    img.src = imageUrl;
+  }, [imageUrl]);
 
   useEffect(() => {
     if (props.artwork && props.artwork.prompt) {
@@ -26,22 +49,36 @@ const ArtworkDetails = (props: ArtworkDetailProps) => {
       const promptConfig = [
         { key: "Model", value: prompt.model },
         { key: "Sampler", value: prompt.sampler },
-        { key: "size", value: `${prompt.width}x${prompt.height}` },
+        {
+          key: "size",
+          value: `${imageResolution.width}x${imageResolution.height}`,
+        },
         { key: "Steps", value: prompt.num_inference_steps },
         { key: "Guidance Scale", value: prompt.guidance_scale },
         { key: "Seed", value: prompt.generator },
       ];
       setConfig(promptConfig);
     }
-  }, [props.artwork]);
+  }, [props.artwork, imageResolution]);
 
   const handleCopy = async () => {
     await copyToClipboard(props.artwork?.prompt?.prompt || "");
     showInfoAlert("Copied to clipboard");
   };
 
+  const ArtworkFormInstance = (
+    <ArtworkForm
+      artwork={props.artwork}
+      showForm={props.showForm}
+      setShowForm={props.setShowForm}
+      refreshArtworks={props.refreshArtworks}
+    />
+  );
+
   return props.artwork ? (
     <div className={styles.artworkInfo}>
+      {isMobile && ArtworkFormInstance}
+
       <div>
         {props.artwork.title && (
           <h3 className={`headline-3 white ${styles.title}`}>
@@ -68,12 +105,7 @@ const ArtworkDetails = (props: ArtworkDetailProps) => {
         </div>
       </div>
 
-      <ArtworkForm
-        artwork={props.artwork}
-        showForm={props.showForm}
-        setShowForm={props.setShowForm}
-        refreshArtworks={props.refreshArtworks}
-      />
+      {!isMobile && ArtworkFormInstance}
     </div>
   ) : null;
 };

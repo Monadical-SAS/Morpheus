@@ -20,12 +20,37 @@ file_service = FilesService(files_repository=files_repository)
 settings = get_settings()
 
 MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.model_default}"
+UPSCALING_MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.upscaling_model_default}"
 
 
 class DiffusionTask(Task):
     abstract = True
 
     def __init__(self, name: str = MODEL_PATH_DEFAULT):
+        super().__init__()
+        self.model = None
+        self.name_model = name
+        print("Default model at init: ", self.name_model)
+
+    @run_as_per_environment
+    def __call__(self, *args, **kwargs):
+        if not self.model:
+            logger.info("loading model....")
+            try:
+                module_import = importlib.import_module(self.path[0])
+                model_obj = getattr(module_import, self.path[1])
+                self.model = model_obj(model_name=self.name_model)
+                logger.info("Model loaded")
+            except Exception as e:
+                logger.exception(e)
+                raise ModelLoadError from e
+        return self.run(*args, **kwargs)
+
+
+class UpscalingTask(Task):
+    abstract = True
+
+    def __init__(self, name: str = UPSCALING_MODEL_PATH_DEFAULT):
         super().__init__()
         self.model = None
         self.name_model = name
@@ -67,6 +92,44 @@ def generate_stable_diffusion_text2img_output_task(self, prompt: Prompt) -> list
                 model_name=model_selected,
                 sampler=sampler_selected,
                 pipeline_name="StableDiffusionPipeline",
+            )
+
+        images = self.model.generate_images(prompt=prompt)
+        # upload to s3
+        logger.info("Uploading image(s) to s3 and getting the url(s)")
+        filename = file_service.upload_multiple_images_to_s3(images=images, user_bucket=settings.images_temp_bucket)
+        url_images = file_service.get_image_urls(filenames=filename)
+
+        return url_images
+    except OutOfMemoryError as e:
+        logger.exception(e)
+        raise OutOfMemoryGPUError from e
+    except Exception as e:
+        logger.exception(e)
+        raise ModelLoadError from e
+
+
+@app.task(
+    ignore_result=False,
+    bind=True,
+    base=DiffusionTask,
+    path=("app.celery.mlmodels.stable_diffusion", "StableDiffusionXLText2Image"),
+    name=f"{__name__}.stable-diffusion-text2img-xl",
+)
+@check_environment
+def generate_stable_diffusion_xl_text2img_output_task(self, prompt: Prompt) -> list[str]:
+    try:
+        model_selected = prompt.model
+        sampler_selected = prompt.sampler
+
+        logger.info(f"Current model: {self.model.model_name} - Model selected: {model_selected}")
+        logger.info(f"Current sampler: {self.model.sampler} - Sampler selected: {sampler_selected}")
+
+        if self.model.model_name != model_selected or self.model.sampler != sampler_selected:
+            self.model.__init__(
+                model_name=model_selected,
+                sampler=sampler_selected,
+                pipeline_name="StableDiffusionXLPipeline",
             )
 
         images = self.model.generate_images(prompt=prompt)
@@ -145,9 +208,9 @@ def generate_stable_diffusion_controlnet_output_task(self, prompt: PromptControl
         )
 
         if (
-            self.model.model_name != model_selected
-            or self.model.sampler != sampler_selected
-            or self.model.controlnet_model_name != controlnet_model_selected
+                self.model.model_name != model_selected
+                or self.model.sampler != sampler_selected
+                or self.model.controlnet_model_name != controlnet_model_selected
         ):
             self.model.__init__(
                 model_name=model_selected,
@@ -249,7 +312,7 @@ def generate_stable_diffusion_inpaint_output_task(self, prompt: Prompt, image: I
 @app.task(
     ignore_result=False,
     bind=True,
-    base=DiffusionTask,
+    base=UpscalingTask,
     path=("app.celery.mlmodels.stable_diffusion", "StableDiffusionUpscale"),
     name=f"{__name__}.stable-diffusion-upscale",
 )

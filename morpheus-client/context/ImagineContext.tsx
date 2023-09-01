@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   createContext,
   ReactNode,
@@ -12,6 +13,7 @@ import {
   generateImageWithInpainting,
   generateImageWithPix2Pix,
   generateImageWithText2Img,
+  generateImageWithUpscaling,
   getGeneratedDiffusionImagesWithRetry,
 } from "@/services/sdiffusion";
 import { useDiffusion } from "./SDContext";
@@ -26,7 +28,8 @@ type ImagineOptions =
   | "img2img"
   | "controlnet"
   | "pix2pix"
-  | "inpainting";
+  | "inpainting"
+  | "upscaling";
 
 export type ImagineResult = {
   prompt: Prompt;
@@ -78,6 +81,7 @@ const ImagineProvider = (props: { children: ReactNode }) => {
   );
 
   useEffect(() => {
+    console.log("img2ImgURL", img2ImgURL)
     if (img2ImgURL) {
       getFileBlobFromURL(img2ImgURL)
         .then((file: File) => {
@@ -90,10 +94,6 @@ const ImagineProvider = (props: { children: ReactNode }) => {
         });
     }
   }, [img2ImgURL]);
-
-  useEffect(() => {
-    maskFile && setMaskFile(null);
-  }, [img2imgFile]);
 
   useEffect(() => {
     if (localResults.length > 0 && resultImages.length === 0) {
@@ -145,6 +145,8 @@ const ImagineProvider = (props: { children: ReactNode }) => {
           img2imgFile,
           maskFile
         );
+      } else if (option === "upscaling") {
+        return await generateImageWithUpscaling(request, img2imgFile);
       } else {
         return ErrorResponse("Please select a valid option");
       }

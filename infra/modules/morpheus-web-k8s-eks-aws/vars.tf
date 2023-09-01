@@ -62,6 +62,14 @@ variable "self_managed_gpu_node_desired_size" {
   default = 1
 }
 
+variable "self_managed_gpu_node_warm_pool_min_size" {
+  default = 2
+}
+
+variable "self_managed_gpu_node_warm_pool_max_group_prepared_capacity" {
+  default = 4
+}
+
 variable "self_managed_gpu_nodes_instance_type" {
   default = "g4dn.xlarge"
 }
@@ -195,7 +203,7 @@ variable "scale_up_queue_threshold" {
 }
 
 variable "scale_up_period" {
-  default = "30"
+  default = "10"
 }
 
 variable "scale_up_evaluation_period" {
@@ -207,7 +215,7 @@ variable "scale_up_scaling_adjustment" {
 }
 
 variable "scale_up_cooldown" {
-  default = "480"
+  default = "120"
 }
 
 variable "scale_down_queue_threshold" {

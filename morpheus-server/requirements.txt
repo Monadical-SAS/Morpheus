@@ -19,7 +19,7 @@ python-multipart
 requests
 celery
 redis
-diffusers==0.17.1
+diffusers==0.20.0
 transformers
 ftfy
 scipy
@@ -36,3 +36,5 @@ opencv-contrib-python-headless
 flower
 dynamicprompts[attentiongrabber,magicprompt]
 beautifulsoup4
+safetensors
+invisible-watermark>=0.2.0

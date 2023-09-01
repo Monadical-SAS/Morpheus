@@ -8,11 +8,14 @@ import { AuthProvider } from "@/context/AuthContext";
 import { DiffusionProvider } from "@/context/SDContext";
 import { ControlNetProvider } from "@/context/CNContext";
 import { ImagineProvider } from "@/context/ImagineContext";
+import { FirebaseTrackingProvider } from "@/context/GoogleAnalyticsContext";
 import { Toaster } from "@/components/ui/toaster";
+import CookiesConsent from "@/components/CookiesConsent/CookiesConsent";
 
 import "../App.scss";
 import "../styles/globals.css";
 import "../excalidraw/main.scss";
+import { ModelsProvider } from "@/context/ModelsContext";
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
@@ -123,18 +126,23 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         <meta name="google-site-verification" content="" />
       </Head>
 
-      <ToastProvider>
-        <AuthProvider>
-          <DiffusionProvider>
-            <ControlNetProvider>
-              <ImagineProvider>
-                <Component {...pageProps} />
-                <Toaster />
-              </ImagineProvider>
-            </ControlNetProvider>
-          </DiffusionProvider>
-        </AuthProvider>
-      </ToastProvider>
+      <FirebaseTrackingProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <ModelsProvider>
+              <DiffusionProvider>
+                <ControlNetProvider>
+                  <ImagineProvider>
+                    <Component {...pageProps} />
+                    <CookiesConsent />
+                    <Toaster />
+                  </ImagineProvider>
+                </ControlNetProvider>
+              </DiffusionProvider>
+            </ModelsProvider>
+          </AuthProvider>
+        </ToastProvider>
+      </FirebaseTrackingProvider>
     </Fragment>
   );
 };
