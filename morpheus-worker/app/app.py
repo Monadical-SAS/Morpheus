@@ -1,131 +1,18 @@
 import logging
 import uuid
-from typing import Any
-import os
-import io
-import boto3
+
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import Response
-from pydantic import BaseModel
-import ray
 from ray import serve
 from ray.util.state import get_task
 from ray.util.state import summarize_tasks
-from io import BytesIO
-from PIL import Image
+
+from actors.sd_img_to_img import StableDiffusionImageToImage
+from actors.sd_text_to_img import StableDiffusionXLTextToImage, StableDiffusionV2Text2Img
+from schemas.schemas import PromptRequest
 
 app = FastAPI()
 logger = logging.getLogger(__name__)
-
-
-class PromptRequest(BaseModel):
-    prompt: str
-    img_size: int = 512
-
-
-@ray.remote
-class S3Client:
-    def __init__(self) -> None:
-        self.AWS_ACCESS_KEY_ID = ""
-        self.AWS_SECRET_ACCESS_KEY = ""
-        self.IMAGES_BUCKET = os.environ.get("IMAGES_BUCKET")
-
-        self.s3 = boto3.client(
-            "s3",
-            aws_access_key_id=self.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY,
-        )
-
-    def upload_file(self, file: Any, folder_name: str, file_name: str):
-        img_byte_arr = BytesIO()
-        file.save(img_byte_arr, format="png")
-        img_byte_arr = img_byte_arr.getvalue()
-        key = f"{folder_name}/{file_name}"
-        try:
-            self.s3.put_object(
-                Body=img_byte_arr,
-                Bucket="morpheus-results-staging-253",
-                Key=key,
-            )
-            return f"https://{self.IMAGES_BUCKET}.s3.amazonaws.com/{key}.png"
-        except Exception as e:
-            logger.error("Error uploading file")
-            logger.error(e)
-
-
-@ray.remote(num_gpus=1)
-class StableDiffusionXLTextToImage:
-    def __init__(self):
-        import torch
-        from diffusers import StableDiffusionXLPipeline
-
-        model_id = "stabilityai/stable-diffusion-xl-base-1.0"
-
-        self.pipe = StableDiffusionXLPipeline.from_pretrained(
-            model_id,
-            torch_dtype=torch.float16,
-            variant="fp16",
-            use_safetensors=True
-        )
-        self.pipe = self.pipe.to("cuda")
-
-    def generate(self, task_id: str, prompt: str, img_size=512):
-        assert len(prompt), "prompt parameter cannot be empty"
-        result = self.pipe(prompt, height=img_size, width=img_size).images[0]
-        s3_client = S3Client.remote()
-        result = ray.get(s3_client.upload_file.remote(result, "ray-results", f"{task_id}.png"))
-        print(f"result {result}")
-        logger.info(f"Image uploaded to S3")
-
-
-@ray.remote(num_gpus=1)
-class StableDiffusionV2Text2Img:
-    def __init__(self):
-        import torch
-        from diffusers import StableDiffusionXLPipeline
-
-        model_id = "stabilityai/stable-diffusion-xl-base-1.0"
-
-        self.pipe = StableDiffusionXLPipeline.from_pretrained(
-            model_id,
-            torch_dtype=torch.float16,
-            variant="fp16",
-            use_safetensors=True
-        )
-        self.pipe = self.pipe.to("cuda")
-
-    def generate(self, task_id: str, prompt: str, img_size=512):
-        assert len(prompt), "prompt parameter cannot be empty"
-        result = self.pipe(prompt, height=img_size, width=img_size).images[0]
-        s3_client = S3Client.remote()
-        result = ray.get(s3_client.upload_file.remote(result, "ray-results", f"{task_id}.png"))
-        print(f"result {result}")
-        logger.info(f"Image uploaded to S3")
-
-
-@ray.remote(num_gpus=1)
-class StableDiffusionImageToImage:
-    def __init__(self):
-        import torch
-        from diffusers import EulerDiscreteScheduler, StableDiffusionImg2ImgPipeline
-
-        model_id = "stabilityai/stable-diffusion-2"
-        scheduler = EulerDiscreteScheduler.from_pretrained(
-            model_id, subfolder="scheduler"
-        )
-        self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
-            model_id, scheduler=scheduler, revision="fp16", torch_dtype=torch.float16
-        )
-        self.pipe = self.pipe.to("cuda")
-
-    def generate(self, task_id: str, prompt: str, base_image: any):
-        assert len(prompt), "prompt parameter cannot be empty"
-        image = Image.open(io.BytesIO(base_image))
-        result = self.pipe(prompt, image=image).images[0]
-        s3_client = S3Client.remote()
-        result = ray.get(s3_client.upload_file.remote(result, "ray-results", f"{task_id}.png"))
-        print(f"result {result}")
-        logger.info(f"Image uploaded to S3")
 
 
 @serve.deployment(num_replicas=1, route_prefix="/")
