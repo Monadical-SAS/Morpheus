@@ -2,13 +2,14 @@ import { useState } from "react";
 
 import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
-import { initialText } from "../Inputs/InputText/InputText";
+import { initialText, TextState } from "../Inputs/InputText/InputText";
 import MagicPrompt from "../MagicPrompt/MagicPrompt";
 import ImagineSettings from "../ImagineSettings/ImagineSettings";
 import { useDiffusion } from "@/context/SDContext";
 import { useImagine } from "@/context/ImagineContext";
 import { useModels } from "@/context/ModelsContext";
 import styles from "./ImagineInput.module.scss";
+import { PROMPTS } from "@/utils/constants";
 
 interface ImagineInputProps {
   isFormValid: boolean;
@@ -16,14 +17,12 @@ interface ImagineInputProps {
 }
 
 interface PromptProps {
-  isPromptEmpty: boolean;
-  setIsPromptEmpty: (value: boolean) => void;
+  prompt: TextState;
   setPrompt: (value: any) => void;
 }
 
 const clearPrompt = (props: PromptProps) => {
-  if (!props.isPromptEmpty) {
-    props.setIsPromptEmpty(true);
+  if (PROMPTS.includes(props.prompt?.value)) {
     props.setPrompt(initialText);
   }
 };
@@ -32,9 +31,7 @@ const ImagineInput = (props: ImagineInputProps) => {
   const { selectedModel } = useModels();
   const { prompt, setPrompt } = useDiffusion();
   const { isLoading } = useImagine();
-  const [isPromptEmpty, setIsPromptEmpty] = useState(false);
   const isRequestValid = props.isFormValid && !!selectedModel;
-
   return (
     <div className={styles.imagineInputWrapper}>
       <div className={styles.imagineInputContainer}>
@@ -48,9 +45,7 @@ const ImagineInput = (props: ImagineInputProps) => {
             isRequired={true}
             rightIcon={<MagicPrompt />}
             disableGrammarly={true}
-            onClick={() =>
-              clearPrompt({ isPromptEmpty, setIsPromptEmpty, setPrompt })
-            }
+            onClick={() => clearPrompt({ prompt, setPrompt })}
             automaticValidation={false}
             inputStyles={{ backgroundColor: "#14172D" }}
           />
