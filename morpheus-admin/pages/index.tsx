@@ -13,8 +13,8 @@ export default function Home() {
 
   useEffect(() => {
     getAvailableModels()
-      .then((res: Response) => {
-        setModels(res.data);
+      .then((response: Response) => {
+        setModels(response.data);
       })
       .catch((error) => {
         alert(error);

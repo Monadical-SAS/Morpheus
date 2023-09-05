@@ -1,6 +1,6 @@
 import { ComponentPropsWithoutRef } from "react";
 
-export interface ToggleInputProps extends ComponentPropsWithoutRef<"checkbox"> {
+export interface ToggleInputProps extends ComponentPropsWithoutRef<"input"> {
   name: string;
   label: string;
   register: any;
@@ -9,7 +9,7 @@ export interface ToggleInputProps extends ComponentPropsWithoutRef<"checkbox"> {
 export const ToggleInput = (props: ToggleInputProps) => {
   return (
     <div className="form-control">
-      <label className="label cursor-pointer">
+      <label className="cursor-pointer label">
         <span className="label-text">{props.label}</span>
         <input
           type="checkbox"

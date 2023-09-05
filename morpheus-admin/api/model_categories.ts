@@ -13,7 +13,7 @@ export const getAvailableCategories = async () => {
       data: [],
     };
   } catch (error) {
-    return { success: false, message: error };
+    return { success: false, message: error, data: [] };
   }
 };
 

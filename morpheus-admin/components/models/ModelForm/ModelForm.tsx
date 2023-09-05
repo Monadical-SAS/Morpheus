@@ -132,7 +132,6 @@ export function ModelForm() {
         text={"Submit"}
         variant={ButtonVariant.Primary}
         className={"w-full"}
-        type={"submit"}
       />
     </form>
   );
