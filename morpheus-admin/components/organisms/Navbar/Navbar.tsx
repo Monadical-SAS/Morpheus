@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import Brand from "@/components/Brand/Brand";
+import Brand from "@/components/atoms/Brand/Brand";
 import styles from "./Navbar.module.scss";
 
 const Navbar = () => {

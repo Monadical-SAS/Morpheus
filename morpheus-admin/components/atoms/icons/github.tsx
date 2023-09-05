@@ -1,4 +1,4 @@
-import { IconProps } from "@/components/icons/types";
+import { IconProps } from "@/components/atoms/icons/types";
 
 export const GithubIcon = (props: IconProps) => (
   <svg

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import MainLayout from "@/layout/MainContainer/MainLayout";
-import { ModelForm } from "@/components/models/ModelForm/ModelForm";
-import styles from "@/styles/pages/Home.module.scss";
+import Modal from "@/components/atoms/modal";
+import { ModelForm } from "@/components/organisms/ModelForm/ModelForm";
 import { Button, ButtonSize, ButtonVariant } from "@/components/atoms/button";
 import { getAvailableModels } from "@/api/models";
 import { Model, Response } from "@/lib/models";
-import Modal from "@/components/molecules/modal";
+import styles from "@/styles/pages/Home.module.scss";
 
 export default function Home() {
   const [models, setModels] = useState<Model[]>([]);

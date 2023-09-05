@@ -4,7 +4,10 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  sentry: {},
+  sentry: {
+    disableServerWebpackPlugin: true,
+    disableClientWebpackPlugin: true,
+  },
   images: {
     unoptimized: true,
     domains: [

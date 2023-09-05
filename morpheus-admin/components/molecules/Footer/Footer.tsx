@@ -1,8 +1,9 @@
 import React from "react";
-import Brand from "@/components/Brand/Brand";
-import { TwitterIcon } from "@/components/icons/twitter";
-import { LinkedinIcon } from "@/components/icons/linkedin";
-import { GithubIcon } from "@/components/icons/github";
+
+import Brand from "@/components/atoms/Brand/Brand";
+import { GithubIcon } from "@/components/atoms/icons/github";
+import { TwitterIcon } from "@/components/atoms/icons/twitter";
+import { LinkedinIcon } from "@/components/atoms/icons/linkedin";
 import styles from "./Footer.module.scss";
 
 const Footer = () => {
