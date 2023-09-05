@@ -14,7 +14,7 @@ applications:
 
   route_prefix: /
 
-  import_path: models:deployment
+  import_path: app:deployment
 
   runtime_env: {}
 
