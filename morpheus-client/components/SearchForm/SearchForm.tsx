@@ -1,5 +1,5 @@
 import InputSearch from "../Inputs/InputSearch/InputSearch";
-import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
+import Button from "../buttons/Button/Button";
 import { useState } from "react";
 import { searchArtWorks } from "@/services/artworks";
 import { useToastContext } from "@/context/ToastContext";
@@ -43,7 +43,7 @@ const SearchForm = (props: SearchFormProps) => {
           showLabel={false}
         />
 
-        <ButtonPrimary
+        <Button
           styles={{ width: "192px" }}
           loading={searchLoading}
           text={"Search..."}

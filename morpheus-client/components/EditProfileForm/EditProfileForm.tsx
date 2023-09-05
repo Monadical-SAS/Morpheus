@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
+import Button from "../buttons/Button/Button";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
 import InputFile from "../Inputs/InputFile/InputFile";
 import { UserImage } from "../UserCard/UserCard";
@@ -110,7 +110,7 @@ const EditProfileForm = () => {
         styles={{ marginTop: "24px" }}
       />
 
-      <ButtonPrimary
+      <Button
         styles={{ width: "100%", marginTop: "32px" }}
         loading={loading}
         text={"Save changes"}

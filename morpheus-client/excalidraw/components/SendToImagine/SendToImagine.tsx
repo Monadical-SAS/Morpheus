@@ -4,7 +4,7 @@ import { exportToBlob } from "../../packages/utils";
 import { useImagine } from "@/context/ImagineContext";
 import { getFileFromBlob } from "@/utils/images";
 import { useApp, useExcalidrawAppState, useExcalidrawElements } from "../App";
-import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
+import Button from "@/components/buttons/Button/Button";
 import styles from "./SendToImagine.module.scss";
 
 export const SendImageToImagine = () => {
@@ -35,8 +35,8 @@ export const SendImageToImagine = () => {
 
   return (
     <div className={styles.container}>
-      <ButtonPrimary loading={false} text={"Cancel"} onClick={handleCancel} />
-      <ButtonPrimary
+      <Button loading={false} text={"Cancel"} onClick={handleCancel} />
+      <Button
         loading={false}
         text={"Use on imagine"}
         onClick={handleSendTo}

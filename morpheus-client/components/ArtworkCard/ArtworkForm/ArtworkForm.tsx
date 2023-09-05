@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ButtonPrimary from "../../buttons/ButtonPrimary/ButtonPrimary";
+import Button from "../../buttons/Button/Button";
 import CollectionSelect from "../../CollectionSelect/CollectionSelect";
 import { CloseIcon } from "../../icons/close";
 import { saveArtWork, updateArtWork } from "@/services/artworks";
@@ -138,7 +138,7 @@ const ArtworkForm = (props: ArtworkFormProps) => {
       />
 
       <div className={styles.buttonsContainer}>
-        <ButtonPrimary
+        <Button
           text={`${props.artwork.id ? "Update" : "Save"}`}
           loading={isLoading}
           onClick={handleFormSubmit}

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { SignUpWithGoogle } from "../SocialSignUp/SignUpWithGoogle";
 import InputEmail from "../../Inputs/InputEmail/InputEmail";
 import InputPassword from "../../Inputs/InputPassword/InputPassword";
-import ButtonPrimary from "../../buttons/ButtonPrimary/ButtonPrimary";
+import Button from "../../buttons/Button/Button";
 import { useToastContext } from "@/context/ToastContext";
 import { Separator } from "../Separator/Separator";
 import { AuthOption, useAuth } from "@/context/AuthContext";
@@ -79,7 +79,7 @@ export const LoginForm = () => {
           Forgot password?
         </a>
 
-        <ButtonPrimary
+        <Button
           styles={{ marginTop: "32px" }}
           disabled={!formValid}
           loading={loading}

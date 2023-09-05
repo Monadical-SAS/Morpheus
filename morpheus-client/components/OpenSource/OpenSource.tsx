@@ -1,4 +1,4 @@
-import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
+import Button from "@/components/buttons/Button/Button";
 import { StarIcon } from "@/components/icons/star";
 import styles from "./OpenSource.module.scss";
 
@@ -17,7 +17,7 @@ export const OpenSource = () => {
         your own project needs.
       </p>
 
-      <ButtonPrimary
+      <Button
         loading={false}
         onClick={() =>
           window.open("https://github.com/Monadical-SAS/Morpheus/fork")

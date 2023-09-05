@@ -11,6 +11,7 @@ export interface User {
   bio?: string;
   phone?: string;
   is_active: boolean;
+  is_new_user?: boolean;
 }
 
 export interface UserFirebase {
