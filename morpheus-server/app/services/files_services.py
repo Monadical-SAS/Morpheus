@@ -4,8 +4,8 @@ from typing import Any
 from PIL import Image
 from sqlalchemy.orm import Session
 
-from app.repository.files.files_interface import FileRepositoryInterface
-from app.repository.user_repository import UserRepository
+from morpheus_data.repository.files.files_interface import FileRepositoryInterface
+from morpheus_data.repository.user_repository import UserRepository
 
 logger = logging.getLogger(__name__)
 

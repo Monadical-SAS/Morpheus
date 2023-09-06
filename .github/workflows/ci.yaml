@@ -13,6 +13,7 @@ jobs:
       collaborative: ${{ steps.collaborative-step.outputs.collaborative }}
       frontend: ${{ steps.frontend-step.outputs.frontend }}
       workerray: ${{ steps.worker-ray-step.outputs.workerray }}
+      data: ${{ steps.data-step.outputs.data }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -46,12 +47,24 @@ jobs:
         run: |
           workerray=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-worker-ray)
           echo "workerray=$workerray" >> "$GITHUB_OUTPUT"
+      - id: data-step
+        name: Check change in data
+        run: |
+          data=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-data)
+          echo "data=$data" >> "$GITHUB_OUTPUT"
 
 
-  ci-api:
-    if: needs.ci.outputs.api == 'true'
+  ci-data:
+    if: needs.ci.outputs.data == 'true'
     needs:
       - ci
+    uses: ./.github/workflows/ci-data.yaml
+    secrets: inherit
+  ci-api:
+    if: needs.ci.outputs.api == 'true' || needs.ci.outputs.data == 'true'
+    needs:
+      - ci
+      - ci-data
     uses: ./.github/workflows/ci-api.yaml
     secrets: inherit
   ci-collaborative:
@@ -72,7 +85,7 @@ jobs:
       - ci
     uses: ./.github/workflows/ci-worker-ray.yaml
     secrets: inherit
-  
+
 #############################################################################################################
 ### CD - jobs
 #############################################################################################################
@@ -84,6 +97,7 @@ jobs:
       collaborative: ${{ steps.collaborative-step.outputs.collaborative }}
       frontend: ${{ steps.frontend-step.outputs.frontend }}
       workerray: ${{ steps.worker-ray-step.outputs.workerray }}
+      data: ${{ steps.data-step.outputs.data }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -114,11 +128,24 @@ jobs:
         run: |
           workerray=$(python ./monorepo/cicd.py --project morpheus-worker-ray)
           echo "workerray=$workerray" >> "$GITHUB_OUTPUT"
+      - id: data-step
+        name: Check change in data
+        run: |
+          data=$(python ./monorepo/cicd.py --project morpheus-data)
+          echo "data=$data" >> "$GITHUB_OUTPUT"
 
-  cd-api:
-    if: needs.cd.outputs.api == 'true'
+  cd-data:
+    if: needs.cd.outputs.data == 'true'
     needs:
       - cd
+    uses: ./.github/workflows/cd-data.yaml
+    secrets: inherit
+
+  cd-api:
+    if: needs.cd.outputs.api == 'true' || needs.cd.outputs.data == 'true'
+    needs:
+      - cd
+      - cd-data
     uses: ./.github/workflows/cd-api.yaml
     secrets: inherit
   cd-frontend:

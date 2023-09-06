@@ -3,7 +3,9 @@ from enum import Enum
 from functools import lru_cache
 
 from omegaconf import OmegaConf
-from pydantic import BaseSettings, PostgresDsn
+from pydantic import PostgresDsn
+
+from morpheus_data.config import Settings as SettingsData
 
 
 class EnvironmentEnum(str, Enum):
@@ -14,27 +16,9 @@ class EnvironmentEnum(str, Enum):
     prod = "prod"
 
 
-class Settings(BaseSettings):
-    postgres_user: str = "postgres"
-    postgres_password: str = "password"
-    postgres_host: str = "postgres"
-    postgres_port: str = "5432"
-    postgres_db: str = "morpheus"
-
-    firebase_project_id: str
-    firebase_private_key: str
-    firebase_client_email: str
-    firebase_web_api_key: str
-
-    bucket_type: str = "S3"
-    images_bucket: str
-    images_temp_bucket: str
-    models_bucket: str
-
-    aws_access_key_id: str = ""
-    aws_secret_access_key: str = ""
-
+class Settings(SettingsData):
     environment: EnvironmentEnum = EnvironmentEnum.local
+
     model_parent_path: str = "/mnt/"
     model_default: str = "stabilityai/stable-diffusion-2"
     controlnet_model_default = "lllyasviel/sd-controlnet-canny"
@@ -67,11 +51,6 @@ class Settings(BaseSettings):
         )
 
 
-class APISettings(BaseSettings):
-    sd_host: str
-    testing: bool
-
-
 @lru_cache()
 def get_settings() -> Settings:
     settings = Settings()
@@ -85,7 +64,9 @@ def read_available_samplers(file: str):
 
 samplers = read_available_samplers("config/sd-schedulers.yaml")
 
-file_handlers = {"S3": {"module": "app.repository.files.s3_files_repository", "handler": "S3ImagesRepository"}}
+file_handlers = {
+    "S3": {"module": "morpheus_data.repository.files.s3_files_repository", "handler": "S3ImagesRepository"}
+}
 
 
 @lru_cache()

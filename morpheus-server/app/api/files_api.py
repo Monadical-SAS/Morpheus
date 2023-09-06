@@ -3,8 +3,9 @@ from typing import Union
 from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.orm import Session
 
+from morpheus_data.database import get_db
+
 from app.config import get_file_handlers
-from app.database import get_db
 from app.integrations.firebase import get_user
 from app.models.schemas import Response
 from app.services.files_services import FilesService

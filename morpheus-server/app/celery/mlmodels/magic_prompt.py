@@ -6,8 +6,9 @@ from dynamicprompts.generators import RandomPromptGenerator
 from dynamicprompts.generators.magicprompt import MagicPromptGenerator
 from loguru import logger
 
+from morpheus_data.models.schemas import MagicPrompt
+
 from app.config import get_settings
-from app.models.schemas import MagicPrompt
 
 settings = get_settings()
 

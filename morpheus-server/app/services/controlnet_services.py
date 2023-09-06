@@ -3,8 +3,8 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.models.schemas import ControlNetModel, ControlNetModelCreate
-from app.repository.controlnet_repository import ControlNetModelRepository
+from morpheus_data.models.schemas import ControlNetModel, ControlNetModelCreate
+from morpheus_data.repository.controlnet_repository import ControlNetModelRepository
 
 
 class ControlNetModelService:

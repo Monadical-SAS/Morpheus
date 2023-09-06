@@ -1,13 +1,12 @@
 from celery.result import AsyncResult
 from fastapi import APIRouter, Depends, File, UploadFile
 
-from app.database import get_db
+from morpheus_data.database import get_db
+from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
+
 from app.error.error import ImageNotProvidedError, ModelNotFoundError, UserNotFoundError
 from app.integrations.firebase import get_user
 from app.models.schemas import (
-    MagicPrompt,
-    PromptControlNet,
-    Prompt,
     Response,
     TaskResponse,
     TaskStatus,

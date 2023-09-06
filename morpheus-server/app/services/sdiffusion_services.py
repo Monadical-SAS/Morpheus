@@ -3,13 +3,14 @@ from typing import Any
 from PIL import Image
 from sqlalchemy.orm import Session
 
+from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
+from morpheus_data.repository.model_repository import ModelRepository
+from morpheus_data.repository.user_repository import UserRepository
+from morpheus_data.utils.images import get_rgb_image_from_bytes, resize_image
+
 from app.config import get_settings
 from app.error.error import ImageNotProvidedError, ModelNotFoundError, UserNotFoundError
-from app.models.schemas import MagicPrompt, PromptControlNet, Prompt
-from app.repository.model_repository import ModelRepository
 from app.repository.sdiffusion_repository import StableDiffusionRepository
-from app.repository.user_repository import UserRepository
-from app.utils.images import get_rgb_image_from_bytes, resize_image
 
 
 class StableDiffusionService:

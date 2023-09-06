@@ -1,12 +1,14 @@
-from typing import Union, List
+from typing import List, Union
 from uuid import UUID
 
 from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app.models.schemas import ControlNetModelCreate, ControlNetModel, Response
+from morpheus_data.database import get_db
+from morpheus_data.models.schemas import ControlNetModel, ControlNetModelCreate
+
+from app.models.schemas import Response
 from app.services.controlnet_services import ControlNetModelService
 
 router = APIRouter()

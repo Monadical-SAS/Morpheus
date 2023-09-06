@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 services:
   postgres:
     image: postgres:15-alpine
@@ -42,6 +42,22 @@ services:
       - "8001:8001"
     stdin_open: true
     tty: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+      datalib:
+        condition: service_completed_successfully
+
+  datalib:
+    build:
+      context: morpheus-data
+      dockerfile: ./Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    image: monadicalsas/morpheus-data:latest
+    volumes:
+      - ./wheels:/wheels
+      - ./morpheus-data:/app
     depends_on:
       postgres:
         condition: service_healthy
@@ -252,6 +268,9 @@ services:
       - ./morpheus-server:/opt/api
     stdin_open: true
     tty: true
+    depends_on:
+      datalib:
+        condition: service_completed_successfully
 
 
 volumes:

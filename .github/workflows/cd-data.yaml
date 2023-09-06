@@ -1,0 +1,14 @@
+name: CI Test and deploy Frontend
+on:
+  workflow_dispatch:
+  workflow_call:
+env:
+  MAX_LINE_LENGTH: 120
+  WORKING_DIR: morpheus-data
+jobs:
+  ci-data:
+    uses: ./.github/workflows/ci-data.yaml
+    with:
+      called: true
+    secrets: inherit
+
