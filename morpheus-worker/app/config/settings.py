@@ -7,4 +7,4 @@ class Settings(BaseSettings):
     images_bucket: str
 
     class Config:
-        env_file = ".env"
+        env_file = "secrets.env"

@@ -7,8 +7,12 @@ from ray import serve
 from ray.util.state import get_task
 from ray.util.state import summarize_tasks
 
+from actors.sd_controlnet import StableDiffusionControlnet
 from actors.sd_img_to_img import StableDiffusionImageToImage
+from actors.sd_inpainting import StableDiffusionInpainting
+from actors.sd_pix_to_pix import StableDiffusionPixToPix
 from actors.sd_text_to_img import StableDiffusionXLTextToImage, StableDiffusionV2Text2Img
+from actors.sd_upscaling import StableDiffusionUpscaling
 from schemas.schemas import PromptRequest
 
 app = FastAPI()
@@ -38,12 +42,10 @@ class APIIngress:
             assert len(prompt.prompt), "prompt parameter cannot be empty"
             task_uuid = str(uuid.uuid4())
             stable = StableDiffusionXLTextToImage.remote()
-            task = stable.generate.remote(task_uuid, prompt.prompt, prompt.img_size)
-            print(str(task))
+            stable.generate.remote(task_uuid, prompt.prompt, prompt.img_size)
             return Response(content=task_uuid)
         except Exception as e:
-            print(e)
-            return e
+            return Response(content=e)
 
     @app.post("/text2img")
     async def generate_text2img(self, prompt: PromptRequest):
@@ -51,12 +53,10 @@ class APIIngress:
             assert len(prompt.prompt), "prompt parameter cannot be empty"
             task_uuid = str(uuid.uuid4())
             stable = StableDiffusionV2Text2Img.remote()
-            task = stable.generate.remote(task_uuid, prompt.prompt, prompt.img_size)
-            print(str(task))
+            stable.generate.remote(task_uuid, prompt.prompt, prompt.img_size)
             return Response(content=task_uuid)
         except Exception as e:
-            print(e)
-            return e
+            return Response(content=e)
 
     @app.post("/img2img")
     async def generate_img2_img(
@@ -69,12 +69,76 @@ class APIIngress:
             task_uuid = str(uuid.uuid4())
             stable = StableDiffusionImageToImage.remote()
             image = await image.read()
-            task = stable.generate.remote(task_uuid, prompt, image)
-            print(str(task))
+            stable.generate.remote(task_uuid, prompt, image)
             return Response(content=task_uuid)
         except Exception as e:
-            print(e)
-            return e
+            return Response(content=e)
+
+    @app.post("/pix2pix")
+    async def generate_img2_img(
+            self,
+            prompt: str,
+            image: UploadFile,
+    ):
+        try:
+            assert len(prompt), "prompt parameter cannot be empty"
+            task_uuid = str(uuid.uuid4())
+            stable = StableDiffusionPixToPix.remote()
+            image = await image.read()
+            stable.generate.remote(task_uuid, prompt, image)
+            return Response(content=task_uuid)
+        except Exception as e:
+            return Response(content=e)
+
+    @app.post("/upscaling")
+    async def generate_img2_img(
+            self,
+            prompt: str,
+            image: UploadFile,
+    ):
+        try:
+            assert len(prompt), "prompt parameter cannot be empty"
+            task_uuid = str(uuid.uuid4())
+            stable = StableDiffusionUpscaling.remote()
+            image = await image.read()
+            stable.generate.remote(task_uuid, prompt, image)
+            return Response(content=task_uuid)
+        except Exception as e:
+            return Response(content=e)
+
+    @app.post("/inpainting")
+    async def generate_img2_img(
+            self,
+            prompt: str,
+            image: UploadFile,
+            mask: UploadFile,
+    ):
+        try:
+            assert len(prompt), "prompt parameter cannot be empty"
+            task_uuid = str(uuid.uuid4())
+            stable = StableDiffusionInpainting.remote()
+            image = await image.read()
+            mask = await mask.read()
+            stable.generate.remote(task_uuid, prompt, image, mask)
+            return Response(content=task_uuid)
+        except Exception as e:
+            return Response(content=e)
+
+    @app.post("/controlnet")
+    async def generate_img2_img(
+            self,
+            prompt: str,
+            image: UploadFile,
+    ):
+        try:
+            assert len(prompt), "prompt parameter cannot be empty"
+            task_uuid = str(uuid.uuid4())
+            stable = StableDiffusionControlnet.remote()
+            image = await image.read()
+            stable.generate.remote(task_uuid, prompt, image)
+            return Response(content=task_uuid)
+        except Exception as e:
+            return Response(content=e)
 
     @app.get("/task")
     async def task_status(self, task_id: str):
