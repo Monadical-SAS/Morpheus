@@ -6,3 +6,4 @@ transformers
 accelerate
 python-multipart
 pillow
+loguru

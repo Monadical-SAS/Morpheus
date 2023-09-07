@@ -123,10 +123,10 @@ services:
 
   worker-ray:
     build:
-      context: ./morpheus-worker/app
+      context: ./morpheus-worker
       # if you are using a mac, uncomment this arg
-      # args:
-      #   RAY_IMAGE_TAG: latest-gpu-aarch64
+      args:
+        RAY_IMAGE_TAG: latest-gpu-aarch64
     image: morpheus-worker:latest
     command: ray start --head --num-gpus 1 --dashboard-host 0.0.0.0 --block
     ports:

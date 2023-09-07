@@ -3,9 +3,9 @@ from typing import Any
 
 import boto3
 import ray
-from app.config.settings import Settings
+from app.config.settings import get_settings
 
-settings = Settings()
+settings = get_settings()
 
 
 @ray.remote
