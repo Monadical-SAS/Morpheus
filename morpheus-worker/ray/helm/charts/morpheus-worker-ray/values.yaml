@@ -26,11 +26,11 @@ worker:
     minReplicas: 1
     maxReplicas: 1
     rayStartParams:
-      numCpus: "3"
+      numCpus: "2"
       numGpus: "1"
     resources:
       limits:
-        cpu: "3"
+        cpu: "2"
         memory: "8G"
         gpu: 1
 
