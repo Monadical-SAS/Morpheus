@@ -38,7 +38,43 @@ variable "self_managed_web_nodes_instance_type" {
   default = "t3.medium"
 }
 
-variable "self_managed_service_nodes_instance_type" {
+variable "self_managed_head_node_group_name" {
+  default = "self-mng-head"
+}
+
+variable "self_managed_head_node_min_size" {
+  default = 1
+}
+
+variable "self_managed_head_node_max_size" {
+  default = 2
+}
+
+variable "self_managed_head_node_desired_size" {
+  default = 1
+}
+
+variable "self_managed_head_iam_role_name" {
+  default = "self-managed-node-group-head"
+}
+
+variable "self_managed_head_nodes_instance_type" {
+  default = "t3.medium"
+}
+
+variable "self_managed_head_nodes_ami" {
+  default = "ami-081f4e51bfefc32f6"
+}
+
+variable "eks_managed_service_node_group_name" {
+  default = "eks-mng-services"
+}
+
+variable "eks_managed_services_iam_role_name" {
+  default = "eks-managed-node-group-services"
+}
+
+variable "eks_managed_service_nodes_instance_type" {
   default = "t3.small"
 }
 
@@ -232,4 +268,12 @@ variable "scale_down_evaluation_period" {
 
 variable "scale_down_scaling_adjustment" {
   default = -1
+}
+
+variable "create_aws_auth_configmap" {
+  default = true
+}
+
+variable "manage_aws_auth_configmap" {
+  default = true
 }

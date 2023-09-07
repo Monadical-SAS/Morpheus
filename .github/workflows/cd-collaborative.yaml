@@ -5,6 +5,7 @@ on:
 env:
   MAX_LINE_LENGTH: 120
   WORKING_DIR_BACKEND: morpheus-collaborative
+  MORPHEUS_COLLABORATIVE_IMAGE_NAME: ${{ env.MORPHEUS_COLLABORATIVE_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-collaborative' }}
 jobs:
   ci-collab:
     uses: ./.github/workflows/ci-collaborative.yaml
@@ -39,6 +40,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Push Docker Image
         run: |
-          docker pull monadicalsas/morpheus-collaborative:${{ github.run_id }}
-          docker tag monadicalsas/morpheus-collaborative:${{ github.run_id }} monadicalsas/morpheus-collaborative:latest
-          docker push monadicalsas/morpheus-collaborative:latest
+          docker pull ${{ env.MORPHEUS_COLLABORATIVE_IMAGE_NAME }}:${{ github.run_id }}
+          docker tag ${{ env.MORPHEUS_COLLABORATIVE_IMAGE_NAME }}:${{ github.run_id }} ${{ env.MORPHEUS_COLLABORATIVE_IMAGE_NAME }}:latest
+          docker push ${{ env.MORPHEUS_COLLABORATIVE_IMAGE_NAME }}:latest
