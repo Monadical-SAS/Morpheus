@@ -13,8 +13,8 @@ spec:
       rayStartParams:
         port: '6379'
         dashboard-host: '0.0.0.0'
-        num-cpus: "{{ .Values.worker.workerGroup.rayStartParams.numCpus }}"
-        num-gpus: "{{ .Values.worker.workerGroup.rayStartParams.numGpus }}"
+        num-cpus: "{{ .Values.worker.head.rayStartParams.numCpus }}"
+        num-gpus: "{{ .Values.worker.head.rayStartParams.numGpus }}"
         block: 'true'
       template:
         spec:
