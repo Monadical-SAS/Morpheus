@@ -1,4 +1,5 @@
 import io
+import logging
 
 import ray
 from PIL import Image
@@ -10,6 +11,7 @@ class StableDiffusionInpainting:
     def __init__(self):
         import torch
         from diffusers import EulerDiscreteScheduler, StableDiffusionInpaintPipeline
+        self.logger = logging.getLogger(__name__)
 
         model_id = "runwayml/stable-diffusion-inpainting"
         scheduler = EulerDiscreteScheduler.from_pretrained(
@@ -21,10 +23,10 @@ class StableDiffusionInpainting:
         self.pipe = self.pipe.to("cuda")
 
     def generate(self, task_id: str, prompt: str, base_image: any, mask_image: any):
-        assert len(prompt), "prompt parameter cannot be empty"
+        assert len(prompt), self.logger.error("prompt parameter cannot be empty")
         image = Image.open(io.BytesIO(base_image))
         result = self.pipe(prompt, image=image, mask_image=image).images[0]
         s3_client = S3Client.remote()
         result = ray.get(s3_client.upload_file.remote(result, "ray-results", f"{task_id}.png"))
-        print(f"result {result}")
-        print(f"Image uploaded to S3")
+        self.logger.info(f"Inpainting for taskId {task_id} result {result}")
+        return result

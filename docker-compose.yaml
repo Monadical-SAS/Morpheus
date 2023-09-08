@@ -128,6 +128,8 @@ services:
       args:
         RAY_IMAGE_TAG: latest-gpu-aarch64
     image: morpheus-worker:latest
+    env_file:
+      - morpheus-worker/secrets.env
     command: ray start --head --num-gpus 1 --dashboard-host 0.0.0.0 --block
     ports:
       - "8000:8000"

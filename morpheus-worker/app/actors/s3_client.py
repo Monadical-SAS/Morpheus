@@ -1,3 +1,4 @@
+import logging
 from io import BytesIO
 from typing import Any
 
@@ -11,6 +12,8 @@ settings = get_settings()
 @ray.remote
 class S3Client:
     def __init__(self) -> None:
+        self.logger = logging.getLogger(__name__)
+
         self.AWS_ACCESS_KEY_ID = settings.aws_access_key_id
         self.AWS_SECRET_ACCESS_KEY = settings.aws_secret_access_key
         self.IMAGES_BUCKET = settings.images_bucket
@@ -32,7 +35,8 @@ class S3Client:
                 Bucket=self.IMAGES_BUCKET,
                 Key=key,
             )
+            self.logger.info(f"Image uploaded to S3: {key}")
             return f"https://{self.IMAGES_BUCKET}.s3.amazonaws.com/{key}.png"
         except Exception as e:
-            print("Error uploading file")
-            print(e)
+            self.logger.error(f"Error uploading image to S3: {key}")
+            self.logger.error(e)
