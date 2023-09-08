@@ -10,12 +10,12 @@ from morpheus_data.utils.images import get_rgb_image_from_bytes, resize_image
 
 from app.config import get_settings
 from app.error.error import ImageNotProvidedError, ModelNotFoundError, UserNotFoundError
-from app.repository.sdiffusion_repository import StableDiffusionRepository
+from app.integrations.generative_ai_engine.generative_ai_interface import GenerativeAIInterface
 
 
 class StableDiffusionService:
-    def __init__(self):
-        self.sd_repository = StableDiffusionRepository()
+    def __init__(self, generative_ai_generator: GenerativeAIInterface):
+        self.sd_generator = generative_ai_generator
         self.model_repository = ModelRepository()
         self.user_repository = UserRepository()
         self.settings = get_settings()
@@ -23,32 +23,32 @@ class StableDiffusionService:
     def generate_text2img_images(self, db: Session, prompt: Prompt, email: str) -> str:
         self.validate_request(db=db, model=prompt.model, email=email)
         prompt.model = f"{self.settings.model_parent_path}{prompt.model}"
-        return self.sd_repository.generate_text2img_images(prompt)
+        return self.sd_generator.generate_text2img_images(prompt)
 
     def generate_img2img_images(self, db: Session, prompt: Prompt, image: Any, email: str) -> str:
         self.validate_request(db=db, model=prompt.model, email=email)
         image = self.validate_and_clean_image(image=image, width=prompt.width)
         prompt.model = f"{self.settings.model_parent_path}{prompt.model}"
-        return self.sd_repository.generate_img2img_images(prompt, image)
+        return self.sd_generator.generate_img2img_images(prompt, image)
 
     def generate_controlnet_images(self, db: Session, prompt: PromptControlNet, image: Any, email: str) -> str:
         self.validate_request(db=db, model=prompt.model, email=email)
         image = self.validate_and_clean_image(image=image, width=prompt.width)
         prompt.model = f"{self.settings.model_parent_path}{prompt.model}"
-        return self.sd_repository.generate_controlnet_images(prompt, image)
+        return self.sd_generator.generate_controlnet_images(prompt, image)
 
     def generate_pix2pix_images(self, db: Session, prompt: Prompt, image: Any, email: str) -> str:
         self.validate_request(db=db, model=prompt.model, email=email)
         image = self.validate_and_clean_image(image=image, width=prompt.width)
         prompt.model = f"{self.settings.model_parent_path}{prompt.model}"
-        return self.sd_repository.generate_pix2pix_images(prompt, image)
+        return self.sd_generator.generate_pix2pix_images(prompt, image)
 
     def generate_inpainting_images(self, db: Session, prompt: Prompt, image: Any, mask: Any, email: str) -> str:
         self.validate_request(db=db, model=prompt.model, email=email)
         image = self.validate_and_clean_image(image=image, width=512, height=512)
         mask = self.validate_and_clean_image(image=mask, width=512, height=512)
         prompt.model = f"{self.settings.model_parent_path}{prompt.model}"
-        return self.sd_repository.generate_inpainting_images(prompt, image, mask)
+        return self.sd_generator.generate_inpainting_images(prompt, image, mask)
 
     def generate_upscaling_images(self, db: Session, prompt: Prompt, image: Any, email: str) -> str:
         self.validate_request(db=db, model=prompt.model, email=email)
@@ -56,12 +56,12 @@ class StableDiffusionService:
         prompt.width = image.width
         prompt.height = image.height
         prompt.model = f"{self.settings.model_parent_path}{prompt.model}"
-        return self.sd_repository.generate_upscaling_images(prompt, image)
+        return self.sd_generator.generate_upscaling_images(prompt, image)
 
     def generate_magicprompt(self, db: Session, prompt: MagicPrompt, email: str) -> str:
         self.validate_magicprompt_request(db=db, email=email)
         # prompt.config.model = f"{self.settings.model_parent_path}{prompt.config.model}"
-        return self.sd_repository.generate_magicprompt(prompt)
+        return self.sd_generator.generate_magicprompt(prompt)
 
     def validate_request(self, db: Session, model: str, email: str) -> None:
         db_user = self.user_repository.get_user_by_email(db=db, email=email)

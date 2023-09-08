@@ -53,7 +53,6 @@ jobs:
           data=$(python ./monorepo/cicd.py -c "origin/main" --project morpheus-data)
           echo "data=$data" >> "$GITHUB_OUTPUT"
 
-
   ci-data:
     if: needs.ci.outputs.data == 'true'
     needs:
@@ -61,7 +60,7 @@ jobs:
     uses: ./.github/workflows/ci-data.yaml
     secrets: inherit
   ci-api:
-    if: needs.ci.outputs.api == 'true' || needs.ci.outputs.data == 'true'
+    if: ${{ !failure() && !cancelled() && (needs.ci.outputs.api == 'true' || needs.ci.outputs.data == 'true') }}
     needs:
       - ci
       - ci-data
