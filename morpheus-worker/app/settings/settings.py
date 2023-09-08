@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     pipeline_name_default: str = "StableDiffusionXLPipeline"
     model_default: str = "stabilityai/stable-diffusion-xl-base-1.0"
     scheduler_default: str = "DDPMScheduler"
+    pipeline_default: str = "StableDiffusionXLPipeline"
     enable_float32: bool = False
     enable_attention_slicing: bool = False
 

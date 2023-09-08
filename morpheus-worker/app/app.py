@@ -7,7 +7,7 @@ from app.actors.sd_inpainting import StableDiffusionInpainting
 from app.actors.sd_pix_to_pix import StableDiffusionPixToPix
 from app.actors.sd_text_to_img import StableDiffusionXLTextToImage, StableDiffusionV2Text2Img
 from app.actors.sd_upscaling import StableDiffusionUpscaling
-from app.schemas.schemas import PromptRequest
+from app.schemas.schemas import Prompt
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import Response
 from ray import serve
@@ -36,23 +36,23 @@ class APIIngress:
         return "Hello from Morpheus Ray"
 
     @app.post("/text2img_xl")
-    async def generate_text2img_xl(self, prompt: PromptRequest):
+    async def generate_text2img_xl(self, prompt: Prompt):
         try:
             assert len(prompt.prompt), "prompt parameter cannot be empty"
             task_uuid = str(uuid.uuid4())
-            stable = StableDiffusionXLTextToImage.remote()
-            stable.generate.remote(task_uuid, prompt.prompt, prompt.img_size)
+            stable = StableDiffusionXLTextToImage.remote(scheduler=prompt.scheduler)
+            stable.generate.remote(prompt=prompt)
             return Response(content=task_uuid)
         except Exception as e:
             self.logger.error(f"Error in generate_text2img_xl {e}")
             return Response(content=e)
 
     @app.post("/text2img")
-    async def generate_text2img(self, prompt: PromptRequest):
+    async def generate_text2img(self, prompt: Prompt):
         try:
             assert len(prompt.prompt), "prompt parameter cannot be empty"
             task_uuid = str(uuid.uuid4())
-            stable = StableDiffusionV2Text2Img.remote()
+            stable = StableDiffusionV2Text2Img.remote(scheduler=prompt.scheduler)
             stable.generate.remote(task_uuid, prompt.prompt, prompt.img_size)
             return Response(content=task_uuid)
         except Exception as e:

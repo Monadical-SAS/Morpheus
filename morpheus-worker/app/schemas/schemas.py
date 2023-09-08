@@ -1,11 +1,11 @@
 from typing import Optional, Any
-from uuid import UUID
+import uuid
 
 from pydantic import BaseModel
 
 
 class Prompt(BaseModel):
-    task_id: UUID
+    task_id: uuid.UUID
     prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
     negative_prompt: str = "bad, low res, ugly, deformed"
     width: int = 768
@@ -24,8 +24,7 @@ class Prompt(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
-                "scheduler": "PNDMScheduler",
+                "task_id": str(uuid.uuid4()),
                 "prompt": "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation",
                 "negative_prompt": "bad, low res, ugly, deformed",
                 "width": 768,
@@ -35,5 +34,8 @@ class Prompt(BaseModel):
                 "num_images_per_prompt": 1,
                 "generator": -1,
                 "strength": 0.75,
+                "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+                "scheduler": "PNDMScheduler",
+                "user_id": "ray@morpheus.com",
             }
         }

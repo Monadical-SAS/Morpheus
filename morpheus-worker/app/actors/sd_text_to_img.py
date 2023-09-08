@@ -4,11 +4,12 @@ import ray
 
 from app.actors.s3_client import S3Client
 from app.schemas.schemas import Prompt
+from app.actors.common.sd_base import StableDiffusionAbstract
 
 
 @ray.remote(num_gpus=1)
-class StableDiffusionV2Text2Img:
-    def __init__(self, model_id: str, scheduler: str):
+class StableDiffusionV2Text2Img(StableDiffusionAbstract):
+    def __init__(self, *,  model_id: str, scheduler: str):
         super().__init__(
             pipeline_name="StableDiffusionPipeline",
             model_id=model_id,
@@ -36,8 +37,8 @@ class StableDiffusionV2Text2Img:
 
 
 @ray.remote(num_gpus=1)
-class StableDiffusionXLTextToImage:
-    def __init__(self, model_id: str, scheduler: str):
+class StableDiffusionXLTextToImage(StableDiffusionAbstract):
+    def __init__(self, *, scheduler: str):
         super().__init__(
             pipeline_name="StableDiffusionXLPipeline",
             model_id="stabilityai/stable-diffusion-xl-base-1.0",

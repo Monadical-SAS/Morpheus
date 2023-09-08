@@ -125,8 +125,8 @@ services:
     build:
       context: ./morpheus-worker
       # if you are using a mac, uncomment this arg
-      args:
-        RAY_IMAGE_TAG: latest-gpu-aarch64
+      #args:
+      #  RAY_IMAGE_TAG: latest-gpu-aarch64
     image: morpheus-worker:latest
     env_file:
       - morpheus-worker/secrets.env
