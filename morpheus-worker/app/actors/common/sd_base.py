@@ -1,36 +1,36 @@
 import importlib
-from abc import ABC, abstractmethod
+import logging
+from abc import ABC
 from pathlib import Path
 
 import torch
-from app.common.decorators import validate_stable_diffusion_upscaler
-from app.config import get_settings
-from loguru import logger
+
+from app.settings.settings import get_settings
 
 settings = get_settings()
 
-MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.model_default}"
-CONTROLNET_MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.controlnet_model_default}"
-
 
 class StableDiffusionAbstract(ABC):
-    def __init__(self, pipeline_name: str, sampler: str, model_name: str = MODEL_PATH_DEFAULT):
-        hf_model_name = model_name.removeprefix(settings.model_parent_path)
-        self.model_name = model_name if Path(model_name).exists() else hf_model_name
-        self.token = settings.hf_auth_token
-        self.sampler = sampler
+    def __init__(
+            self,
+            pipeline_name: str = settings.pipeline_default,
+            model_id: str = settings.model_default,
+            scheduler: str = settings.scheduler_default
+    ):
+        self.logger = logging.getLogger(__name__)
+
+        self.local_model_path = Path(settings.models_folder) / model_id
+        self.model_source = self.local_model_path if Path(self.local_model_path).exists() else model_id
 
         # Check the environment variable/settings file to determine if we should
         # be using 16 bit or 32 bit precision when generating images.  16 bit
         # will be faster, but 32 bit may have higher image quality.
-        if settings.enable_float32:
-            self.dtype = torch.float32
-        else:
-            self.dtype = torch.float16
+        self.dtype = torch.float32 if settings.enable_float32 else torch.float16
+        self.logger.info("Floating point precision during image generation: " + str(self.dtype))
 
         # Check to see if we have CUDA available via an NVidia GPU.
         if torch.cuda.is_available() and torch.backends.cuda.is_built():
-            logger.info("PyTorch CUDA backend is available, enabling")
+            self.logger.info("PyTorch CUDA backend is available, enabling")
             self.generator_device = "cuda"
             self.enable_xformers = True
             self.device = "cuda"
@@ -38,7 +38,7 @@ class StableDiffusionAbstract(ABC):
         # Check to see if we have Apple Silicon's MPS Framework available and that it has
         # been compiled into this version of PyTorch.
         elif torch.backends.mps.is_available() and torch.backends.mps.is_built():
-            logger.info("PyTorch Apple MPS backend is available, enabling")
+            self.logger.info("PyTorch Apple MPS backend is available, enabling")
             self.generator_device = "cpu"
             self.enable_xformers = False
             self.device = "mps"
@@ -50,33 +50,55 @@ class StableDiffusionAbstract(ABC):
         # If neither of the CUDA or MPS are available, use the CPU instead.  This
         # will be very slow.
         else:
-            logger.info("PyTorch is Defaulting to using CPU as a backend")
+            self.logger.info("PyTorch is Defaulting to using CPU as a backend")
             self.generator_device = "cpu"
             self.enable_xformers = False
             self.device = "cpu"
 
-        logger.info("Floating point precision during image generation: " + str(self.dtype))
+        # Import modules and pipelines
+        self.diffusers_import = importlib.import_module("diffusers")
+        self.pipeline_import = getattr(self.diffusers_import, pipeline_name)
+        self.scheduler_import = getattr(self.diffusers_import, scheduler)
 
-        self._module_import = importlib.import_module("diffusers")
-        self._pipeline = getattr(self._module_import, pipeline_name)
+        # Load the model and scheduler
+        self.scheduler = self.scheduler_import.from_pretrained(
+            self.model_source,
+            subfolder="scheduler",
+        )
+        self.pipeline = self.pipeline_import.from_pretrained(
+            self.model_source,
+            torch_dtype=self.dtype,
+            scheduler=self.scheduler,
+            use_safetensors=True,
+        )
+        self.pipeline.to(self.device)
 
-    @abstractmethod
+        # Save the model locally if it doesn't exist
+        self.save_model()
+
+        # Activate attention slicing and xformers
+        self.activate_attention_slicing()
+        self.activate_xformers()
+
     def generate_images(self, *args, **kwargs):
         pass
 
-    @staticmethod
-    @validate_stable_diffusion_upscaler
-    def save_model(pipe, path: str):
-        pipe.save_pretrained(save_directory=path)
+    def save_model(self):
+        if not Path(self.local_model_path).exists():
+            self.pipeline.save_pretrained(save_directory=self.local_model_path)
 
-    @staticmethod
-    def swap_attention_slicing_option(model, enable: bool):
-        (model.enable_attention_slicing() if enable else model.disable_attention_slicing())
+    def activate_attention_slicing(self):
+        if settings.enable_attention_slicing:
+            self.logger.info("Attention slicing is enabled")
+            self.pipeline.enable_attention_slicing()
+        else:
+            self.logger.info("Attention slicing is disabled")
+            self.pipeline.disable_attention_slicing()
 
-    @staticmethod
-    def swap_xformers(model, enable: bool):
-        (
-            model.enable_xformers_memory_efficient_attention()
-            if enable
-            else model.disable_xformers_memory_efficient_attention()
-        )
+    def activate_xformers(self):
+        if self.enable_xformers:
+            self.logger.info("Xformers is enabled")
+            self.pipeline.enable_xformers_memory_efficient_attention()
+        else:
+            self.logger.info("Xformers is disabled")
+            self.pipeline.disable_xformers_memory_efficient_attention()

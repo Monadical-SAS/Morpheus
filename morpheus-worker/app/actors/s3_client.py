@@ -1,10 +1,11 @@
 import logging
 from io import BytesIO
-from typing import Any
+from typing import Any, List
 
 import boto3
 import ray
-from app.config.settings import get_settings
+
+from app.settings.settings import get_settings
 
 settings = get_settings()
 
@@ -24,7 +25,7 @@ class S3Client:
             aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY,
         )
 
-    def upload_file(self, file: Any, folder_name: str, file_name: str):
+    def upload_file(self, *, file: Any, folder_name: str, file_name: str):
         img_byte_arr = BytesIO()
         file.save(img_byte_arr, format="png")
         img_byte_arr = img_byte_arr.getvalue()
@@ -40,3 +41,16 @@ class S3Client:
         except Exception as e:
             self.logger.error(f"Error uploading image to S3: {key}")
             self.logger.error(e)
+
+    def upload_multiple_files(self, *, files: List[Any], folder_name: str, file_name: str):
+        object_ids = [
+            self.s3_client.upload_file.remote(
+                file=image,
+                folder_name=folder_name,
+                file_name=f"{file_name}-{index}.png"
+            ) for index, image in enumerate(files)
+        ]
+        ready_ids, no_ready_ids = ray.wait(object_ids)
+        for i in ready_ids:
+            result = ray.get(i)
+            self.logger.info(f"ImageToImage generated result {result}")

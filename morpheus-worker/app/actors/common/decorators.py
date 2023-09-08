@@ -1,7 +1,7 @@
 import json
 from functools import wraps
 
-from app.config import get_settings
+from app.settings.settings import get_settings
 from loguru import logger
 
 settings = get_settings()
@@ -11,7 +11,7 @@ def validate_stable_diffusion_upscaler(func):
     @wraps(func)
     def wrapper_check_stable_diffusion_upscaler(*args, **kwargs):
         func(*args, **kwargs)
-        file_path = f"{settings.model_parent_path}stabilityai/stable-diffusion-x4-upscaler"
+        file_path = f"{settings.models_folder}stabilityai/stable-diffusion-x4-upscaler"
         if kwargs["path"] == file_path:
             logger.info("Fixing Stable Diffusion Upscaling 4x model...")
             fix_stable_diffusion_upscaling_4x_model(f"{file_path}/model_index.json")

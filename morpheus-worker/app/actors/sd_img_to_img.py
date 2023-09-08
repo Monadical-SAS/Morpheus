@@ -3,30 +3,39 @@ import logging
 
 import ray
 from PIL import Image
+
+from app.actors.common.sd_base import StableDiffusionAbstract
 from app.actors.s3_client import S3Client
+from app.schemas.schemas import Prompt
 
 
 @ray.remote(num_gpus=1)
-class StableDiffusionImageToImage:
-    def __init__(self):
-        import torch
-        from diffusers import EulerDiscreteScheduler, StableDiffusionImg2ImgPipeline
+class StableDiffusionImageToImage(StableDiffusionAbstract):
+    def __init__(self, model_id: str, scheduler: str):
+        super().__init__(
+            pipeline_name="StableDiffusionImg2ImgPipeline",
+            model_id=model_id,
+            scheduler=scheduler
+        )
         self.logger = logging.getLogger(__name__)
+        self.s3_client = S3Client.remote()
 
-        model_id = "stabilityai/stable-diffusion-2"
-        scheduler = EulerDiscreteScheduler.from_pretrained(
-            model_id, subfolder="scheduler"
+    def generate(self, prompt: Prompt):
+        self.logger.info(f"StableDiffusionImageToImage.generate: prompt: {prompt}")
+        image = Image.open(io.BytesIO(prompt.image))
+        result = self.pipe(
+            prompt=prompt.prompt,
+            width=prompt.width,
+            height=prompt.height,
+            num_inference_steps=prompt.num_inference_steps,
+            guidance_scale=prompt.guidance_scale,
+            num_images_per_prompt=prompt.num_images_per_prompt,
+            negative_prompt=prompt.negative_prompt,
+            strength=prompt.strength,
+            image=image,
+        ).images
+        return self.s3_client.upload_multiple_files.remote(
+            files=result,
+            folder_name=prompt.user_id,
+            file_name=f"{prompt.task_id}"
         )
-        self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
-            model_id, scheduler=scheduler, revision="fp16", torch_dtype=torch.float16
-        )
-        self.pipe = self.pipe.to("cuda")
-
-    def generate(self, task_id: str, prompt: str, base_image: any):
-        assert len(prompt), self.logger.error("prompt parameter cannot be empty")
-        image = Image.open(io.BytesIO(base_image))
-        result = self.pipe(prompt, image=image).images[0]
-        s3_client = S3Client.remote()
-        result = ray.get(s3_client.upload_file.remote(result, "ray-results", f"{task_id}.png"))
-        self.logger.info(f"ImageToImage for taskId {task_id} result {result}")
-        return result

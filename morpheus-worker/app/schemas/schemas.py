@@ -1,35 +1,35 @@
-from typing import Optional
+from typing import Optional, Any
+from uuid import UUID
 
 from pydantic import BaseModel
 
 
-class PromptRequest(BaseModel):
-    prompt: str
-    img_size: int = 512
-
-
 class Prompt(BaseModel):
-    prompt: str
-    model: str
-    sampler: str
-    negative_prompt: str
-    width: int = 512
-    height: int = 512
+    task_id: UUID
+    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    negative_prompt: str = "bad, low res, ugly, deformed"
+    width: int = 768
+    height: int = 768
     num_inference_steps: int = 50
     guidance_scale: int = 10
     num_images_per_prompt: int = 1
     generator: int = -1
     strength: Optional[float] = 0.75
+    image: Optional[Any] = None
+    mask: Optional[Any] = None
+    model_id: str
+    scheduler: str
+    user_id: str
 
     class Config:
         schema_extra = {
             "example": {
-                "prompt": "Prompt text",
-                "model": "stabilityai/stable-diffusion-2",
-                "sampler": "Euler",
-                "negative_prompt": "Negative prompt text",
-                "width": 512,
-                "height": 512,
+                "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+                "scheduler": "PNDMScheduler",
+                "prompt": "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation",
+                "negative_prompt": "bad, low res, ugly, deformed",
+                "width": 768,
+                "height": 768,
                 "num_inference_steps": 50,
                 "guidance_scale": 10,
                 "num_images_per_prompt": 1,
