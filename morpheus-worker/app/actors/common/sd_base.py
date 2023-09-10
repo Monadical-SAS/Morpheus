@@ -69,7 +69,7 @@ class StableDiffusionAbstract(ABC):
             torch_dtype=self.dtype,
             use_safetensors=True,
         )
-        self.pipeline.scheduler = self.scheduler_import.from_pretrained(
+        self.pipeline.scheduler = self.scheduler_import.from_config(
             self.pipeline.scheduler.config,
         )
         self.pipeline.to(self.device)
