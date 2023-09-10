@@ -1,9 +1,18 @@
+# model serving and web
 ray[serve]
+loguru
+
+# image handing and upload
 boto3
+python-multipart
+pillow
+
+# image generation
 torch
 diffusers
 transformers
 accelerate
-python-multipart
-pillow
-loguru
+xformers
+safetensors
+invisible-watermark>=0.2.0
+opencv-python
