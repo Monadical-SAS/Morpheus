@@ -1,18 +1,18 @@
 import logging
-import uuid
+
+from fastapi import FastAPI, UploadFile, Depends
+from fastapi.responses import Response
+from ray import serve
+from ray.util.state import get_task
+from ray.util.state import summarize_tasks
 
 from app.actors.sd_controlnet import StableDiffusionControlnet
 from app.actors.sd_img_to_img import StableDiffusionImageToImage
 from app.actors.sd_inpainting import StableDiffusionInpainting
 from app.actors.sd_pix_to_pix import StableDiffusionPixToPix
-from app.actors.sd_text_to_img import StableDiffusionXLTextToImage, StableDiffusionV2Text2Img
+from app.actors.sd_text_to_img import StableDiffusionText2Img
 from app.actors.sd_upscaling import StableDiffusionUpscaling
 from app.schemas.schemas import Prompt
-from fastapi import FastAPI, UploadFile
-from fastapi.responses import Response
-from ray import serve
-from ray.util.state import get_task
-from ray.util.state import summarize_tasks
 
 app = FastAPI()
 
@@ -35,26 +35,18 @@ class APIIngress:
     async def root(self):
         return "Hello from Morpheus Ray"
 
-    @app.post("/text2img_xl")
-    async def generate_text2img_xl(self, prompt: Prompt):
-        try:
-            assert len(prompt.prompt), "prompt parameter cannot be empty"
-            task_uuid = str(uuid.uuid4())
-            stable = StableDiffusionXLTextToImage.remote(scheduler=prompt.scheduler)
-            stable.generate.remote(prompt=prompt)
-            return Response(content=task_uuid)
-        except Exception as e:
-            self.logger.error(f"Error in generate_text2img_xl {e}")
-            return Response(content=e)
-
     @app.post("/text2img")
     async def generate_text2img(self, prompt: Prompt):
         try:
-            assert len(prompt.prompt), "prompt parameter cannot be empty"
-            task_uuid = str(uuid.uuid4())
-            stable = StableDiffusionV2Text2Img.remote(scheduler=prompt.scheduler)
-            stable.generate.remote(task_uuid, prompt.prompt, prompt.img_size)
-            return Response(content=task_uuid)
+            print("prompt", prompt)
+            self.logger.info(f"StableDiffusionV2Text2Img.generate: prompt: {prompt}")
+            stable = StableDiffusionText2Img.remote(
+                pipeline=prompt.pipeline,
+                scheduler=prompt.scheduler,
+                model_id=prompt.model_id,
+            )
+            stable.generate.remote(prompt.prompt)
+            return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_text2img {e}")
             return Response(content=e)
@@ -62,16 +54,18 @@ class APIIngress:
     @app.post("/img2img")
     async def generate_img2_img(
             self,
-            prompt: str,
             image: UploadFile,
+            prompt: Prompt = Depends(),
     ):
         try:
-            assert len(prompt), "prompt parameter cannot be empty"
-            task_uuid = str(uuid.uuid4())
-            stable = StableDiffusionImageToImage.remote()
+            stable = StableDiffusionImageToImage.remote(
+                piepline=prompt.pipeline,
+                scheduler=prompt.scheduler,
+                model_id=prompt.model_id,
+            )
             image = await image.read()
-            stable.generate.remote(task_uuid, prompt, image)
-            return Response(content=task_uuid)
+            stable.generate.remote(prompt=prompt, image=image)
+            return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_img2_img {e}")
             return Response(content=e)
@@ -79,16 +73,18 @@ class APIIngress:
     @app.post("/pix2pix")
     async def generate_img2_img(
             self,
-            prompt: str,
             image: UploadFile,
+            prompt: Prompt = Depends(),
     ):
         try:
-            assert len(prompt), "prompt parameter cannot be empty"
-            task_uuid = str(uuid.uuid4())
-            stable = StableDiffusionPixToPix.remote()
+            stable = StableDiffusionPixToPix.remote(
+                piepline=prompt.pipeline,
+                scheduler=prompt.scheduler,
+                model_id=prompt.model_id,
+            )
             image = await image.read()
-            stable.generate.remote(task_uuid, prompt, image)
-            return Response(content=task_uuid)
+            stable.generate.remote(prompt=prompt, image=image)
+            return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_pix2pix {e}")
             return Response(content=e)
@@ -96,16 +92,18 @@ class APIIngress:
     @app.post("/upscaling")
     async def generate_img2_img(
             self,
-            prompt: str,
             image: UploadFile,
+            prompt: Prompt = Depends(),
     ):
         try:
-            assert len(prompt), "prompt parameter cannot be empty"
-            task_uuid = str(uuid.uuid4())
-            stable = StableDiffusionUpscaling.remote()
+            stable = StableDiffusionUpscaling.remote(
+                piepline=prompt.pipeline,
+                scheduler=prompt.scheduler,
+                model_id=prompt.model_id,
+            )
             image = await image.read()
-            stable.generate.remote(task_uuid, prompt, image)
-            return Response(content=task_uuid)
+            stable.generate.remote(prompt=prompt, image=image)
+            return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_upscaling {e}")
             return Response(content=e)
@@ -113,18 +111,20 @@ class APIIngress:
     @app.post("/inpainting")
     async def generate_img2_img(
             self,
-            prompt: str,
             image: UploadFile,
             mask: UploadFile,
+            prompt: Prompt = Depends(),
     ):
         try:
-            assert len(prompt), "prompt parameter cannot be empty"
-            task_uuid = str(uuid.uuid4())
-            stable = StableDiffusionInpainting.remote()
+            stable = StableDiffusionInpainting.remote(
+                piepline=prompt.pipeline,
+                scheduler=prompt.scheduler,
+                model_id=prompt.model_id,
+            )
             image = await image.read()
             mask = await mask.read()
-            stable.generate.remote(task_uuid, prompt, image, mask)
-            return Response(content=task_uuid)
+            stable.generate.remote(prompt=prompt, image=image, mask=mask)
+            return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_inpainting {e}")
             return Response(content=e)
@@ -132,16 +132,14 @@ class APIIngress:
     @app.post("/controlnet")
     async def generate_img2_img(
             self,
-            prompt: str,
             image: UploadFile,
+            prompt: Prompt = Depends(),
     ):
         try:
-            assert len(prompt), "prompt parameter cannot be empty"
-            task_uuid = str(uuid.uuid4())
             stable = StableDiffusionControlnet.remote()
             image = await image.read()
-            stable.generate.remote(task_uuid, prompt, image)
-            return Response(content=task_uuid)
+            stable.generate.remote(prompt=prompt, image=image)
+            return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_controlnet {e}")
             return Response(content=e)

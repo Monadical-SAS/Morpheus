@@ -1,11 +1,14 @@
-from typing import Optional, Any
 import uuid
+from typing import Optional, Any
 
 from pydantic import BaseModel
+from app.settings.settings import get_settings
+
+settings = get_settings()
 
 
 class Prompt(BaseModel):
-    task_id: uuid.UUID
+    task_id: str
     prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
     negative_prompt: str = "bad, low res, ugly, deformed"
     width: int = 768
@@ -15,10 +18,9 @@ class Prompt(BaseModel):
     num_images_per_prompt: int = 1
     generator: int = -1
     strength: Optional[float] = 0.75
-    image: Optional[Any] = None
-    mask: Optional[Any] = None
-    model_id: str
-    scheduler: str
+    pipeline: str = settings.default_pipeline
+    scheduler: str = settings.default_scheduler
+    model_id: str = settings.default_model
     user_id: str
 
     class Config:
@@ -34,8 +36,9 @@ class Prompt(BaseModel):
                 "num_images_per_prompt": 1,
                 "generator": -1,
                 "strength": 0.75,
-                "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
-                "scheduler": "PNDMScheduler",
+                "pipeline": settings.default_pipeline,
+                "scheduler": settings.default_scheduler,
+                "model_id": settings.default_model,
                 "user_id": "ray@morpheus.com",
             }
         }

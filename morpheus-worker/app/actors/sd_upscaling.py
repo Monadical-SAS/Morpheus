@@ -1,27 +1,34 @@
 import io
 import logging
+from typing import Any
 
 import ray
 from PIL import Image
 
+from app.actors.common.sd_base import StableDiffusionAbstract
 from app.actors.s3_client import S3Client
 from app.schemas.schemas import Prompt
 
 
 @ray.remote(num_gpus=1)
-class StableDiffusionUpscaling:
-    def __init__(self, model_id: str, scheduler: str):
+class StableDiffusionUpscaling(StableDiffusionAbstract):
+    def __init__(
+            self, *,
+            pipeline: str = "StableDiffusionUpscalePipeline",
+            scheduler: str = "DDPMScheduler",
+            model_id: str = "stabilityai/stable-diffusion-x4-upscaler"
+    ):
         super().__init__(
-            pipeline_name="StableDiffusionUpscalePipeline",
-            model_id="stabilityai/stable-diffusion-x4-upscaler",
-            scheduler=scheduler
+            pipeline=pipeline,
+            scheduler=scheduler,
+            model_id=model_id,
         )
         self.logger = logging.getLogger(__name__)
         self.s3_client = S3Client.remote()
 
-    def generate(self, prompt: Prompt):
+    def generate(self, prompt: Prompt, image: Any):
         self.logger.info(f"StableDiffusionUpscaling.generate: prompt: {prompt}")
-        image = Image.open(io.BytesIO(prompt.image))
+        image = Image.open(io.BytesIO(image))
         result = self.pipe(
             prompt=prompt.prompt,
             width=prompt.width,

@@ -1,5 +1,6 @@
 import importlib
 import logging
+import os
 from abc import ABC
 from pathlib import Path
 
@@ -8,18 +9,20 @@ import torch
 from app.settings.settings import get_settings
 
 settings = get_settings()
+custom_cache_dir = "/mnt/"
+os.environ["TRANSFORMERS_CACHE"] = custom_cache_dir
 
 
 class StableDiffusionAbstract(ABC):
     def __init__(
-            self,
-            pipeline_name: str = settings.pipeline_default,
-            model_id: str = settings.model_default,
-            scheduler: str = settings.scheduler_default
+            self, *,
+            pipeline: str = settings.default_pipeline,
+            model_id: str = settings.default_model,
+            scheduler: str = settings.default_scheduler
     ):
         self.logger = logging.getLogger(__name__)
 
-        self.local_model_path = Path(settings.models_folder) / model_id
+        self.local_model_path = Path(settings.models_folder).joinpath(model_id)
         self.model_source = self.local_model_path if Path(self.local_model_path).exists() else model_id
 
         # Check the environment variable/settings file to determine if we should
@@ -57,19 +60,17 @@ class StableDiffusionAbstract(ABC):
 
         # Import modules and pipelines
         self.diffusers_import = importlib.import_module("diffusers")
-        self.pipeline_import = getattr(self.diffusers_import, pipeline_name)
+        self.pipeline_import = getattr(self.diffusers_import, pipeline)
         self.scheduler_import = getattr(self.diffusers_import, scheduler)
 
         # Load the model and scheduler
-        self.scheduler = self.scheduler_import.from_pretrained(
-            self.model_source,
-            subfolder="scheduler",
-        )
         self.pipeline = self.pipeline_import.from_pretrained(
             self.model_source,
             torch_dtype=self.dtype,
-            scheduler=self.scheduler,
             use_safetensors=True,
+        )
+        self.pipeline.scheduler = self.scheduler_import.from_pretrained(
+            self.pipeline.scheduler.config,
         )
         self.pipeline.to(self.device)
 

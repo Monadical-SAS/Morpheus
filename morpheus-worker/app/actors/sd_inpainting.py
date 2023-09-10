@@ -1,5 +1,6 @@
 import io
 import logging
+from typing import Any
 
 import ray
 from PIL import Image
@@ -11,19 +12,24 @@ from app.schemas.schemas import Prompt
 
 @ray.remote(num_gpus=1)
 class StableDiffusionInpainting(StableDiffusionAbstract):
-    def __init__(self, scheduler: str):
+    def __init__(
+            self, *,
+            pipeline: str = "StableDiffusionInpaintPipeline",
+            scheduler: str = "DDPMScheduler",
+            model_id: str = "runwayml/stable-diffusion-inpainting"
+    ):
         super().__init__(
-            pipeline_name="StableDiffusionInpaintPipeline",
-            model_id="runwayml/stable-diffusion-inpainting",
-            scheduler=scheduler
+            pipeline=pipeline,
+            scheduler=scheduler,
+            model_id=model_id
         )
         self.logger = logging.getLogger(__name__)
         self.s3_client = S3Client.remote()
 
-    def generate(self, prompt: Prompt):
+    def generate(self, prompt: Prompt, image: Any, mask: Any):
         self.logger.info(f"StableDiffusionInpainting.generate: prompt: {prompt}")
-        image = Image.open(io.BytesIO(prompt.image))
-        mask = Image.open(io.BytesIO(prompt.mask))
+        image = Image.open(io.BytesIO(image))
+        mask = Image.open(io.BytesIO(mask))
 
         result = self.pipe(
             prompt=prompt.prompt,
