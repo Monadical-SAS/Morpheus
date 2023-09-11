@@ -57,7 +57,7 @@ def cloudwatch_metric():
             print("Scheduled is None ...")
     except Exception as e:
         print("Exception in scheduled:" + str(e))
-    
+
     if num_workers != 0:
         metric = pending_tasks_count / num_workers
         cloudwatch = boto3.client("cloudwatch", region_name=CLOUDWATCH_REGION)
@@ -67,6 +67,7 @@ def cloudwatch_metric():
         )
         return True
     return False
+
 
 while True:
     try:

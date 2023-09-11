@@ -30,7 +30,7 @@ jobs:
       - name: Deploy
         run: |
           # Running migrations by a pod
-          kubectl run morpheus-migrations --pod-running-timeout=15m --rm -i --image monadicalsas/morpheus-api:${{ github.run_id }} --overrides="{
+          kubectl run morpheus-migrations --pod-running-timeout=15m --rm -i --image monadicalsas/morpheus-data:latest --overrides="{
             \"spec\": {
               \"imagePullSecrets\": [
                 {
@@ -40,7 +40,7 @@ jobs:
               \"containers\": [
                 {
                   \"name\": \"morpheus\",
-                  \"image\": \"monadicalsas/morpheus-api:${{ github.run_id }}\",
+                  \"image\": \"monadicalsas/morpheus-data:latest\",
                   \"imagePullPolicy\": \"Always\",
                   \"command\": [
                     \"alembic\", \"upgrade\", \"head\"

@@ -1,13 +1,13 @@
 from celery.result import AsyncResult
 from fastapi import APIRouter, Depends, File, UploadFile
 
-from app.database.database import get_db
+from morpheus_data.database.database import get_db
+from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
+
+from app.config import get_generative_ai_backend
 from app.error.error import ImageNotProvidedError, ModelNotFoundError, UserNotFoundError
 from app.integrations.firebase import get_user
 from app.models.schemas import (
-    MagicPrompt,
-    PromptControlNet,
-    Prompt,
     Response,
     TaskResponse,
     TaskStatus,
@@ -15,7 +15,8 @@ from app.models.schemas import (
 from app.services.sdiffusion_services import StableDiffusionService
 
 router = APIRouter()
-sd_services = StableDiffusionService()
+generative_ai_generator = get_generative_ai_backend()
+sd_services = StableDiffusionService(generative_ai_generator=generative_ai_generator)
 
 
 @router.post(
@@ -144,7 +145,10 @@ async def generate_inpaint_from_prompt_and_image_and_mask(
     response_description="Perform upscaling on an image with a prompt.",
 )
 async def generate_upscale_from_prompt_and_image(
-    prompt: Prompt = Depends(), image: UploadFile = File(...), db=Depends(get_db), user=Depends(get_user)
+    prompt: Prompt = Depends(),
+    image: UploadFile = File(...),
+    db=Depends(get_db),
+    user=Depends(get_user),
 ):
     try:
         image = await image.read()

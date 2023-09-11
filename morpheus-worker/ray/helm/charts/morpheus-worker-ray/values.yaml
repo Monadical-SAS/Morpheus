@@ -15,11 +15,11 @@ worker:
   rayVersion: 2.3.0
   head:
     rayStartParams:
-      numCpus: "2"
+      numCpus: "1"
       numGpus: "0"
     resources:
       limits:
-        cpu: "2"
+        cpu: "1"
         memory: "6G"
   workerGroup:
     replicas: 1
@@ -30,7 +30,7 @@ worker:
       numGpus: "1"
     resources:
       limits:
-        cpu: "4"
+        cpu: "2"
         memory: "8G"
         gpu: 1
 

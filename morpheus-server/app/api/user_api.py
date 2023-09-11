@@ -4,9 +4,11 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.database.database import get_db
+from morpheus_data.database.database import get_db
+from morpheus_data.models.schemas import User
+
 from app.integrations.firebase import get_user
-from app.models.schemas import User, Response
+from app.models.schemas import Response
 from app.services.user_services import UserService
 
 router = APIRouter()

@@ -67,6 +67,8 @@ jobs:
           pip install pytest
       - name: Install dependencies
         run: |
+          pip install build
+          pip install -e ../morpheus-data
           pip install -r requirements.txt
           pip install torch --index-url https://download.pytorch.org/whl/cpu
       - name: Run tests
