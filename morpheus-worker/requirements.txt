@@ -15,4 +15,5 @@ accelerate
 xformers
 safetensors
 invisible-watermark>=0.2.0
-opencv-python
+controlnet-aux==0.0.1
+opencv-contrib-python-headless

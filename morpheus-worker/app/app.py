@@ -45,7 +45,7 @@ class APIIngress:
                 scheduler=prompt.scheduler,
                 model_id=prompt.model_id,
             )
-            stable.generate.remote(prompt.prompt)
+            stable.generate.remote(prompt=prompt)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_text2img {e}")

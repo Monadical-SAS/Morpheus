@@ -25,7 +25,7 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
 
     def generate(self, prompt: Prompt):
         self.logger.info(f"StableDiffusionV2Text2Img.generate: prompt: {prompt}")
-        result = self.pipe(
+        result = self.pipeline(
             prompt=prompt.prompt,
             width=prompt.width,
             height=prompt.height,

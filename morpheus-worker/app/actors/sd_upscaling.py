@@ -29,7 +29,7 @@ class StableDiffusionUpscaling(StableDiffusionAbstract):
     def generate(self, prompt: Prompt, image: Any):
         self.logger.info(f"StableDiffusionUpscaling.generate: prompt: {prompt}")
         image = Image.open(io.BytesIO(image))
-        result = self.pipe(
+        result = self.pipeline(
             prompt=prompt.prompt,
             width=prompt.width,
             height=prompt.height,

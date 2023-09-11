@@ -31,7 +31,7 @@ class StableDiffusionInpainting(StableDiffusionAbstract):
         image = Image.open(io.BytesIO(image))
         mask = Image.open(io.BytesIO(mask))
 
-        result = self.pipe(
+        result = self.pipeline(
             prompt=prompt.prompt,
             width=prompt.width,
             height=prompt.height,
