@@ -34,8 +34,11 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
             num_images_per_prompt=prompt.num_images_per_prompt,
             negative_prompt=prompt.negative_prompt,
         ).images
-        return self.s3_client.upload_multiple_files.remote(
-            files=result,
-            folder_name=prompt.user_id,
-            file_name=f"{prompt.task_id}"
+
+        ray.wait(
+            self.s3_client.upload_multiple_files.remote(
+                files=result,
+                folder_name=prompt.user_id,
+                file_name=f"{prompt.task_id}"
+            )
         )
