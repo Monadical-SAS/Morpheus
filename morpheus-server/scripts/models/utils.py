@@ -8,6 +8,7 @@ from omegaconf import OmegaConf
 
 from decorators import validate_stable_diffusion_upscaler
 
+
 def load_config_from_file(filename):
     return OmegaConf.load(filename)
 

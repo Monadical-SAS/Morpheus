@@ -36,8 +36,8 @@ class ModelService:
     async def get_model_by_id(self, *, db: Session, model_id: UUID) -> MLModel:
         return self.model_repository.get_model_by_id(db=db, model_id=model_id)
 
-    # async def get_model_by_category(self, *, db: Session, category_id: UUID) -> MLModel:
-    #     return self.model_repository.get_model_by_category(db=db, category_id=category_id)
+    async def get_model_by_category(self, *, db: Session, category_id: UUID) -> MLModel:
+        return self.model_repository.get_model_by_category(db=db, category_id=category_id)
 
     async def get_model_by_source(self, *, db: Session, model_source: str) -> MLModel:
         return self.model_repository.get_model_by_source(db=db, model_source=model_source)

@@ -509,9 +509,9 @@ class StableDiffusionXLText2Image(StableDiffusionAbstract):
         super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
         self.pipe = StableDiffusionXLPipeline.from_pretrained(
             "stabilityai/stable-diffusion-xl-base-1.0",
-             torch_dtype=torch.float16,
-             variant="fp16",
-             use_safetensors=True
+            torch_dtype=torch.float16,
+            variant="fp16",
+            use_safetensors=True
         )
         self.pipe.to("cuda")
 
@@ -526,7 +526,7 @@ class StableDiffusionXLText2Image(StableDiffusionAbstract):
         images = self.pipe(
             prompt=prompt.prompt,
             negative_prompt=prompt.negative_prompt,
-            num_images_per_prompt=1 ,
+            num_images_per_prompt=1,
             guidance_scale=prompt.guidance_scale,
             num_inference_steps=prompt.num_inference_steps,
             generator=generator,
