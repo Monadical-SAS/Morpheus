@@ -3,7 +3,10 @@ from morpheus_data.database.init_data.categories import controlnet
 controlnet_models = [
     {
         "name": "Canny edges",
-        "description": "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Canny edges.",
+        "description": (
+            "ControlNet is a neural network structure to control diffusion models by adding extra "
+            "conditions. This checkpoint corresponds to the ControlNet conditioned on Canny edges."
+        ),
         "source": "lllyasviel/sd-controlnet-canny",
         "url_docs": "https://huggingface.co/lllyasviel/sd-controlnet-canny",
         "categories": [controlnet],
@@ -11,7 +14,10 @@ controlnet_models = [
     },
     {
         "name": "Depth",
-        "description": "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Depth estimation.",
+        "description": (
+            "ControlNet is a neural network structure to control diffusion models by adding extra "
+            "conditions. This checkpoint corresponds to the ControlNet conditioned on Depth estimation."
+        ),
         "source": "lllyasviel/sd-controlnet-depth",
         "url_docs": "https://huggingface.co/lllyasviel/sd-controlnet-depth",
         "categories": [controlnet],
@@ -19,10 +25,13 @@ controlnet_models = [
     },
     {
         "name": "Segmentation",
-        "description": "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Image Segmentation.",
+        "description": (
+            "ControlNet is a neural network structure to control diffusion models by adding extra "
+            "conditions. This checkpoint corresponds to the ControlNet conditioned on Image Segmentation."
+        ),
         "source": "lllyasviel/sd-controlnet-seg",
         "url_docs": "https://huggingface.co/lllyasviel/sd-controlnet-seg",
         "categories": [controlnet],
         "extra_params": {"type": "seg"},
-    }
+    },
 ]
