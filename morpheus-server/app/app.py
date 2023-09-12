@@ -28,10 +28,10 @@ sentry_sdk.init(
 
 app = FastAPI()
 
+Base.metadata.create_all(bind=engine)
 
 @app.on_event("startup")
 async def startup_db():
-    Base.metadata.create_all(bind=engine)
     init_morpheus_data()
 
 
