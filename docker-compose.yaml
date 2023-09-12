@@ -28,6 +28,8 @@ services:
     build:
       context: morpheus-server
       dockerfile: ./Dockerfile
+      args:
+        - TAG=${TAG:-latest}
     image: morpheus-server:latest
     env_file:
       - morpheus-server/secrets.env
@@ -54,7 +56,7 @@ services:
       dockerfile: ./Dockerfile
       args:
         DOCKER_BUILDKIT: 1
-    image: monadicalsas/morpheus-data:latest
+    image: monadicalsas/morpheus-data:${TAG:-latest}
     volumes:
       - ./wheels:/wheels
       - ./morpheus-data:/app

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
 from morpheus_data.config import get_settings
@@ -228,32 +228,32 @@ class MLModelCreate(BaseModel):
     is_active: bool = True
 
     class Config:
-    schema_extra = {
-        "example": {
-            "name": "Model Name",
-            "source": "https://modelurl.com",
-            "description": "Model description",
-            "url_docs": "https://modeldocs.com",
-            "is_active": True,
+        schema_extra = {
+            "example": {
+                "name": "Model Name",
+                "source": "https://modelurl.com",
+                "description": "Model description",
+                "url_docs": "https://modeldocs.com",
+                "is_active": True,
+            }
         }
-    }
 
 
 class MLModel(MLModelCreate):
     id: UUID
 
     class Config:
-    orm_mode = True
-    schema_extra = {
-        "example": {
-            "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
-            "name": "Model Name",
-            "source": "https://modelurl.com",
-            "description": "Model description",
-            "url_docs": "https://modeldocs.com",
-            "is_active": True,
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
+                "name": "Model Name",
+                "source": "https://modelurl.com",
+                "description": "Model description",
+                "url_docs": "https://modeldocs.com",
+                "is_active": True,
+            }
         }
-    }
 
 
 class SamplerModel(BaseModel):
