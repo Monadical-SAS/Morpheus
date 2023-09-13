@@ -43,7 +43,7 @@ class ModelsHandler:
 
         # Upload images to S3 Bucket
         image_urls_future = self.s3_client.upload_multiple_files.remote(
-            images_future=generated_images,
+            files=generated_images,
             folder_name=prompt.user_id,
             file_name=f"{prompt.task_id}"
         )
