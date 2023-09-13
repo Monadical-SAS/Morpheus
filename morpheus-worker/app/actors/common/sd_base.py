@@ -23,6 +23,7 @@ class StableDiffusionAbstract(ABC):
     ):
         self.logger = logging.getLogger(__name__)
         self.generator = None
+        self.controlnet = None
 
         # Get the model source, path for local model, model_id for hugin face remote model
         self.local_model_path = Path(settings.models_folder).joinpath(model_id)
@@ -80,13 +81,17 @@ class StableDiffusionAbstract(ABC):
                 torch_dtype=self.dtype
             )
 
+        # Build the pipeline parameters
+        default_params = {
+            "pretrained_model_name": self.model_source,
+            "torch_dtype": self.dtype,
+            "use_safetensors": True,
+        }
+        if self.controlnet:
+            default_params["controlnet"] = self.controlnet
+
         # Load the model and scheduler
-        self.pipeline = self.pipeline_import.from_pretrained(
-            self.model_source,
-            controlnet=self.controlnet if self.controlnet else None,
-            torch_dtype=self.dtype,
-            use_safetensors=True,
-        )
+        self.pipeline = self.pipeline_import.from_pretrained(**default_params)
         self.pipeline.scheduler = self.scheduler_import.from_config(
             self.pipeline.scheduler.config,
         )

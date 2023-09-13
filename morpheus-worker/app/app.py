@@ -107,22 +107,6 @@ class APIIngress:
             self.logger.error(f"Error in generate_inpainting {e}")
             return Response(content=e)
 
-    @app.post("/controlnet")
-    async def generate_img2_img(
-            self,
-            image: UploadFile,
-            prompt: Prompt = Depends(),
-    ):
-        try:
-            self.logger.info(f"StableDiffusionControlnet.generate: prompt: {prompt}")
-            prompt.image = await image.read()
-            handler = ModelsHandler.remote(endpoint="text2img")
-            handler.handle_generation.remote(prompt=prompt)
-            return Response(content=prompt.task_id)
-        except Exception as e:
-            self.logger.error(f"Error in generate_controlnet {e}")
-            return Response(content=e)
-
     @app.get("/task")
     async def task_status(self, task_id: str):
         task = get_task(task_id)

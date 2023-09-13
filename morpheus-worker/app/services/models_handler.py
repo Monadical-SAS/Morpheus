@@ -3,7 +3,6 @@ import logging
 import ray
 
 from app.actors.s3_client import S3Client
-from app.actors.sd_controlnet import StableDiffusionControlnet
 from app.actors.sd_img_to_img import StableDiffusionImageToImage
 from app.actors.sd_inpainting import StableDiffusionInpainting
 from app.actors.sd_pix_to_pix import StableDiffusionPixToPix
@@ -27,7 +26,6 @@ class ModelsHandler:
             CategoryEnum.PIX_TO_PIX: StableDiffusionPixToPix,
             CategoryEnum.UPSCALING: StableDiffusionUpscaling,
             CategoryEnum.INPAINTING: StableDiffusionInpainting,
-            CategoryEnum.CONTROLNET: StableDiffusionControlnet,
         }
         generator = generators.get(self.endpoint)
         if generator is None:
