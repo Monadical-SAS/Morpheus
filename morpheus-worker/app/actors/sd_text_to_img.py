@@ -31,6 +31,7 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
             guidance_scale=prompt.guidance_scale,
             num_images_per_prompt=prompt.num_images_per_prompt,
             negative_prompt=prompt.negative_prompt,
+            generator=prompt.generator,
         ).images
         self.logger.info(f"StableDiffusionV2Text2Img.generate: result: {len(result)}")
         return result

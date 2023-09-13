@@ -40,5 +40,6 @@ class Prompt(BaseModel):
     class Config:
         size = random.choice([480, 512, 768, 1024])
         schema_extra = {
-            "example": generate_random_prompt()
+            "example": generate_random_prompt(),
+            "exclude": ["image", "mask"],
         }

@@ -28,15 +28,13 @@ class StableDiffusionPixToPix(StableDiffusionAbstract):
         self.logger.info(f"StableDiffusionPixToPix.generate: prompt: {prompt}")
         image = Image.open(io.BytesIO(prompt.image))
         result = self.pipeline(
-            prompt=prompt.prompt,
-            width=prompt.width,
-            height=prompt.height,
-            num_inference_steps=prompt.num_inference_steps,
-            guidance_scale=prompt.guidance_scale,
-            num_images_per_prompt=prompt.num_images_per_prompt,
-            negative_prompt=prompt.negative_prompt,
-            strength=prompt.strength,
             image=image,
+            prompt=prompt.prompt,
+            negative_prompt=prompt.negative_prompt,
+            guidance_scale=prompt.guidance_scale,
+            num_inference_steps=prompt.num_inference_steps,
+            num_images_per_prompt=prompt.num_images_per_prompt,
+            generator=prompt.generator,
         ).images
         self.logger.info(f"StableDiffusionPixToPix.generate: result: {len(result)}")
         return result
