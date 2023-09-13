@@ -20,7 +20,7 @@ interface MainContainerProps {
 const ImagineBase = (props: MainContainerProps) => {
   const { img2imgFile, setImg2imgFile, maskFile, setMaskFile } = useImagine();
   const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
+  const isMobile = width < MOBILE_SCREEN_WIDTH && width !== 0;
 
   const ImagineInputInstance = (
     <ImagineInput

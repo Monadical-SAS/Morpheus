@@ -12,16 +12,14 @@ interface ImagineContainerProps {
 
 const ImagineLayout = (props: ImagineContainerProps) => {
   const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
+  const isMobile = width < MOBILE_SCREEN_WIDTH && width !== 0;
 
   return (
     <PrivateRoute>
       <div className={styles.imagineLayout}>
         {!isMobile && <ImagineMenu />}
-
         <div className={styles.imagineContent}>
           <Navbar />
-
           {props.children}
         </div>
       </div>

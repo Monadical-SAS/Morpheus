@@ -26,7 +26,7 @@ const Modal = (props: ModalProps) => {
   const { width } = useWindowDimensions();
 
   const initialStyles = useMemo(() => {
-    const isMobile = width < MOBILE_SCREEN_WIDTH;
+    const isMobile = width < MOBILE_SCREEN_WIDTH && width !== 0;
     const defaultSize = isMobile ? 90 : 80;
 
     return {

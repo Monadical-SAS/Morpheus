@@ -83,7 +83,7 @@ const Navbar = (props: NavbarProps) => {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { user, setAuthOption } = useAuth();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
+  const isMobile = width < MOBILE_SCREEN_WIDTH && width !== 0;
 
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 

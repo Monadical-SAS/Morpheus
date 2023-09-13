@@ -13,7 +13,7 @@ export const UserProfile = () => {
   const { width } = useWindowDimensions();
   const { showSuccessAlert, showWarningAlert, showErrorAlert } =
     useToastContext();
-  const isMobile = width <= MOBILE_SCREEN_WIDTH;
+  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
 
   const confirmRemove = () => {
     showWarningAlert(
