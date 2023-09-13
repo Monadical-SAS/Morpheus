@@ -3,7 +3,6 @@ import logging
 import ray
 
 from app.actors.common.sd_base import StableDiffusionAbstract
-from app.actors.s3_client import S3Client
 from app.schemas.schemas import Prompt
 
 
@@ -21,7 +20,6 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
             scheduler=scheduler
         )
         self.logger = logging.getLogger(__name__)
-        self.s3_client = S3Client.remote()
 
     def generate(self, prompt: Prompt):
         self.logger.info(f"StableDiffusionV2Text2Img.generate: prompt: {prompt}")
@@ -34,11 +32,5 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
             num_images_per_prompt=prompt.num_images_per_prompt,
             negative_prompt=prompt.negative_prompt,
         ).images
-
-        ray.wait(
-            self.s3_client.upload_multiple_files.remote(
-                files=result,
-                folder_name=prompt.user_id,
-                file_name=f"{prompt.task_id}"
-            )
-        )
+        self.logger.info(f"StableDiffusionV2Text2Img.generate: result: {len(result)}")
+        return result

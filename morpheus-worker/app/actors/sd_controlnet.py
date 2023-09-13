@@ -3,6 +3,7 @@ import logging
 
 import ray
 from PIL import Image
+
 from app.actors.s3_client import S3Client
 
 

@@ -17,6 +17,7 @@ RUN sudo apt-get update && sudo apt-get install -y jq build-essential libpq-dev 
 # Install python requirements
 COPY requirements.txt .
 RUN pip install --upgrade pip
+RUN pip install torch
 RUN pip install -r requirements.txt
 
 # Copy the application files

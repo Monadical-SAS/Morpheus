@@ -6,13 +6,8 @@ from ray import serve
 from ray.util.state import get_task
 from ray.util.state import summarize_tasks
 
-from app.actors.sd_controlnet import StableDiffusionControlnet
-from app.actors.sd_img_to_img import StableDiffusionImageToImage
-from app.actors.sd_inpainting import StableDiffusionInpainting
-from app.actors.sd_pix_to_pix import StableDiffusionPixToPix
-from app.actors.sd_text_to_img import StableDiffusionText2Img
-from app.actors.sd_upscaling import StableDiffusionUpscaling
-from app.schemas.schemas import Prompt
+from app.schemas.schemas import Prompt, CategoryEnum
+from app.services.models_handler import ModelsHandler
 
 app = FastAPI()
 
@@ -35,95 +30,78 @@ class APIIngress:
     async def root(self):
         return "Hello from Morpheus Ray"
 
-    @app.post("/text2img")
+    @app.post(f"/{CategoryEnum.TEXT_TO_IMAGE}")
     async def generate_text2img(self, prompt: Prompt):
         try:
-            print("prompt", prompt)
-            self.logger.info(f"StableDiffusionV2Text2Img.generate: prompt: {prompt}")
-            stable = StableDiffusionText2Img.remote(
-                pipeline=prompt.pipeline,
-                scheduler=prompt.scheduler,
-                model_id=prompt.model_id,
-            )
-            stable.generate.remote(prompt=prompt)
+            self.logger.info(f"StableDiffusionText2Img.generate: prompt: {prompt}")
+            handler = ModelsHandler.remote(endpoint=CategoryEnum.TEXT_TO_IMAGE)
+            handler.handle_generation.remote(prompt=prompt)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_text2img {e}")
             return Response(content=e)
 
-    @app.post("/img2img")
+    @app.post(f"/{CategoryEnum.IMAGE_TO_IMAGE}")
     async def generate_img2_img(
             self,
             image: UploadFile,
             prompt: Prompt = Depends(),
     ):
         try:
-            stable = StableDiffusionImageToImage.remote(
-                piepline=prompt.pipeline,
-                scheduler=prompt.scheduler,
-                model_id=prompt.model_id,
-            )
+            self.logger.info(f"StableDiffusionImg2Img.generate: prompt: {prompt}")
             image = await image.read()
-            stable.generate.remote(prompt=prompt, image=image)
+            handler = ModelsHandler.remote(endpoint=CategoryEnum.IMAGE_TO_IMAGE)
+            handler.handle_generation.remote(prompt=prompt, image=image)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_img2_img {e}")
             return Response(content=e)
 
-    @app.post("/pix2pix")
-    async def generate_img2_img(
+    @app.post(f"/{CategoryEnum.PIX_TO_PIX}")
+    async def generate_pix2pix(
             self,
             image: UploadFile,
             prompt: Prompt = Depends(),
     ):
         try:
-            stable = StableDiffusionPixToPix.remote(
-                piepline=prompt.pipeline,
-                scheduler=prompt.scheduler,
-                model_id=prompt.model_id,
-            )
+            self.logger.info(f"StableDiffusionPix2Pix.generate: prompt: {prompt}")
             image = await image.read()
-            stable.generate.remote(prompt=prompt, image=image)
+            handler = ModelsHandler.remote(endpoint=CategoryEnum.PIX_TO_PIX)
+            handler.handle_generation.remote(prompt=prompt, image=image)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_pix2pix {e}")
             return Response(content=e)
 
-    @app.post("/upscaling")
-    async def generate_img2_img(
+    @app.post(f"/{CategoryEnum.UPSCALING}")
+    async def generate_upscaling(
             self,
             image: UploadFile,
             prompt: Prompt = Depends(),
     ):
         try:
-            stable = StableDiffusionUpscaling.remote(
-                piepline=prompt.pipeline,
-                scheduler=prompt.scheduler,
-                model_id=prompt.model_id,
-            )
+            self.logger.info(f"StableDiffusionUpscaling.generate: prompt: {prompt}")
             image = await image.read()
-            stable.generate.remote(prompt=prompt, image=image)
+            handler = ModelsHandler.remote(endpoint=CategoryEnum.UPSCALING)
+            handler.handle_generation.remote(prompt=prompt, image=image)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_upscaling {e}")
             return Response(content=e)
 
-    @app.post("/inpainting")
-    async def generate_img2_img(
+    @app.post(f"/{CategoryEnum.INPAINTING}")
+    async def generate_inpainting(
             self,
             image: UploadFile,
             mask: UploadFile,
             prompt: Prompt = Depends(),
     ):
         try:
-            stable = StableDiffusionInpainting.remote(
-                piepline=prompt.pipeline,
-                scheduler=prompt.scheduler,
-                model_id=prompt.model_id,
-            )
+            self.logger.info(f"StableDiffusionInpainting.generate: prompt: {prompt}")
             image = await image.read()
             mask = await mask.read()
-            stable.generate.remote(prompt=prompt, image=image, mask=mask)
+            handler = ModelsHandler.remote(endpoint=CategoryEnum.INPAINTING)
+            handler.handle_generation.remote(prompt=prompt, image=image, mask=mask)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_inpainting {e}")
@@ -136,9 +114,10 @@ class APIIngress:
             prompt: Prompt = Depends(),
     ):
         try:
-            stable = StableDiffusionControlnet.remote()
+            self.logger.info(f"StableDiffusionControlnet.generate: prompt: {prompt}")
             image = await image.read()
-            stable.generate.remote(prompt=prompt, image=image)
+            handler = ModelsHandler.remote(endpoint="text2img")
+            handler.handle_generation.remote(prompt=prompt, image=image)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_controlnet {e}")

@@ -6,7 +6,6 @@ import ray
 from PIL import Image
 
 from app.actors.common.sd_base import StableDiffusionAbstract
-from app.actors.s3_client import S3Client
 from app.schemas.schemas import Prompt
 
 
@@ -24,7 +23,6 @@ class StableDiffusionInpainting(StableDiffusionAbstract):
             model_id=model_id
         )
         self.logger = logging.getLogger(__name__)
-        self.s3_client = S3Client.remote()
 
     def generate(self, prompt: Prompt, image: Any, mask: Any):
         self.logger.info(f"StableDiffusionInpainting.generate: prompt: {prompt}")
@@ -43,8 +41,5 @@ class StableDiffusionInpainting(StableDiffusionAbstract):
             image=image,
             mask_image=mask
         ).images
-        return self.s3_client.upload_multiple_files.remote(
-            files=result,
-            folder_name=prompt.user_id,
-            file_name=f"{prompt.task_id}"
-        )
+        self.logger.info(f"StableDiffusionInpainting.generate: result: {len(result)}")
+        return result

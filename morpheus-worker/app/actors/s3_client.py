@@ -1,6 +1,6 @@
 import logging
 from io import BytesIO
-from typing import Any, List
+from typing import Any
 
 import boto3
 import ray
@@ -42,13 +42,13 @@ class S3Client:
             self.logger.error(f"Error uploading image to S3: {key}")
             self.logger.error(e)
 
-    def upload_multiple_files(self, *, files: List[Any], folder_name: str, file_name: str):
+    def upload_multiple_files(self, *, images_future: Any, folder_name: str, file_name: str):
         object_references = [
             self.s3_client.upload_file.remote(
                 file=image,
                 folder_name=folder_name,
                 file_name=f"{file_name}-{index}.png"
-            ) for index, image in enumerate(files)
+            ) for index, image in enumerate(images_future)
         ]
         all_data = []
 

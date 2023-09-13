@@ -1,10 +1,21 @@
 import uuid
-from typing import Optional, Any
+from enum import Enum
+from typing import Optional
 
 from pydantic import BaseModel
+
 from app.settings.settings import get_settings
 
 settings = get_settings()
+
+
+class CategoryEnum(str, Enum):
+    TEXT_TO_IMAGE = "text2img"
+    IMAGE_TO_IMAGE = "img2img"
+    PIX_TO_PIX = "pix2pix"
+    UPSCALING = "upscaling"
+    INPAINTING = "inpainting"
+    CONTROLNET = "controlnet"
 
 
 class Prompt(BaseModel):
