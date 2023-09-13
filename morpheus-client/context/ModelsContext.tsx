@@ -9,7 +9,7 @@ import { getAvailableModels } from "@/services/models";
 import { getAvailableSamplers } from "@/services/samplers";
 import { Model } from "@/models/models";
 
-export enum ModelFeature {
+export enum ModelCategory {
   Empty = "",
   Text2Image = "text2img",
   Image2Image = "img2img",
@@ -19,9 +19,18 @@ export enum ModelFeature {
   Upscaling = "upscaling",
 }
 
+const categories = [
+  ModelCategory.Text2Image,
+  ModelCategory.Image2Image,
+  ModelCategory.Inpainting,
+  ModelCategory.ControlNet,
+  ModelCategory.Pix2Pix,
+  ModelCategory.Upscaling,
+];
+
 export interface ActiveLink {
   model: Model;
-  feature: ModelFeature;
+  feature: ModelCategory;
 }
 
 export interface IModelsContext {
@@ -33,13 +42,13 @@ export interface IModelsContext {
   setSampler: (sampler: string) => void;
   activeLink: ActiveLink;
   setActiveLink: (option: ActiveLink) => void;
-  findValidModelForFeature: (feature: ModelFeature) => Model;
+  findValidModelForFeature: (feature: ModelCategory) => Model;
 }
 
 const initialConfig = {
   model: undefined,
   sampler: "PNDMScheduler",
-  initialFeatures: [ModelFeature.Text2Image, ModelFeature.Image2Image],
+  initialFeatures: [ModelCategory.Text2Image, ModelCategory.Image2Image],
 };
 
 const defaultState = {
@@ -56,14 +65,13 @@ const defaultState = {
 
 const mapModelBooleanFeaturesToStringFeatures = (model: Model) => {
   const features = [];
-  if (model.text2img) features.push(ModelFeature.Text2Image);
-  if (model.img2img) features.push(ModelFeature.Image2Image);
-  if (model.inpainting) features.push(ModelFeature.Inpainting);
-  if (model.controlnet) features.push(ModelFeature.ControlNet);
-  if (model.pix2pix) features.push(ModelFeature.Pix2Pix);
-  if (model.upscaling) features.push(ModelFeature.Upscaling);
+  for (let category of categories) {
+    if (model.categories.some((modelCategory) => modelCategory.name === category)) {
+      features.push(category);
+    }
+  }
   return features;
-};
+}
 
 const ModelsContext = createContext<IModelsContext>(defaultState);
 
@@ -92,7 +100,7 @@ const ModelsProvider = (props: { children: ReactNode }) => {
           setModels(modelsWithFeatures || []);
           setActiveLink({
             model: modelsWithFeatures[0],
-            feature: modelsWithFeatures[0].features[0],
+            feature: modelsWithFeatures[0].categories[0].name,
           });
         }
       }
@@ -112,9 +120,9 @@ const ModelsProvider = (props: { children: ReactNode }) => {
     }
   }, [activeLink]);
 
-  const findValidModelForFeature = (feature: ModelFeature) => {
+  const findValidModelForFeature = (feature: ModelCategory) => {
     return (
-      models.find((model: Model) => model.features.includes(feature)) ||
+      models.find((model: Model) => model.categories.some((category) => category.name === feature)) ||
       models[0]
     );
   };

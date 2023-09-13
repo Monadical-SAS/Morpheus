@@ -1,6 +1,8 @@
 import httpInstance from "./httpClient";
 
-export const getAvailableModels = async (url: string) => {
+type ApiResponse = { success: boolean; data?: any; error?: any };
+
+export const getAvailableModels = async (url: string): Promise<ApiResponse> => {
   try {
     const response = await httpInstance.get(url);
     if (response.status === 200 && response.data.length > 0) {

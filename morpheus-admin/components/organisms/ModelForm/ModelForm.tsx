@@ -47,7 +47,7 @@ export function ModelForm() {
         ],
       };
       const response = await saveNewModel(modelData);
-      if (response.success) {
+      if (response?.success) {
         alert("Model created successfully");
       }
     } catch (error) {
