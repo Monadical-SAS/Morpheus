@@ -7,6 +7,7 @@ import Brand from "../Typography/Brand/Brand";
 import UserCard, { UserImage } from "../UserCard/UserCard";
 import { AuthOption, useAuth } from "@/context/AuthContext";
 import { isEmptyObject } from "@/utils/object";
+import { Desktop, Mobile } from "../ResponsiveHandlers/Responsive";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { User } from "@/models/models";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
@@ -60,10 +61,7 @@ const NavMenu = (props: NavMenuProps) => {
       </div>
 
       <nav className={styles.auth}>
-        <span
-          className={styles.avatarImage}
-          onClick={() => setShowUserCard(true)}
-        >
+        <span className={styles.avatarImage} onClick={() => setShowUserCard(true)}>
           <UserImage />
         </span>
 
@@ -81,10 +79,7 @@ interface NavbarProps {
 
 const Navbar = (props: NavbarProps) => {
   const router = useRouter();
-  const { width } = useWindowDimensions();
   const { user, setAuthOption } = useAuth();
-  const isMobile = width < MOBILE_SCREEN_WIDTH && width !== 0;
-
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const redirectToHome = useCallback(async () => {
@@ -112,12 +107,9 @@ const Navbar = (props: NavbarProps) => {
 
   return (
     <div className={styles.navbarContainer}>
-      {isMobile ? (
-        <Fragment>
-          <BurgerMenu
-            isOpen={showMobileMenu}
-            onStateChange={(state) => setShowMobileMenu(state.isOpen)}
-          >
+      <Fragment>
+        <Mobile>
+          <BurgerMenu isOpen={showMobileMenu} onStateChange={(state) => setShowMobileMenu(state.isOpen)}>
             <div className={styles.burgerMenuContent}>
               <NavMenu
                 user={user}
@@ -137,17 +129,18 @@ const Navbar = (props: NavbarProps) => {
               justifyContent: "center",
             }}
           />
-        </Fragment>
-      ) : (
-        <NavMenu
-          user={user}
-          redirectToHome={redirectToHome}
-          redirectToProfile={redirectToProfile}
-          handleAuthActionClick={handleAuthActionClick}
-          isMobile={false}
-          showBrand={props.showBrand}
-        />
-      )}
+        </Mobile>
+        <Desktop>
+          <NavMenu
+            user={user}
+            redirectToHome={redirectToHome}
+            redirectToProfile={redirectToProfile}
+            handleAuthActionClick={handleAuthActionClick}
+            isMobile={false}
+            showBrand={props.showBrand}
+          />
+        </Desktop>
+      </Fragment>
     </div>
   );
 };

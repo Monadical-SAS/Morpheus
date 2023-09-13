@@ -4,10 +4,10 @@ import ImagineImageInput from "@/components/ImagineImageInput/ImagineImageInput"
 import ImageGallery from "@/components/ImageGallery/ImageGallery";
 import ImagineInput from "@/components/ImagineInput/ImagineInput";
 import ImagineLayout from "@/layout/ImagineLayout/ImagineLayout";
-import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { UploadMaskIcon } from "@/components/icons/uploadMask";
 import { useImagine } from "@/context/ImagineContext";
-import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
+import { Desktop, Mobile } from "../ResponsiveHandlers/Responsive";
+
 import styles from "./ImagineBase.module.scss";
 
 interface MainContainerProps {
@@ -19,15 +19,7 @@ interface MainContainerProps {
 
 const ImagineBase = (props: MainContainerProps) => {
   const { img2imgFile, setImg2imgFile, maskFile, setMaskFile } = useImagine();
-  const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH && width !== 0;
-
-  const ImagineInputInstance = (
-    <ImagineInput
-      isFormValid={props.formValid}
-      handleGenerate={props.handleGenerate}
-    />
-  );
+  const ImagineInputInstance = <ImagineInput isFormValid={props.formValid} handleGenerate={props.handleGenerate} />;
 
   const ImageInputs = (props.showImageInput || props.showMaskInput) && (
     <div className={styles.imageInputsContainer}>
@@ -55,24 +47,23 @@ const ImagineBase = (props: MainContainerProps) => {
   return (
     <ImagineLayout>
       <main className={styles.imagineBase}>
-        {isMobile && (
+        <Mobile>
           <Fragment>
             <ImagineMenu />
             {ImageInputs}
             {ImagineInputInstance}
           </Fragment>
-        )}
+        </Mobile>
 
         <div className={styles.imagesContent}>
-          {!isMobile && ImageInputs}
+          <Desktop>{ImageInputs}</Desktop>
 
           <div className={styles.results}>
             <ImageGallery />
             <br />
           </div>
         </div>
-
-        {!isMobile && ImagineInputInstance}
+        <Desktop>{ImagineInputInstance}</Desktop>
       </main>
     </ImagineLayout>
   );

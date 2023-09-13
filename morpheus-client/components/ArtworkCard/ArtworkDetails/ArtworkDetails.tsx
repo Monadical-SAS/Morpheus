@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import ArtworkForm from "../ArtworkForm/ArtworkForm";
 import { CopyIcon } from "../../icons/copy";
 import useCopyToClipboard from "@/hooks/useCopyToClipboard";
-import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { useToastContext } from "@/context/ToastContext";
 import { ArtWork } from "@/models/models";
 import styles from "./ArtworkDetails.module.scss";
-import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
+import { Desktop, Mobile } from "@/components/ResponsiveHandlers/Responsive";
 
 interface ArtworkDetailProps {
   artwork?: ArtWork;
@@ -24,8 +23,6 @@ interface ImageResolution {
 const ArtworkDetails = (props: ArtworkDetailProps) => {
   const { copyToClipboard } = useCopyToClipboard();
   const { showInfoAlert } = useToastContext();
-  const { width } = useWindowDimensions();
-  const isMobile = width <= MOBILE_SCREEN_WIDTH && width !== 0;
 
   const [config, setConfig] = useState<any[]>([]);
   const [imageResolution, setImageResolution] = useState<ImageResolution>({
@@ -77,7 +74,7 @@ const ArtworkDetails = (props: ArtworkDetailProps) => {
 
   return props.artwork ? (
     <div className={styles.artworkInfo}>
-      {isMobile && ArtworkFormInstance}
+      <Mobile>{ArtworkFormInstance}</Mobile>
 
       <div>
         {props.artwork.title && (
@@ -105,7 +102,7 @@ const ArtworkDetails = (props: ArtworkDetailProps) => {
         </div>
       </div>
 
-      {!isMobile && ArtworkFormInstance}
+      <Desktop>{ArtworkFormInstance}</Desktop>
     </div>
   ) : null;
 };
