@@ -44,7 +44,7 @@ class S3Client:
 
     def upload_multiple_files(self, *, files: List[Any], folder_name: str, file_name: str):
         image_urls = [
-            self.s3_client.upload_file(
+            self.upload_file(
                 file=image,
                 folder_name=folder_name,
                 file_name=f"{file_name}-{index}.png"
