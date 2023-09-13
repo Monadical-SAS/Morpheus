@@ -34,6 +34,8 @@ class Prompt(BaseModel):
     scheduler: str = settings.default_scheduler
     model_id: str = settings.default_model
     user_id: str
+    image: Optional[bytes] = None
+    mask: Optional[bytes] = None
 
     class Config:
         size = random.choice([480, 512, 768, 1024])

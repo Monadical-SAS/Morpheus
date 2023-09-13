@@ -49,9 +49,9 @@ class APIIngress:
     ):
         try:
             self.logger.info(f"StableDiffusionImg2Img.generate: prompt: {prompt}")
-            image = await image.read()
+            prompt.image = await image.read()
             handler = ModelsHandler.remote(endpoint=CategoryEnum.IMAGE_TO_IMAGE)
-            handler.handle_generation.remote(prompt=prompt, image=image)
+            handler.handle_generation.remote(prompt=prompt)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_img2_img {e}")
@@ -65,9 +65,9 @@ class APIIngress:
     ):
         try:
             self.logger.info(f"StableDiffusionPix2Pix.generate: prompt: {prompt}")
-            image = await image.read()
+            prompt.image = await image.read()
             handler = ModelsHandler.remote(endpoint=CategoryEnum.PIX_TO_PIX)
-            handler.handle_generation.remote(prompt=prompt, image=image)
+            handler.handle_generation.remote(prompt=prompt)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_pix2pix {e}")
@@ -81,9 +81,9 @@ class APIIngress:
     ):
         try:
             self.logger.info(f"StableDiffusionUpscaling.generate: prompt: {prompt}")
-            image = await image.read()
+            prompt.image = await image.read()
             handler = ModelsHandler.remote(endpoint=CategoryEnum.UPSCALING)
-            handler.handle_generation.remote(prompt=prompt, image=image)
+            handler.handle_generation.remote(prompt=prompt)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_upscaling {e}")
@@ -98,10 +98,10 @@ class APIIngress:
     ):
         try:
             self.logger.info(f"StableDiffusionInpainting.generate: prompt: {prompt}")
-            image = await image.read()
-            mask = await mask.read()
+            prompt.image = await image.read()
+            prompt.mask = await mask.read()
             handler = ModelsHandler.remote(endpoint=CategoryEnum.INPAINTING)
-            handler.handle_generation.remote(prompt=prompt, image=image, mask=mask)
+            handler.handle_generation.remote(prompt=prompt)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_inpainting {e}")
@@ -115,9 +115,9 @@ class APIIngress:
     ):
         try:
             self.logger.info(f"StableDiffusionControlnet.generate: prompt: {prompt}")
-            image = await image.read()
+            prompt.image = await image.read()
             handler = ModelsHandler.remote(endpoint="text2img")
-            handler.handle_generation.remote(prompt=prompt, image=image)
+            handler.handle_generation.remote(prompt=prompt)
             return Response(content=prompt.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_controlnet {e}")

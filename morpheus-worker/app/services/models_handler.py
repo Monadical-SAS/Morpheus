@@ -10,7 +10,6 @@ from app.actors.sd_pix_to_pix import StableDiffusionPixToPix
 from app.actors.sd_text_to_img import StableDiffusionText2Img
 from app.actors.sd_upscaling import StableDiffusionUpscaling
 from app.schemas.schemas import Prompt, CategoryEnum
-from app.utils.prompts import generate_random_prompt
 
 
 @ray.remote(num_cpus=0)
@@ -37,8 +36,6 @@ class ModelsHandler:
         return generator
 
     def handle_generation(self, prompt: Prompt):
-        random_config = generate_random_prompt()
-        prompt = Prompt(**random_config)
         self.logger.info(f"Generating image for: {prompt}")
         # Generate images with Stable Diffusion models
         generated_images_future = self.generator.generate.remote(prompt=prompt)

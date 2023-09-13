@@ -1,6 +1,5 @@
 import io
 import logging
-from typing import Any
 
 import ray
 from PIL import Image
@@ -24,10 +23,10 @@ class StableDiffusionInpainting(StableDiffusionAbstract):
         )
         self.logger = logging.getLogger(__name__)
 
-    def generate(self, prompt: Prompt, image: Any, mask: Any):
+    def generate(self, prompt: Prompt):
         self.logger.info(f"StableDiffusionInpainting.generate: prompt: {prompt}")
-        image = Image.open(io.BytesIO(image))
-        mask = Image.open(io.BytesIO(mask))
+        image = Image.open(io.BytesIO(prompt.image))
+        mask = Image.open(io.BytesIO(prompt.mask))
 
         result = self.pipeline(
             prompt=prompt.prompt,

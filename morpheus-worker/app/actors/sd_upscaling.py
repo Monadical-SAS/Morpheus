@@ -24,9 +24,9 @@ class StableDiffusionUpscaling(StableDiffusionAbstract):
         )
         self.logger = logging.getLogger(__name__)
 
-    def generate(self, prompt: Prompt, image: Any):
+    def generate(self, prompt: Prompt):
         self.logger.info(f"StableDiffusionUpscaling.generate: prompt: {prompt}")
-        image = Image.open(io.BytesIO(image))
+        image = Image.open(io.BytesIO(prompt.image))
         result = self.pipeline(
             prompt=prompt.prompt,
             width=prompt.width,
