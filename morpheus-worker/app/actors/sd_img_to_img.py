@@ -26,7 +26,7 @@ class StableDiffusionImageToImage(StableDiffusionAbstract):
     def generate(self, prompt: Prompt):
         self.logger.info(f"StableDiffusionImageToImage.generate: prompt: {prompt}")
         self.set_generator(prompt.generator)
-        image = Image.open(io.BytesIO(prompt.image))
+        image = Image.open(io.BytesIO(prompt.image)).convert("RGB")
         result = self.pipeline(
             image=image,
             prompt=prompt.prompt,
