@@ -28,11 +28,17 @@ upscaling = {
     "description": "Stable Diffusion Upscale"
 }
 
+processing = {
+    "name": "processing",
+    "description": "Processing images"
+}
+
 all_categories = [
     text2img,
     img2img,
     pix2pix,
     controlnet,
+    processing,
     inpainting,
     upscaling
 ]

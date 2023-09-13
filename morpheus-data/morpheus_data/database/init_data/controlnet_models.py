@@ -1,4 +1,4 @@
-from morpheus_data.database.init_data.categories import controlnet
+from morpheus_data.database.init_data.categories import controlnet, processing
 
 controlnet_models = [
     {
@@ -9,7 +9,7 @@ controlnet_models = [
         ),
         "source": "lllyasviel/sd-controlnet-canny",
         "url_docs": "https://huggingface.co/lllyasviel/sd-controlnet-canny",
-        "categories": [controlnet],
+        "categories": [controlnet, processing ],
         "extra_params": {"type": "canny"},
     },
     {
@@ -20,7 +20,7 @@ controlnet_models = [
         ),
         "source": "lllyasviel/sd-controlnet-depth",
         "url_docs": "https://huggingface.co/lllyasviel/sd-controlnet-depth",
-        "categories": [controlnet],
+        "categories": [controlnet, processing],
         "extra_params": {"type": "depth"},
     },
     {
@@ -31,7 +31,7 @@ controlnet_models = [
         ),
         "source": "lllyasviel/sd-controlnet-seg",
         "url_docs": "https://huggingface.co/lllyasviel/sd-controlnet-seg",
-        "categories": [controlnet],
+        "categories": [controlnet, processing],
         "extra_params": {"type": "seg"},
     },
 ]
