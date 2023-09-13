@@ -18,12 +18,22 @@ class StableDiffusionAbstract(ABC):
             self, *,
             pipeline: str = settings.default_pipeline,
             model_id: str = settings.default_model,
-            scheduler: str = settings.default_scheduler
+            scheduler: str = settings.default_scheduler,
+            controlnet_id: str = None
     ):
         self.logger = logging.getLogger(__name__)
         self.generator = None
+
+        # Get the model source, path for local model, model_id for hugin face remote model
         self.local_model_path = Path(settings.models_folder).joinpath(model_id)
         self.model_source = self.local_model_path if Path(self.local_model_path).exists() else model_id
+
+        # Get the controlnet source, path for local controlnet, controlnet_id for hugin face remote controlnet
+        if controlnet_id is not None:
+            self.local_controlnet_path = Path(settings.models_folder).joinpath(controlnet_id)
+            self.controlnet_source = self.local_controlnet_path if Path(
+                self.local_controlnet_path
+            ).exists() else controlnet_id
 
         # Check the environment variable/settings file to determine if we should
         # be using 16 bit or 32 bit precision when generating images.  16 bit
@@ -63,9 +73,17 @@ class StableDiffusionAbstract(ABC):
         self.pipeline_import = getattr(self.diffusers_import, pipeline)
         self.scheduler_import = getattr(self.diffusers_import, scheduler)
 
+        if controlnet_id is not None:
+            controlnet_import = getattr(self.diffusers_import, "ControlNetModel")
+            self.controlnet = controlnet_import.from_pretrained(
+                self.controlnet_source,
+                torch_dtype=self.dtype
+            )
+
         # Load the model and scheduler
         self.pipeline = self.pipeline_import.from_pretrained(
             self.model_source,
+            controlnet=self.controlnet if self.controlnet else None,
             torch_dtype=self.dtype,
             use_safetensors=True,
         )

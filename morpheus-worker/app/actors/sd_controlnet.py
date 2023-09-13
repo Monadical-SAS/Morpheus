@@ -4,37 +4,40 @@ import logging
 import ray
 from PIL import Image
 
-from app.actors.s3_client import S3Client
+from app.actors.common.sd_base import StableDiffusionAbstract
+from app.schemas.schemas import Prompt
 
 
 @ray.remote(num_gpus=1)
-class StableDiffusionControlnet:
-    def __init__(self):
-        import torch
-        from diffusers import EulerDiscreteScheduler, StableDiffusionControlNetPipeline, ControlNetModel
+class StableDiffusionControlnet(StableDiffusionAbstract):
+    def __init__(
+            self, *,
+            pipeline: str = "StableDiffusionXLImg2ImgPipeline",
+            scheduler: str = "DDPMScheduler",
+            model_id: str = "stabilityai/stable-diffusion-xl-refiner-1.0",
+            controlnet_id: str = "lllyasviel/sd-controlnet-canny"
+    ):
+        super().__init__(
+            pipeline=pipeline,
+            scheduler=scheduler,
+            model_id=model_id,
+            controlnet_id=controlnet_id
+        )
         self.logger = logging.getLogger(__name__)
 
-        model_id = "stabilityai/stable-diffusion-x4-upscaler"
-        controlnet_id = "lllyasviel/sd-controlnet-canny"
-
-        scheduler = EulerDiscreteScheduler.from_pretrained(
-            model_id, subfolder="scheduler"
-        )
-        controlnet = ControlNetModel.from_pretrained(controlnet_id)
-        self.pipe = StableDiffusionControlNetPipeline.from_pretrained(
-            model_id,
-            controlnet=controlnet,
-            scheduler=scheduler,
-            revision="fp16",
-            torch_dtype=torch.float16
-        )
-        self.pipe = self.pipe.to("cuda")
-
-    def generate(self, task_id: str, prompt: str, base_image: any):
-        assert len(prompt), self.logger.error("prompt parameter cannot be empty")
-        image = Image.open(io.BytesIO(base_image))
-        result = self.pipe(prompt, image=image).images[0]
-        s3_client = S3Client.remote()
-        result = ray.get(s3_client.upload_file.remote(result, "ray-results", f"{task_id}.png"))
-        self.logger.info(f"ControlNet for taskId {task_id} result {result}")
+    def generate(self, prompt: Prompt):
+        self.logger.info(f"StableDiffusionControlnet.generate: prompt: {prompt}")
+        self.set_generator(prompt.generator)
+        image = Image.open(io.BytesIO(prompt.image)).convert("RGB")
+        result = self.pipeline(
+            image=image,
+            prompt=prompt.prompt,
+            negative_prompt=prompt.negative_prompt,
+            guidance_scale=prompt.guidance_scale,
+            num_inference_steps=prompt.num_inference_steps,
+            num_images_per_prompt=prompt.num_images_per_prompt,
+            strength=prompt.strength,
+            generator=self.generator,
+        ).images
+        self.logger.info(f"StableDiffusionControlnet.generate: result: {len(result)}")
         return result
