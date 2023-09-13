@@ -19,7 +19,7 @@ class S3Client:
         self.AWS_SECRET_ACCESS_KEY = settings.aws_secret_access_key
         self.IMAGES_BUCKET = settings.images_bucket
 
-        self.s3 = boto3.client(
+        self.s3_client = boto3.client(
             "s3",
             aws_access_key_id=self.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY,
@@ -31,7 +31,7 @@ class S3Client:
         img_byte_arr = img_byte_arr.getvalue()
         key = f"{folder_name}/{file_name}"
         try:
-            self.s3.put_object(
+            self.s3_client.put_object(
                 Body=img_byte_arr,
                 Bucket=self.IMAGES_BUCKET,
                 Key=key,
