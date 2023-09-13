@@ -37,12 +37,18 @@ class ModelsHandler:
 
     def handle_generation(self, prompt: Prompt):
         self.logger.info(f"Generating image for: {prompt}")
-        result_future = self.generator.generate.remote(prompt=prompt)
-        images_ref = self.s3_client.upload_multiple_files.remote(
-            images_future=result_future,
+        # Generate images with Stable Diffusion models
+        generated_images_future = self.generator.generate.remote(prompt=prompt)
+        generated_images = ray.get(generated_images_future)
+
+        # Upload images to S3 Bucket
+        image_urls_future = self.s3_client.upload_multiple_files.remote(
+            images_future=generated_images,
             folder_name=prompt.user_id,
             file_name=f"{prompt.task_id}"
         )
-        images = ray.get(images_ref)
-        self.logger.info(f"Uploaded images: {images}")
-        return images
+        image_urls = ray.get(image_urls_future)
+
+        # Return image URLs
+        self.logger.info(f"Uploaded images: {image_urls}")
+        return image_urls
