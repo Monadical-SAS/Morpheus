@@ -1,6 +1,5 @@
 import io
 import logging
-from typing import Any
 
 import ray
 from PIL import Image
@@ -26,6 +25,7 @@ class StableDiffusionUpscaling(StableDiffusionAbstract):
 
     def generate(self, prompt: Prompt):
         self.logger.info(f"StableDiffusionUpscaling.generate: prompt: {prompt}")
+        self.set_generator(prompt.generator)
         image = Image.open(io.BytesIO(prompt.image))
         result = self.pipeline(
             image=image,
@@ -34,7 +34,7 @@ class StableDiffusionUpscaling(StableDiffusionAbstract):
             guidance_scale=prompt.guidance_scale,
             num_inference_steps=prompt.num_inference_steps,
             num_images_per_prompt=prompt.num_images_per_prompt,
-            generator=prompt.generator,
+            generator=self.generator,
         ).images
         self.logger.info(f"StableDiffusionUpscaling.generate: result: {len(result)}")
         return result

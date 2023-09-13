@@ -21,7 +21,7 @@ class StableDiffusionAbstract(ABC):
             scheduler: str = settings.default_scheduler
     ):
         self.logger = logging.getLogger(__name__)
-
+        self.generator = None
         self.local_model_path = Path(settings.models_folder).joinpath(model_id)
         self.model_source = self.local_model_path if Path(self.local_model_path).exists() else model_id
 
@@ -83,6 +83,9 @@ class StableDiffusionAbstract(ABC):
 
     def generate_images(self, *args, **kwargs):
         pass
+
+    def set_generator(self, generator: int):
+        self.generator = torch.Generator(self.generator_device).manual_seed(generator)
 
     def save_model(self):
         if not Path(self.local_model_path).exists():

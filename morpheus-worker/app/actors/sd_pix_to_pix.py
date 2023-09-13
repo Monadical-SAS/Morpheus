@@ -27,6 +27,7 @@ class StableDiffusionPixToPix(StableDiffusionAbstract):
     def generate(self, prompt: Prompt):
         self.logger.info(f"StableDiffusionPixToPix.generate: prompt: {prompt}")
         image = Image.open(io.BytesIO(prompt.image))
+        self.set_generator(prompt.generator)
         result = self.pipeline(
             image=image,
             prompt=prompt.prompt,
@@ -34,7 +35,7 @@ class StableDiffusionPixToPix(StableDiffusionAbstract):
             guidance_scale=prompt.guidance_scale,
             num_inference_steps=prompt.num_inference_steps,
             num_images_per_prompt=prompt.num_images_per_prompt,
-            generator=prompt.generator,
+            generator=self.generator,
         ).images
         self.logger.info(f"StableDiffusionPixToPix.generate: result: {len(result)}")
         return result

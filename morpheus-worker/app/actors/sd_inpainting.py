@@ -25,6 +25,7 @@ class StableDiffusionInpainting(StableDiffusionAbstract):
 
     def generate(self, prompt: Prompt):
         self.logger.info(f"StableDiffusionInpainting.generate: prompt: {prompt}")
+        self.set_generator(prompt.generator)
         image = Image.open(io.BytesIO(prompt.image)).convert("RGB")
         mask = Image.open(io.BytesIO(prompt.mask)).convert("RGB")
 
@@ -36,7 +37,7 @@ class StableDiffusionInpainting(StableDiffusionAbstract):
             guidance_scale=prompt.guidance_scale,
             num_inference_steps=prompt.num_inference_steps,
             num_images_per_prompt=prompt.num_images_per_prompt,
-            generator=prompt.generator,
+            generator=self.generator,
             strength=prompt.strength,
         ).images
         self.logger.info(f"StableDiffusionInpainting.generate: result: {len(result)}")
