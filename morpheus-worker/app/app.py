@@ -6,7 +6,7 @@ from ray import serve
 from ray.util.state import get_task
 from ray.util.state import summarize_tasks
 
-from app.schemas.schemas import Prompt, CategoryEnum
+from app.models.schemas import Prompt, CategoryEnum
 from app.services.models_handler import ModelsHandler
 
 app = FastAPI()

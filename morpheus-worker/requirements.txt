@@ -1,11 +1,15 @@
-# model serving and web
+# Web serving
 ray[serve]
 loguru
 
-# image handing and upload
+# image handling and upload
 boto3
 python-multipart
 pillow
+
+# Database integration
+sqlalchemy
+psycopg2-binary
 
 # image generation
 torch

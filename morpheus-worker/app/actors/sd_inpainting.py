@@ -5,7 +5,7 @@ import ray
 from PIL import Image
 
 from app.actors.common.sd_base import StableDiffusionAbstract
-from app.schemas.schemas import Prompt
+from app.models.schemas import Prompt
 
 
 @ray.remote(num_gpus=1)

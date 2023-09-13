@@ -1,6 +1,7 @@
 import random
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -16,7 +17,12 @@ class CategoryEnum(str, Enum):
     PIX_TO_PIX = "pix2pix"
     UPSCALING = "upscaling"
     INPAINTING = "inpainting"
-    CONTROLNET = "controlnet"
+
+
+class GenerationCreate(BaseModel):
+    id: UUID
+    images: List[str] = []
+    failed: bool = False
 
 
 class Prompt(BaseModel):
