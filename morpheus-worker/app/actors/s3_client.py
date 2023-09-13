@@ -43,18 +43,12 @@ class S3Client:
             self.logger.error(e)
 
     def upload_multiple_files(self, *, images_future: Any, folder_name: str, file_name: str):
-        object_references = [
-            self.s3_client.upload_file.remote(
+        image_urls = [
+            self.s3_client.upload_file(
                 file=image,
                 folder_name=folder_name,
                 file_name=f"{file_name}-{index}.png"
             ) for index, image in enumerate(images_future)
         ]
-        all_data = []
-
-        while len(object_references) > 0:
-            finished, object_references = ray.wait(object_references, timeout=1)
-            data = ray.get(finished)
-            all_data.extend(data)
-        self.logger.info(f"StableDiffusionV2Text2Img.generate: all_data: {all_data}")
-        return all_data
+        self.logger.info(f"StableDiffusionV2Text2Img.generate: all_data: {image_urls}")
+        return image_urls
