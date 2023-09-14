@@ -24,7 +24,8 @@ import {
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
 import { Model } from "@/models/models";
 import styles from "./ImagineMenu.module.scss";
-import { Desktop, Mobile, useMobile} from "../ResponsiveHandlers/Responsive";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 const ImagineMenu = () => {
   const router = useRouter();
@@ -32,6 +33,8 @@ const ImagineMenu = () => {
   const imagineOptionPath = router.pathname.split("/").pop();
   const [openItem, setOpenItem] = useState<string>();
   const [showModelsModal, setShowModelsModal] = useState(false);
+  const { width } = useWindowDimensions();
+  const isMobile = width <= MOBILE_SCREEN_WIDTH && width > 0;
 
   useEffect(() => {
     if (imagineOptionPath && selectedModel) {
@@ -70,37 +73,34 @@ const ImagineMenu = () => {
     </Accordion>
   ));
 
-  return (
+  return isMobile ? (
     <Fragment>
-      <Desktop>
-        <div className={styles.imagineMenu}>
-          <div className={styles.brandContainer}>
-            <Brand />
-          </div>
-
-          <p className="base-1 white">Models</p>
-          {ModelsAccordion}
-
-          <OpenSource />
-        </div>
-      </Desktop>
-      <Mobile>
-        <ButtonPrimary
-          text={getMobileTitle()}
-          onClick={() => setShowModelsModal(true)}
-          loading={false}
-          className={styles.mobileButton}
-        />
-        <Modal
-          width={"610px"}
-          height={"auto"}
-          isOpen={showModelsModal}
-          toggleModal={() => setShowModelsModal(!showModelsModal)}
-        >
-          {ModelsAccordion}
-        </Modal>
-      </Mobile>
+      <ButtonPrimary
+        text={getMobileTitle()}
+        onClick={() => setShowModelsModal(true)}
+        loading={false}
+        className={styles.mobileButton}
+      />
+      <Modal
+        width={"610px"}
+        height={"auto"}
+        isOpen={showModelsModal}
+        toggleModal={() => setShowModelsModal(!showModelsModal)}
+      >
+        {ModelsAccordion}
+      </Modal>
     </Fragment>
+  ) : (
+    <div className={styles.imagineMenu}>
+      <div className={styles.brandContainer}>
+        <Brand />
+      </div>
+
+      <p className="base-1 white">Models</p>
+      {ModelsAccordion}
+
+      <OpenSource />
+    </div>
   );
 };
 
@@ -190,7 +190,8 @@ interface ImagineMenuItemProps {
 const ImagineMenuItem = (props: ImagineMenuItemProps) => {
   const router = useRouter();
   const { setActiveLink, activeLink } = useModels();
-  const isMobile = useMobile();
+  const { width } = useWindowDimensions();
+  const isMobile = width <= MOBILE_SCREEN_WIDTH && width > 0;
   const getItemStyles = () => {
     return `${styles.menuItem}  ${props.active && styles.active}`;
   };

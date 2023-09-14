@@ -7,10 +7,9 @@ import Brand from "../Typography/Brand/Brand";
 import UserCard, { UserImage } from "../UserCard/UserCard";
 import { AuthOption, useAuth } from "@/context/AuthContext";
 import { isEmptyObject } from "@/utils/object";
-import { Desktop, Mobile } from "../ResponsiveHandlers/Responsive";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import { User } from "@/models/models";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
+import { User } from "@/models/models";
 import styles from "./Navbar.module.scss";
 
 type NavMenuProps = {
@@ -81,6 +80,8 @@ const Navbar = (props: NavbarProps) => {
   const router = useRouter();
   const { user, setAuthOption } = useAuth();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const { width } = useWindowDimensions();
+  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
 
   const redirectToHome = useCallback(async () => {
     if (isEmptyObject(user)) {
@@ -107,8 +108,8 @@ const Navbar = (props: NavbarProps) => {
 
   return (
     <div className={styles.navbarContainer}>
-      <Fragment>
-        <Mobile>
+      {isMobile ? (
+        <Fragment>
           <BurgerMenu isOpen={showMobileMenu} onStateChange={(state) => setShowMobileMenu(state.isOpen)}>
             <div className={styles.burgerMenuContent}>
               <NavMenu
@@ -129,18 +130,17 @@ const Navbar = (props: NavbarProps) => {
               justifyContent: "center",
             }}
           />
-        </Mobile>
-        <Desktop>
-          <NavMenu
-            user={user}
-            redirectToHome={redirectToHome}
-            redirectToProfile={redirectToProfile}
-            handleAuthActionClick={handleAuthActionClick}
-            isMobile={false}
-            showBrand={props.showBrand}
-          />
-        </Desktop>
-      </Fragment>
+        </Fragment>
+      ) : (
+        <NavMenu
+          user={user}
+          redirectToHome={redirectToHome}
+          redirectToProfile={redirectToProfile}
+          handleAuthActionClick={handleAuthActionClick}
+          isMobile={false}
+          showBrand={props.showBrand}
+        />
+      )}
     </div>
   );
 };

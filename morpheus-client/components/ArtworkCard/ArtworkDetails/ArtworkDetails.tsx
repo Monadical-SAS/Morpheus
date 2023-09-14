@@ -5,7 +5,8 @@ import useCopyToClipboard from "@/hooks/useCopyToClipboard";
 import { useToastContext } from "@/context/ToastContext";
 import { ArtWork } from "@/models/models";
 import styles from "./ArtworkDetails.module.scss";
-import { Desktop, Mobile } from "@/components/ResponsiveHandlers/Responsive";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 interface ArtworkDetailProps {
   artwork?: ArtWork;
@@ -23,6 +24,8 @@ interface ImageResolution {
 const ArtworkDetails = (props: ArtworkDetailProps) => {
   const { copyToClipboard } = useCopyToClipboard();
   const { showInfoAlert } = useToastContext();
+  const { width } = useWindowDimensions();
+  const isMobile = width <= MOBILE_SCREEN_WIDTH && width > 0;
 
   const [config, setConfig] = useState<any[]>([]);
   const [imageResolution, setImageResolution] = useState<ImageResolution>({
@@ -74,7 +77,7 @@ const ArtworkDetails = (props: ArtworkDetailProps) => {
 
   return props.artwork ? (
     <div className={styles.artworkInfo}>
-      <Mobile>{ArtworkFormInstance}</Mobile>
+      {isMobile && ArtworkFormInstance}
 
       <div>
         {props.artwork.title && (
@@ -102,7 +105,7 @@ const ArtworkDetails = (props: ArtworkDetailProps) => {
         </div>
       </div>
 
-      <Desktop>{ArtworkFormInstance}</Desktop>
+      {!isMobile && ArtworkFormInstance}
     </div>
   ) : null;
 };

@@ -12,8 +12,8 @@ import MaskPaintingCanvas from "../MaskPaintingCanvas/MaskPaintingCanvas";
 import { CloseIcon } from "../icons/close";
 import { UploadImageIcon } from "../icons/uploadImage";
 import { PaintImageIcon } from "../icons/paintImage";
-import { useMobile } from "../ResponsiveHandlers/Responsive";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./ImagineImageInput.module.scss";
 import Link from "next/link";
 
@@ -33,7 +33,7 @@ interface DragDropFileProps {
 const ImagineImageInput = (props: DragDropFileProps) => {
   const inputRef = useRef<any>(null);
   const { width } = useWindowDimensions();
-  const isMobile = useMobile();
+  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
 
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

@@ -6,7 +6,8 @@ import ImagineInput from "@/components/ImagineInput/ImagineInput";
 import ImagineLayout from "@/layout/ImagineLayout/ImagineLayout";
 import { UploadMaskIcon } from "@/components/icons/uploadMask";
 import { useImagine } from "@/context/ImagineContext";
-import { Desktop, Mobile } from "../ResponsiveHandlers/Responsive";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 import styles from "./ImagineBase.module.scss";
 
@@ -19,6 +20,8 @@ interface MainContainerProps {
 
 const ImagineBase = (props: MainContainerProps) => {
   const { img2imgFile, setImg2imgFile, maskFile, setMaskFile } = useImagine();
+  const { width } = useWindowDimensions();
+  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
   const ImagineInputInstance = <ImagineInput isFormValid={props.formValid} handleGenerate={props.handleGenerate} />;
 
   const ImageInputs = (props.showImageInput || props.showMaskInput) && (
@@ -47,23 +50,23 @@ const ImagineBase = (props: MainContainerProps) => {
   return (
     <ImagineLayout>
       <main className={styles.imagineBase}>
-        <Mobile>
+        {isMobile && (
           <Fragment>
             <ImagineMenu />
             {ImageInputs}
             {ImagineInputInstance}
           </Fragment>
-        </Mobile>
+        )}
 
         <div className={styles.imagesContent}>
-          <Desktop>{ImageInputs}</Desktop>
+          {!isMobile && ImageInputs}
 
           <div className={styles.results}>
             <ImageGallery />
             <br />
           </div>
         </div>
-        <Desktop>{ImagineInputInstance}</Desktop>
+        {!isMobile && ImagineInputInstance}
       </main>
     </ImagineLayout>
   );

@@ -3,13 +3,16 @@ import { UserIcon } from "../icons/user";
 import { CloseIcon } from "../icons/close";
 import { logout, removeUserInfo } from "@/services/users";
 import { useAuth } from "@/context/AuthContext";
-import { Mobile, Desktop } from "../ResponsiveHandlers/Responsive";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import { useToastContext } from "@/context/ToastContext";
 import styles from "./UserProfile.module.scss";
 
 export const UserProfile = () => {
   const { user } = useAuth();
   const { showSuccessAlert, showWarningAlert, showErrorAlert } = useToastContext();
+  const { width } = useWindowDimensions();
+  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
 
   const confirmRemove = () => {
     showWarningAlert("Are you sure you want to delete your account?", "Confirm", handleRemove);
@@ -44,15 +47,13 @@ export const UserProfile = () => {
           <UserIcon width={"16"} height={"16"} color={"white"} />
           <p className="base-2 white">Edit profile</p>
         </div>
-        <Desktop>{DeleteAccount}</Desktop>
+        {!isMobile && DeleteAccount}
       </div>
 
       <div className={styles.userProfileContent}>
         <EditProfileForm />
       </div>
-      <Mobile>
-        <div className={styles.mobileDeleteAccount}>{DeleteAccount}</div>
-      </Mobile>
+      {isMobile && <div className={styles.mobileDeleteAccount}>{DeleteAccount}</div>}
     </div>
   );
 };
