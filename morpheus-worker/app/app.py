@@ -6,8 +6,8 @@ from ray import serve
 from ray.util.state import get_task
 from ray.util.state import summarize_tasks
 
-from app.models.schemas import Prompt, CategoryEnum
-from app.services.models_handler import ModelsHandler
+from app.handlers.model_handler import ModelHandler
+from app.models.schemas import Request, CategoryEnum, ModelRequest
 
 app = FastAPI()
 
@@ -31,28 +31,30 @@ class APIIngress:
         return "Hello from Morpheus Ray"
 
     @app.post(f"/{CategoryEnum.TEXT_TO_IMAGE}")
-    async def generate_text2img(self, prompt: Prompt):
+    async def generate_text2img(self, request: Request):
         try:
-            self.logger.info(f"StableDiffusionText2Img.generate: prompt: {prompt}")
-            handler = ModelsHandler.remote(endpoint=CategoryEnum.TEXT_TO_IMAGE)
-            handler.handle_generation.remote(prompt=prompt)
-            return Response(content=prompt.task_id)
+            self.logger.info(f"StableDiffusionText2Img.generate: request: {request}")
+            model_request = ModelRequest(**request.dict())
+            handler = ModelHandler.remote(endpoint=CategoryEnum.TEXT_TO_IMAGE)
+            handler.handle_generation.remote(request=model_request)
+            return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_text2img {e}")
             return Response(content=e)
 
     @app.post(f"/{CategoryEnum.IMAGE_TO_IMAGE}")
-    async def generate_img2_img(
+    async def generate_img2img(
             self,
             image: UploadFile,
-            prompt: Prompt = Depends(),
+            request: Request = Depends(),
     ):
         try:
-            self.logger.info(f"StableDiffusionImg2Img.generate: prompt: {prompt}")
-            prompt.image = await image.read()
-            handler = ModelsHandler.remote(endpoint=CategoryEnum.IMAGE_TO_IMAGE)
-            handler.handle_generation.remote(prompt=prompt)
-            return Response(content=prompt.task_id)
+            self.logger.info(f"StableDiffusionImg2Img.generate: request: {request}")
+            model_request = ModelRequest(**request.dict())
+            model_request.image = await image.read()
+            handler = ModelHandler.remote(endpoint=CategoryEnum.IMAGE_TO_IMAGE)
+            handler.handle_generation.remote(request=model_request)
+            return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_img2_img {e}")
             return Response(content=e)
@@ -61,14 +63,15 @@ class APIIngress:
     async def generate_pix2pix(
             self,
             image: UploadFile,
-            prompt: Prompt = Depends(),
+            request: Request = Depends(),
     ):
         try:
-            self.logger.info(f"StableDiffusionPix2Pix.generate: prompt: {prompt}")
-            prompt.image = await image.read()
-            handler = ModelsHandler.remote(endpoint=CategoryEnum.PIX_TO_PIX)
-            handler.handle_generation.remote(prompt=prompt)
-            return Response(content=prompt.task_id)
+            self.logger.info(f"StableDiffusionPix2Pix.generate: request: {request}")
+            model_request = ModelRequest(**request.dict())
+            model_request.image = await image.read()
+            handler = ModelHandler.remote(endpoint=CategoryEnum.PIX_TO_PIX)
+            handler.handle_generation.remote(request=model_request)
+            return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_pix2pix {e}")
             return Response(content=e)
@@ -77,14 +80,15 @@ class APIIngress:
     async def generate_upscaling(
             self,
             image: UploadFile,
-            prompt: Prompt = Depends(),
+            request: Request = Depends(),
     ):
         try:
-            self.logger.info(f"StableDiffusionUpscaling.generate: prompt: {prompt}")
-            prompt.image = await image.read()
-            handler = ModelsHandler.remote(endpoint=CategoryEnum.UPSCALING)
-            handler.handle_generation.remote(prompt=prompt)
-            return Response(content=prompt.task_id)
+            self.logger.info(f"StableDiffusionUpscaling.generate: request: {request}")
+            model_request = ModelRequest(**request.dict())
+            model_request.image = await image.read()
+            handler = ModelHandler.remote(endpoint=CategoryEnum.UPSCALING)
+            handler.handle_generation.remote(request=model_request)
+            return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_upscaling {e}")
             return Response(content=e)
@@ -94,15 +98,16 @@ class APIIngress:
             self,
             image: UploadFile,
             mask: UploadFile,
-            prompt: Prompt = Depends(),
+            request: Request = Depends(),
     ):
         try:
-            self.logger.info(f"StableDiffusionInpainting.generate: prompt: {prompt}")
-            prompt.image = await image.read()
-            prompt.mask = await mask.read()
-            handler = ModelsHandler.remote(endpoint=CategoryEnum.INPAINTING)
-            handler.handle_generation.remote(prompt=prompt)
-            return Response(content=prompt.task_id)
+            self.logger.info(f"StableDiffusionInpainting.generate: request: {request}")
+            model_request = ModelRequest(**request.dict())
+            model_request.image = await image.read()
+            model_request.mask = await mask.read()
+            handler = ModelHandler.remote(endpoint=CategoryEnum.INPAINTING)
+            handler.handle_generation.remote(request=model_request)
+            return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_inpainting {e}")
             return Response(content=e)

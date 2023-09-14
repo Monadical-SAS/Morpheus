@@ -3,7 +3,7 @@ import logging
 import ray
 
 from app.actors.common.sd_base import StableDiffusionAbstract
-from app.models.schemas import Prompt
+from app.models.schemas import Request, ModelRequest
 
 
 @ray.remote(num_gpus=1)
@@ -21,17 +21,17 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
         )
         self.logger = logging.getLogger(__name__)
 
-    def generate(self, prompt: Prompt):
-        self.logger.info(f"StableDiffusionV2Text2Img.generate: prompt: {prompt}")
-        self.set_generator(prompt.generator)
+    def generate(self, request: ModelRequest):
+        self.logger.info(f"StableDiffusionV2Text2Img.generate: request: {request}")
+        self.set_generator(request.generator)
         result = self.pipeline(
-            prompt=prompt.prompt,
-            width=prompt.width,
-            height=prompt.height,
-            num_inference_steps=prompt.num_inference_steps,
-            guidance_scale=prompt.guidance_scale,
-            num_images_per_prompt=prompt.num_images_per_prompt,
-            negative_prompt=prompt.negative_prompt,
+            prompt=request.prompt,
+            width=request.width,
+            height=request.height,
+            num_inference_steps=request.num_inference_steps,
+            guidance_scale=request.guidance_scale,
+            num_images_per_prompt=request.num_images_per_prompt,
+            negative_prompt=request.negative_prompt,
             generator=self.generator,
         ).images
         self.logger.info(f"StableDiffusionV2Text2Img.generate: result: {len(result)}")

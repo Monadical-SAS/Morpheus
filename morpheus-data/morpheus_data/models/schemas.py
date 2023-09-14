@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
 from morpheus_data.config import get_settings
@@ -300,3 +300,19 @@ class SamplerModel(BaseModel):
     id: str
     name: str
     description: str
+
+
+class Generation(BaseModel):
+    id: UUID
+    results: List[str] = []
+    failed: bool = False
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
+                "results": ["https://imageurl.png"],
+                "failed": False,
+            }
+        }

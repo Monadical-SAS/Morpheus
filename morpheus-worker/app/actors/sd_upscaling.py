@@ -5,7 +5,7 @@ import ray
 from PIL import Image
 
 from app.actors.common.sd_base import StableDiffusionAbstract
-from app.models.schemas import Prompt
+from app.models.schemas import ModelRequest
 
 
 @ray.remote(num_gpus=1)
@@ -23,17 +23,17 @@ class StableDiffusionUpscaling(StableDiffusionAbstract):
         )
         self.logger = logging.getLogger(__name__)
 
-    def generate(self, prompt: Prompt):
-        self.logger.info(f"StableDiffusionUpscaling.generate: prompt: {prompt}")
-        self.set_generator(prompt.generator)
-        image = Image.open(io.BytesIO(prompt.image)).convert("RGB")
+    def generate(self, request: ModelRequest):
+        self.logger.info(f"StableDiffusionUpscaling.generate: request: {request}")
+        self.set_generator(request.generator)
+        image = Image.open(io.BytesIO(request.image)).convert("RGB")
         result = self.pipeline(
             image=image,
-            prompt=prompt.prompt,
-            negative_prompt=prompt.negative_prompt,
-            guidance_scale=prompt.guidance_scale,
-            num_inference_steps=prompt.num_inference_steps,
-            num_images_per_prompt=prompt.num_images_per_prompt,
+            prompt=request.prompt,
+            negative_prompt=request.negative_prompt,
+            guidance_scale=request.guidance_scale,
+            num_inference_steps=request.num_inference_steps,
+            num_images_per_prompt=request.num_images_per_prompt,
             generator=self.generator,
         ).images
         self.logger.info(f"StableDiffusionUpscaling.generate: result: {len(result)}")

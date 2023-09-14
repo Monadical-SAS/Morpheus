@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     models_folder: str = "/mnt/"
     pipeline_name_default: str = "StableDiffusionXLPipeline"
     default_scheduler: str = "DDPMScheduler"
-    default_pipeline: str = "StableDiffusionXLPipeline"
+    default_pipeline: str = "3"
     default_model: str = "stabilityai/stable-diffusion-xl-base-1.0"
     enable_float32: bool = False
     enable_attention_slicing: bool = False

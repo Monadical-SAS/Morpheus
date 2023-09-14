@@ -1,13 +1,20 @@
 import uuid
 
-from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric
+from morpheus_data.database import Base
+from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric, ARRAY, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
-from morpheus_data.database import Base
+
+class BaseModel(Base):
+    __abstract__ = True
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
 
-class User(Base):
+class User(BaseModel):
     __tablename__ = "user"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -22,7 +29,7 @@ class User(Base):
     artworks = relationship("ArtWork", back_populates="owner")
 
 
-class Collection(Base):
+class Collection(BaseModel):
     __tablename__ = "collection"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -35,7 +42,7 @@ class Collection(Base):
     artworks = relationship("ArtWork", back_populates="collection")
 
 
-class Prompt(Base):
+class Prompt(BaseModel):
     __tablename__ = "prompt"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -60,7 +67,7 @@ class Prompt(Base):
     artworks = relationship("ArtWork", back_populates="prompt")
 
 
-class ArtWork(Base):
+class ArtWork(BaseModel):
     __tablename__ = "artwork"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -75,7 +82,7 @@ class ArtWork(Base):
     prompt = relationship("Prompt", back_populates="artworks")
 
 
-class SDModel(Base):
+class SDModel(BaseModel):
     __tablename__ = "sdmodel"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -92,7 +99,7 @@ class SDModel(Base):
     upscaling = Column(Boolean, nullable=True, default=False)
 
 
-class SDControlNetModel(Base):
+class SDControlNetModel(BaseModel):
     __tablename__ = "sd_controlnet_model"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(64), nullable=True)
@@ -101,3 +108,10 @@ class SDControlNetModel(Base):
     description = Column(String(512), nullable=True)
     is_active = Column(Boolean, default=True)
     url_docs = Column(String(512), nullable=True)
+
+
+class Generation(BaseModel):
+    __tablename__ = "generation"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    results = Column(ARRAY(String), nullable=True)
+    failed = Column(Boolean, nullable=True, default=False)

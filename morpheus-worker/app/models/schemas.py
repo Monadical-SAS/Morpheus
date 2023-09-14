@@ -1,12 +1,10 @@
-import random
 from enum import Enum
 from typing import Optional, List
 from uuid import UUID
 
-from pydantic import BaseModel
-
 from app.settings.settings import get_settings
 from app.utils.prompts import generate_random_prompt
+from pydantic import BaseModel
 
 settings = get_settings()
 
@@ -19,13 +17,7 @@ class CategoryEnum(str, Enum):
     INPAINTING = "inpainting"
 
 
-class GenerationCreate(BaseModel):
-    id: UUID
-    images: List[str] = []
-    failed: bool = False
-
-
-class Prompt(BaseModel):
+class Request(BaseModel):
     task_id: str
     prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
     negative_prompt: str = "bad, low res, ugly, deformed"
@@ -40,12 +32,20 @@ class Prompt(BaseModel):
     scheduler: str = settings.default_scheduler
     model_id: str = settings.default_model
     user_id: str
-    image: Optional[bytes] = None
-    mask: Optional[bytes] = None
 
     class Config:
-        size = random.choice([480, 512, 768, 1024])
         schema_extra = {
             "example": generate_random_prompt(),
             "exclude": ["image", "mask"],
         }
+
+
+class ModelRequest(Request):
+    image: Optional[bytes] = None
+    mask: Optional[bytes] = None
+
+
+class Generation(BaseModel):
+    id: UUID
+    results: List[str] = []
+    failed: bool = False
