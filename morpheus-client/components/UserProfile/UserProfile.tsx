@@ -12,7 +12,7 @@ export const UserProfile = () => {
   const { user } = useAuth();
   const { showSuccessAlert, showWarningAlert, showErrorAlert } = useToastContext();
   const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
 
   const confirmRemove = () => {
     showWarningAlert("Are you sure you want to delete your account?", "Confirm", handleRemove);

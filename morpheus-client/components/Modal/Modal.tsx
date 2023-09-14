@@ -24,7 +24,7 @@ interface ModalProps {
 
 const Modal = (props: ModalProps) => {
   const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
   const initialStyles = useMemo(() => {
     const defaultSize = isMobile ? 90 : 80;
 

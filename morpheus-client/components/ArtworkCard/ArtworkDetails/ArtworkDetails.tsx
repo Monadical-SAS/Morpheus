@@ -25,7 +25,7 @@ const ArtworkDetails = (props: ArtworkDetailProps) => {
   const { copyToClipboard } = useCopyToClipboard();
   const { showInfoAlert } = useToastContext();
   const { width } = useWindowDimensions();
-  const isMobile = width <= MOBILE_SCREEN_WIDTH && width > 0;
+  const isMobile = width <= MOBILE_SCREEN_WIDTH;
 
   const [config, setConfig] = useState<any[]>([]);
   const [imageResolution, setImageResolution] = useState<ImageResolution>({

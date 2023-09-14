@@ -34,7 +34,7 @@ const ImagineMenu = () => {
   const [openItem, setOpenItem] = useState<string>();
   const [showModelsModal, setShowModelsModal] = useState(false);
   const { width } = useWindowDimensions();
-  const isMobile = width <= MOBILE_SCREEN_WIDTH && width > 0;
+  const isMobile = width <= MOBILE_SCREEN_WIDTH;
 
   useEffect(() => {
     if (imagineOptionPath && selectedModel) {
@@ -191,7 +191,7 @@ const ImagineMenuItem = (props: ImagineMenuItemProps) => {
   const router = useRouter();
   const { setActiveLink, activeLink } = useModels();
   const { width } = useWindowDimensions();
-  const isMobile = width <= MOBILE_SCREEN_WIDTH && width > 0;
+  const isMobile = width <= MOBILE_SCREEN_WIDTH;
   const getItemStyles = () => {
     return `${styles.menuItem}  ${props.active && styles.active}`;
   };

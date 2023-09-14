@@ -12,7 +12,7 @@ interface ImagineContainerProps {
 
 const ImagineLayout = (props: ImagineContainerProps) => {
   const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
   return (
     <PrivateRoute>
       <div className={styles.imagineLayout}>

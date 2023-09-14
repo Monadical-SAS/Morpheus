@@ -33,7 +33,7 @@ interface DragDropFileProps {
 const ImagineImageInput = (props: DragDropFileProps) => {
   const inputRef = useRef<any>(null);
   const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
 
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

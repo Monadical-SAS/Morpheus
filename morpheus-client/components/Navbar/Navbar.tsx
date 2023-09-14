@@ -81,7 +81,7 @@ const Navbar = (props: NavbarProps) => {
   const { user, setAuthOption } = useAuth();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
 
   const redirectToHome = useCallback(async () => {
     if (isEmptyObject(user)) {

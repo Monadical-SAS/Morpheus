@@ -21,7 +21,7 @@ interface MainContainerProps {
 const ImagineBase = (props: MainContainerProps) => {
   const { img2imgFile, setImg2imgFile, maskFile, setMaskFile } = useImagine();
   const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH && width > 0;
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
   const ImagineInputInstance = <ImagineInput isFormValid={props.formValid} handleGenerate={props.handleGenerate} />;
 
   const ImageInputs = (props.showImageInput || props.showMaskInput) && (
