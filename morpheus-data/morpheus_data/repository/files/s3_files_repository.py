@@ -8,10 +8,10 @@ from PIL import Image
 from fastapi import UploadFile
 from rich import print
 
-from app.config import get_settings
-from app.repository.files.files_interface import FileRepositoryInterface
-from app.utils.images import from_image_to_bytes
-from app.utils.timer import get_timestamp
+from morpheus_data.config import get_settings
+from morpheus_data.repository.files.files_interface import FileRepositoryInterface
+from morpheus_data.utils.images import from_image_to_bytes
+from morpheus_data.utils.timer import get_timestamp
 
 settings = get_settings()
 logger = logging.getLogger(__name__)

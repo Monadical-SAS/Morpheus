@@ -3,8 +3,8 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.models.models import ArtWork, Prompt
-from app.models.schemas import ArtWorkCreate
+from morpheus_data.models.models import ArtWork, Prompt
+from morpheus_data.models.schemas import ArtWorkCreate
 
 
 class ArtWorkRepository:

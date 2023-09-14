@@ -5,8 +5,8 @@ from typing import Any
 import boto3
 import tqdm
 
-from app.config import get_settings
-from app.repository.files.files_interface import ModelRepositoryInterface
+from morpheus_data.config import get_settings
+from morpheus_data.repository.files.files_interface import ModelRepositoryInterface
 
 settings = get_settings()
 logger = logging.getLogger(__name__)

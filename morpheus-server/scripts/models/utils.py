@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 
 import torch
@@ -8,12 +7,6 @@ from dynamicprompts.generators.magicprompt import MagicPromptGenerator
 from omegaconf import OmegaConf
 
 from decorators import validate_stable_diffusion_upscaler
-
-sys.path.append(".")
-from app.config import get_settings  # noqa: E402
-
-settings = get_settings()
-
 
 def load_config_from_file(filename):
     return OmegaConf.load(filename)
@@ -32,7 +25,6 @@ def download_model_from_huggingface(params):
             params.source,
             revision="fp16",
             torch_dtype=torch.float16,
-            use_auth_token=settings.hf_auth_token,
         )
     except OSError as e:
         print("OSerror", e)
@@ -40,7 +32,6 @@ def download_model_from_huggingface(params):
             params.source,
             # revision="fp16",
             torch_dtype=torch.float16,
-            use_auth_token=settings.hf_auth_token,
         )
     model.save_pretrained(f"tmp/{output}")
     return output

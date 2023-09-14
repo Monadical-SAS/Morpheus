@@ -5,10 +5,12 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from morpheus_data.database import get_db
+from morpheus_data.models.schemas import ArtWork, ArtWorkCreate
+
 from app.config import get_file_handlers
-from app.database import get_db
 from app.integrations.firebase import get_user
-from app.models.schemas import ArtWork, ArtWorkCreate, Response
+from app.models.schemas import Response
 from app.services.artwork_services import ArtWorkService
 
 router = APIRouter()

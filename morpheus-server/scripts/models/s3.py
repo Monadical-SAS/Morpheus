@@ -1,4 +1,3 @@
-import sys
 from glob import glob
 from pathlib import Path
 
@@ -7,8 +6,7 @@ import typer
 from config import Target, config_file, download_model
 from utils import load_config_from_file
 
-sys.path.append(".")
-from app.repository.files.s3_models_repository import S3ModelFileRepository  # noqa: E402
+from morpheus_data.repository.files.s3_models_repository import S3ModelFileRepository  # noqa: E402
 
 app = typer.Typer(help="subcommand to manage models in S3:  register/list/delete")
 

@@ -1,11 +1,11 @@
-from typing import Union, List
+from typing import List, Union
 
 from sqlalchemy.orm import Session
 
-from app.models.schemas import User
-from app.repository.collection_repository import CollectionRepository
-from app.repository.firebase_repository import FirebaseRepository
-from app.repository.user_repository import UserRepository
+from morpheus_data.models.schemas import User
+from morpheus_data.repository.collection_repository import CollectionRepository
+from morpheus_data.repository.firebase_repository import FirebaseRepository
+from morpheus_data.repository.user_repository import UserRepository
 
 
 class UserService:

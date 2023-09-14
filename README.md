@@ -261,13 +261,15 @@ docker compose run --rm api pytest tests/test_module.py::test_function
 ```
 
 ### Running the migrations
+To use morpheus-data image to run the migrations, you need to create a secrets.env file in the morpheus-server 
+directory. For more information, you can read the morpheus-data [README](./morpheus-data/README.md).
 
 ```shell
 # Create migration
-docker-compose run --rm api alembic revision --autogenerate -m "Initial migration"
+docker-compose run --rm datalib alembic revision --autogenerate -m "Initial migration"
 
 # Migrate / Update the head
-docker-compose run --rm api alembic upgrade head
+docker-compose run --rm datalib alembic upgrade head
 ```
 
 ### PG admin
@@ -282,9 +284,41 @@ PGADMIN_DEFAULT_EMAIL=admin@admin.com
 PGADMIN_DEFAULT_PASSWORD=password
 ```
 
+### Implement changes in morpheus-data
+
+`morpheus-data` works as a package to have a transverse Python library to manage all ORM-related operations in Morpheus.
+Other Morpheus microservices can import into them and use it.
+
+To run Morpheus locally using morpheus-data as a library, you need to do this:
+
+```bash
+
+# Building in separate steps
+#---------------------------------------------
+# build morpheus-data wheel
+docker compose build datalib
+
+# build morpheus-server api
+docker compose build api
+
+# Building alltogether
+#---------------------------------------------
+docker compose --profile <local|staging|manage> build
+
+# Run
+#---------------------------------------------
+docker compose --profile <local|staging> up
+```
+
+**Note**:  You need to build `morpheus-data` and `morpheus-server` API service (or any other microservice that uses it)
+every time you make a change inside `morpheus-data`. This build is necessary because you need to build the wheel 
+file again and install it in the `morpheus-server` API service or any other service that uses it
+For more information, you can read the morpheus-data [README](./morpheus-data/README.md).
+
+
 ### Adding a new dependency to the backend
 
-1. Add the new dependency directly to the respective requirements.txt file
+1. Add the new dependency directly to the respective `requirements.txt` file
 2. Update the docker image
    ```shell
     docker-compose build api

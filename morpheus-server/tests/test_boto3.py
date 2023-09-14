@@ -2,7 +2,7 @@ import urllib
 
 import pytest
 
-from app.repository.files.s3_files_repository import S3ImagesRepository
+from morpheus_data.repository.files.s3_files_repository import S3ImagesRepository
 
 COLLECTION_PATH = "collections"
 AVATAR_PATH = "avatars"

@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Nume
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from app.database import Base
+from morpheus_data.database import Base
 
 
 class User(Base):

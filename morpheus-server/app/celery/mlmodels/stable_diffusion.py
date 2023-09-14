@@ -11,10 +11,11 @@ from diffusers import (
 )
 from loguru import logger
 
+from morpheus_data.models.schemas import Prompt, PromptControlNet
+
 import app.utils.lora_ti_utils as lora_ti_utils
 from app.celery.mlmodels.controlnet import preprocessing_image
 from app.config import get_settings
-from app.models.schemas import Prompt, PromptControlNet
 from app.utils.decorators import validate_stable_diffusion_upscaler
 
 settings = get_settings()

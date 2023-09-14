@@ -1,6 +1,8 @@
 from PIL import Image
 from loguru import logger
 
+from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
+
 from app.celery.tasks.magic_prompt import generate_stable_diffusion_magicprompt_output_task
 from app.celery.tasks.stable_diffusion import (
     generate_stable_diffusion_controlnet_output_task,
@@ -11,10 +13,10 @@ from app.celery.tasks.stable_diffusion import (
     generate_stable_diffusion_upscale_output_task,
     generate_stable_diffusion_xl_text2img_output_task
 )
-from app.models.schemas import MagicPrompt, Prompt, PromptControlNet
+from app.integrations.generative_ai_engine.generative_ai_interface import GenerativeAIInterface
 
 
-class StableDiffusionRepository:
+class GenerativeAIStableDiffusionCelery(GenerativeAIInterface):
     @staticmethod
     def generate_text2img_images(prompt: Prompt) -> str:
         logger.info(f" Running Stable Diffusion Text2Img process with prompt: {prompt}")

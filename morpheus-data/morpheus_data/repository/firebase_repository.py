@@ -4,7 +4,7 @@ import logging
 import requests
 from firebase_admin import auth
 
-from app.config import get_settings
+from morpheus_data.config import get_settings
 
 settings = get_settings()
 

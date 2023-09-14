@@ -3,10 +3,10 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.models.schemas import Collection, CollectionCreate
-from app.repository.collection_repository import CollectionRepository
-from app.repository.files.files_interface import FileRepositoryInterface
-from app.repository.user_repository import UserRepository
+from morpheus_data.models.schemas import Collection, CollectionCreate
+from morpheus_data.repository.collection_repository import CollectionRepository
+from morpheus_data.repository.files.files_interface import FileRepositoryInterface
+from morpheus_data.repository.user_repository import UserRepository
 
 
 class CollectionService:

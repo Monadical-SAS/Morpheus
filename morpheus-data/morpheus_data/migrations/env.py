@@ -2,7 +2,7 @@ from logging.config import fileConfig
 
 from alembic import context
 
-import app.models.models as models
+import morpheus_data.models.models as models
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -38,7 +38,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    from app.config import get_settings
+    from morpheus_data.config import get_settings
 
     settings = get_settings()
     url = settings.get_db_url()
@@ -65,7 +65,7 @@ def run_migrations_online() -> None:
     #     prefix="sqlalchemy.",
     #     poolclass=pool.NullPool,
     # )
-    from app.database import engine
+    from morpheus_data.database import engine
 
     connectable = engine
     with connectable.connect() as connection:
