@@ -51,7 +51,9 @@ sd_models = [
     },
     {
         "name": "SD x4 Upscaler",
-        "description": "Stable Diffusion x4 Upscaler can be used to enhance the resolution of input images by a factor of 4.",
+        "description": (
+            "Stable Diffusion x4 Upscaler can be used to enhance the resolution of input images by a " "factor of 4."
+        ),
         "source": "stabilityai/stable-diffusion-x4-upscaler",
         "url_docs": "https://huggingface.co/stabilityai/stable-diffusion-x4-upscaler",
         "categories": [upscaling],
