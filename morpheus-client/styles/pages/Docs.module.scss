@@ -1,0 +1,84 @@
+@use "styles/colors";
+@use "styles/variables";
+@use "styles/media";
+@use "styles/typography";
+@use "styles/mdx";
+
+.docsWrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1300px;
+  height: 100%;
+
+  .tableOfContents {
+    position: fixed;
+    margin: 80px 20px 0 0;
+    width: 330px;
+    height: 100%;
+    overflow-y: auto;
+    padding-bottom: 200px;
+    
+    @include media.mobile {
+      display: none;
+    }
+
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+
+    .heading2Link {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 35px 0 10px 40px;
+    }
+
+    @mixin heading3Link {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-left: 40px;
+      padding: 0 0 8px 30px;
+    }
+
+    .heading3LinkActive {
+      @include heading3Link;
+      border-left: 2px solid colors.$main-color;
+    }
+
+    .heading3LinkInactive {
+      @include heading3Link;
+      border-left: 2px solid colors.$background-primary-4;
+    }
+
+    @mixin heading4Link {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-left: 40px;
+      padding: 0 0 8px 40px;
+    }
+
+    .heading4LinkActive {
+      @include heading4Link;
+      border-left: 2px solid colors.$main-color;
+    }
+
+    .heading4LinkInactive {
+      @include heading4Link;
+      border-left: 2px solid colors.$background-primary-4;
+    }
+  }
+
+  .content {
+    @extend .mdx;
+    margin: 105px 32px 20px 350px;
+    width: 100%;
+    height: 100%;
+
+    @include media.mobile {
+      margin: 105px 32px 20px 32px;
+    }
+  }
+}

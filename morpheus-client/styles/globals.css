@@ -2,52 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "code.css";
+
 @font-face {
-    font-family: "Poppins";
-    src: url("/fonts/Poppins-Regular.ttf");
-    font-display: swap;
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Regular.ttf");
+  font-display: swap;
 }
 
 @layer base {
-    :root {
-        --background: #14172D;
-        --foreground: #FFFFFF;
+  :root {
+    --background: #14172d;
+    --foreground: #ffffff;
 
-        --muted: #252238;
-        --muted-foreground: #FFFFFF;
+    --muted: #252238;
+    --muted-foreground: #ffffff;
 
-        --popover: #14172D;
-        --popover-foreground: #FFFFFF;
+    --popover: #14172d;
+    --popover-foreground: #ffffff;
 
-        --card: #14172D;
-        --card-foreground: #FFFFFF;
+    --card: #14172d;
+    --card-foreground: #ffffff;
 
-        --border: #312E47;
-        --input: #14172D;
+    --border: #312e47;
+    --input: #14172d;
 
-        --primary: #B3005E;
-        --primary-foreground: #FFFFFF;
+    --primary: #b3005e;
+    --primary-foreground: #ffffff;
 
-        --secondary: #252238;
-        --secondary-foreground: #8B90B2;
+    --secondary: #252238;
+    --secondary-foreground: #8b90b2;
 
-        --accent: #252238;
-        --accent-foreground: #FFFFFF;
+    --accent: #252238;
+    --accent-foreground: #ffffff;
 
-        --destructive: #ff548a;
-        --destructive-foreground: #222732;
+    --destructive: #ff548a;
+    --destructive-foreground: #222732;
 
-        --success: #d8fde0;
-        --success-foreground: #222732;
+    --success: #d8fde0;
+    --success-foreground: #222732;
 
-        --info: #8eb2ff;
-        --info-foreground: #222732;
+    --info: #8eb2ff;
+    --info-foreground: #222732;
 
-        --warning: #ffcd47;
-        --warning-foreground: #222732;
+    --warning: #ffcd47;
+    --warning-foreground: #222732;
 
-        --ring: 215 20.2% 65.1%;
+    --ring: 215 20.2% 65.1%;
 
-        --radius: 0.5rem;
-    }
+    --radius: 0.5rem;
+  }
 }

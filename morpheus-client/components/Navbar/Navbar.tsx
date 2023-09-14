@@ -11,6 +11,7 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { User } from "@/models/models";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./Navbar.module.scss";
+import { cn } from "@/utils/styles";
 
 type NavMenuProps = {
   user: User;
@@ -54,8 +55,8 @@ const NavMenu = (props: NavMenuProps) => {
         <Link className={getLinkStyles("gallery")} href={"/gallery"}>
           Gallery
         </Link>
-        <Link className={getLinkStyles("about")} href={"/about"}>
-          About
+        <Link className={getLinkStyles("docs")} href={"/docs"}>
+          Docs
         </Link>
       </div>
 
@@ -77,6 +78,7 @@ const NavMenu = (props: NavMenuProps) => {
 
 interface NavbarProps {
   showBrand?: boolean;
+  fixed?: boolean;
 }
 
 const Navbar = (props: NavbarProps) => {
@@ -111,7 +113,7 @@ const Navbar = (props: NavbarProps) => {
   );
 
   return (
-    <div className={styles.navbarContainer}>
+    <div className={styles.navbarContainer} style={{ position: props.fixed ? "fixed" : "relative" }}>
       {isMobile ? (
         <Fragment>
           <BurgerMenu

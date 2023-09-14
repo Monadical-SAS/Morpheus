@@ -1,0 +1,183 @@
+@use "styles/typography";
+@use "styles/colors";
+
+.mdx {
+  h2 {
+    @extend .headline-2;
+    color: colors.$typography-primary;
+    margin-bottom: 50px;
+  }
+
+  h2:not(:first-of-type) {
+    margin-top: 30px;
+  }
+
+  h3 {
+    @extend .headline-3;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+  }
+
+  h4 {
+    @extend .headline-4;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+  }
+
+  h5 {
+    @extend .headline-5;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+  }
+
+  h6 {
+    @extend .headline-6;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+  }
+
+  p {
+    @extend .body-1;
+    color: colors.$typography-secondary;
+  }
+
+  p + p {
+    @extend .body-1;
+    color: colors.$typography-secondary;
+    margin-top: 12px;
+  }
+
+  p + h3 {
+    @extend .headline-3;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  p + h4 {
+    @extend .headline-4;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  p + h5 {
+    @extend .headline-5;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  p + h6 {
+    @extend .headline-6;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  ul {
+    @extend .body-1;
+    color: colors.$typography-secondary;
+    list-style-type: disc;
+    margin-left: 20px;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  ul + h3 {
+    @extend .headline-3;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  ul + h4 {
+    @extend .headline-4;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  ul + h5 {
+    @extend .headline-5;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  ul + h6 {
+    @extend .headline-6;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  ol {
+    @extend .body-1;
+    color: colors.$typography-secondary;
+    list-style-type: decimal;
+    margin-left: 20px;
+  }
+
+  ol + h3 {
+    @extend .headline-3;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  ol + h4 {
+    @extend .headline-4;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  ol + h5 {
+    @extend .headline-5;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  ol + h6 {
+    @extend .headline-6;
+    color: colors.$typography-primary;
+    margin-bottom: 24px;
+    margin-top: 50px;
+  }
+
+  a {
+    color: colors.$main-color;
+    text-decoration: underline;
+  }
+
+  img {
+    display: block;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  div pre {
+    background-color: theme("colors.gray.800");
+    border-radius: 12px;
+    white-space: pre-wrap;
+  }
+
+  code {
+    color: theme("colors.red.400");
+    background-color: theme("colors.gray.800");
+    border-radius: 4px;
+    margin: 24px 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  div code {
+    color: theme("colors.gray.300");
+    background-color: theme("colors.gray.800");
+    border-radius: 12px;
+    margin: 24px 0;
+  }
+}

@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   background: colors.$background-primary !important;
+  z-index: 10;
 
   @include media.mobile {
     height: auto;

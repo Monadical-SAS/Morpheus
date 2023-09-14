@@ -13,7 +13,7 @@ interface MainContainerProps {
 export const MainLayout = (props: MainContainerProps) => {
   return (
     <div className={styles.mainLayout}>
-      <Navbar showBrand={true} />
+      <Navbar showBrand={true} fixed={true} />
 
       <main className={styles.mainContent} style={props.style}>
         {props.children}
