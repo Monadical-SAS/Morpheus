@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   workflow_call:
 env:
-  MORPHEUS_CLIENT_IMAGE_NAME: ${{ env.MORPHEUS_CLIENT_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-client' }}
+  MORPHEUS_CLIENT_IMAGE_NAME: ${{ vars.MORPHEUS_CLIENT_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-client' }}
 jobs:
   ci-frontend:
     uses: ./.github/workflows/ci-frontend.yaml

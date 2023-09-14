@@ -5,7 +5,7 @@ on:
 env:
   MAX_LINE_LENGTH: 120
   WORKING_DIR_BACKEND: morpheus-collaborative
-  MORPHEUS_COLLABORATIVE_IMAGE_NAME: ${{ env.MORPHEUS_COLLABORATIVE_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-collaborative' }}
+  MORPHEUS_COLLABORATIVE_IMAGE_NAME: ${{ vars.MORPHEUS_COLLABORATIVE_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-collaborative' }}
 jobs:
   ci-collab:
     uses: ./.github/workflows/ci-collaborative.yaml
