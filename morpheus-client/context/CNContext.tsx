@@ -41,7 +41,7 @@ const ControlNetProvider = (props: { children: ReactNode }) => {
     const response = await getAvailableModels("/models");
     if (response.success && response.data) {
       const filteredModels = response.data.filter((model: any) =>
-        model.categories.some((category: any) => category.name === ModelCategory.ControlNet)
+        model.categories.some((category: any) => category.name === ModelCategory.Processing)
       );
       setControlNetModels(filteredModels || []);
     }

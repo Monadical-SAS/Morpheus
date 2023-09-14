@@ -1,10 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { getAvailableModels } from "@/services/models";
 import { getAvailableSamplers } from "@/services/samplers";
 import { Model } from "@/models/models";
@@ -17,6 +11,7 @@ export enum ModelCategory {
   ControlNet = "controlnet",
   Pix2Pix = "pix2pix",
   Upscaling = "upscaling",
+  Processing = "processing",
 }
 
 const categories = [
@@ -71,7 +66,7 @@ const mapModelBooleanFeaturesToStringFeatures = (model: Model) => {
     }
   }
   return features;
-}
+};
 
 const ModelsContext = createContext<IModelsContext>(defaultState);
 
@@ -91,7 +86,10 @@ const ModelsProvider = (props: { children: ReactNode }) => {
     getAvailableModels("/models").then((response) => {
       if (response.success && response.data) {
         if (response.data.length > 0) {
-          const modelsWithFeatures = response.data.map((model: Model) => {
+          const filteredModels = response.data.filter((model: any) =>
+            model.categories.every((category: any) => category.name !== ModelCategory.Processing)
+          );
+          const modelsWithFeatures = filteredModels.map((model: Model) => {
             return {
               ...model,
               features: mapModelBooleanFeaturesToStringFeatures(model),
@@ -121,10 +119,7 @@ const ModelsProvider = (props: { children: ReactNode }) => {
   }, [activeLink]);
 
   const findValidModelForFeature = (feature: ModelCategory) => {
-    return (
-      models.find((model: Model) => model.categories.some((category) => category.name === feature)) ||
-      models[0]
-    );
+    return models.find((model: Model) => model.categories.some((category) => category.name === feature)) || models[0];
   };
 
   return (
