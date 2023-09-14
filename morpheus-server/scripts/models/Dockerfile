@@ -1,4 +1,5 @@
-FROM monadicalsas/morpheus-data:latest as lib
+ARG TAG="latest"
+FROM monadicalsas/morpheus-data:${TAG} as lib
 FROM python:3.10-slim
 
 # Configuration defaults

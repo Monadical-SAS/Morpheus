@@ -28,6 +28,8 @@ services:
     build:
       context: morpheus-server
       dockerfile: ./Dockerfile
+      args:
+        - TAG=${TAG:-latest}
     image: morpheus-server:latest
     env_file:
       - morpheus-server/secrets.env
@@ -54,7 +56,7 @@ services:
       dockerfile: ./Dockerfile
       args:
         DOCKER_BUILDKIT: 1
-    image: monadicalsas/morpheus-data:latest
+    image: monadicalsas/morpheus-data:${TAG:-latest}
     volumes:
       - ./wheels:/wheels
       - ./morpheus-data:/app
@@ -200,7 +202,11 @@ services:
         condition: service_completed_successfully
 
   worker_local:
-    build: ./morpheus-server
+    build:
+      context: morpheus-server
+      dockerfile: ./Dockerfile
+      args:
+        - TAG=${TAG:-latest}
     command: celery -A app.celery.workers.stable_diffusion_app worker --max-tasks-per-child=1 --loglevel=info -Q stable_diffusion
     profiles: [ "local" ]
     stdin_open: true
@@ -220,7 +226,11 @@ services:
         condition: service_completed_successfully
 
   magicprompt_worker_local:
-    build: ./morpheus-server
+    build:
+      context: morpheus-server
+      dockerfile: ./Dockerfile
+      args:
+        - TAG=${TAG:-latest}
     command: celery -A app.celery.workers.magic_prompt_app worker --max-tasks-per-child=1 --loglevel=info -Q magic_prompt
     profiles: [ "local" ]
     stdin_open: true
@@ -260,6 +270,8 @@ services:
     build:
       context: morpheus-server
       dockerfile: ./scripts/models/Dockerfile
+      args:
+        - TAG=${TAG:-latest}
     image: morpheus-script-model:latest
     profiles: [ "manage" ]
     env_file:
