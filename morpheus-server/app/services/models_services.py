@@ -27,10 +27,6 @@ class ModelService:
 
     async def get_models(self, *, db: Session) -> List[MLModel]:
         models = self.model_repository.get_models(db=db)
-        print("-----------------")
-        print(models)
-        print(models[0].categories)
-        print("-----------------")
         return models
 
     async def get_model_by_id(self, *, db: Session, model_id: UUID) -> MLModel:
