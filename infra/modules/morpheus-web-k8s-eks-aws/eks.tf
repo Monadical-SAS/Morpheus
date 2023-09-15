@@ -12,8 +12,8 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  create_aws_auth_configmap = true
-  manage_aws_auth_configmap = true
+  create_aws_auth_configmap = var.create_aws_auth_configmap
+  manage_aws_auth_configmap = var.manage_aws_auth_configmap
 
   node_security_group_additional_rules = {
     ingress_bastion = {
@@ -47,7 +47,7 @@ module "eks" {
   eks_managed_node_groups = {
 
     eks-managed-services = {
-      name            = "eks-mng-services"
+      name            = var.eks_managed_service_node_group_name
       use_name_prefix = true
 
       subnet_ids = module.vpc.private_subnets
@@ -57,7 +57,7 @@ module "eks" {
       desired_size = 1
 
       force_update_version = true
-      instance_types       = [var.self_managed_service_nodes_instance_type]
+      instance_types       = [var.eks_managed_service_nodes_instance_type]
 
       metadata_options = {
         http_endpoint               = "enabled"
@@ -67,7 +67,7 @@ module "eks" {
       }
 
       create_iam_role          = true
-      iam_role_name            = "eks-managed-node-group-services"
+      iam_role_name            = var.eks_managed_services_iam_role_name
       iam_role_use_name_prefix = false
       iam_role_description     = "EKS managed node group services"
       labels = {
@@ -115,6 +115,44 @@ module "eks" {
       }
     }
 
+    self-managed-head = {
+      name            = var.self_managed_head_node_group_name
+      use_name_prefix = true
+
+      key_name = aws_key_pair.cluster_key.key_name
+
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=morpheus-type=worker-head'"
+
+      subnet_ids = module.vpc.private_subnets
+
+      min_size     = var.self_managed_head_node_min_size
+      max_size     = var.self_managed_head_node_max_size
+      desired_size = var.self_managed_head_node_desired_size
+      ami_id       = var.self_managed_head_nodes_ami
+
+      force_update_version = true
+      instance_type        = var.self_managed_head_nodes_instance_type
+
+      metadata_options = {
+        http_endpoint               = "enabled"
+        http_tokens                 = "required"
+        http_put_response_hop_limit = 2
+        instance_metadata_tags      = "disabled"
+      }
+
+      create_iam_role          = true
+      iam_role_name            = local.self_managed_head_iam_role_name
+      iam_role_use_name_prefix = false
+      iam_role_description     = "Self managed node group head"
+      iam_role_additional_policies = [
+        "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
+        "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+      ]
+      labels = {
+        morpheus-type = "worker-head"
+      }
+    }
+    
     self-managed-gpu = {
       name            = var.self_managed_gpu_node_group_name
       use_name_prefix = true

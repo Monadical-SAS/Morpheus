@@ -29,6 +29,22 @@ variable "vpc_public_subnets" {
 variable "vpc_private_subnets" {
 }
 
+variable "eks_managed_service_node_group_name" {
+  default = "eks-mng-services"
+}
+
+variable "eks_managed_services_iam_role_name" {
+  default = "eks-managed-node-group-services"
+}
+
+variable "self_managed_web_node_group_name" {
+  default = "self-mng-web"
+}
+
+variable "self_managed_web_iam_role_name" {
+  default = "self-managed-node-group-web"
+}
+
 variable "self_managed_gpu_nodes_device_size" {
 }
 
@@ -48,6 +64,14 @@ variable "self_managed_gpu_node_desired_size" {
   default = 1
 }
 
+variable "self_managed_gpu_node_group_name" {
+  default = "self-mng-gpu"
+}
+
+variable "self_managed_gpu_iam_role_name" {
+  default = "self-managed-node-group-gpu"
+}
+
 variable "self_managed_gpu_adv_nodes_device_size" {
 }
 
@@ -65,6 +89,14 @@ variable "self_managed_gpu_adv_node_max_size" {
 
 variable "self_managed_gpu_adv_node_desired_size" {
   default = 1
+}
+
+variable "self_managed_gpu_adv_iam_role_name" {
+  default = "self-managed-node-group-gpu-adv"
+}
+
+variable "self_managed_gpu_adv_node_group_name" {
+  default = "self-mng-gpu-adv"
 }
 
 variable "scale_up_queue_threshold" {
@@ -103,4 +135,12 @@ variable "api_hostname" {
 }
 
 variable "client_hostname" {
+}
+
+variable "create_aws_auth_configmap" {
+  default = true
+}
+
+variable "manage_aws_auth_configmap" {
+  default = true
 }
