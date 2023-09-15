@@ -2,10 +2,9 @@ import importlib
 from enum import Enum
 from functools import lru_cache
 
+from morpheus_data.config import Settings as SettingsData
 from omegaconf import OmegaConf
 from pydantic import PostgresDsn
-
-from morpheus_data.config import Settings as SettingsData
 
 
 class EnvironmentEnum(str, Enum):
@@ -25,20 +24,18 @@ class Settings(SettingsData):
     environment: EnvironmentEnum = EnvironmentEnum.local
 
     model_parent_path: str = "/mnt/"
-    model_default: str = "stabilityai/stable-diffusion-2"
-    controlnet_model_default = "lllyasviel/sd-controlnet-canny"
-    magicprompt_model_default = "Gustavosta/MagicPrompt-Stable-Diffusion"
+    default_model: str = "stabilityai/stable-diffusion-2"
+    controlnet_default_model = "lllyasviel/sd-controlnet-canny"
+    magicprompt_default_model = "Gustavosta/MagicPrompt-Stable-Diffusion"
     upscaling_model_default = "stabilityai/stable-diffusion-x4-upscaler"
-    sampler_default: str = "PNDMScheduler"
+    default_scheduler: str = "PNDMScheduler"
     hf_auth_token: str = ""
     enable_float32: bool = False
     max_num_images: int = 4
-
-    generative_ai_backend: str = GenerativeAIBackendEnum.celery
+    generative_ai_backend: str = GenerativeAIBackendEnum.ray
 
     celery_broker_url: str = "redis://redis:6379/0"
     celery_result_backend: str = "redis://redis:6379/0"
-
     celery_stable_diffusion_queue: str = "stable_diffusion"
     celery_magic_prompt_queue: str = "magic_prompt"
     celery_default_queue: str = "default"
@@ -82,7 +79,11 @@ backend_handlers = {
     "celery": {
         "module": "app.integrations.generative_ai_engine.sdiffusion_celery",
         "handler": "GenerativeAIStableDiffusionCelery",
-    }
+    },
+    "ray": {
+        "module": "app.integrations.generative_ai_engine.sdiffusion_ray",
+        "handler": "GenerativeAIStableDiffusionRay",
+    },
 }
 
 
@@ -102,8 +103,10 @@ def get_file_handlers():
         return None
 
 
+@lru_cache()
 def get_generative_ai_backend():
     settings = get_settings()
+    print("settings.generative_ai_backend", settings.generative_ai_backend)
     try:
         module_import = importlib.import_module(
             backend_handlers[settings.generative_ai_backend]["module"]
@@ -111,6 +114,8 @@ def get_generative_ai_backend():
         backend = getattr(
             module_import, backend_handlers[settings.generative_ai_backend]["handler"]
         )
+        print("module_import", module_import)
+        print("backend", backend)
         return backend()
     except Exception as e:
         print("Error getting generative ai backend", e)

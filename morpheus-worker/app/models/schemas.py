@@ -18,7 +18,7 @@ class CategoryEnum(str, Enum):
 
 
 class Request(BaseModel):
-    task_id: str
+    task_id: UUID
     prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
     negative_prompt: str = "bad, low res, ugly, deformed"
     width: int = 768

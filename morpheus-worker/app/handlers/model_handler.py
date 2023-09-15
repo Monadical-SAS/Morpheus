@@ -10,6 +10,7 @@ from app.actors.sd_pix_to_pix import StableDiffusionPixToPix
 from app.actors.sd_text_to_img import StableDiffusionText2Img
 from app.actors.sd_upscaling import StableDiffusionUpscaling
 from app.models.schemas import CategoryEnum, Generation, ModelRequest
+from app.utils.images import create_fake_images
 
 
 @ray.remote(num_cpus=0)
@@ -17,7 +18,7 @@ class ModelHandler:
     def __init__(self, *, endpoint: CategoryEnum):
         self.endpoint = endpoint
         self.logger = logging.getLogger(__name__)
-        self.generator = self.get_generator().remote()
+        # self.generator = self.get_generator().remote()
         self.s3_client = S3Client.remote()
         self.db_client = DBClient.remote()
 
@@ -38,8 +39,10 @@ class ModelHandler:
     def handle_generation(self, request: ModelRequest):
         self.logger.info(f"Generating image for: {request}")
         # Generate images with Stable Diffusion models
-        generated_images_future = self.generator.generate.remote(request=request)
-        generated_images = ray.get(generated_images_future)
+        # generated_images_future = self.generator.generate.remote(request=request)
+        # generated_images = ray.get(generated_images_future)
+
+        generated_images = create_fake_images(n_images=2)
 
         # Upload images to S3 Bucket
         image_urls_future = self.s3_client.upload_multiple_files.remote(

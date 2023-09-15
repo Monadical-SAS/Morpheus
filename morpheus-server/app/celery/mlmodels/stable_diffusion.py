@@ -2,7 +2,11 @@ import importlib
 from abc import ABC, abstractmethod
 from pathlib import Path
 
+import app.utils.lora_ti_utils as lora_ti_utils
 import torch
+from app.celery.mlmodels.controlnet import preprocessing_image
+from app.config import get_settings
+from app.utils.decorators import validate_stable_diffusion_upscaler
 from diffusers import (
     DDPMScheduler,
     StableDiffusionPipeline,
@@ -10,26 +14,20 @@ from diffusers import (
     StableDiffusionXLPipeline
 )
 from loguru import logger
-
-from morpheus_data.models.schemas import Prompt, PromptControlNet
-
-import app.utils.lora_ti_utils as lora_ti_utils
-from app.celery.mlmodels.controlnet import preprocessing_image
-from app.config import get_settings
-from app.utils.decorators import validate_stable_diffusion_upscaler
+from morpheus_data.models.schemas import GenerationRequest
 
 settings = get_settings()
 
-MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.model_default}"
-CONTROLNET_MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.controlnet_model_default}"
+MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.default_model}"
+CONTROLNET_MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.controlnet_default_model}"
 
 
 class StableDiffusionAbstract(ABC):
-    def __init__(self, pipeline_name: str, sampler: str, model_name: str = MODEL_PATH_DEFAULT):
+    def __init__(self, pipeline_name: str, scheduler: str, model_name: str = MODEL_PATH_DEFAULT):
         hf_model_name = model_name.removeprefix(settings.model_parent_path)
         self.model_name = model_name if Path(model_name).exists() else hf_model_name
         self.token = settings.hf_auth_token
-        self.sampler = sampler
+        self.scheduler = scheduler
 
         # Check the environment variable/settings file to determine if we should
         # be using 16 bit or 32 bit precision when generating images.  16 bit
@@ -125,10 +123,10 @@ class StableDiffusionBaseClassic(StableDiffusionAbstract):
     def __init__(
             self,
             model_name: str,
-            sampler: str = "PNDMScheduler",
+            scheduler: str = "PNDMScheduler",
             pipeline_name: str = "StableDiffusionPipeline",
     ):
-        super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
+        super().__init__(pipeline_name=pipeline_name, model_name=model_name, scheduler=scheduler)
 
         classic_pipeline = StableDiffusionPipeline.from_pretrained(
             self.model_name,
@@ -146,7 +144,7 @@ class StableDiffusionBaseClassic(StableDiffusionAbstract):
             self.model.enable_xformers_memory_efficient_attention()
 
         # import scheduler
-        scheduler = getattr(self._module_import, self.sampler)
+        scheduler = getattr(self._module_import, self.scheduler)
         self.model.scheduler = scheduler.from_config(self.model.scheduler.config)
 
         if not Path(model_name).exists() and settings.environment != "prod":
@@ -165,10 +163,10 @@ class StableDiffusionBaseControlNet(StableDiffusionAbstract):
             self,
             model_name: str,
             controlnet_model_name: str = CONTROLNET_MODEL_PATH_DEFAULT,
-            sampler: str = "PNDMScheduler",
+            scheduler: str = "PNDMScheduler",
             pipeline_name: str = "StableDiffusionPipeline",
     ):
-        super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
+        super().__init__(pipeline_name=pipeline_name, model_name=model_name, scheduler=scheduler)
 
         hf_controlnet_model_name = controlnet_model_name.removeprefix(settings.model_parent_path)
 
@@ -190,7 +188,7 @@ class StableDiffusionBaseControlNet(StableDiffusionAbstract):
             self.model.enable_xformers_memory_efficient_attention()
 
         # import scheduler
-        scheduler = getattr(self._module_import, self.sampler)
+        scheduler = getattr(self._module_import, self.scheduler)
         self.model.scheduler = scheduler.from_config(self.model.scheduler.config)
 
         if not Path(model_name).exists() and settings.environment != "prod":
@@ -212,41 +210,41 @@ class StableDiffusionText2Image(StableDiffusionBaseClassic):
     def __init__(
             self,
             model_name: str,
-            sampler: str = "PNDMScheduler",
+            scheduler: str = "PNDMScheduler",
             pipeline_name: str = "StableDiffusionPipeline",
     ):
-        super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
+        super().__init__(pipeline_name=pipeline_name, model_name=model_name, scheduler=scheduler)
 
     def generate_images(self, **kwargs):
         logger.info("generating image in Text2Image pipeline")
-        prompt: Prompt = kwargs.get("prompt")
-        generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
+        request: GenerationRequest = kwargs.get("request")
+        generator = torch.Generator(self.generator_device).manual_seed(request.generator)
         attention_params = {}
 
         # LoRA
-        if prompt.use_lora:
-            self.add_lora_to_model(self.model, prompt.lora_path)
+        if request.use_lora:
+            self.add_lora_to_model(self.model, request.lora_path)
             self.loaded_lora = True
         else:
-            prompt.lora_scale = 0.0
+            request.lora_scale = 0.0
 
         # Use scale param only if a lora has been loaded
         if self.loaded_lora:
-            attention_params["scale"] = prompt.lora_scale
+            attention_params["scale"] = request.lora_scale
 
         # Textual Inversion Embeddings
-        if prompt.use_embedding:
-            self.add_embedding_to_model(self.model, prompt.embedding_path)
+        if request.use_embedding:
+            self.add_embedding_to_model(self.model, request.embedding_path)
 
         images = self.model(
-            prompt=prompt.prompt,
-            negative_prompt=prompt.negative_prompt,
-            num_images_per_prompt=prompt.num_images_per_prompt,
-            guidance_scale=prompt.guidance_scale,
-            num_inference_steps=prompt.num_inference_steps,
+            prompt=request.prompt,
+            negative_prompt=request.negative_prompt,
+            num_images_per_prompt=request.num_images_per_prompt,
+            guidance_scale=request.guidance_scale,
+            num_inference_steps=request.num_inference_steps,
             generator=generator,
-            width=prompt.width,
-            height=prompt.height,
+            width=request.width,
+            height=request.height,
             cross_attention_kwargs=attention_params,
         ).images
 
@@ -262,42 +260,42 @@ class StableDiffusionImage2Image(StableDiffusionBaseClassic):
     def __init__(
             self,
             model_name: str,
-            sampler: str = "PNDMScheduler",
+            scheduler: str = "PNDMScheduler",
             pipeline_name: str = "StableDiffusionImg2ImgPipeline",
     ):
-        super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
+        super().__init__(pipeline_name=pipeline_name, model_name=model_name, scheduler=scheduler)
 
     def generate_images(self, **kwargs):
         logger.info("generating image in Image2Image pipeline")
-        prompt: Prompt = kwargs.get("prompt")
+        request: GenerationRequest = kwargs.get("request")
         image = kwargs.get("image")
-        generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
+        generator = torch.Generator(self.generator_device).manual_seed(request.generator)
         attention_params = {}
 
         # LoRA
-        if prompt.use_lora:
-            self.add_lora_to_model(self.model, prompt.lora_path)
+        if request.use_lora:
+            self.add_lora_to_model(self.model, request.lora_path)
             self.loaded_lora = True
         else:
-            prompt.lora_scale = 0.0
+            request.lora_scale = 0.0
 
         # Use scale param only if a lora has been loaded
         if self.loaded_lora:
-            attention_params["scale"] = prompt.lora_scale
+            attention_params["scale"] = request.lora_scale
 
         # Textual Inversion Embeddings
-        if prompt.use_embedding:
-            self.add_embedding_to_model(self.model, prompt.embedding_path)
+        if request.use_embedding:
+            self.add_embedding_to_model(self.model, request.embedding_path)
 
         images = self.model(
-            prompt=prompt.prompt,
-            negative_prompt=prompt.negative_prompt,
             image=image,
+            prompt=request.prompt,
+            negative_prompt=request.negative_prompt,
             generator=generator,
-            num_inference_steps=prompt.num_inference_steps,
-            guidance_scale=prompt.guidance_scale,
-            num_images_per_prompt=prompt.num_images_per_prompt,
-            strength=prompt.strength,
+            num_inference_steps=request.num_inference_steps,
+            guidance_scale=request.guidance_scale,
+            num_images_per_prompt=request.num_images_per_prompt,
+            strength=request.strength,
             cross_attention_kwargs=attention_params,
         ).images
 
@@ -314,51 +312,51 @@ class StableDiffusionControlNet(StableDiffusionBaseControlNet):
             self,
             model_name: str,
             controlnet_model_name: str = CONTROLNET_MODEL_PATH_DEFAULT,
-            sampler: str = "PNDMScheduler",
+            scheduler: str = "PNDMScheduler",
             pipeline_name: str = "StableDiffusionControlNetPipeline",
     ):
         super().__init__(
             pipeline_name=pipeline_name,
             model_name=model_name,
-            sampler=sampler,
+            scheduler=scheduler,
             controlnet_model_name=controlnet_model_name,
         )
 
     def generate_images(self, **kwargs):
         logger.info("generating image in Controlnet pipeline")
-        prompt: PromptControlNet = kwargs.get("prompt")
+        request: GenerationRequest = kwargs.get("request")
         image = kwargs.get("image")
-        generator = torch.Generator(device="cpu").manual_seed(prompt.generator)
+        generator = torch.Generator(device="cpu").manual_seed(request.generator)
         attention_params = {}
 
         # LoRA
-        if prompt.use_lora:
+        if request.use_lora:
             # At the moment, civitai lora with cpu offload is not supported by Huggingface
             # https://github.com/huggingface/diffusers/issues/3958
-            if "civitai.com" not in prompt.lora_path:
-                self.add_lora_to_model(self.model, prompt.lora_path)
+            if "civitai.com" not in request.lora_path:
+                self.add_lora_to_model(self.model, request.lora_path)
                 self.loaded_lora = True
         else:
-            prompt.lora_scale = 0.0
+            request.lora_scale = 0.0
 
         if self.loaded_lora:
-            attention_params["scale"] = prompt.lora_scale
+            attention_params["scale"] = request.lora_scale
 
         # Textual Inversion Embeddings
-        if prompt.use_embedding:
-            self.add_embedding_to_model(self.model, prompt.embedding_path)
+        if request.use_embedding:
+            self.add_embedding_to_model(self.model, request.embedding_path)
 
         # preprocessing image
-        base_image = preprocessing_image.get(prompt.controlnet_type)(image)
+        base_image = preprocessing_image.get(request.controlnet_type)(image)
 
         images = self.model(
-            prompt=prompt.prompt,
-            negative_prompt=prompt.negative_prompt,
+            prompt=request.prompt,
+            negative_prompt=request.negative_prompt,
             image=base_image,
             generator=generator,
-            num_inference_steps=prompt.num_inference_steps,
-            guidance_scale=prompt.guidance_scale,
-            num_images_per_prompt=prompt.num_images_per_prompt,
+            num_inference_steps=request.num_inference_steps,
+            guidance_scale=request.guidance_scale,
+            num_images_per_prompt=request.num_images_per_prompt,
             cross_attention_kwargs=attention_params,
         ).images
 
@@ -376,29 +374,29 @@ class StableDiffusionInstructPix2Pix(StableDiffusionBaseClassic):
     def __init__(
             self,
             model_name: str,
-            sampler: str = "PNDMScheduler",
+            scheduler: str = "PNDMScheduler",
             pipeline_name: str = "StableDiffusionInstructPix2PixPipeline",
     ):
-        super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
+        super().__init__(pipeline_name=pipeline_name, model_name=model_name, scheduler=scheduler)
 
     def generate_images(self, **kwargs):
         logger.info("Generating image in Pix2Pix pipeline.")
-        prompt: Prompt = kwargs.get("prompt")
+        request: GenerationRequest = kwargs.get("request")
         image = kwargs.get("image")
-        generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
+        generator = torch.Generator(self.generator_device).manual_seed(request.generator)
 
         images = self.model(
-            prompt=prompt.prompt,
-            negative_prompt=prompt.negative_prompt,
-            num_inference_steps=prompt.num_inference_steps,
-            guidance_scale=prompt.guidance_scale,
-            num_images_per_prompt=prompt.num_images_per_prompt,
+            prompt=request.prompt,
+            negative_prompt=request.negative_prompt,
+            num_inference_steps=request.num_inference_steps,
+            guidance_scale=request.guidance_scale,
+            num_images_per_prompt=request.num_images_per_prompt,
             generator=generator,
             image=image,
         ).images
 
         if len(images) == 0:
-            logger.info("No text2img images generated")
+            logger.info("No pix2pix images generated")
             return None
 
         logger.info("pix2pix task completed successfully")
@@ -409,31 +407,31 @@ class StableDiffusionInpainting(StableDiffusionBaseClassic):
     def __init__(
             self,
             model_name: str,
-            sampler: str = "PNDMScheduler",
+            scheduler: str = "PNDMScheduler",
             pipeline_name: str = "StableDiffusionInpaintPipeline",
     ):
-        super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
+        super().__init__(pipeline_name=pipeline_name, model_name=model_name, scheduler=scheduler)
 
     def generate_images(self, **kwargs):
-        logger.info("Generating image in Inpaint pipeline.")
-        prompt: Prompt = kwargs.get("prompt")
+        logger.info("Generating image in Inpainting pipeline.")
+        request: GenerationRequest = kwargs.get("request")
         image = kwargs.get("image")
         mask = kwargs.get("mask")
-        generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
+        generator = torch.Generator(self.generator_device).manual_seed(request.generator)
 
         images = self.model(
-            prompt=prompt.prompt,
-            negative_prompt=prompt.negative_prompt,
-            num_inference_steps=prompt.num_inference_steps,
-            guidance_scale=prompt.guidance_scale,
-            num_images_per_prompt=prompt.num_images_per_prompt,
+            prompt=request.prompt,
+            negative_prompt=request.negative_prompt,
+            num_inference_steps=request.num_inference_steps,
+            guidance_scale=request.guidance_scale,
+            num_images_per_prompt=request.num_images_per_prompt,
             generator=generator,
             image=image,
             mask_image=mask,
         ).images
 
         if len(images) == 0:
-            logger.info("No text2img images generated")
+            logger.info("No inpainting images generated")
             return None
 
         logger.info("inpainting task completed successfully")
@@ -444,10 +442,10 @@ class StableDiffusionUpscale(StableDiffusionAbstract):
     def __init__(
             self,
             model_name: str,
-            sampler: str = "PNDMScheduler",
+            scheduler: str = "PNDMScheduler",
             pipeline_name: str = "StableDiffusionUpscalePipeline",
     ):
-        super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
+        super().__init__(pipeline_name=pipeline_name, model_name=model_name, scheduler=scheduler)
 
         scheduler = DDPMScheduler(num_train_timesteps=1000, beta_schedule="squaredcos_cap_v2")
 
@@ -468,7 +466,7 @@ class StableDiffusionUpscale(StableDiffusionAbstract):
             self.model.enable_xformers_memory_efficient_attention()
 
         # import scheduler
-        scheduler = getattr(self._module_import, self.sampler)
+        scheduler = getattr(self._module_import, self.scheduler)
         self.model.scheduler = scheduler.from_config(self.model.scheduler.config)
 
         if not Path(model_name).exists() and settings.environment != "prod":
@@ -477,16 +475,16 @@ class StableDiffusionUpscale(StableDiffusionAbstract):
 
     def generate_images(self, **kwargs):
         logger.info("Generating image in Upscale pipeline.")
-        prompt: Prompt = kwargs.get("prompt")
+        request: GenerationRequest = kwargs.get("request")
         image = kwargs.get("image")
-        generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
+        generator = torch.Generator(self.generator_device).manual_seed(request.generator)
 
         images = self.model(
-            prompt=prompt.prompt,
-            negative_prompt=prompt.negative_prompt,
-            num_inference_steps=prompt.num_inference_steps,
-            guidance_scale=prompt.guidance_scale,
-            num_images_per_prompt=prompt.num_images_per_prompt,
+            prompt=request.prompt,
+            negative_prompt=request.negative_prompt,
+            num_inference_steps=request.num_inference_steps,
+            guidance_scale=request.guidance_scale,
+            num_images_per_prompt=request.num_images_per_prompt,
             generator=generator,
             image=image,
         ).images
@@ -503,15 +501,15 @@ class StableDiffusionXLText2Image(StableDiffusionAbstract):
     def __init__(
             self,
             model_name: str = "stabilityai/stable-diffusion-xl-base-1.0",
-            sampler: str = "PNDMScheduler",
+            scheduler: str = "PNDMScheduler",
             pipeline_name: str = "StableDiffusionXLPipeline",
     ):
-        super().__init__(pipeline_name=pipeline_name, model_name=model_name, sampler=sampler)
+        super().__init__(pipeline_name=pipeline_name, model_name=model_name, scheduler=scheduler)
         self.pipe = StableDiffusionXLPipeline.from_pretrained(
             "stabilityai/stable-diffusion-xl-base-1.0",
-             torch_dtype=torch.float16,
-             variant="fp16",
-             use_safetensors=True
+            torch_dtype=torch.float16,
+            variant="fp16",
+            use_safetensors=True
         )
         self.pipe.to("cuda")
 
@@ -520,18 +518,18 @@ class StableDiffusionXLText2Image(StableDiffusionAbstract):
 
     def generate_images(self, **kwargs):
         logger.info("generating image in Text2Image pipeline")
-        prompt: Prompt = kwargs.get("prompt")
-        generator = torch.Generator(self.generator_device).manual_seed(prompt.generator)
+        request: GenerationRequest = kwargs.get("request")
+        generator = torch.Generator(self.generator_device).manual_seed(request.generator)
 
         images = self.pipe(
-            prompt=prompt.prompt,
-            negative_prompt=prompt.negative_prompt,
-            num_images_per_prompt=1 ,
-            guidance_scale=prompt.guidance_scale,
-            num_inference_steps=prompt.num_inference_steps,
+            prompt=request.prompt,
+            negative_prompt=request.negative_prompt,
+            num_images_per_prompt=1,
+            guidance_scale=request.guidance_scale,
+            num_inference_steps=request.num_inference_steps,
             generator=generator,
-            width=prompt.width or 768,
-            height=prompt.height or 768,
+            width=request.width or 768,
+            height=request.height or 768,
         ).images
 
         if len(images) == 0:

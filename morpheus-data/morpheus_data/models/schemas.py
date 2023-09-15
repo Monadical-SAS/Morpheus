@@ -92,11 +92,11 @@ class Prompt(BaseModel):
 
     @validator("model")
     def check_if_empty_model(cls, model):
-        return model or settings.model_default
+        return model or settings.default_model
 
     @validator("sampler")
     def check_if_empty_sampler(cls, sampler):
-        return sampler or settings.sampler_default
+        return sampler or settings.default_scheduler
 
     @validator("negative_prompt")
     def check_if_empty_neg_prompt(cls, neg_prompt):
@@ -316,3 +316,20 @@ class Generation(BaseModel):
                 "failed": False,
             }
         }
+
+
+class GenerationRequest(BaseModel):
+    task_id: UUID
+    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    negative_prompt: str = "bad, low res, ugly, deformed"
+    width: int = 768
+    height: int = 768
+    num_inference_steps: int = 50
+    guidance_scale: int = 10
+    num_images_per_prompt: int = 1
+    generator: int = -1
+    strength: Optional[float] = 0.75
+    pipeline: str = settings.default_pipeline
+    scheduler: str = settings.default_scheduler
+    model_id: str = settings.default_model
+    user_id: str

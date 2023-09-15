@@ -25,6 +25,12 @@ sd_services = StableDiffusionService(generative_ai_generator=generative_ai_gener
 )
 async def generate_text2img_images(prompt: Prompt = Depends(), db=Depends(get_db), user=Depends(get_user)):
     try:
+        print("------------------")
+        print("prompt", prompt)
+        print(sd_services)
+        print("generative_ai_generator", generative_ai_generator)
+        print("------------------")
+
         task_id = sd_services.generate_text2img_images(db=db, prompt=prompt, email=user["email"])
         return Response(message="Text2Img request queued successfully", data=task_id)
     except UserNotFoundError as e:

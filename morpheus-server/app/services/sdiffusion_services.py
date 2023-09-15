@@ -2,6 +2,7 @@ from PIL import Image
 from app.config import get_settings
 from app.error.error import ImageNotProvidedError, ModelNotFoundError, UserNotFoundError
 from app.integrations.generative_ai_engine.generative_ai_interface import GenerativeAIInterface
+from morpheus_data.models.schemas import GenerationRequest
 from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
 from morpheus_data.repository.generation_repository import GenerationRepository
 from morpheus_data.repository.model_repository import ModelRepository
@@ -18,57 +19,60 @@ class StableDiffusionService:
         self.user_repository = UserRepository()
         self.settings = get_settings()
 
-    def build_backend_request(self, db: Session, prompt: Prompt, email: str) -> dict:
+    def build_backend_request(self, db: Session, prompt: Prompt, email: str) -> GenerationRequest:
         self.validate_request(db=db, model=prompt.model, email=email)
         generation_db = self.generation_repository.create_generation(db=db)
         pipeline = hasattr(prompt, "pipeline") and prompt.pipeline or "StableDiffusionPipeline"
-
-        backend_request = {
+        request_dict = {
             **prompt.dict(),
             "task_id": generation_db.id,
             "user_id": email,
-            "model_id": prompt.model,
-            "scheduler": prompt.sampler,
             "pipeline": pipeline,
+            "scheduler": prompt.sampler,
+            "model_id": prompt.model,
         }
+        backend_request = GenerationRequest(**request_dict)
+        print("----------------------------")
+        print(backend_request.__dict__)
+        print("----------------------------")
         return backend_request
 
     def generate_text2img_images(self, db: Session, prompt: Prompt, email: str) -> str:
         backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
-        return self.sd_generator.generate_text2img_images(prompt=prompt, **backend_request)
+        return self.sd_generator.generate_text2img_images(request=backend_request)
 
     def generate_img2img_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
         backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
         image = self.validate_and_clean_image(image=image, width=prompt.width)
-        return self.sd_generator.generate_img2img_images(prompt, image, **backend_request)
+        return self.sd_generator.generate_img2img_images(request=backend_request, image=image)
 
     def generate_controlnet_images(self, db: Session, prompt: PromptControlNet, image: bytes, email: str) -> str:
         backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
         image = self.validate_and_clean_image(image=image, width=prompt.width)
-        return self.sd_generator.generate_controlnet_images(prompt, image, **backend_request)
+        return self.sd_generator.generate_controlnet_images(request=backend_request, image=image)
 
     def generate_pix2pix_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
         backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
         image = self.validate_and_clean_image(image=image, width=prompt.width)
-        return self.sd_generator.generate_pix2pix_images(prompt, image, **backend_request)
+        return self.sd_generator.generate_pix2pix_images(request=backend_request, image=image)
 
     def generate_inpainting_images(self, db: Session, prompt: Prompt, image: bytes, mask: bytes, email: str) -> str:
         backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
         image = self.validate_and_clean_image(image=image, width=512, height=512)
         mask = self.validate_and_clean_image(image=mask, width=512, height=512)
-        return self.sd_generator.generate_inpainting_images(prompt, image, mask, **backend_request)
+        return self.sd_generator.generate_inpainting_images(request=backend_request, image=image, mask=mask)
 
     def generate_upscaling_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
         backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
         image = self.validate_and_clean_image(image=image)
         prompt.width = image.width
         prompt.height = image.height
-        return self.sd_generator.generate_upscaling_images(prompt, image, **backend_request)
+        return self.sd_generator.generate_upscaling_images(request=backend_request, image=image)
 
     def generate_magicprompt(self, db: Session, prompt: MagicPrompt, email: str) -> str:
         self.validate_magicprompt_request(db=db, email=email)
-        # prompt.config.model = f"{self.settings.model_parent_path}{prompt.config.model}"
-        return self.sd_generator.generate_magicprompt(prompt)
+        backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
+        return self.sd_generator.generate_magicprompt(request=backend_request)
 
     def validate_request(self, db: Session, model: str, email: str) -> None:
         db_user = self.user_repository.get_user_by_email(db=db, email=email)
