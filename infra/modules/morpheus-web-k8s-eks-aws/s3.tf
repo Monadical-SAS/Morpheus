@@ -7,6 +7,28 @@ resource "aws_s3_bucket" "results" {
   }
 }
 
+resource "aws_s3_bucket_acl" "results_acl" {
+    bucket = aws_s3_bucket.results.id
+    acl    = "public-read"
+    depends_on = [aws_s3_bucket_ownership_controls.s3_bucket_acl_ownership]
+}
+
+resource "aws_s3_bucket_ownership_controls" "s3_bucket_acl_ownership" {
+  bucket = aws_s3_bucket.results.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+  depends_on = [aws_s3_bucket_public_access_block.results_public_access_block]
+}
+
+resource "aws_s3_bucket_public_access_block" "results_public_access_block" {
+  bucket = aws_s3_bucket.results.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_cors_configuration" "results_bucket_cors" {
   bucket = aws_s3_bucket.results.id
 

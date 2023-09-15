@@ -65,10 +65,11 @@ export interface Model {
   is_active: boolean;
   url_docs?: string;
   categories: any[];
+
 }
 
 export interface ControlNetModel extends Model {
-  type?: string;
+  extra_params: Record<string, any>
 }
 
 export interface Sampler {

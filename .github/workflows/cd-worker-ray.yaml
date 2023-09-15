@@ -4,6 +4,7 @@ on:
   workflow_call:
 env:
   WORKING_DIR_BACKEND: morpheus-worker/ray
+  MORPHEUS_WORKER_IMAGE_NAME: ${{ vars.MORPHEUS_WORKER_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-worker' }}
 jobs:
   ci-worker-ray:
     uses: ./.github/workflows/ci-worker-ray.yaml
@@ -36,6 +37,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Push Docker Image
         run: |
-          docker pull monadicalsas/morpheus-worker:${{ github.run_id }}
-          docker tag monadicalsas/morpheus-worker:${{ github.run_id }} monadicalsas/morpheus-worker:latest
-          docker push monadicalsas/morpheus-worker:latest
+          docker pull ${{ env.MORPHEUS_WORKER_IMAGE_NAME }}:${{ github.run_id }}
+          docker tag ${{ env.MORPHEUS_WORKER_IMAGE_NAME }}:${{ github.run_id }} ${{ env.MORPHEUS_WORKER_IMAGE_NAME }}:latest
+          docker push ${{ env.MORPHEUS_WORKER_IMAGE_NAME }}:latest
