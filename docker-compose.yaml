@@ -130,7 +130,7 @@ services:
   worker:
     build:
       context: morpheus-server
-      dockerfile: ./scripts/models/Dockerfile
+      dockerfile: ./Dockerfile
       args:
         - TAG=${TAG:-latest}
     command: celery -A app.celery.workers.stable_diffusion_app worker --max-tasks-per-child=1 --loglevel=info -Q stable_diffusion
@@ -185,7 +185,7 @@ services:
   magicprompt_worker:
     build:
       context: morpheus-server
-      dockerfile: ./scripts/models/Dockerfile
+      dockerfile: ./Dockerfile
       args:
         - TAG=${TAG:-latest}
     command: celery -A app.celery.workers.magic_prompt_app worker --max-tasks-per-child=1 --loglevel=info -Q magic_prompt
