@@ -83,7 +83,7 @@ class StableDiffusionAbstract(ABC):
 
         # Build the pipeline parameters
         default_params = {
-            "pretrained_model_name": self.model_source,
+            "pretrained_model_name_or_path": self.model_source,
             "torch_dtype": self.dtype,
             "use_safetensors": True,
         }

@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from settings import get_settings
+from app.settings.settings import get_settings
 
 settings = get_settings()
 engine = create_engine(settings.get_db_url())
