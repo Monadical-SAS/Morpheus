@@ -21,13 +21,15 @@ class StableDiffusionService:
     def build_backend_request(self, db: Session, prompt: Prompt, email: str) -> dict:
         self.validate_request(db=db, model=prompt.model, email=email)
         generation_db = self.generation_repository.create_generation(db=db)
+        pipeline = hasattr(prompt, "pipeline") and prompt.pipeline or "StableDiffusionPipeline"
+
         backend_request = {
             **prompt.dict(),
             "task_id": generation_db.id,
             "user_id": email,
             "model_id": prompt.model,
             "scheduler": prompt.sampler,
-            "pipeline": prompt.pipeline
+            "pipeline": pipeline,
         }
         return backend_request
 
