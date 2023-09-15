@@ -187,7 +187,7 @@ services:
       context: morpheus-server
       dockerfile: ./scripts/models/Dockerfile
       args:
-        - TAG=${TAG:-latest}œ
+        - TAG=${TAG:-latest}
     command: celery -A app.celery.workers.magic_prompt_app worker --max-tasks-per-child=1 --loglevel=info -Q magic_prompt
     profiles: [ "staging" ]
     volumes:
