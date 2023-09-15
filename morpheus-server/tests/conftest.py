@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
-from morpheus_data.database import get_db
+from morpheus_data.database.database import get_db
 from morpheus_data.models.schemas import User
 from morpheus_data.repository.firebase_repository import FirebaseRepository
 from morpheus_data.repository.user_repository import UserRepository

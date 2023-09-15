@@ -6,13 +6,14 @@ import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from morpheus_data.database import engine, Base
+from morpheus_data.database.database import engine, Base
+from morpheus_data.database.init_db import init_morpheus_data
 
 from app.api.artwork_api import router as ArtworksRouter
 from app.api.auth_api import router as AuthRouter
 from app.api.collections_api import router as CollectionsRouter
-from app.api.controlnet_model_api import router as CNModelsRouter
 from app.api.files_api import router as FilesRouter
+from app.api.model_category_api import router as ModelCategoryRouter
 from app.api.models_api import router as ModelsRouter
 from app.api.samplers_api import router as SamplersRouter
 from app.api.sdiffusion_api import router as SDiffusionRouter
@@ -25,16 +26,21 @@ sentry_sdk.init(
     dsn=SENTRY_DSN,
 )
 
+app = FastAPI()
+
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+@app.on_event("startup")
+async def startup_db():
+    init_morpheus_data()
+
 
 config_path = Path("config").absolute() / "logging-conf.yml"
 logger = InitLogger.create_logger(config_path)
 
 ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS")
 if ALLOWED_ORIGINS is None:
-    origins = ["http://localhost:3000", "http://0.0.0.0:3000"]
+    origins = ["http://localhost:3000", "http://localhost:3001"]
 else:
     origins = ALLOWED_ORIGINS.split(",")
 
@@ -53,7 +59,7 @@ app.include_router(FilesRouter, tags=["files"], prefix="/files")
 app.include_router(CollectionsRouter, tags=["collections"], prefix="/collections")
 app.include_router(ArtworksRouter, tags=["artworks"], prefix="/artworks")
 app.include_router(ModelsRouter, tags=["models"], prefix="/models")
-app.include_router(CNModelsRouter, tags=["controlnet models"], prefix="/cnmodels")
+app.include_router(ModelCategoryRouter, tags=["categories"], prefix="/categories")
 app.include_router(SamplersRouter, tags=["samplers"], prefix="/samplers")
 
 

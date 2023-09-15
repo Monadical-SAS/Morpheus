@@ -8,8 +8,8 @@ import UserCard, { UserImage } from "../UserCard/UserCard";
 import { AuthOption, useAuth } from "@/context/AuthContext";
 import { isEmptyObject } from "@/utils/object";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import { User } from "@/models/models";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
+import { User } from "@/models/models";
 import styles from "./Navbar.module.scss";
 
 type NavMenuProps = {
@@ -60,10 +60,7 @@ const NavMenu = (props: NavMenuProps) => {
       </div>
 
       <nav className={styles.auth}>
-        <span
-          className={styles.avatarImage}
-          onClick={() => setShowUserCard(true)}
-        >
+        <span className={styles.avatarImage} onClick={() => setShowUserCard(true)}>
           <UserImage />
         </span>
 
@@ -81,11 +78,10 @@ interface NavbarProps {
 
 const Navbar = (props: NavbarProps) => {
   const router = useRouter();
-  const { width } = useWindowDimensions();
   const { user, setAuthOption } = useAuth();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
-
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const { width } = useWindowDimensions();
+  const isMobile = width < MOBILE_SCREEN_WIDTH;
 
   const redirectToHome = useCallback(async () => {
     if (isEmptyObject(user)) {
@@ -114,10 +110,7 @@ const Navbar = (props: NavbarProps) => {
     <div className={styles.navbarContainer}>
       {isMobile ? (
         <Fragment>
-          <BurgerMenu
-            isOpen={showMobileMenu}
-            onStateChange={(state) => setShowMobileMenu(state.isOpen)}
-          >
+          <BurgerMenu isOpen={showMobileMenu} onStateChange={(state) => setShowMobileMenu(state.isOpen)}>
             <div className={styles.burgerMenuContent}>
               <NavMenu
                 user={user}

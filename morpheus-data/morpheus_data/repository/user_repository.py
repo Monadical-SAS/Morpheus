@@ -50,7 +50,6 @@ class UserRepository:
             return None
 
         db_user.name = user.name
-        db_user.phone = user.phone
         db_user.bio = user.bio
         db_user.avatar = user.avatar
         db.commit()

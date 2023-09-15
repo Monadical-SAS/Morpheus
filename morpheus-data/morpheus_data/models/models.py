@@ -1,10 +1,10 @@
 import uuid
 
-from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric
+from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric, JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from morpheus_data.database import Base
+from morpheus_data.database.database import Base
 
 
 class User(Base):
@@ -15,7 +15,6 @@ class User(Base):
     name = Column(String(64), nullable=True)
     bio = Column(String(512), nullable=True)
     avatar = Column(String(512), nullable=True)
-    phone = Column(String(16), nullable=True)
     is_active = Column(Boolean, default=True)
     collections = relationship("Collection", back_populates="owner")
     prompts = relationship("Prompt", back_populates="owner")
@@ -75,29 +74,39 @@ class ArtWork(Base):
     prompt = relationship("Prompt", back_populates="artworks")
 
 
-class SDModel(Base):
-    __tablename__ = "sdmodel"
+class ModelCategory(Base):
+    __tablename__ = "model_category"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = Column(String(64), nullable=True)
+    description = Column(String(512), nullable=True)
+    models = relationship(
+        "MLModel",
+        secondary="model_category_association",
+        back_populates="categories"
+    )
+
+
+class MLModel(Base):
+    __tablename__ = "ml_model"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(64), nullable=True)
     source = Column(String(512), nullable=True)
     description = Column(String(512), nullable=True)
-    is_active = Column(Boolean, default=True)
     url_docs = Column(String(512), nullable=True)
-    text2img = Column(Boolean, nullable=True, default=False)
-    img2img = Column(Boolean, nullable=True, default=False)
-    inpainting = Column(Boolean, nullable=True, default=False)
-    controlnet = Column(Boolean, nullable=True, default=False)
-    pix2pix = Column(Boolean, nullable=True, default=False)
-    upscaling = Column(Boolean, nullable=True, default=False)
+    categories = relationship(
+        "ModelCategory",
+        secondary="model_category_association",
+        back_populates="models"
+    )
+    extra_params = Column(JSON, nullable=True)
+    is_active = Column(Boolean, default=True)
 
 
-class SDControlNetModel(Base):
-    __tablename__ = "sd_controlnet_model"
+class ModelCategoryAssociation(Base):
+    __tablename__ = "model_category_association"
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String(64), nullable=True)
-    type = Column(String(64), nullable=True)
-    source = Column(String(512), nullable=True)
-    description = Column(String(512), nullable=True)
-    is_active = Column(Boolean, default=True)
-    url_docs = Column(String(512), nullable=True)
+    model_id = Column(UUID(as_uuid=True), ForeignKey("ml_model.id"))
+    category_id = Column(UUID(as_uuid=True), ForeignKey("model_category.id"))

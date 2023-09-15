@@ -1,7 +1,7 @@
 from celery.result import AsyncResult
 from fastapi import APIRouter, Depends, File, UploadFile
 
-from morpheus_data.database import get_db
+from morpheus_data.database.database import get_db
 from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
 
 from app.config import get_generative_ai_backend
