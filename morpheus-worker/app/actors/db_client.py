@@ -1,13 +1,8 @@
 import logging
 
 import ray
-
-from app.models.models import Generation
 from app.models.schemas import Generation
 from app.settings.database import get_db
-from app.settings.settings import get_settings
-
-settings = get_settings()
 
 
 @ray.remote
