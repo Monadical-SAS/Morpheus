@@ -1,6 +1,3 @@
-import shutil
-from pathlib import Path
-
 import typer
 from omegaconf import OmegaConf
 from rich import print
@@ -11,6 +8,8 @@ import s3
 from config import APIServer, DBTarget, Target, api_server_urls, config_file, download_model, models_url
 from utils import load_config_from_file
 
+from morpheus_data.registry.model_manager import remove_model_from_disk, list_models_in_disk
+
 cli = typer.Typer(rich_markup_mode="rich")
 
 cli.add_typer(s3.app, name="s3")
@@ -20,12 +19,11 @@ console = Console()
 
 
 def remove_model_from_local(name):
-    path = f"./tmp/{name}"
-    if not Path(path).exists():
-        print("Folder not found in local")
-        return
-    shutil.rmtree(f"./tmp/{name}")
-    print("Model deleted from tmp folder")
+    try:
+        remove_model_from_disk(name)
+        print(f"Model {name} deleted from local")
+    except Exception as e:
+        raise Exception(f"Error deleting model from local: {e}")
 
 
 @cli.command("upload")
@@ -98,6 +96,11 @@ def delete_model(
         db.delete_model_from_db_by_source(
             server_url=f"{api_server_urls[api_server]}/{models_url[target]}", model_source=name
         )
+
+
+@cli.command("list")
+def list_model():
+    print(list_models_in_disk())
 
 
 @cli.command("test")

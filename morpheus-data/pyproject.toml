@@ -17,6 +17,9 @@ dependencies = [
     "tqdm>=4.65.0",
     "pillow>=9.5.0",
     "fastapi>=0.95.1",
+    "torch==1.13.1",
+    "diffusers==0.20.0",
+    "dynamicprompts[attentiongrabber,magicprompt]"
 ]
 
 [build-system]

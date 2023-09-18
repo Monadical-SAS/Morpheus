@@ -70,6 +70,12 @@ class ControlNetType(str, Enum):
     poses = "poses"
 
 
+class ModelKind(str, Enum):
+    diffusion = "diffusion"
+    controlnet = "controlnet"
+    prompt = "prompt"
+
+
 class Prompt(BaseModel):
     prompt: str = Field(..., min_length=1)
     model: str
@@ -221,6 +227,7 @@ class ModelCategory(BaseModel):
 class MLModelCreate(BaseModel):
     name: str
     source: str
+    kind: ModelKind = None
     description: str = None
     url_docs: str = None
     categories: List[ModelCategory] = None
@@ -232,6 +239,7 @@ class MLModelCreate(BaseModel):
             "example": {
                 "name": "Model Name",
                 "source": "https://modelurl.com",
+                "kind": "diffusion",
                 "description": "Model description",
                 "url_docs": "https://modeldocs.com",
                 "is_active": True,
@@ -249,6 +257,7 @@ class MLModel(MLModelCreate):
                 "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
                 "name": "Model Name",
                 "source": "https://modelurl.com",
+                "kind": "diffusion",
                 "description": "Model description",
                 "url_docs": "https://modeldocs.com",
                 "is_active": True,

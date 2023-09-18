@@ -93,6 +93,7 @@ class MLModel(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(64), nullable=True)
     source = Column(String(512), nullable=True)
+    kind = Column(String(64), nullable=True)
     description = Column(String(512), nullable=True)
     url_docs = Column(String(512), nullable=True)
     categories = relationship(
