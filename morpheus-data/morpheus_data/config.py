@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     aws_access_key_id: str = ""
     aws_secret_access_key: str = ""
 
+    temp_model_folder: str = "./tmp"
     model_default: str = "stabilityai/stable-diffusion-2"
     sampler_default: str = "PNDMScheduler"
     max_num_images: int = 4

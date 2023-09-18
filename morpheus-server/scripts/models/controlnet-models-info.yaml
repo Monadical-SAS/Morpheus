@@ -3,6 +3,7 @@ models:
     type: "canny"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Canny edges."
     source: "lllyasviel/sd-controlnet-canny"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-canny"
 
@@ -10,6 +11,7 @@ models:
     type: "depth"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Depth estimation."
     source: "lllyasviel/sd-controlnet-depth"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-depth"
 
@@ -17,6 +19,7 @@ models:
     type: "seg"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Image Segmentation."
     source: "lllyasviel/sd-controlnet-seg"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-seg"
 
@@ -24,6 +27,7 @@ models:
     type: "hed"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on HED Boundary."
     source: "lllyasviel/sd-controlnet-hed"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-hed"
   
@@ -31,6 +35,7 @@ models:
     type: "mlsd"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on M-LSD straight line detection."
     source: "lllyasviel/sd-controlnet-mlsd"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-mlsd"
 
@@ -38,6 +43,7 @@ models:
     type: "normalmap"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Normal Map Estimation."
     source: "lllyasviel/sd-controlnet-normal"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-normal"
 
@@ -45,6 +51,7 @@ models:
     type: "poses"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Human Pose Estimation."
     source: "lllyasviel/sd-controlnet-openpose"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-openpose"
 
@@ -52,6 +59,7 @@ models:
     type: "scribble"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Scribble images."
     source: "lllyasviel/sd-controlnet-scribble"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-scribble"
 
