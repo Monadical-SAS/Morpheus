@@ -13,6 +13,7 @@ class ModelRepository:
         db_model = MLModel(
             name=model.name,
             source=model.source,
+            kind=model.kind,
             description=model.description,
             url_docs=model.url_docs,
             extra_params=model.extra_params,
@@ -44,10 +45,18 @@ class ModelRepository:
 
     @classmethod
     def update_model(cls, *, db: Session, model: MLModelCreate) -> MLModel:
-        query = db.query(MLModel).filter(MLModel.source == model.source)
-        query.update(model.dict(), synchronize_session="fetch")
+        db_model: MLModel = db.query(MLModel).filter(MLModel.source == model.source).first()
+
+        db_model.name = model.name
+        db_model.description = model.description
+        db_model.source = model.source
+        db_model.kind = model.kind
+        db_model.url_docs = model.url_docs
+        db_model.categories = model.categories
+        db_model.extra_params = model.extra_params
+        db_model.is_active = model.is_active
         db.commit()
-        return query.first()
+        return db_model
 
     @classmethod
     def delete_model_by_source(cls, *, db: Session, model_source: str) -> MLModel:
