@@ -99,6 +99,34 @@ variable "self_managed_gpu_adv_node_group_name" {
   default = "self-mng-gpu-adv"
 }
 
+variable "self_managed_head_node_group_name" {
+  default = "self-mng-head"
+}
+
+variable "self_managed_head_node_min_size" {
+  default = 1
+}
+
+variable "self_managed_head_node_max_size" {
+  default = 2
+}
+
+variable "self_managed_head_node_desired_size" {
+  default = 2
+}
+
+variable "self_managed_head_iam_role_name" {
+  default = "self-managed-node-group-head"
+}
+
+variable "self_managed_head_nodes_instance_type" {
+  default = "t3.xlarge"
+}
+
+variable "self_managed_head_nodes_ami" {
+  default = "ami-081f4e51bfefc32f6"
+}
+
 variable "scale_up_queue_threshold" {
   default = "4"
 }
@@ -143,4 +171,36 @@ variable "create_aws_auth_configmap" {
 
 variable "manage_aws_auth_configmap" {
   default = true
+}
+
+variable "self_managed_gpu_adv_node_warm_pool_min_size" {
+  default = 2
+}
+
+variable "self_managed_gpu_adv_node_warm_pool_max_group_prepared_capacity" {
+  default = 4
+}
+
+variable "scale_up_adv_queue_threshold" {
+  default = "4"
+}
+
+variable "scale_up_adv_period" {
+  default = "30"
+}
+
+variable "scale_up_adv_evaluation_period" {
+  default = "2"
+}
+
+variable "scale_up_adv_scaling_adjustment" {
+  default = 2
+}
+
+variable "scale_down_adv_queue_threshold" {
+  default = "4"
+}
+
+variable "scale_down_adv_period" {
+  default = "60"
 }

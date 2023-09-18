@@ -21,6 +21,11 @@ module "morpheus_cluster" {
   self_managed_gpu_adv_node_max_size = var.self_managed_gpu_adv_node_max_size
   self_managed_gpu_adv_nodes_device_size = var.self_managed_gpu_adv_nodes_device_size
   self_managed_gpu_adv_node_desired_size = var.self_managed_gpu_adv_node_desired_size
+  self_managed_head_node_min_size = var.self_managed_head_node_min_size
+  self_managed_head_node_max_size = var.self_managed_head_node_max_size
+  self_managed_head_node_desired_size = var.self_managed_head_node_desired_size
+  self_managed_head_nodes_instance_type = var.self_managed_head_nodes_instance_type
+  self_managed_head_iam_role_name = var.self_managed_head_iam_role_name
   scale_up_queue_threshold = var.scale_up_queue_threshold
   scale_up_period = var.scale_up_period
   scale_up_evaluation_period = var.scale_up_evaluation_period
@@ -29,6 +34,14 @@ module "morpheus_cluster" {
   scale_down_period = var.scale_down_period
   scale_down_evaluation_period = var.scale_down_evaluation_period
   scale_down_scaling_adjustment = var.scale_down_scaling_adjustment
+  scale_up_adv_queue_threshold = var.scale_up_adv_queue_threshold
+  scale_up_adv_period = var.scale_up_period
+  scale_up_adv_evaluation_period = var.scale_up_adv_evaluation_period
+  scale_up_adv_scaling_adjustment = var.scale_up_adv_scaling_adjustment
+  scale_down_adv_queue_threshold = var.scale_downadv__queue_threshold
+  scale_down_adv_period = var.scale_down_adv_period
+  scale_down_adv_evaluation_period = var.scale_down_adv_evaluation_period
+  scale_down_adv_scaling_adjustment = var.scale_down_adv_scaling_adjustment
   api_hostname = var.api_hostname
   client_hostname = var.client_hostname
   create_aws_auth_configmap = var.create_aws_auth_configmap
