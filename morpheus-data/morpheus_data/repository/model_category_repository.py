@@ -4,6 +4,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from morpheus_data.models.models import ModelCategory
+from morpheus_data.models.schemas import MLModelCreate
 
 
 class ModelCategoryRepository:
@@ -29,6 +30,10 @@ class ModelCategoryRepository:
     @classmethod
     def get_category_by_name(cls, *, db: Session, name: str) -> ModelCategory:
         return db.query(ModelCategory).filter(ModelCategory.name == name).first()
+
+    @classmethod
+    def get_categories_by_model(cls, *, db: Session, model: MLModelCreate) -> List[ModelCategory]:
+        return db.query(ModelCategory).filter(ModelCategory.models.id == model.id).all()
 
     @classmethod
     def update_category(cls, *, db: Session, category: ModelCategory) -> ModelCategory:
