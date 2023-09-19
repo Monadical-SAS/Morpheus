@@ -32,7 +32,6 @@ class ModelHandler:
             CategoryEnum.PIX_TO_PIX: StableDiffusionPixToPix,
             CategoryEnum.UPSCALING: StableDiffusionUpscaling,
             CategoryEnum.INPAINTING: StableDiffusionInpainting,
-            CategoryEnum.MAGIC_PROMPT: StableDiffusionText2Img,
         }
         generator = generators.get(self.endpoint)
         if generator is None:
