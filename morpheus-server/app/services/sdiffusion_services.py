@@ -8,7 +8,7 @@ from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
 from morpheus_data.repository.generation_repository import GenerationRepository
 from morpheus_data.repository.model_repository import ModelRepository
 from morpheus_data.repository.user_repository import UserRepository
-from morpheus_data.utils.images import get_rgb_image_from_bytes, resize_image
+from morpheus_data.utils.images import get_rgb_image_from_bytes
 from sqlalchemy.orm import Session
 
 
@@ -86,10 +86,11 @@ class StableDiffusionService:
         backend_request = GenerationRequest(**request_dict)
         return backend_request
 
-    def _validate_and_clean_image(self, *, image: bytes, width: int = None, height: int = None) -> Image:
+    def _validate_and_clean_image(self, *, image: bytes) -> Image:
         if not image:
             raise ImageNotProvidedError("Image not provided")
 
-        image = get_rgb_image_from_bytes(image)
-        image = resize_image(image=image, width=width, height=height)
-        return image
+        try:
+            return get_rgb_image_from_bytes(image)
+        except Exception as e:
+            raise ImageNotProvidedError(f"Invalid image provided: {e}")

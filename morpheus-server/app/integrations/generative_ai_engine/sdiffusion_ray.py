@@ -4,6 +4,7 @@ from app.config import get_settings
 from app.integrations.generative_ai_engine.generative_ai_interface import GenerativeAIInterface
 from loguru import logger
 from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
+from morpheus_data.utils.images import from_image_to_bytes
 
 settings = get_settings()
 
@@ -17,9 +18,11 @@ def send_request_to_ray_server(
 ) -> str:
     files = {}
     if image:
-        files["image"] = ("image.png", image.tobytes(), "image/png")
+        bytes_image = from_image_to_bytes(image)
+        files["image"] = ("image.png", bytes_image, "image/png")
     if mask:
-        files["mask"] = ("mask.png", mask.tobytes(), "image/png")
+        bytes_mask = from_image_to_bytes(mask)
+        files["mask"] = ("mask.png", bytes_mask, "image/png")
 
     request_args = {
         "url": f"http://worker-ray:8000/{endpoint}",
