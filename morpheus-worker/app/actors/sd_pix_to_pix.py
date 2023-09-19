@@ -30,7 +30,7 @@ class StableDiffusionPixToPix(StableDiffusionAbstract):
         result = self.pipeline(
             image=image,
             prompt=request.prompt,
-            negative_request=request.negative_prompt,
+            negative_prompt=request.negative_prompt,
             guidance_scale=request.guidance_scale,
             num_inference_steps=request.num_inference_steps,
             num_images_per_request=request.num_images_per_prompt,
