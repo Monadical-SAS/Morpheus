@@ -10,8 +10,8 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
     def __init__(
             self, *,
             pipeline: str = "StableDiffusionXLPipeline",
+            model_id: str = "stabilityai/stable-diffusion-xl-base-1.0",
             scheduler: str = "DDPMScheduler",
-            model_id: str = "stabilityai/stable-diffusion-xl-base-1.0"
     ):
         super().__init__(
             pipeline=pipeline,

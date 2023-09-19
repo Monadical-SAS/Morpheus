@@ -1,15 +1,16 @@
 import logging
 import uuid
 
-from app.handlers.model_handler import ModelHandler
-from app.handlers.text_model_handler import TextModelHandler
-from app.integrations.db_client import DBClient
-from app.models.schemas import GenerationRequest, TextGenerationRequest, CategoryEnum, ModelRequest, TextCategoryEnum
 from fastapi import FastAPI, UploadFile, Depends
 from fastapi.responses import Response
 from ray import serve
 from ray.util.state import get_task
 from ray.util.state import list_nodes
+
+from app.handlers.model_handler import ModelHandler
+from app.handlers.text_model_handler import TextModelHandler
+from app.integrations.db_client import DBClient
+from app.models.schemas import GenerationRequest, TextGenerationRequest, CategoryEnum, ModelRequest, TextCategoryEnum
 
 app = FastAPI()
 
@@ -41,8 +42,8 @@ class APIIngress:
             self.logger.info(f"StableDiffusionText2Img.generate: request: {request}")
             request.task_id = str(uuid.uuid4())
             model_request = ModelRequest(**request.dict())
-            handler = ModelHandler.remote(endpoint=CategoryEnum.TEXT_TO_IMAGE)
-            handler.handle_generation.remote(request=model_request)
+            handler = ModelHandler.remote(endpoint=CategoryEnum.TEXT_TO_IMAGE, request=model_request)
+            handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_text2img {e}")
@@ -59,8 +60,8 @@ class APIIngress:
             request.task_id = str(uuid.uuid4())
             model_request = ModelRequest(**request.dict())
             model_request.image = await image.read()
-            handler = ModelHandler.remote(endpoint=CategoryEnum.IMAGE_TO_IMAGE)
-            handler.handle_generation.remote(request=model_request)
+            handler = ModelHandler.remote(endpoint=CategoryEnum.IMAGE_TO_IMAGE, request=model_request)
+            handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_img2_img {e}")
@@ -77,8 +78,8 @@ class APIIngress:
             request.task_id = str(uuid.uuid4())
             model_request = ModelRequest(**request.dict())
             model_request.image = await image.read()
-            handler = ModelHandler.remote(endpoint=CategoryEnum.PIX_TO_PIX)
-            handler.handle_generation.remote(request=model_request)
+            handler = ModelHandler.remote(endpoint=CategoryEnum.PIX_TO_PIX, request=model_request)
+            handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_pix2pix {e}")
@@ -95,8 +96,8 @@ class APIIngress:
             request.task_id = str(uuid.uuid4())
             model_request = ModelRequest(**request.dict())
             model_request.image = await image.read()
-            handler = ModelHandler.remote(endpoint=CategoryEnum.UPSCALING)
-            handler.handle_generation.remote(request=model_request)
+            handler = ModelHandler.remote(endpoint=CategoryEnum.UPSCALING, request=model_request)
+            handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_upscaling {e}")
@@ -115,8 +116,8 @@ class APIIngress:
             model_request = ModelRequest(**request.dict())
             model_request.image = await image.read()
             model_request.mask = await mask.read()
-            handler = ModelHandler.remote(endpoint=CategoryEnum.INPAINTING)
-            handler.handle_generation.remote(request=model_request)
+            handler = ModelHandler.remote(endpoint=CategoryEnum.INPAINTING, request=model_request)
+            handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_inpainting {e}")
