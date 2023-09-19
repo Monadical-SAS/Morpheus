@@ -1,9 +1,8 @@
 import logging
 
 import ray
-
 from app.actors.common.sd_base import StableDiffusionAbstract
-from app.models.schemas import Request, ModelRequest
+from app.models.schemas import ModelRequest
 
 
 @ray.remote(num_gpus=1)
@@ -19,7 +18,7 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
             model_id=model_id,
             scheduler=scheduler
         )
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("ray")
 
     def generate(self, request: ModelRequest):
         self.logger.info(f"StableDiffusionV2Text2Img.generate: request: {request}")

@@ -33,7 +33,7 @@ class Settings(SettingsData):
     enable_float32: bool = False
     max_num_images: int = 4
     generative_ai_backend: str = GenerativeAIBackendEnum.ray
-
+    ray_backend_url: str = "http://worker-ray:8000"
     celery_broker_url: str = "redis://redis:6379/0"
     celery_result_backend: str = "redis://redis:6379/0"
     celery_stable_diffusion_queue: str = "stable_diffusion"
@@ -106,7 +106,6 @@ def get_file_handlers():
 @lru_cache()
 def get_generative_ai_backend():
     settings = get_settings()
-    print("settings.generative_ai_backend", settings.generative_ai_backend)
     try:
         module_import = importlib.import_module(
             backend_handlers[settings.generative_ai_backend]["module"]
@@ -114,8 +113,6 @@ def get_generative_ai_backend():
         backend = getattr(
             module_import, backend_handlers[settings.generative_ai_backend]["handler"]
         )
-        print("module_import", module_import)
-        print("backend", backend)
         return backend()
     except Exception as e:
         print("Error getting generative ai backend", e)

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from PIL import Image
-from morpheus_data.models.schemas import GenerationRequest
+from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
 
 
 class GenerativeAIInterface(ABC):
@@ -37,5 +37,5 @@ class GenerativeAIInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def generate_magicprompt(*, request: GenerationRequest) -> str:
-        raise NotImplementedError("generate_magicprompt method is not implemented")
+    def generate_magic_prompt(*, request: TextGenerationRequest) -> str:
+        raise NotImplementedError("generate_magic_prompt method is not implemented")

@@ -1,7 +1,7 @@
 import uuid
 
 from morpheus_data.database import Base
-from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric, ARRAY, DateTime
+from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric, ARRAY, DateTime, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -114,4 +114,8 @@ class Generation(BaseModel):
     __tablename__ = "generation"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     results = Column(ARRAY(String), nullable=True)
-    failed = Column(Boolean, nullable=True, default=False)
+    status = Column(
+        Enum("PENDING", "COMPLETED", "FAILED", name="generation_status"),
+        nullable=False,
+        default="PENDING"
+    )

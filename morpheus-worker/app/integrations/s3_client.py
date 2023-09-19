@@ -3,17 +3,14 @@ from io import BytesIO
 from typing import Any, List
 
 import boto3
-import ray
-
 from app.settings.settings import get_settings
 
 settings = get_settings()
 
 
-@ray.remote
 class S3Client:
     def __init__(self) -> None:
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("ray")
 
         self.AWS_ACCESS_KEY_ID = settings.aws_access_key_id
         self.AWS_SECRET_ACCESS_KEY = settings.aws_secret_access_key
@@ -37,7 +34,7 @@ class S3Client:
                 Key=key,
             )
             self.logger.info(f"Image uploaded to S3: {key}")
-            return f"https://{self.IMAGES_BUCKET}.s3.amazonaws.com/{key}.png"
+            return f"https://{self.IMAGES_BUCKET}.s3.amazonaws.com/{key}"
         except Exception as e:
             self.logger.error(f"Error uploading image to S3: {key}")
             self.logger.error(e)

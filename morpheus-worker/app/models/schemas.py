@@ -17,8 +17,12 @@ class CategoryEnum(str, Enum):
     INPAINTING = "inpainting"
 
 
-class Request(BaseModel):
-    task_id: UUID
+class TextCategoryEnum(str, Enum):
+    MAGIC_PROMPT = "magic_prompt"
+
+
+class GenerationRequest(BaseModel):
+    task_id: str = None
     prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
     negative_prompt: str = "bad, low res, ugly, deformed"
     width: int = 768
@@ -31,21 +35,27 @@ class Request(BaseModel):
     pipeline: str = settings.default_pipeline
     scheduler: str = settings.default_scheduler
     model_id: str = settings.default_model
-    user_id: str
+    user_id: str = "user@morpheus.com"
 
     class Config:
         schema_extra = {
             "example": generate_random_prompt(),
-            "exclude": ["image", "mask"],
         }
 
 
-class ModelRequest(Request):
+class ModelRequest(GenerationRequest):
     image: Optional[bytes] = None
     mask: Optional[bytes] = None
+
+
+class TextGenerationRequest(BaseModel):
+    task_id: str = None
+    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    model_id: str = "Gustavosta/MagicPrompt-Stable-Diffusion"
+    user_id: str
 
 
 class Generation(BaseModel):
     id: UUID
     results: List[str] = []
-    failed: bool = False
+    status: str = "PENDING"

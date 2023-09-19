@@ -1,8 +1,9 @@
 from PIL import Image
 from app.config import get_settings
-from app.error.error import ImageNotProvidedError, ModelNotFoundError, UserNotFoundError
+from app.error.error import ImageNotProvidedError, ModelNotFoundError
+from app.error.generation import GenerationNotFoundError
 from app.integrations.generative_ai_engine.generative_ai_interface import GenerativeAIInterface
-from morpheus_data.models.schemas import GenerationRequest
+from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
 from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
 from morpheus_data.repository.generation_repository import GenerationRepository
 from morpheus_data.repository.model_repository import ModelRepository
@@ -19,76 +20,73 @@ class StableDiffusionService:
         self.user_repository = UserRepository()
         self.settings = get_settings()
 
-    def build_backend_request(self, db: Session, prompt: Prompt, email: str) -> GenerationRequest:
-        self.validate_request(db=db, model=prompt.model, email=email)
-        generation_db = self.generation_repository.create_generation(db=db)
+    def get_generation_result(self, db: Session, task_id: str) -> str:
+        generation = self.generation_repository.get_generation(db=db, generation_id=task_id)
+        if generation is None:
+            raise GenerationNotFoundError(f"Generation with id {task_id} not found")
+        return generation
+
+    def generate_text2img_images(self, db: Session, prompt: Prompt, email: str) -> str:
+        backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
+        if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
+            backend_request.pipeline = "StableDiffusionXLPipeline"
+        return self.sd_generator.generate_text2img_images(request=backend_request)
+
+    def generate_img2img_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
+        backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
+        if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
+            backend_request.pipeline = "StableDiffusionXLImg2ImgPipeline"
+        image = self._validate_and_clean_image(image=image, width=prompt.width)
+        return self.sd_generator.generate_img2img_images(request=backend_request, image=image)
+
+    def generate_controlnet_images(self, db: Session, prompt: PromptControlNet, image: bytes, email: str) -> str:
+        backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
+        image = self._validate_and_clean_image(image=image, width=prompt.width)
+        return self.sd_generator.generate_controlnet_images(request=backend_request, image=image)
+
+    def generate_pix2pix_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
+        backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
+        image = self._validate_and_clean_image(image=image, width=prompt.width)
+        return self.sd_generator.generate_pix2pix_images(request=backend_request, image=image)
+
+    def generate_inpainting_images(self, db: Session, prompt: Prompt, image: bytes, mask: bytes, email: str) -> str:
+        backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
+        if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
+            backend_request.pipeline = "StableDiffusionXLInpaintPipeline"
+        image = self._validate_and_clean_image(image=image, width=512, height=512)
+        mask = self._validate_and_clean_image(image=mask, width=512, height=512)
+        return self.sd_generator.generate_inpainting_images(request=backend_request, image=image, mask=mask)
+
+    def generate_upscaling_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
+        backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
+        image = self._validate_and_clean_image(image=image)
+        prompt.width = image.width
+        prompt.height = image.height
+        return self.sd_generator.generate_upscaling_images(request=backend_request, image=image)
+
+    def generate_magic_prompt(self, prompt: MagicPrompt, email: str) -> str:
+        backend_request = TextGenerationRequest(prompt=prompt.prompt, user_id=email)
+        return self.sd_generator.generate_magic_prompt(request=backend_request)
+
+    def _validate_request(self, db: Session, model: str = None) -> None:
+        db_model = self.model_repository.get_model_by_source(db=db, model_source=model)
+        if not db_model:
+            raise ModelNotFoundError(f"model {model} does not exist in db")
+
+    def _build_backend_request(self, db: Session, prompt: Prompt, email: str) -> GenerationRequest:
+        self._validate_request(db=db, model=prompt.model)
         pipeline = hasattr(prompt, "pipeline") and prompt.pipeline or "StableDiffusionPipeline"
         request_dict = {
             **prompt.dict(),
-            "task_id": generation_db.id,
             "user_id": email,
             "pipeline": pipeline,
             "scheduler": prompt.sampler,
             "model_id": prompt.model,
         }
         backend_request = GenerationRequest(**request_dict)
-        print("----------------------------")
-        print(backend_request.__dict__)
-        print("----------------------------")
         return backend_request
 
-    def generate_text2img_images(self, db: Session, prompt: Prompt, email: str) -> str:
-        backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
-        return self.sd_generator.generate_text2img_images(request=backend_request)
-
-    def generate_img2img_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
-        backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
-        image = self.validate_and_clean_image(image=image, width=prompt.width)
-        return self.sd_generator.generate_img2img_images(request=backend_request, image=image)
-
-    def generate_controlnet_images(self, db: Session, prompt: PromptControlNet, image: bytes, email: str) -> str:
-        backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
-        image = self.validate_and_clean_image(image=image, width=prompt.width)
-        return self.sd_generator.generate_controlnet_images(request=backend_request, image=image)
-
-    def generate_pix2pix_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
-        backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
-        image = self.validate_and_clean_image(image=image, width=prompt.width)
-        return self.sd_generator.generate_pix2pix_images(request=backend_request, image=image)
-
-    def generate_inpainting_images(self, db: Session, prompt: Prompt, image: bytes, mask: bytes, email: str) -> str:
-        backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
-        image = self.validate_and_clean_image(image=image, width=512, height=512)
-        mask = self.validate_and_clean_image(image=mask, width=512, height=512)
-        return self.sd_generator.generate_inpainting_images(request=backend_request, image=image, mask=mask)
-
-    def generate_upscaling_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
-        backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
-        image = self.validate_and_clean_image(image=image)
-        prompt.width = image.width
-        prompt.height = image.height
-        return self.sd_generator.generate_upscaling_images(request=backend_request, image=image)
-
-    def generate_magicprompt(self, db: Session, prompt: MagicPrompt, email: str) -> str:
-        self.validate_magicprompt_request(db=db, email=email)
-        backend_request = self.build_backend_request(db=db, prompt=prompt, email=email)
-        return self.sd_generator.generate_magicprompt(request=backend_request)
-
-    def validate_request(self, db: Session, model: str, email: str) -> None:
-        db_user = self.user_repository.get_user_by_email(db=db, email=email)
-        if not db_user:
-            raise UserNotFoundError(f"User with email {email} not found")
-
-        db_model = self.model_repository.get_model_by_source(db=db, model_source=model)
-        if not db_model:
-            raise ModelNotFoundError(f"model {model} does not exist in db")
-
-    def validate_magicprompt_request(self, db: Session, email: str) -> None:
-        db_user = self.user_repository.get_user_by_email(db=db, email=email)
-        if not db_user:
-            raise UserNotFoundError(f"User with email {email} not found")
-
-    def validate_and_clean_image(self, *, image: bytes, width: int = None, height: int = None) -> Image:
+    def _validate_and_clean_image(self, *, image: bytes, width: int = None, height: int = None) -> Image:
         if not image:
             raise ImageNotProvidedError("Image not provided")
 

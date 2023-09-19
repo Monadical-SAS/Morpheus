@@ -1,7 +1,4 @@
 from PIL import Image
-from loguru import logger
-from morpheus_data.models.schemas import GenerationRequest
-
 from app.celery.tasks.magic_prompt import generate_stable_diffusion_magicprompt_output_task
 from app.celery.tasks.stable_diffusion import (
     generate_stable_diffusion_controlnet_output_task,
@@ -13,6 +10,8 @@ from app.celery.tasks.stable_diffusion import (
     generate_stable_diffusion_xl_text2img_output_task
 )
 from app.integrations.generative_ai_engine.generative_ai_interface import GenerativeAIInterface
+from loguru import logger
+from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
 
 
 class GenerativeAIStableDiffusionCelery(GenerativeAIInterface):
@@ -56,7 +55,7 @@ class GenerativeAIStableDiffusionCelery(GenerativeAIInterface):
         return str(task_id)
 
     @staticmethod
-    def generate_magicprompt(*, request: GenerationRequest) -> str:
+    def generate_magic_prompt(*, request: TextGenerationRequest) -> str:
         logger.info(f"Running Stable Diffusion MagicPrompt process with request: {request}")
         task_id = generate_stable_diffusion_magicprompt_output_task.delay(request=request)
         return str(task_id)

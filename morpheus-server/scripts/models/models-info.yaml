@@ -6,8 +6,8 @@ models:
     is_active: true
     url_docs: "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0"
     text2img: true
-    img2img: false
-    inpainting: false
+    img2img: true
+    inpainting: true
     controlnet: false
     pix2pix: false
     upscaling: false

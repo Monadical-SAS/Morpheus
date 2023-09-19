@@ -319,7 +319,7 @@ class Generation(BaseModel):
 
 
 class GenerationRequest(BaseModel):
-    task_id: UUID
+    task_id: UUID = None
     prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
     negative_prompt: str = "bad, low res, ugly, deformed"
     width: int = 768
@@ -332,4 +332,11 @@ class GenerationRequest(BaseModel):
     pipeline: str = settings.default_pipeline
     scheduler: str = settings.default_scheduler
     model_id: str = settings.default_model
+    user_id: str
+
+
+class TextGenerationRequest(BaseModel):
+    task_id: UUID = None
+    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    model_id: str = "Gustavosta/MagicPrompt-Stable-Diffusion"
     user_id: str

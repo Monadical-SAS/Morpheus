@@ -1,16 +1,11 @@
 import importlib
 import logging
-import os
 from abc import ABC
 from pathlib import Path
-
-import torch
 
 from app.settings.settings import get_settings
 
 settings = get_settings()
-custom_cache_dir = "/mnt/"
-os.environ["TRANSFORMERS_CACHE"] = custom_cache_dir
 
 
 class StableDiffusionAbstract(ABC):
@@ -21,7 +16,8 @@ class StableDiffusionAbstract(ABC):
             scheduler: str = settings.default_scheduler,
             controlnet_id: str = None
     ):
-        self.logger = logging.getLogger(__name__)
+        import torch
+        self.logger = logging.getLogger("ray")
         self.generator = None
         self.controlnet = None
 
@@ -108,6 +104,7 @@ class StableDiffusionAbstract(ABC):
         pass
 
     def set_generator(self, generator: int):
+        import torch
         self.generator = torch.Generator(self.generator_device).manual_seed(generator)
 
     def save_model(self):

@@ -21,7 +21,7 @@ class StableDiffusionImageToImage(StableDiffusionAbstract):
             scheduler=scheduler,
             model_id=model_id,
         )
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("ray")
 
     def generate(self, request: ModelRequest):
         self.logger.info(f"StableDiffusionImageToImage.generate: request: {request}")

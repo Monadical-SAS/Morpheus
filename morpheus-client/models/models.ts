@@ -83,7 +83,7 @@ export interface Sampler {
   description?: string;
 }
 
-export interface Response {
+export interface ServerResponse {
   success: boolean;
   message?: string;
   error?: string;

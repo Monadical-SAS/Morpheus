@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: 57397fed7b01
+Revision ID: 83125676ca00
 Revises: 
-Create Date: 2023-09-14 19:18:37.663634
+Create Date: 2023-09-18 23:29:48.380525
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '57397fed7b01'
+revision = '83125676ca00'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,7 +23,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('results', sa.ARRAY(sa.String()), nullable=True),
-    sa.Column('failed', sa.Boolean(), nullable=True),
+    sa.Column('status', sa.Enum('PENDING', 'COMPLETED', 'FAILED', name='generation_status'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('sd_controlnet_model',

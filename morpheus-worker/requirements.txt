@@ -2,7 +2,7 @@
 ray[serve]
 loguru
 
-# image handling and upload
+# Image handling and upload
 boto3
 python-multipart
 pillow
@@ -11,7 +11,7 @@ pillow
 sqlalchemy
 psycopg2-binary
 
-# image generation
+# Image generation
 torch
 diffusers
 transformers
@@ -21,3 +21,6 @@ safetensors
 invisible-watermark>=0.2.0
 controlnet-aux==0.0.1
 opencv-contrib-python-headless
+
+# Text generation
+dynamicprompts[attentiongrabber,magicprompt]

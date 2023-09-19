@@ -6,10 +6,11 @@ import { useDiffusion } from "@/context/SDContext";
 import { useToastContext } from "@/context/ToastContext";
 import {
   generateMagicPrompt,
-  getGeneratedMagicPromptWithRetry,
+  getGeneratedDataWithRetry,
 } from "@/services/sdiffusion";
 import { getInputValidators } from "../Inputs/validators";
 import styles from "./MagicPrompt.module.scss";
+import { ServerResponse } from "@/models/models";
 
 interface MagicPromptProps {
   styles?: CSSProperties;
@@ -27,7 +28,7 @@ const MagicPrompt = (props: MagicPromptProps) => {
     if (!prompt.value) return;
 
     setIsLoading(true);
-    const response = await generateMagicPrompt({
+    const response: ServerResponse = await generateMagicPrompt({
       prompt: prompt.value,
     });
     if (!response.success) {
@@ -40,7 +41,7 @@ const MagicPrompt = (props: MagicPromptProps) => {
       response.message || "MagicPrompt request queued successfully!"
     );
     const taskId = response.data;
-    const responseMagicPrompt = await getGeneratedMagicPromptWithRetry(taskId);
+    const responseMagicPrompt = await getGeneratedDataWithRetry(taskId);
 
     if (!responseMagicPrompt.success) {
       setIsLoading(false);

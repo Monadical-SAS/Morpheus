@@ -1,6 +1,11 @@
 import importlib
 
 from PIL import Image
+from celery import Task
+from loguru import logger
+from morpheus_data.models.schemas import GenerationRequest
+from torch.cuda import OutOfMemoryError
+
 from app.celery.workers.stable_diffusion_app import app
 from app.config import get_settings, get_file_handlers
 from app.error.error import ModelLoadError, OutOfMemoryGPUError
@@ -9,10 +14,6 @@ from app.utils.decorators import (
     check_environment,
     run_as_per_environment,
 )
-from celery import Task
-from loguru import logger
-from morpheus_data.models.schemas import GenerationRequest
-from torch.cuda import OutOfMemoryError
 
 files_repository = get_file_handlers()
 file_service = FilesService(files_repository=files_repository)
