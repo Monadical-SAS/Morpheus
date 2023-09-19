@@ -1,5 +1,5 @@
-import io
 import logging
+from io import BytesIO
 
 import ray
 from PIL import Image
@@ -26,13 +26,13 @@ class StableDiffusionInpainting(StableDiffusionAbstract):
     def generate(self, request: ModelRequest):
         self.logger.info(f"StableDiffusionInpainting.generate: request: {request}")
         self.set_generator(request.generator)
-        image = Image.open(io.BytesIO(request.image)).convert("RGB")
-        mask = Image.open(io.BytesIO(request.mask)).convert("RGB")
+        image = Image.open(BytesIO(request.image)).convert("RGB")
+        mask = Image.open(BytesIO(request.mask)).convert("RGB")
 
         result = self.pipeline(
             image=image,
             mask_image=mask,
-            request=request.prompt,
+            prompt=request.prompt,
             negative_request=request.negative_prompt,
             guidance_scale=request.guidance_scale,
             num_inference_steps=request.num_inference_steps,

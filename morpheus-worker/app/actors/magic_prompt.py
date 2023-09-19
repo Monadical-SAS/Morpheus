@@ -3,10 +3,11 @@ import random
 from pathlib import Path
 
 import ray
-from app.models.schemas import ModelRequest
-from app.settings.settings import get_settings
 from dynamicprompts.generators import RandomPromptGenerator
 from dynamicprompts.generators.magicprompt import MagicPromptGenerator
+
+from app.models.schemas import ModelRequest
+from app.settings.settings import get_settings
 
 settings = get_settings()
 
@@ -28,7 +29,7 @@ class StableDiffusionMagicPrompt:
         )
 
         if not Path(self.local_model_path).exists():
-            self.magic_generator.generator.save_pretrained(self.local_model_path)
+            self.magic_generator.generator.save_pretrained(save_directory=str(self.local_model_path))
 
     def generate(self, request: ModelRequest):
         self.logger.info(f"StableDiffusionMagicPrompt.generate: request: {request}")

@@ -1,5 +1,5 @@
-import io
 import logging
+from io import BytesIO
 
 import ray
 from PIL import Image
@@ -26,7 +26,7 @@ class StableDiffusionUpscaling(StableDiffusionAbstract):
     def generate(self, request: ModelRequest):
         self.logger.info(f"StableDiffusionUpscaling.generate: request: {request}")
         self.set_generator(request.generator)
-        image = Image.open(io.BytesIO(request.image)).convert("RGB")
+        image = Image.open(BytesIO(request.image)).convert("RGB")
         result = self.pipeline(
             image=image,
             prompt=request.prompt,
