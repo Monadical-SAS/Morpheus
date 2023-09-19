@@ -46,6 +46,8 @@ class ModelRepository:
     @classmethod
     def update_model(cls, *, db: Session, model: MLModelCreate) -> MLModel:
         db_model: MLModel = db.query(MLModel).filter(MLModel.source == model.source).first()
+        print("Updating model")
+        print(f"{db_model=}")
 
         db_model.name = model.name
         db_model.description = model.description

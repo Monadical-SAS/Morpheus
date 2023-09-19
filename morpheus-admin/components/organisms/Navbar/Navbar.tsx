@@ -21,25 +21,6 @@ const Navbar = () => {
       <div className={styles.brand}>
         <Brand onClick={redirectToHome} styles={{ fontSize: "20px" }} />
       </div>
-
-      <div className={styles.links}>
-        <Link className={getLinkStyles("models")} href={"/models"}>
-          SD Models
-        </Link>
-        <Link className={getLinkStyles("controlnet")} href={"/controlnet"}>
-          ControlNet
-        </Link>
-        <Link className={getLinkStyles("lora")} href={"/lora"}>
-          LoRa
-        </Link>
-        <Link className={getLinkStyles("embeddings")} href={"/embeddings"}>
-          Embeddings
-        </Link>
-      </div>
-
-      <nav className={styles.auth}>
-        <span className="base-1 secondary">user</span>
-      </nav>
     </div>
   );
 };

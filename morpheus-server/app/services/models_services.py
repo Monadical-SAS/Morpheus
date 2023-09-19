@@ -58,6 +58,8 @@ class ModelService:
         return self.model_repository.get_model_by_source(db=db, model_source=model_source)
 
     async def update_model(self, *, db: Session, model: MLModelCreate) -> MLModel:
+        print("Updating model")
+        print(f"{model.__dict__=}")
         model_db = self.model_repository.get_model_by_source(db=db, model_source=model.source)
         model_categories = self.category_repository.get_categories_by_model(db=db, model=model)
         if model.categories != model_categories:
@@ -70,7 +72,7 @@ class ModelService:
                 self.s3_model_registry.register_model_in_storage(output_path=model.source)
             else:
                 self.s3_model_registry.delete_model_from_storage(name=model.source)
-
+        print("updated model")
         return self.model_repository.update_model(db=db, model=model)
 
     async def delete_model_by_source(self, *, db: Session, model_source: str) -> MLModel:

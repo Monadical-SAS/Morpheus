@@ -52,12 +52,12 @@ async def get_category_model_by_id(category_id: UUID, db: Session = Depends(get_
 
 
 @router.put("", response_model=Union[Response, MLModel])
-async def update_sd_model(model: MLModelCreate, db: Session = Depends(get_db)):
+async def update_sd_model(model: MLModel, db: Session = Depends(get_db)):
     sd_model_updated = await model_service.update_model(db=db, model=model)
     if not sd_model_updated:
         return Response(success=False, message=f"No SD Model found with source {model.source}")
-
-    return sd_model_updated
+    
+    return Response(success=True, message="SD Model updated", data={"model_updated": sd_model_updated})
 
 
 @router.delete("/{model_source:path}", response_model=Union[Response, List[MLModel]])
@@ -66,4 +66,4 @@ async def delete_sd_model(model_source: str, db: Session = Depends(get_db)):
     if not sd_model:
         return Response(success=False, message="No SD Model found")
 
-    return sd_model
+    return Response(success=True, message="SD Model deleted", data={"model_deleted": sd_model})

@@ -3,13 +3,15 @@ import MainLayout from "@/layout/MainContainer/MainLayout";
 import Modal from "@/components/atoms/modal";
 import { ModelForm } from "@/components/organisms/ModelForm/ModelForm";
 import { Button, ButtonSize, ButtonVariant } from "@/components/atoms/button";
-import { getAvailableModels } from "@/api/models";
+import { getAvailableModels, updateModel, deleteModel } from "@/api/models";
 import { Model, Response } from "@/lib/models";
 import styles from "@/styles/pages/Home.module.scss";
 
 export default function Home() {
   const [models, setModels] = useState<Model[]>([]);
   const [open, setOpen] = useState(false);
+  const [editingModel, setEditingModel] = useState<Model | null>(null);
+  const [removingModel, setRemovingModel] = useState<Model | null>(null);
 
   useEffect(() => {
     getAvailableModels()
@@ -22,15 +24,40 @@ export default function Home() {
   }, []);
 
   const handleActivateModel = (model: Model) => {
-    console.log("handleActivateModel", model.source);
-  };
-
-  const handleEditModel = (model: Model) => {
-    console.log("handleEditModel", model.source);
+    const modelData = { ...model, is_active: !model.is_active };
+    updateModel(modelData)
+      .then((response: Response) => {
+        if (!response.success) {
+          alert(response.message);
+        }
+        const updatedModels = models.map((modelData) => {
+          if (modelData.source === response.data.data.model_updated.source) {
+            return response.data;
+          }
+          return modelData;
+        });
+        setModels(updatedModels);
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
 
   const handleRemoveModel = (model: Model) => {
-    console.log("handleRemoveModel", model.source);
+    deleteModel(model.source)
+      .then((response: Response) => {
+        if (!response.success) {
+          alert(response.message);
+        }
+        const updatedModels = models.filter(
+          (modelData) => modelData.source !== response.data.data.model_deleted.source
+        );
+        setModels(updatedModels);
+        setRemovingModel(null);
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
 
   return (
@@ -46,7 +73,7 @@ export default function Home() {
             onClick={() => setOpen(true)}
           />
           <Modal open={open} onClose={() => setOpen(false)}>
-            <ModelForm />
+            <ModelForm title={"Add a new Model"} />
           </Modal>
         </div>
 
@@ -63,8 +90,8 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                {models.map((model) => (
-                  <tr key={model.source}>
+                {models.map((model, index) => (
+                  <tr key={model.id}>
                     <th>{model.name}</th>
                     <td>{model.source}</td>
                     <td>
@@ -76,17 +103,43 @@ export default function Home() {
                       />
                     </td>
                     <td>
-                      <span onClick={() => handleEditModel(model)}>Edit</span>
+                      <span onClick={() => setEditingModel(model)}>Edit</span>
                     </td>
                     <td>
-                      <span onClick={() => handleRemoveModel(model)}>
-                        Remove
-                      </span>
+                      <span onClick={() => setRemovingModel(model)}>Remove</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            {editingModel && (
+              <Modal open={editingModel !== null} onClose={() => setEditingModel(null)}>
+                <ModelForm
+                  title={"Edit Model"}
+                  name={editingModel.name}
+                  source={editingModel.source}
+                  description={editingModel.description}
+                  url_docs={editingModel.url_docs}
+                  category={editingModel.category}
+                  is_active={editingModel.is_active}
+                />
+              </Modal>
+            )}
+            {removingModel && (
+              <Modal open={removingModel !== null} onClose={() => setRemovingModel(null)}>
+                <div className="modal-body">
+                  <p>Are you sure you want to remove this model?</p>
+                  <div className="flex flex-row justify-center gap-8 pt-4">
+                    <Button text={"Cancel"} variant={ButtonVariant.Primary} onClick={() => setRemovingModel(null)} />
+                    <Button
+                      text={"Remove"}
+                      variant={ButtonVariant.Warning}
+                      onClick={() => handleRemoveModel(removingModel)}
+                    />
+                  </div>
+                </div>
+              </Modal>
+            )}
           </div>
         )}
       </main>

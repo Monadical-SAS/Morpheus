@@ -7,6 +7,7 @@ interface SelectInputProps extends ComponentPropsWithoutRef<"select"> {
   register: any;
   validationSchema?: any;
   errors?: any;
+  selectedValues?: string[]; // Changed to an array
 }
 
 export const Select = (props: SelectInputProps) => {
@@ -16,7 +17,7 @@ export const Select = (props: SelectInputProps) => {
   };
 
   return (
-    <div className="form-control w-full">
+    <div className="w-full form-control">
       <label className="label">
         <span className="label-text">
           {props.label} {props.validationSchema.required && "*"}
@@ -26,15 +27,18 @@ export const Select = (props: SelectInputProps) => {
       <select
         className="select select-bordered"
         {...props.register(props.name, props.validationSchema)}
+        value={props.selectedValues} // Updated to handle array
       >
         {props.options.map((option, index) => (
-          <option key={`${option}-${index}`}>{option}</option>
+          <option key={`${option}-${index}`} value={option}>
+            {option}
+          </option>
         ))}
       </select>
 
       {props.errors && (
         <label className="label">
-          <span className="error text-sm text-error">{getInputError()}</span>
+          <span className="text-sm error text-error">{getInputError()}</span>
         </label>
       )}
     </div>

@@ -5,6 +5,7 @@ interface TextInputProps extends ComponentPropsWithoutRef<"input"> {
   register: any;
   validationSchema?: any;
   errors?: any;
+  value?: string;
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -16,7 +17,7 @@ export const TextInput = (props: TextInputProps) => {
   };
 
   return (
-    <div className="form-control w-full">
+    <div className="w-full form-control">
       <label className="label">
         <span className="label-text">
           {props.label} {props.validationSchema.required && "*"}
@@ -25,15 +26,16 @@ export const TextInput = (props: TextInputProps) => {
 
       <input
         name={props.name}
+        value={props.value}
         type={props.type || "text"}
         placeholder={props.placeholder}
-        className="input input-bordered w-full"
+        className="w-full input input-bordered"
         {...props.register(props.name, props.validationSchema)}
       />
 
       {props.errors && (
         <label className="label">
-          <span className="error text-sm text-error">{getInputError()}</span>
+          <span className="text-sm error text-error">{getInputError()}</span>
         </label>
       )}
     </div>
