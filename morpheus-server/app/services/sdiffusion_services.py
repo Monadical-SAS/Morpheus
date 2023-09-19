@@ -36,25 +36,25 @@ class StableDiffusionService:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
             backend_request.pipeline = "StableDiffusionXLImg2ImgPipeline"
-        image = self._validate_and_clean_image(image=image, width=prompt.width)
+        image = self._validate_and_clean_image(image=image)
         return self.sd_generator.generate_img2img_images(request=backend_request, image=image)
 
     def generate_controlnet_images(self, db: Session, prompt: PromptControlNet, image: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
-        image = self._validate_and_clean_image(image=image, width=prompt.width)
+        image = self._validate_and_clean_image(image=image)
         return self.sd_generator.generate_controlnet_images(request=backend_request, image=image)
 
     def generate_pix2pix_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
-        image = self._validate_and_clean_image(image=image, width=prompt.width)
+        image = self._validate_and_clean_image(image=image)
         return self.sd_generator.generate_pix2pix_images(request=backend_request, image=image)
 
     def generate_inpainting_images(self, db: Session, prompt: Prompt, image: bytes, mask: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
             backend_request.pipeline = "StableDiffusionXLInpaintPipeline"
-        image = self._validate_and_clean_image(image=image, width=512, height=512)
-        mask = self._validate_and_clean_image(image=mask, width=512, height=512)
+        image = self._validate_and_clean_image(image=image)
+        mask = self._validate_and_clean_image(image=mask)
         return self.sd_generator.generate_inpainting_images(request=backend_request, image=image, mask=mask)
 
     def generate_upscaling_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
