@@ -33,7 +33,7 @@ class StableDiffusionPixToPix(StableDiffusionAbstract):
             negative_prompt=request.negative_prompt,
             guidance_scale=request.guidance_scale,
             num_inference_steps=request.num_inference_steps,
-            num_images_per_request=request.num_images_per_prompt,
+            num_images_per_prompt=request.num_images_per_prompt,
             generator=self.generator,
         ).images
         self.logger.info(f"StableDiffusionPixToPix.generate: result: {len(result)}")
