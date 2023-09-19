@@ -31,6 +31,8 @@ def send_request_to_ray_server(
     if files:
         request_args["files"] = files
 
+    logger.info(f"Sending request to ray server with args: {request_args}")
+
     try:
         response = requests.post(**request_args)
         if response.status_code == 200:

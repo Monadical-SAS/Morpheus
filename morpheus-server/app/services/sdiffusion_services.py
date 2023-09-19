@@ -30,12 +30,16 @@ class StableDiffusionService:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
             backend_request.pipeline = "StableDiffusionXLPipeline"
+        else:
+            backend_request.pipeline = "StableDiffusionPipeline"
         return self.sd_generator.generate_text2img_images(request=backend_request)
 
     def generate_img2img_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
             backend_request.pipeline = "StableDiffusionXLImg2ImgPipeline"
+        else:
+            backend_request.pipeline = "StableDiffusionImg2ImgPipeline"
         image = self._validate_and_clean_image(image=image)
         return self.sd_generator.generate_img2img_images(request=backend_request, image=image)
 
@@ -46,6 +50,7 @@ class StableDiffusionService:
 
     def generate_pix2pix_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
+        backend_request.pipeline = "StableDiffusionInstructPix2PixPipeline"
         image = self._validate_and_clean_image(image=image)
         return self.sd_generator.generate_pix2pix_images(request=backend_request, image=image)
 
@@ -53,12 +58,15 @@ class StableDiffusionService:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
             backend_request.pipeline = "StableDiffusionXLInpaintPipeline"
+        else:
+            backend_request.pipeline = "StableDiffusionInpaintPipeline"
         image = self._validate_and_clean_image(image=image)
         mask = self._validate_and_clean_image(image=mask)
         return self.sd_generator.generate_inpainting_images(request=backend_request, image=image, mask=mask)
 
     def generate_upscaling_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
+        backend_request.pipeline = "StableDiffusionUpscalePipeline"
         image = self._validate_and_clean_image(image=image)
         prompt.width = image.width
         prompt.height = image.height
