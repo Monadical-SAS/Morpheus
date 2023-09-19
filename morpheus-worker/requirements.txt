@@ -13,7 +13,7 @@ psycopg2-binary
 
 # Image generation
 torch
-diffusers
+diffusers==0.21.1
 transformers
 accelerate
 xformers
