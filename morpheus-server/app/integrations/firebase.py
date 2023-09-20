@@ -3,7 +3,7 @@ from app.error.user import UserNotFoundError
 from fastapi import Depends, HTTPException, status, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from firebase_admin import auth, credentials, initialize_app
-from morpheus_data.database import get_db
+from morpheus_data.database.database import get_db
 from morpheus_data.repository.user_repository import UserRepository
 
 settings = get_settings()
