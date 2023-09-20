@@ -54,7 +54,7 @@ def upload_model(server: APIServer, target: Target):
         if is_valid_db_target:
             print(":point_right: [bold magenta] DB Registration [/bold magenta]")
             db.update_or_register_model_on_db(
-                model=OmegaConf.to_container(model), output_path=output_path, server=server, target=target
+                model=OmegaConf.to_container(model), output_path=output_path, server=server
             )
 
 
