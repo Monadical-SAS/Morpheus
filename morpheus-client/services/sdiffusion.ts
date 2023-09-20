@@ -142,6 +142,7 @@ export const fetchDataWithRetry = async (
   retryCount: number,
   maxCount: number = MAX_RETRY_COUNT
 ): Promise<any> => {
+  await sleep(5000);
   if (retryCount > maxCount) {
     return ErrorResponse(
       "Failed to fetch results from server after maximum retries exceeded"
@@ -181,8 +182,8 @@ export const getGeneratedDataWithRetry = async (
 };
 
 const mapCounterToSleepTime = (counter: number) => {
-  if (counter <= 5) return 5000;
-  if (counter <= 10) return 10000;
-  if (counter <= 20) return 30000;
+  if (counter <= 5) return 2000;
+  if (counter <= 10) return 5000;
+  if (counter <= 20) return 10000;
   return 5000;
 };
