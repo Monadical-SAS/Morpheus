@@ -26,7 +26,7 @@ class TextModelHandler:
 
         return generator
 
-    def handle_generation(self, db: Session, request: TextGenerationRequest):
+    def handle_generation(self, *, db: Session, request: TextGenerationRequest):
         self.logger.info(f"Generating text for: {request}")
 
         try:

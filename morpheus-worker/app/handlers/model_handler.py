@@ -49,7 +49,7 @@ class ModelHandler:
 
         return generator
 
-    def handle_generation(self, db: Session):
+    def handle_generation(self, *, db: Session):
         self.logger.info(f"Generating image for: {self.request}")
 
         try:
