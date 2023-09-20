@@ -11,7 +11,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -20,7 +20,7 @@ services:
     env_file:
       - morpheus-server/secrets.env
     ports:
-        - "8002:80"
+      - "8002:80"
     depends_on:
       postgres:
         condition: service_healthy
@@ -107,25 +107,25 @@ services:
 
   cloudflare-api:
     image: cloudflare/cloudflared
-    profiles: ["staging-old"]
+    profiles: [ "staging-old" ]
     network_mode: 'service:api'
     command: tunnel --url http://api:8001 run morpheus-staging-api-tunnel
     depends_on:
-    - api
+      - api
     volumes:
-    - ./etc/cloudflare/api/config.yml:/home/nonroot/.cloudflared/config.yml
-    - ./etc/cloudflare/api/credentials.json:/home/nonroot/.cloudflared/credentials.json
+      - ./etc/cloudflare/api/config.yml:/home/nonroot/.cloudflared/config.yml
+      - ./etc/cloudflare/api/credentials.json:/home/nonroot/.cloudflared/credentials.json
 
   cloudflare-client:
     image: cloudflare/cloudflared
-    profiles: ["staging-old"]
+    profiles: [ "staging-old" ]
     network_mode: 'service:client'
     command: tunnel --url http://client:3000 run morpheus-staging-client-tunnel
     depends_on:
-    - client
+      - client
     volumes:
-    - ./etc/cloudflare/client/config.yml:/home/nonroot/.cloudflared/config.yml
-    - ./etc/cloudflare/client/credentials.json:/home/nonroot/.cloudflared/credentials.json
+      - ./etc/cloudflare/client/config.yml:/home/nonroot/.cloudflared/config.yml
+      - ./etc/cloudflare/client/credentials.json:/home/nonroot/.cloudflared/credentials.json
 
   worker:
     build:
@@ -134,7 +134,7 @@ services:
       args:
         - TAG=${TAG:-latest}
     command: celery -A app.celery.workers.stable_diffusion_app worker --max-tasks-per-child=1 --loglevel=info -Q stable_diffusion
-    profiles: ["staging"]
+    profiles: [ "staging" ]
     volumes:
       - ./morpheus-server:/opt/api
       - sd_model:/mnt/
@@ -156,31 +156,33 @@ services:
               count: 1
               capabilities: [ gpu ]
 
-#  worker-ray:
-#    build:
-#      context: ./morpheus-worker/ray
-#      # if you are using a mac, uncomment this arg
-#      # args:
-#      #   RAY_IMAGE_TAG: latest-gpu-aarch64
-#    image: morpheus-worker:latest
-#    command: ray start --head --num-gpus 1 --dashboard-host 0.0.0.0 --block
-#    ports:
-#      - "8000:8000"
-#      - "8265:8265"
-#    volumes:
-#      - sd_model:/mnt/
-#    depends_on:
-#      api:
-#        condition: service_started
-#
-#  worker-ray-deployer:
-#    image: morpheus-worker:latest
-#    command: bash -c "sleep 5 && ray job submit -- serve deploy models.yaml"
-#    environment:
-#      - RAY_ADDRESS=http://worker-ray:8265
-#    depends_on:
-#      worker-ray:
-#        condition: service_started
+  worker-ray:
+    build:
+      context: ./morpheus-worker
+      # if you are using a mac, uncomment this arg
+      #args:
+      #  RAY_IMAGE_TAG: latest-gpu-aarch64
+    image: morpheus-worker:latest
+    env_file:
+      - morpheus-worker/secrets.env
+    command: ray start --head --num-gpus 1 --dashboard-host 0.0.0.0 --block
+    ports:
+      - "8000:8000"
+      - "8265:8265"
+    volumes:
+      - sd_model:/mnt/
+    depends_on:
+      api:
+        condition: service_started
+
+  worker-ray-deployer:
+    image: morpheus-worker:latest
+    command: bash -c "sleep 5 && ray job submit -- serve deploy models.yaml"
+    environment:
+      - RAY_ADDRESS=http://worker-ray:8265
+    depends_on:
+      worker-ray:
+        condition: service_started
 
   magicprompt_worker:
     build:

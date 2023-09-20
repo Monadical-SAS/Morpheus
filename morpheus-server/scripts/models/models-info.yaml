@@ -8,7 +8,8 @@ models:
     url_docs: "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0"
     categories:
       - name: "text2img"
-
+      - name: "img2img"
+      - name: "inpainting"
 
   - name: "Stable Diffusion v2"
     description: "This is a model that can be used to generate and modify images based on text prompts. It is a Latent Diffusion Model that uses a fixed, pretrained text encoder (OpenCLIP-ViT/H)."
@@ -50,7 +51,7 @@ models:
     categories:
       - name: "pix2pix"
 
-  - name: "SD Inpainting"
+  - name: "Runway Inpainting"
     description: "Modify an existing image with a text prompt and an image mask."
     source: "runwayml/stable-diffusion-inpainting"
     kind: "diffusion"

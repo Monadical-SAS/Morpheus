@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, ReactNode, useContext, useState } from "react";
-import { useRouter } from "next/router";
 import {
   CheckboxState,
   initializeCheckbox,
@@ -52,7 +51,6 @@ export interface IDiffusionContext {
   restartSDSettings: () => void;
 }
 
-
 const initialConfig = {
   model: "stabilityai/stable-diffusion-2",
   sampler: "PNDMScheduler",
@@ -64,7 +62,7 @@ const initialConfig = {
   amount: initializeNumber(1),
   seed: initializeText(String(generateRandomNumber(20))),
   randomizeSeed: initializeCheckbox(true),
-  strength: initializeNumber(0.5),
+  strength: initializeNumber(0.8),
   embeddingPath: initializeText(String("")),
   useEmbedding: initializeCheckbox(false),
   loraPath: initializeText(String("")),

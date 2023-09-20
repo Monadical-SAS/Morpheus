@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 import {
   loginWithEmailAndPasswordFirebase,
@@ -80,7 +86,9 @@ const AuthProvider = (props: { children: ReactNode }) => {
     }
   }, [user]);
 
-  const registerWithEmailAndPassword = (user: UserRegistration): Promise<void> => {
+  const registerWithEmailAndPassword = (
+    user: UserRegistration
+  ): Promise<void> => {
     return signUpWithEmailAndPasswordFirebase(user)
       .then((response) => {
         loadOrCreateMorpheusUser({ ...response, displayName: user.name });
@@ -136,7 +144,9 @@ const AuthProvider = (props: { children: ReactNode }) => {
         if (response.success) {
           setUser(response.data);
         } else {
-          showErrorAlert(response.error || "An error occurred while loading the user data");
+          showErrorAlert(
+            response.error || "An error occurred while loading the user data"
+          );
         }
       })
       .catch(() => {
@@ -150,12 +160,10 @@ const AuthProvider = (props: { children: ReactNode }) => {
         if (response.success) {
           setUser(response.data);
           setLocalUser(response.data);
-        } else {
-          showErrorAlert("An error occurred while loading the user data");
         }
       })
-      .catch(() => {
-        showErrorAlert("An error occurred while loading the user data");
+      .catch((error) => {
+        console.log(error);
       });
   };
 

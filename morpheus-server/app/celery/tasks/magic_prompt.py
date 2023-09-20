@@ -12,7 +12,7 @@ from app.error.error import ModelLoadError, OutOfMemoryGPUError
 
 settings = get_settings()
 
-MAGICPROMPT_MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.magicprompt_model_default}"
+MAGICPROMPT_MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.magicprompt_default_model}"
 
 
 class MagicPromptTask(Task):

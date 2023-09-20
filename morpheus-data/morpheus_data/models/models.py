@@ -1,13 +1,21 @@
 import uuid
 
+from morpheus_data.database.database import Base
+from sqlalchemy import ARRAY, DateTime, Enum
 from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric, JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
-from morpheus_data.database.database import Base
+
+class BaseModel(Base):
+    __abstract__ = True
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
 
-class User(Base):
+class User(BaseModel):
     __tablename__ = "user"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -21,7 +29,7 @@ class User(Base):
     artworks = relationship("ArtWork", back_populates="owner")
 
 
-class Collection(Base):
+class Collection(BaseModel):
     __tablename__ = "collection"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -34,7 +42,7 @@ class Collection(Base):
     artworks = relationship("ArtWork", back_populates="collection")
 
 
-class Prompt(Base):
+class Prompt(BaseModel):
     __tablename__ = "prompt"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -59,7 +67,7 @@ class Prompt(Base):
     artworks = relationship("ArtWork", back_populates="prompt")
 
 
-class ArtWork(Base):
+class ArtWork(BaseModel):
     __tablename__ = "artwork"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -74,7 +82,7 @@ class ArtWork(Base):
     prompt = relationship("Prompt", back_populates="artworks")
 
 
-class ModelCategory(Base):
+class ModelCategory(BaseModel):
     __tablename__ = "model_category"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -87,7 +95,7 @@ class ModelCategory(Base):
     )
 
 
-class MLModel(Base):
+class MLModel(BaseModel):
     __tablename__ = "ml_model"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -105,9 +113,20 @@ class MLModel(Base):
     is_active = Column(Boolean, default=True)
 
 
-class ModelCategoryAssociation(Base):
+class ModelCategoryAssociation(BaseModel):
     __tablename__ = "model_category_association"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     model_id = Column(UUID(as_uuid=True), ForeignKey("ml_model.id"))
     category_id = Column(UUID(as_uuid=True), ForeignKey("model_category.id"))
+
+
+class Generation(BaseModel):
+    __tablename__ = "generation"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    results = Column(ARRAY(String), nullable=True)
+    status = Column(
+        Enum("PENDING", "COMPLETED", "FAILED", name="generation_status"),
+        nullable=False,
+        default="PENDING"
+    )
