@@ -3,10 +3,10 @@ kind: RayService
 metadata:
   name: morpheus-rayservice
 spec:
-  serviceUnhealthySecondThreshold: 180
-  deploymentUnhealthySecondThreshold: 180
+  serviceUnhealthySecondThreshold: 600
+  deploymentUnhealthySecondThreshold: 600
   serveConfig:
-    importPath: app.deployment
+    importPath: app.app.deployment
   rayClusterConfig:
     rayVersion: "{{ .Values.worker.rayVersion }}"
     enableInTreeAutoscaling: true
