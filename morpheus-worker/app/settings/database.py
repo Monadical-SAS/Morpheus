@@ -20,6 +20,7 @@ def get_db():
     logger.info("Creating database session")
     db = SessionLocal()
     try:
+        logger.info("Yielding database session")
         yield db
     finally:
         logger.info("Closing database session")
