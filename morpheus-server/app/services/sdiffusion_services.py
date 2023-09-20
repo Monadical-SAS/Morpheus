@@ -102,7 +102,7 @@ class StableDiffusionService:
             "model_id": prompt.model,
         }
         if hasattr(prompt, "controlnet_model"):
-            request_dict["controlnet_model"] = prompt.controlnet_model
+            request_dict["controlnet_id"] = prompt.controlnet_model
         if hasattr(prompt, "controlnet_type"):
             request_dict["controlnet_type"] = prompt.controlnet_type
 
