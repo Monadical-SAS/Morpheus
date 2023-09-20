@@ -11,6 +11,7 @@ image:
   tag: "worker-ray-latest"
 
 worker:
+  headNodeSelector: "worker-head"
   nodeSelector: "gpu-adv"
   rayVersion: 2.3.0
   head:
