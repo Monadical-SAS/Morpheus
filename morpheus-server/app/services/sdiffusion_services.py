@@ -38,6 +38,7 @@ class StableDiffusionService:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
             backend_request.pipeline = "StableDiffusionXLImg2ImgPipeline"
+            backend_request.model_id = "stabilityai/stable-diffusion-xl-refiner-1.0"
         else:
             backend_request.pipeline = "StableDiffusionImg2ImgPipeline"
         image = self._validate_and_clean_image(image=image)
