@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { TextInput } from "@/components/atoms/input";
 import { Button, ButtonVariant } from "@/components/atoms/button";
 import { useEffect, useState } from "react";
-import { Select } from "@/components/atoms/select";
+import MultipleSelect from "@/components/atoms/multiselect";
 import { ToggleInput } from "@/components/atoms/toggle";
 import { saveNewModel, updateModel } from "@/api/models";
 import { getAvailableCategories } from "@/api/model_categories";
@@ -16,8 +16,19 @@ interface ModelFormProps {
   title?: string;
   description?: string;
   url_docs?: string;
-  category?: string;
+  categories?: string;
   is_active?: boolean;
+}
+
+interface Option {
+  name: string;
+}
+
+type MultiValue<Option> = readonly Option[];
+
+interface ArrayObjectSelectState {
+  selectedOptions: MultiValue<Option> | null;
+  error: string | null;
 }
 
 export function ModelForm(props: ModelFormProps) {
@@ -28,6 +39,10 @@ export function ModelForm(props: ModelFormProps) {
   } = useForm<ModelFormProps>();
 
   const [categories, setCategories] = useState<ModelCategory[]>([]);
+  const [MultipleSelectState, setMultipleSelectState] = useState<ArrayObjectSelectState>({
+    selectedOptions: null,
+    error: null,
+  });
 
   useEffect(() => {
     getAvailableCategories()
@@ -70,7 +85,7 @@ export function ModelForm(props: ModelFormProps) {
       });
 
     alert("Model updated successfully");
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
@@ -102,6 +117,14 @@ export function ModelForm(props: ModelFormProps) {
           maxLength: 512,
         }}
         errors={errors.source}
+      />
+
+      <MultipleSelect
+        name="categories"
+        label="Model Categories"
+        options={categories}
+        state={MultipleSelectState}
+        setState={setMultipleSelectState}
       />
 
       <TextInput
@@ -144,17 +167,6 @@ export function ModelForm(props: ModelFormProps) {
           maxLength: 512,
         }}
         errors={errors.url_docs}
-      />
-
-      <Select
-        name={"category"}
-        label={"Model Category"}
-        options={categories.map((category) => category.name)}
-        register={register}
-        validationSchema={{
-          required: true,
-        }}
-        errors={errors.category}
       />
 
       <ToggleInput name={"is_active"} label={"Activate model"} register={register} />
