@@ -34,11 +34,12 @@ class StableDiffusionControlnet(StableDiffusionAbstract):
         result = self.pipeline(
             image=base_image,
             prompt=request.prompt,
-            negative_prompt=request.negative_prompt,
-            guidance_scale=request.guidance_scale,
+            width=request.width,
+            height=request.height,
             num_inference_steps=request.num_inference_steps,
+            guidance_scale=request.guidance_scale,
+            negative_prompt=request.negative_prompt,
             num_images_per_prompt=request.num_images_per_prompt,
-            strength=request.strength,
             generator=self.generator,
         ).images
         result.insert(0, base_image)

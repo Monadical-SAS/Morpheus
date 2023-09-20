@@ -48,6 +48,8 @@ class StableDiffusionService:
 
     def generate_controlnet_images(self, db: Session, prompt: PromptControlNet, image: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
+        backend_request.pipeline = "StableDiffusionControlNetPipeline"
+        backend_request.model_id = "runwayml/stable-diffusion-v1-5"
         image = self._validate_and_clean_image(image=image)
         return self.sd_generator.generate_controlnet_images(request=backend_request, image=image)
 
