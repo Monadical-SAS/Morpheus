@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   workflow_call:
 env:
-  WORKING_DIR_BACKEND: morpheus-worker/ray
+  WORKING_DIR_BACKEND: morpheus-worker
   MORPHEUS_WORKER_IMAGE_NAME: ${{ vars.MORPHEUS_WORKER_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-worker' }}
 jobs:
   ci-worker-ray:
@@ -27,7 +27,7 @@ jobs:
       - name: Create kube config
         run: |
           aws eks --region ${{secrets.AWS_REGION}} update-kubeconfig --name ${{secrets.AWS_CLUSTER_NAME}}
-          helm upgrade --timeout 15m0s --install --atomic morpheus-worker-ray ./morpheus-worker/ray/helm/charts/morpheus-worker-ray/ \
+          helm upgrade --timeout 15m0s --install --atomic morpheus-worker-ray ./morpheus-worker/helm/charts/morpheus-worker-ray/ \
             --set image.tag=${{ github.run_id }}
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
