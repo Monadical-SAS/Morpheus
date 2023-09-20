@@ -29,6 +29,7 @@ class Target(str, Enum):
 class DBTarget(str, Enum):
     sdiffusion = "sdiffusion"
     controlnet = "controlnet"
+    magicprompt = "magicprompt"
 
 
 class Settings(BaseSettings):

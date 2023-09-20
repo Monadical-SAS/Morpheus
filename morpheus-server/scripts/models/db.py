@@ -6,7 +6,7 @@ from omegaconf import OmegaConf
 from rich import print, print_json
 from rich.console import Console
 
-from config import APIServer, DBTarget, api_server_urls, config_file, download_model, models_url
+from config import APIServer, DBTarget, api_server_urls, config_file, download_model
 from utils import load_config_from_file
 
 app = typer.Typer(help="subcommand to manage models in database:  register/list/delete")
@@ -59,41 +59,52 @@ def model_exist_in_db(*, server_url, model_name):
         raise Exception(f"Error verifying model in db: {e}")
 
 
-def register_model_on_db(model: dict, output_path: str, server: str, target: DBTarget):
-    is_in_db = model_exist_in_db(server_url=f"{api_server_urls[server]}/{models_url[target]}", model_name=output_path)
+def register_model_on_db(model: dict, output_path: str, server: str):
+    is_in_db = model_exist_in_db(
+        server_url=f"{api_server_urls[server]}/models?only_active=false", model_name=output_path
+    )
     if is_in_db:
         print(f"Model already exists in db on server {api_server_urls[server]}")
         return
 
-    _register_model_on_db(server_url=f"{api_server_urls[server]}/{models_url[target]}", models_info=model)
+    _register_model_on_db(server_url=f"{api_server_urls[server]}/models", models_info=model)
     print("Model information saved in DB")
 
 
-def update_model_on_db(model: dict, output_path: str, server: str, target: DBTarget):
-    is_in_db = model_exist_in_db(server_url=f"{api_server_urls[server]}/{models_url[target]}", model_name=output_path)
+def update_model_on_db(model: dict, output_path: str, server: str):
+    is_in_db = model_exist_in_db(
+        server_url=f"{api_server_urls[server]}/models?only_active=false", model_name=output_path
+    )
     if not is_in_db:
         print(f":x: Model doesn't exists in db on server {api_server_urls[server]}. ")
         return
 
-    _update_model_on_db(server_url=f"{api_server_urls[server]}/{models_url[target]}", models_info=model)
+    _update_model_on_db(server_url=f"{api_server_urls[server]}/models", models_info=model)
     print(":white_heavy_check_mark: Model information updated in DB")
 
 
-def update_or_register_model_on_db(model: dict, output_path: str, server: str, target: DBTarget):
+def update_or_register_model_on_db(model: dict, output_path: str, server: str):
     try:
         is_in_db = model_exist_in_db(
-            server_url=f"{api_server_urls[server]}/{models_url[target]}", model_name=output_path
+            server_url=f"{api_server_urls[server]}/models?only_active=false", model_name=output_path
         )
+
+        models_db = get_models_from_db(f"{api_server_urls[server]}/models?only_active=false")
+        modeldb = next((model_db for model_db in models_db if model_db["source"] == model["source"]), None)
 
         if is_in_db:
             print(
                 f":small_orange_diamond: Model already exists in db on server {api_server_urls[server]} .... Updating "
                 f"model"
             )
-            _update_model_on_db(server_url=f"{api_server_urls[server]}/{models_url[target]}", models_info=model)
+            print(f"Model information: {model}")
+
+            if modeldb:
+                model["id"] = modeldb["id"]
+            _update_model_on_db(server_url=f"{api_server_urls[server]}/models", models_info=model)
             print(":white_heavy_check_mark: Model information updated in DB\n")
         else:
-            _register_model_on_db(server_url=f"{api_server_urls[server]}/{models_url[target]}", models_info=model)
+            _register_model_on_db(server_url=f"{api_server_urls[server]}/models", models_info=model)
             print(":white_check_mark: Model information saved in DB\n")
     except Exception as e:
         print(":triangular_flag: [bold red1]Error updating/registering model on db: \n", e)
@@ -109,7 +120,7 @@ def list_db(
     List models registered in db in a specific SERVER
     """
     try:
-        models = get_models_from_db(f"{api_server_urls[server]}/{models_url[target]}")
+        models = get_models_from_db(f"{api_server_urls[server]}/models?only_active=false")
         print_json(data={"result": models})
     except Exception as e:
         if debug:
@@ -136,9 +147,7 @@ def register(
 
         for model in config.models:
             output_path = download_model[target](model)
-            register_model_on_db(
-                model=OmegaConf.to_container(model), output_path=output_path, server=server, target=target
-            )
+            register_model_on_db(model=OmegaConf.to_container(model), output_path=output_path, server=server)
     except Exception as e:
         if debug:
             console.print_exception()
@@ -162,12 +171,16 @@ def update(
         if not len(config.models):
             print(" A model information was not be provided")
 
+        models_db = get_models_from_db(f"{api_server_urls[server]}/models?only_active=false")
+
         for model in config.models:
             console.rule(f"Model - {model.source} ")
             output_path = model.source.replace(" ", "_")
-            update_model_on_db(
-                model=OmegaConf.to_container(model), output_path=output_path, server=server, target=target
-            )
+            modeldb = next((model_db for model_db in models_db if model_db["source"] == model.source), None)
+            if modeldb:
+                model.id = modeldb["id"]
+
+            update_model_on_db(model=OmegaConf.to_container(model), output_path=output_path, server=server)
     except Exception as e:
         if debug:
             console.print_exception()
@@ -187,7 +200,7 @@ def delete(
     NAME must be the model source. For example: 'stabilityai/stable-diffusion-2'
     """
     try:
-        delete_model_from_db_by_source(server_url=f"{api_server_urls[server]}/{models_url[target]}", model_source=name)
+        delete_model_from_db_by_source(server_url=f"{api_server_urls[server]}/models", model_source=name)
     except Exception as e:
         if debug:
             console.print_exception()
