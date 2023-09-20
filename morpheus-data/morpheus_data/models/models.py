@@ -1,6 +1,6 @@
 import uuid
 
-from morpheus_data.database import Base
+from morpheus_data.database.database import Base
 from sqlalchemy import ARRAY, DateTime, Enum
 from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric, JSON
 from sqlalchemy.dialects.postgresql import UUID
