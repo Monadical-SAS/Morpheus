@@ -32,8 +32,12 @@ class Settings(SettingsData):
     hf_auth_token: str = ""
     enable_float32: bool = False
     max_num_images: int = 4
+
     generative_ai_backend: str = GenerativeAIBackendEnum.ray
     ray_backend_url: str = "http://worker-ray:8000"
+    waiting_room_enabled: bool = True
+    max_tasks_per_worker: int = 8
+
     celery_broker_url: str = "redis://redis:6379/0"
     celery_result_backend: str = "redis://redis:6379/0"
     celery_stable_diffusion_queue: str = "stable_diffusion"

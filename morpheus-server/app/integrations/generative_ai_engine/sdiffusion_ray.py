@@ -1,12 +1,14 @@
 import requests
 from PIL import Image
 from app.config import get_settings
+from app.error.generation import RayCapacityExceededError
 from app.integrations.generative_ai_engine.generative_ai_interface import GenerativeAIInterface
 from loguru import logger
 from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
 from morpheus_data.utils.images import from_image_to_bytes
 
 settings = get_settings()
+RAY_BACKEND_URL = settings.ray_backend_url
 
 
 def send_request_to_ray_server(
@@ -25,7 +27,7 @@ def send_request_to_ray_server(
         files["mask"] = ("mask.png", bytes_mask, "image/png")
 
     request_args = {
-        "url": f"http://worker-ray:8000/{endpoint}",
+        "url": f"{RAY_BACKEND_URL}/{endpoint}",
         "params": request.__dict__,
     }
     logger.info(f"Sending request to ray server with args: {request_args}")
@@ -34,14 +36,55 @@ def send_request_to_ray_server(
         request_args["files"] = files
 
     try:
+        can_request, pending_tasks = validate_waiting_room()
+        if not can_request:
+            raise RayCapacityExceededError(
+                f"There is no capacity at the moment. "
+                f"Please try again later. Number of pending tasks = {pending_tasks}."
+            )
+
         response = requests.post(**request_args)
         if response.status_code == 200:
             return response.text
         else:
             raise Exception(str(response.text))
     except Exception as e:
-        print(e)
+        logger.error(f"Error while sending request to ray server: {e}")
         raise Exception(str(e))
+
+
+def validate_waiting_room() -> (bool, int):
+    if not settings.waiting_room_enabled:
+        return True, 0
+
+    try:
+        pending_tasks = ray_pending_tasks()
+        worker_number = ray_worker_number()
+        worker_number = worker_number if worker_number > 0 else 1
+        max_tasks = settings.max_tasks_per_worker or 10
+        can_request = (pending_tasks / worker_number) < max_tasks
+        return can_request, pending_tasks
+    except Exception as e:
+        logger.error(f"Error while validating waiting room: {e}")
+        raise e
+
+
+def ray_pending_tasks() -> int:
+    url = f"{RAY_BACKEND_URL}/pending-tasks"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return int(response.text)
+    else:
+        raise Exception(str(response.text))
+
+
+def ray_worker_number() -> int:
+    url = f"{RAY_BACKEND_URL}/worker-number"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return int(response.text)
+    else:
+        raise Exception(str(response.text))
 
 
 class GenerativeAIStableDiffusionRay(GenerativeAIInterface):
