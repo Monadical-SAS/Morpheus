@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { TextInput } from "@/components/atoms/input";
 import { Button, ButtonVariant } from "@/components/atoms/button";
 import { useEffect, useState } from "react";
@@ -16,34 +16,20 @@ interface ModelFormProps {
   title?: string;
   description?: string;
   url_docs?: string;
-  categories?: string;
+  categories?: any[];
   is_active?: boolean;
-}
-
-interface Option {
-  name: string;
-}
-
-type MultiValue<Option> = readonly Option[];
-
-interface ArrayObjectSelectState {
-  selectedOptions: MultiValue<Option> | null;
-  error: string | null;
 }
 
 export function ModelForm(props: ModelFormProps) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
+    control,
   } = useForm<ModelFormProps>();
 
   const [categories, setCategories] = useState<ModelCategory[]>([]);
-  const [MultipleSelectState, setMultipleSelectState] = useState<ArrayObjectSelectState>({
-    selectedOptions: null,
-    error: null,
-  });
-
   useEffect(() => {
     getAvailableCategories()
       .then((response: Response) => {
@@ -55,11 +41,13 @@ export function ModelForm(props: ModelFormProps) {
   }, []);
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     try {
       const modelData = {
         ...data,
-        categories: [categories.find((category) => category.name === data.category)],
+        categories: data.categories.selectedOptions
       };
+      console.log(modelData);
       const response = await saveNewModel(modelData);
       if (response?.success) {
         alert("Model created successfully");
@@ -72,7 +60,7 @@ export function ModelForm(props: ModelFormProps) {
   const handleUpdateModel = async (data: any) => {
     const modelData = {
       ...data,
-      categories: [categories.find((category) => category.name === data.category)],
+      categories: data.categories.selectedValues
     };
     updateModel(modelData)
       .then((response: Response) => {
@@ -119,12 +107,19 @@ export function ModelForm(props: ModelFormProps) {
         errors={errors.source}
       />
 
-      <MultipleSelect
+      <Controller
         name="categories"
-        label="Model Categories"
-        options={categories}
-        state={MultipleSelectState}
-        setState={setMultipleSelectState}
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <MultipleSelect
+            label="Model Categories"
+            options={categories}
+            value={field.value}
+            onChange={(newValue) => {field.onChange(newValue); setValue('categories', newValue)}}
+            errors={errors.categories}
+          />
+        )}
       />
 
       <TextInput

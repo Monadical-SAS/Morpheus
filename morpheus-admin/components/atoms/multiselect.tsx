@@ -69,24 +69,31 @@ type MultiValue<Option> = readonly Option[];
 
 interface ArrayObjectSelectState {
   selectedOptions: MultiValue<Option> | null;
-  error: string | null;
+  errors: string | null;
 }
 
 interface MultipleSelectProps {
-  name: string;
   label: string;
   options: any[];
   selectedValues?: string[];
-  state: ArrayObjectSelectState;
-  setState: React.Dispatch<React.SetStateAction<ArrayObjectSelectState>>;
+  value?: ArrayObjectSelectState | undefined | any;
+  onChange: React.Dispatch<React.SetStateAction<ArrayObjectSelectState>>;
+  errors?: any;
+  
 }
 
 export default function MultipleSelect(props: MultipleSelectProps) {
   const [isClient, setIsClient] = React.useState(false);
-
   const onChange = (newValue: MultiValue<Option>) => {
-    props.setState({ selectedOptions: newValue, error: null });
+    console.log("newValue", newValue);
+    props.onChange({ selectedOptions: newValue, errors: null });
   };
+
+  const getInputError = () => {
+    if (!props.errors) return null;
+    if (props.errors.type === "required") return "This field is required";
+  };
+
 
   React.useEffect(() => {
     setIsClient(true);
@@ -103,7 +110,7 @@ export default function MultipleSelect(props: MultipleSelectProps) {
         <Select
           inputId="categories"
           name="categories"
-          value={props.state.selectedOptions}
+          value={props.value ? props.value.selectedOptions : []}
           onChange={onChange}
           getOptionLabel={(option: Option) => option.name}
           getOptionValue={(option: Option) => option.name}
@@ -115,9 +122,9 @@ export default function MultipleSelect(props: MultipleSelectProps) {
         />
       )}
 
-      {props.state.error && (
+      {props.errors && (
         <label className="label">
-          <span className="text-sm error text-error">{props.state.error}</span>
+          <span className="text-sm error text-error">{getInputError()}</span>
         </label>
       )}
     </div>
