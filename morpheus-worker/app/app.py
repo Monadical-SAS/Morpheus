@@ -1,15 +1,16 @@
 import logging
 import uuid
 
-from app.handlers.model_handler import ModelHandler
-from app.handlers.text_model_handler import TextModelHandler
-from app.integrations.db_client import DBClient
-from app.models.schemas import GenerationRequest, TextGenerationRequest, CategoryEnum, ModelRequest, TextCategoryEnum
 from fastapi import FastAPI, UploadFile, Depends
 from fastapi.responses import Response
 from ray import serve
 from ray.util.state import get_task
 from ray.util.state import list_nodes
+
+from app.handlers.model_handler import ModelHandler
+from app.handlers.text_model_handler import TextModelHandler
+from app.integrations.db_client import DBClient
+from app.models.schemas import GenerationRequest, TextGenerationRequest, CategoryEnum, ModelRequest, TextCategoryEnum
 
 app = FastAPI()
 
@@ -171,7 +172,7 @@ class APIIngress:
         self.logger.info(f"Getting pending tasks")
         db_client = DBClient()
         pending = db_client.count_pending_generations()
-        return Response(content=pending)
+        return pending
 
     @app.get("/worker-number")
     async def worker_number(self):
@@ -179,10 +180,10 @@ class APIIngress:
         try:
             nodes = list_nodes(filters=[("state", "=", "ALIVE"), ("is_head_node", "=", "False")])
             num_workers = len(nodes)
-            print("Getting num of workers ...")
-            return Response(content=num_workers)
+            self.logger.info(f"Number of workers: {num_workers}")
+            return num_workers
         except:
-            return Response(content=1)
+            return 1
 
     @app.get("/last-tasks")
     async def get_last_tasks(self):
@@ -190,7 +191,7 @@ class APIIngress:
         try:
             db_client = DBClient()
             tasks = db_client.get_last_tasks()
-            return Response(content=tasks)
+            return tasks
         except Exception as e:
             error_str = str(e)
             self.logger.error(f"Error in get_last_tasks {error_str}")
