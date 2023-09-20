@@ -1,15 +1,12 @@
-from fastapi import APIRouter, Depends, File, UploadFile
-from loguru import logger
-from morpheus_data.database import get_db
-from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
-
 from app.config import get_generative_ai_backend
 from app.error.error import ImageNotProvidedError, ModelNotFoundError, UserNotFoundError
 from app.integrations.firebase import get_user
-from app.models.schemas import (
-    Response,
-)
+from app.models.schemas import Response
 from app.services.sdiffusion_services import StableDiffusionService
+from fastapi import APIRouter, Depends, File, UploadFile
+from loguru import logger
+from morpheus_data.database.database import get_db
+from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
 
 router = APIRouter()
 generative_ai_generator = get_generative_ai_backend()

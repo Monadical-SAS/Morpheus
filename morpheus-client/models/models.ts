@@ -64,17 +64,12 @@ export interface Model {
   description?: string;
   is_active: boolean;
   url_docs?: string;
-  text2img?: boolean;
-  img2img?: boolean;
-  inpainting?: boolean;
-  controlnet?: boolean;
-  pix2pix?: boolean;
-  upscaling?: boolean;
-  features: string[];
+  categories: any[];
+
 }
 
 export interface ControlNetModel extends Model {
-  type?: string;
+  extra_params: Record<string, any>
 }
 
 export interface Sampler {

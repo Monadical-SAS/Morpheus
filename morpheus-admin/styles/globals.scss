@@ -1,0 +1,61 @@
+@import "buttons";
+@import "colors";
+@import "media";
+@import "fonts/poppins";
+@import "variables";
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --border: #{$grey-color-light};
+  --input: #{$background-secondary};
+  --ring: #{$grey-color-light};
+  --background: #{$background-primary};
+  --background-secondary: #{$background-secondary};
+  --foreground: #{$text-primary};
+  --foreground-secondarydar: #{$text-secondary};
+  --primary: #{$primary-color};
+  --primary-foreground: #{$text-primary};
+  --secondary: #{$secondary-color};
+  --secondary-foreground: #{$text-primary};
+  --destructive: #{$danger-color};
+  --destructive-foreground: #{$text-primary};
+  --muted: #{$disabled-color};
+  --muted-foreground: #{$text-primary};
+  --accent: #{$accent-color};
+  --accent-foreground: #{$text-primary};
+  --popover: #{$background-secondary};
+  --popover-foreground: #{$text-primary};
+  --card: #{$background-secondary};
+  --card-foreground: #{$text-primary};
+  --radius: 24px;
+  --radix-accordion-content-height: 100px;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}

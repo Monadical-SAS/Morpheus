@@ -1,5 +1,6 @@
 ARG BUILD_ENV="no_copy"
-FROM monadicalsas/morpheus-data:latest as lib
+ARG TAG="latest"
+FROM monadicalsas/morpheus-data:${TAG} as lib
 FROM nvidia/cuda:11.7.1-base-ubuntu22.04 as base
 
 # Configuration defaults

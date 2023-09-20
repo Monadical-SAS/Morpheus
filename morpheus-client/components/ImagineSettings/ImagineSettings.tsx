@@ -9,7 +9,7 @@ import InputEmbedding from "@/components/Inputs/InputEmbedding/InputEmbedding";
 import InputLora from "@/components/Inputs/InputLora/InputLora";
 import SamplerSelect from "../SamplerSelect/SamplerSelect";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
-import { ModelFeature, useModels } from "@/context/ModelsContext";
+import { ModelCategory, useModels } from "@/context/ModelsContext";
 import { useDiffusion } from "@/context/SDContext";
 import { useShowSettings } from "@/hooks/useShowSettings";
 import { CloseIcon } from "../icons/close";
@@ -160,8 +160,8 @@ const ImagineSettings = () => {
           />
         </div>
 
-        {(activeFeature === ModelFeature.Image2Image ||
-          activeFeature === ModelFeature.ControlNet) && (
+        {(activeFeature === ModelCategory.Image2Image ||
+          activeFeature === ModelCategory.ControlNet) && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"Strength"}
@@ -199,7 +199,7 @@ const ImagineSettings = () => {
 
       <p className="headline-4 white my-10">Model settings</p>
       <div className={styles.optionsContainer}>
-        {activeFeature === ModelFeature.ControlNet && (
+        {activeFeature === ModelCategory.ControlNet && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"ControlNet Model"}
@@ -219,9 +219,9 @@ const ImagineSettings = () => {
           <SamplerSelect />
         </div>
 
-        {(activeFeature === ModelFeature.Text2Image ||
-          activeFeature === ModelFeature.Image2Image ||
-          activeFeature === ModelFeature.ControlNet) && (
+        {(activeFeature === ModelCategory.Text2Image ||
+          activeFeature === ModelCategory.Image2Image ||
+          activeFeature === ModelCategory.ControlNet) && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"LoRA"}
@@ -237,9 +237,9 @@ const ImagineSettings = () => {
         )}
 
         {useLora.value &&
-          (activeFeature === ModelFeature.Text2Image ||
-            activeFeature === ModelFeature.Image2Image ||
-            activeFeature === ModelFeature.ControlNet) && (
+          (activeFeature === ModelCategory.Text2Image ||
+            activeFeature === ModelCategory.Image2Image ||
+            activeFeature === ModelCategory.ControlNet) && (
             <div className={styles.settingItem}>
               <OptionInfo
                 title={"LoRA Scale"}
@@ -262,9 +262,9 @@ const ImagineSettings = () => {
             </div>
           )}
 
-        {(activeFeature === ModelFeature.Text2Image ||
-          activeFeature === ModelFeature.Image2Image ||
-          activeFeature === ModelFeature.ControlNet) && (
+        {(activeFeature === ModelCategory.Text2Image ||
+          activeFeature === ModelCategory.Image2Image ||
+          activeFeature === ModelCategory.ControlNet) && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"TI Embedding"}

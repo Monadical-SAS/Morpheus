@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     aws_access_key_id: str = ""
     aws_secret_access_key: str = ""
 
+    temp_model_folder: str = "./tmp"
     default_scheduler: str = "DDPMScheduler"
     default_pipeline: str = "StableDiffusionXLPipeline"
     default_model: str = "stabilityai/stable-diffusion-xl-base-1.0"

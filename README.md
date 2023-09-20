@@ -74,6 +74,10 @@ cp -p morpheus-client/env.local.dist morpheus-client/.env.local
 nano morpheus-server/secrets.env
 nano morpheus-client/.env.local
 
+# Check that there is a .env file in the morpheus directory if you run the project locally
+cat .env
+# Output :  TAG=dev
+
 # Build the docker images
 docker-compose build
 ```

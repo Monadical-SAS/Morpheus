@@ -1,8 +1,8 @@
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import React, { Fragment, ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import Brand from "../Typography/Brand/Brand";
-import { ModelFeature, useModels } from "@/context/ModelsContext";
+import { ModelCategory, useModels } from "@/context/ModelsContext";
 import { Accordion } from "@/components/atoms/accordion/Accordion";
 import { Text2ImgIcon } from "../icons/text2img";
 import { Img2ImgIcon } from "../icons/img2img";
@@ -22,41 +22,32 @@ import {
   Text2ImgDescription,
   UpscalingDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
-import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { Model } from "@/models/models";
-import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./ImagineMenu.module.scss";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 const ImagineMenu = () => {
   const router = useRouter();
-  const { width } = useWindowDimensions();
-  const {
-    models,
-    selectedModel,
-    activeLink,
-    setActiveLink,
-    findValidModelForFeature,
-  } = useModels();
+  const { models, selectedModel, activeLink, setActiveLink, findValidModelForFeature } = useModels();
   const imagineOptionPath = router.pathname.split("/").pop();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
   const [openItem, setOpenItem] = useState<string>();
   const [showModelsModal, setShowModelsModal] = useState(false);
+  const { width } = useWindowDimensions();
+  const isMobile = width <= MOBILE_SCREEN_WIDTH;
 
   useEffect(() => {
     if (imagineOptionPath && selectedModel) {
-      if (!selectedModel.features.includes(imagineOptionPath)) {
-        const validModel = findValidModelForFeature(
-          imagineOptionPath as ModelFeature
-        );
-
+      if (!selectedModel.categories.some((category) => category.name === imagineOptionPath)) {
+        const validModel = findValidModelForFeature(imagineOptionPath as ModelCategory);
         setActiveLink({
           model: validModel,
-          feature: imagineOptionPath as ModelFeature,
+          feature: imagineOptionPath as ModelCategory,
         });
       } else {
         setActiveLink({
           model: selectedModel,
-          feature: imagineOptionPath as ModelFeature,
+          feature: imagineOptionPath as ModelCategory,
         });
       }
     }
@@ -76,9 +67,7 @@ const ImagineMenu = () => {
       itemId={model.source}
       title={model.name}
       setOpenedItem={setOpenItem}
-      isOpen={
-        openItem === model.source || activeLink.model.source === model.source
-      }
+      isOpen={openItem === model.source || activeLink.model.source === model.source}
     >
       <ModelMenuFeatures model={model} />
     </Accordion>
@@ -122,114 +111,68 @@ interface ImagineMenuFeaturesProps {
 const ModelMenuFeatures = (props: ImagineMenuFeaturesProps) => {
   const { activeLink } = useModels();
 
-  const getItemActive = (option: ModelFeature | string) => {
-    return (
-      activeLink.model.source === props.model.source &&
-      activeLink.feature === option
-    );
+  const getItemActive = (option: ModelCategory | string) => {
+    return activeLink.model.source === props.model.source && activeLink.feature === option;
   };
 
-  const getIconColor = (option: ModelFeature | string) => {
+  const getIconColor = (option: ModelCategory | string) => {
     return getItemActive(option) ? "#B3005E" : "#6D6D94";
   };
 
+  const categoryConfigs = [
+    {
+      name: ModelCategory.Text2Image,
+      title: "Text To Image",
+      description: <Text2ImgDescription className="body-2 white" />,
+      icon: <Text2ImgIcon height={"18px"} width={"18px"} />,
+    },
+    {
+      name: ModelCategory.Image2Image,
+      title: "Image to Image",
+      description: <Img2ImgDescription className="body-2 white" />,
+      icon: <Img2ImgIcon height={"18px"} width={"18px"} />,
+    },
+    {
+      name: ModelCategory.Pix2Pix,
+      title: "Pix2Pix",
+      description: <Pix2PixDescription className="body-2 white" />,
+      icon: <Pix2PixIcon height={"18px"} width={"18px"} />,
+    },
+    {
+      name: ModelCategory.ControlNet,
+      title: "ControlNet",
+      description: <ControlNetDescription className="body-2 white" />,
+      icon: <ControlNetIcon height={"18px"} width={"18px"} />,
+    },
+    {
+      name: ModelCategory.Inpainting,
+      title: "In-painting",
+      description: <InpaintingDescription className="body-2 white" />,
+      icon: <InpaintingIcon height={"18px"} width={"18px"} />,
+    },
+    {
+      name: ModelCategory.Upscaling,
+      title: "Upscaling",
+      description: <UpscalingDescription className="body-2 white" />,
+      icon: <EnhanceIcon width={"18px"} height={"18px"} />,
+    },
+  ];
+
   return (
     <Fragment>
-      {props.model.text2img && (
-        <ImagineMenuItem
-          title={"Text To Image"}
-          description={<Text2ImgDescription className="body-2 white" />}
-          active={getItemActive(ModelFeature.Text2Image)}
-          icon={
-            <Text2ImgIcon
-              height={"18px"}
-              width={"18px"}
-              color={getIconColor(ModelFeature.Text2Image)}
+      {categoryConfigs.map(
+        (category) =>
+          props.model.categories.some((modelCategory) => modelCategory.name === category.name) && (
+            <ImagineMenuItem
+              key={`${props.model.source}-${category.name}-menu-item`}
+              title={category.title}
+              description={category.description}
+              icon={React.cloneElement(category.icon, { color: getIconColor(category.name) })}
+              active={getItemActive(category.name)}
+              option={category.name}
+              model={props.model}
             />
-          }
-          option={ModelFeature.Text2Image}
-          model={props.model}
-        />
-      )}
-      {props.model.img2img && (
-        <ImagineMenuItem
-          title={"Image to Image"}
-          description={<Img2ImgDescription className="body-2 white" />}
-          active={getItemActive(ModelFeature.Image2Image)}
-          icon={
-            <Img2ImgIcon
-              height={"18px"}
-              width={"18px"}
-              color={getIconColor(ModelFeature.Image2Image)}
-            />
-          }
-          option={ModelFeature.Image2Image}
-          model={props.model}
-        />
-      )}
-      {props.model.pix2pix && (
-        <ImagineMenuItem
-          title={"Pix2Pix"}
-          description={<Pix2PixDescription className="body-2 white" />}
-          active={getItemActive(ModelFeature.Pix2Pix)}
-          icon={
-            <Pix2PixIcon
-              height={"18px"}
-              width={"18px"}
-              color={getIconColor(ModelFeature.Pix2Pix)}
-            />
-          }
-          option={ModelFeature.Pix2Pix}
-          model={props.model}
-        />
-      )}
-      {props.model.controlnet && (
-        <ImagineMenuItem
-          title={"ControlNet"}
-          description={<ControlNetDescription className="body-2 white" />}
-          active={getItemActive(ModelFeature.ControlNet)}
-          icon={
-            <ControlNetIcon
-              height={"18px"}
-              width={"18px"}
-              color={getIconColor(ModelFeature.ControlNet)}
-            />
-          }
-          option={ModelFeature.ControlNet}
-          model={props.model}
-        />
-      )}
-      {props.model.inpainting && (
-        <ImagineMenuItem
-          title={"In-painting"}
-          description={<InpaintingDescription className="body-2 white" />}
-          active={getItemActive(ModelFeature.Inpainting)}
-          icon={
-            <InpaintingIcon
-              height={"18px"}
-              width={"18px"}
-              color={getIconColor(ModelFeature.Inpainting)}
-            />
-          }
-          option={ModelFeature.Inpainting}
-          model={props.model}
-        />
-      )}
-      {props.model.upscaling && (
-        <ImagineMenuItem
-          title={"Upscaling"}
-          description={<UpscalingDescription className="body-2 white" />}
-          active={getItemActive(ModelFeature.Upscaling)}
-          icon={
-            <EnhanceIcon
-              width={"18px"}
-              height={"18px"}
-              color={getIconColor(ModelFeature.Upscaling)}
-            />
-          }
-          option={ModelFeature.Upscaling}
-          model={props.model}
-        />
+          )
       )}
     </Fragment>
   );
@@ -246,10 +189,9 @@ interface ImagineMenuItemProps {
 
 const ImagineMenuItem = (props: ImagineMenuItemProps) => {
   const router = useRouter();
+  const { setActiveLink, activeLink } = useModels();
   const { width } = useWindowDimensions();
-  const { setActiveLink } = useModels();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
-
+  const isMobile = width <= MOBILE_SCREEN_WIDTH;
   const getItemStyles = () => {
     return `${styles.menuItem}  ${props.active && styles.active}`;
   };
@@ -257,10 +199,13 @@ const ImagineMenuItem = (props: ImagineMenuItemProps) => {
   const handleOnClick = () => {
     setActiveLink({
       model: props.model,
-      feature: props.option as ModelFeature,
+      feature: props.option as ModelCategory,
     });
-    router.push(props.option);
   };
+
+  useEffect(() => {
+    router.push(activeLink.feature);
+  }, [activeLink]);
 
   return (
     <AppTooltip
@@ -271,9 +216,7 @@ const ImagineMenuItem = (props: ImagineMenuItemProps) => {
       <div className={getItemStyles()} onClick={handleOnClick}>
         <span className={styles.icon}>{props.icon}</span>
 
-        <span className={`base-1 ${props.active ? "main" : "secondary"}`}>
-          {props.title}
-        </span>
+        <span className={`base-1 ${props.active ? "main" : "secondary"}`}>{props.title}</span>
       </div>
     </AppTooltip>
   );

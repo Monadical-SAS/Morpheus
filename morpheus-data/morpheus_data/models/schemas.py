@@ -13,7 +13,6 @@ class User(BaseModel):
     name: str = None
     bio: str = None
     avatar: str = None
-    phone: str = None
 
     class Config:
         orm_mode = True
@@ -23,7 +22,6 @@ class User(BaseModel):
                 "name": "Juan Arias",
                 "bio": "Juan Arias biography",
                 "avatar": "https://upload.wikimedia.org/wikipedia/en/8/86/Avatar_Aang.png",  # noqa
-                "phone": "+573003000000",
             }
         }
 
@@ -70,6 +68,12 @@ class ControlNetType(str, Enum):
     mlsd = "mlsd"
     scribble = "scribble"
     poses = "poses"
+
+
+class ModelKind(str, Enum):
+    diffusion = "diffusion"
+    controlnet = "controlnet"
+    prompt = "prompt"
 
 
 class Prompt(BaseModel):
@@ -204,38 +208,46 @@ class StableDiffusionSchema(BaseModel):
     prompt: str = Field(..., min_length=1)
 
 
-class SDModelCreate(BaseModel):
+class ModelCategory(BaseModel):
+    id: UUID = None
+    name: str
+    description: str = None
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
+                "name": "Category Name",
+                "description": "Category description",
+            }
+        }
+
+
+class MLModelCreate(BaseModel):
     name: str
     source: str
+    kind: ModelKind = None
     description: str = None
-    is_active: bool = True
     url_docs: str = None
-    text2img: bool | None = False
-    img2img: bool | None = False
-    inpainting: bool | None = False
-    controlnet: bool | None = False
-    pix2pix: bool | None = False
-    upscaling: bool | None = False
+    categories: List[ModelCategory] = None
+    extra_params: dict = None
+    is_active: bool = True
 
     class Config:
         schema_extra = {
             "example": {
                 "name": "Model Name",
                 "source": "https://modelurl.com",
+                "kind": "diffusion",
                 "description": "Model description",
-                "is_active": True,
                 "url_docs": "https://modeldocs.com",
-                "text2img": False,
-                "img2img": False,
-                "inpainting": False,
-                "controlnet": False,
-                "pix2pix": False,
-                "upscaling": False,
+                "is_active": True,
             }
         }
 
 
-class SDModel(SDModelCreate):
+class MLModel(MLModelCreate):
     id: UUID
 
     class Config:
@@ -245,53 +257,10 @@ class SDModel(SDModelCreate):
                 "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
                 "name": "Model Name",
                 "source": "https://modelurl.com",
+                "kind": "diffusion",
                 "description": "Model description",
-                "is_active": True,
                 "url_docs": "https://modeldocs.com",
-                "text2img": False,
-                "img2img": False,
-                "inpainting": False,
-                "controlnet": False,
-                "pix2pix": False,
-            }
-        }
-
-
-class ControlNetModelCreate(BaseModel):
-    name: str
-    type: str
-    source: str
-    description: str = None
-    is_active: bool = True
-    url_docs: str = None
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "name": "Model Name",
-                "type": "mname",
-                "source": "https://modelurl.com",
-                "description": "Model description",
                 "is_active": True,
-                "url_docs": "https://modeldocs.com",
-            }
-        }
-
-
-class ControlNetModel(ControlNetModelCreate):
-    id: UUID
-
-    class Config:
-        orm_mode = True
-        schema_extra = {
-            "example": {
-                "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
-                "name": "Model Name",
-                "type": "mname",
-                "source": "https://modelurl.com",
-                "description": "Model description",
-                "is_active": True,
-                "url_docs": "https://modeldocs.com",
             }
         }
 

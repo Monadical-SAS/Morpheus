@@ -17,6 +17,10 @@ class CollectionRepository:
         return db.query(Collection).filter(Collection.id == collection_id).first()
 
     @classmethod
+    def get_collection_by_name(cls, *, db: Session, name: str) -> Collection:
+        return db.query(Collection).filter(Collection.name == name).first()
+
+    @classmethod
     def get_collections(cls, *, db: Session, owner_id: str, skip: int = 0, limit: int = 100) -> List[Collection]:
         return db.query(Collection).filter(Collection.owner_id == owner_id).offset(skip).limit(limit).all()
 
@@ -37,8 +41,8 @@ class CollectionRepository:
         db_collection = Collection(
             name="Dreamscapes Unleashed",
             description="Embark on a mesmerizing visual journey through the realm of imagination, where Morpheus, "
-            "the god of dreams, unveils a surreal collection of otherworldly images, captivating the senses and "
-            "igniting the boundless potential of the human mind.",
+                        "the god of dreams, unveils a surreal collection of otherworldly images, captivating the senses and "
+                        "igniting the boundless potential of the human mind.",
             image="public/morpheus-image.png",
             owner=owner,
         )

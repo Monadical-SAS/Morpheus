@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import ArtworkForm from "../ArtworkForm/ArtworkForm";
 import { CopyIcon } from "../../icons/copy";
 import useCopyToClipboard from "@/hooks/useCopyToClipboard";
-import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { useToastContext } from "@/context/ToastContext";
 import { ArtWork } from "@/models/models";
 import styles from "./ArtworkDetails.module.scss";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 interface ArtworkDetailProps {
