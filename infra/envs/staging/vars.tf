@@ -204,3 +204,11 @@ variable "scale_down_adv_queue_threshold" {
 variable "scale_down_adv_period" {
   default = "60"
 }
+
+variable "scale_down_adv_scaling_adjustment" {
+  default = -1
+}
+
+variable "scale_down_adv_evaluation_period" {
+  default = "60"
+}

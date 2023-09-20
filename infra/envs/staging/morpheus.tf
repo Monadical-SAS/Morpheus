@@ -38,7 +38,7 @@ module "morpheus_cluster" {
   scale_up_adv_period = var.scale_up_period
   scale_up_adv_evaluation_period = var.scale_up_adv_evaluation_period
   scale_up_adv_scaling_adjustment = var.scale_up_adv_scaling_adjustment
-  scale_down_adv_queue_threshold = var.scale_downadv__queue_threshold
+  scale_down_adv_queue_threshold = var.scale_down_adv_queue_threshold
   scale_down_adv_period = var.scale_down_adv_period
   scale_down_adv_evaluation_period = var.scale_down_adv_evaluation_period
   scale_down_adv_scaling_adjustment = var.scale_down_adv_scaling_adjustment
