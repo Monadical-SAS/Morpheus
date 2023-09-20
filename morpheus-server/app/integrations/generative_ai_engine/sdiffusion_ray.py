@@ -28,10 +28,10 @@ def send_request_to_ray_server(
         "url": f"http://worker-ray:8000/{endpoint}",
         "params": request.__dict__,
     }
+    logger.info(f"Sending request to ray server with args: {request_args}")
+
     if files:
         request_args["files"] = files
-
-    logger.info(f"Sending request to ray server with args: {request_args}")
 
     try:
         response = requests.post(**request_args)
@@ -59,7 +59,9 @@ class GenerativeAIStableDiffusionRay(GenerativeAIInterface):
 
     @staticmethod
     def generate_controlnet_images(*, request: GenerationRequest, image: Image) -> str:
-        pass
+        logger.info(f"Running generate_controlnet_images process with request: {request}")
+        task_id = send_request_to_ray_server(endpoint="controlnet", request=request, image=image)
+        return str(task_id)
 
     @staticmethod
     def generate_pix2pix_images(*, request: GenerationRequest, image: Image) -> str:
