@@ -67,6 +67,24 @@ class APIIngress:
             self.logger.error(f"Error in generate_img2_img {e}")
             return Response(content=e)
 
+    @app.post(f"/{CategoryEnum.CONTROLNET}")
+    async def generate_controlnet(
+            self,
+            image: UploadFile,
+            request: GenerationRequest = Depends(),
+    ):
+        try:
+            self.logger.info(f"StableDiffusionControlnet.generate: request: {request}")
+            request.task_id = str(uuid.uuid4())
+            model_request = ModelRequest(**request.dict())
+            model_request.image = await image.read()
+            handler = ModelHandler.remote(endpoint=CategoryEnum.CONTROLNET, request=model_request)
+            handler.handle_generation.remote()
+            return Response(content=model_request.task_id)
+        except Exception as e:
+            self.logger.error(f"Error in generate_controlnet {e}")
+            return Response(content=e)
+
     @app.post(f"/{CategoryEnum.PIX_TO_PIX}")
     async def generate_pix2pix(
             self,

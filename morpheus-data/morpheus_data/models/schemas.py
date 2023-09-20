@@ -332,6 +332,8 @@ class GenerationRequest(BaseModel):
     pipeline: str = settings.default_pipeline
     scheduler: str = settings.default_scheduler
     model_id: str = settings.default_model
+    controlnet_id: str = None
+    controlnet_type: str = None
     user_id: str
 
 

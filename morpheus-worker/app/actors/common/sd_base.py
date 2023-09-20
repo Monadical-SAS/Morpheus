@@ -94,6 +94,7 @@ class StableDiffusionAbstract(ABC):
 
         # Save the model locally if it doesn't exist
         self.save_model()
+        self.save_controlnet()
 
         # Activate attention slicing and xformers
         self.activate_attention_slicing()
@@ -109,6 +110,10 @@ class StableDiffusionAbstract(ABC):
     def save_model(self):
         if not Path(self.local_model_path).exists():
             self.pipeline.save_pretrained(save_directory=self.local_model_path)
+
+    def save_controlnet(self):
+        if self.controlnet and not Path(self.local_controlnet_path).exists():
+            self.controlnet.save_pretrained(save_directory=self.local_controlnet_path)
 
     def activate_attention_slicing(self):
         if settings.enable_attention_slicing:

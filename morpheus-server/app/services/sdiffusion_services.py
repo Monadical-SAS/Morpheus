@@ -1,3 +1,5 @@
+from typing import Union
+
 from PIL import Image
 from app.config import get_settings
 from app.error.error import ImageNotProvidedError, ModelNotFoundError
@@ -82,7 +84,12 @@ class StableDiffusionService:
         if not db_model:
             raise ModelNotFoundError(f"model {model} does not exist in db")
 
-    def _build_backend_request(self, db: Session, prompt: Prompt, email: str) -> GenerationRequest:
+    def _build_backend_request(
+            self,
+            db: Session,
+            prompt: Union[Prompt, PromptControlNet],
+            email: str
+    ) -> GenerationRequest:
         self._validate_request(db=db, model=prompt.model)
         pipeline = hasattr(prompt, "pipeline") and prompt.pipeline or "StableDiffusionPipeline"
         request_dict = {
@@ -92,6 +99,11 @@ class StableDiffusionService:
             "scheduler": prompt.sampler,
             "model_id": prompt.model,
         }
+        if hasattr(prompt, "controlnet_model"):
+            request_dict["controlnet_model"] = prompt.controlnet_model
+        if hasattr(prompt, "controlnet_type"):
+            request_dict["controlnet_type"] = prompt.controlnet_type
+
         backend_request = GenerationRequest(**request_dict)
         return backend_request
 

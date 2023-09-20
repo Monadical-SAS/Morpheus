@@ -2,9 +2,10 @@ from enum import Enum
 from typing import Optional, List
 from uuid import UUID
 
+from pydantic import BaseModel
+
 from app.settings.settings import get_settings
 from app.utils.prompts import generate_random_prompt
-from pydantic import BaseModel
 
 settings = get_settings()
 
@@ -12,6 +13,7 @@ settings = get_settings()
 class CategoryEnum(str, Enum):
     TEXT_TO_IMAGE = "text2img"
     IMAGE_TO_IMAGE = "img2img"
+    CONTROLNET = "controlnet"
     PIX_TO_PIX = "pix2pix"
     UPSCALING = "upscaling"
     INPAINTING = "inpainting"
@@ -31,10 +33,12 @@ class GenerationRequest(BaseModel):
     guidance_scale: int = 10
     num_images_per_prompt: int = 1
     generator: int = -1
-    strength: Optional[float] = 0.75
+    strength: Optional[float] = 0.8
     pipeline: str = settings.default_pipeline
     scheduler: str = settings.default_scheduler
     model_id: str = settings.default_model
+    controlnet_id: str = None
+    controlnet_type: str = None
     user_id: str = "user@morpheus.com"
 
     class Config:

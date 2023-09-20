@@ -3,6 +3,7 @@ import uuid
 
 import ray
 
+from app.actors.controlnet import StableDiffusionControlnet
 from app.actors.sd_img_to_img import StableDiffusionImageToImage
 from app.actors.sd_inpainting import StableDiffusionInpainting
 from app.actors.sd_pix_to_pix import StableDiffusionPixToPix
@@ -26,7 +27,8 @@ class ModelHandler:
         self.generator = self.get_generator().remote(
             pipeline=self.request.pipeline,
             model_id=self.request.model_id,
-            scheduler=self.request.scheduler
+            scheduler=self.request.scheduler,
+            controlnet_id=self.request.controlnet_id,
         )
         self.s3_client = S3Client()
         self.db_client = DBClient()
@@ -35,6 +37,7 @@ class ModelHandler:
         generators = {
             CategoryEnum.TEXT_TO_IMAGE: StableDiffusionText2Img,
             CategoryEnum.IMAGE_TO_IMAGE: StableDiffusionImageToImage,
+            CategoryEnum.CONTROLNET: StableDiffusionControlnet,
             CategoryEnum.PIX_TO_PIX: StableDiffusionPixToPix,
             CategoryEnum.UPSCALING: StableDiffusionUpscaling,
             CategoryEnum.INPAINTING: StableDiffusionInpainting,
