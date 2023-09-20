@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     default_scheduler: str = "DDPMScheduler"
     default_pipeline: str = "StableDiffusionXLPipeline"
     default_model: str = "stabilityai/stable-diffusion-xl-base-1.0"
-    enable_float32: bool = False
+    enable_float32: bool = True
     enable_attention_slicing: bool = False
 
     def get_db_url(self) -> str:

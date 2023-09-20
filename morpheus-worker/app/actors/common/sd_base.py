@@ -52,7 +52,6 @@ class StableDiffusionAbstract(ABC):
             self.generator_device = "cpu"
             self.enable_xformers = False
             self.device = "mps"
-
             # With Apple M1/M2 hardware, we will always run in 32 bit precision.
             # as MPS doesn't currently support 16 bit.
             self.dtype = torch.float32
