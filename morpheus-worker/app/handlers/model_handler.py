@@ -2,16 +2,15 @@ import logging
 import uuid
 
 import ray
-
 from app.actors.controlnet import StableDiffusionControlnet
 from app.actors.sd_img_to_img import StableDiffusionImageToImage
 from app.actors.sd_inpainting import StableDiffusionInpainting
 from app.actors.sd_pix_to_pix import StableDiffusionPixToPix
 from app.actors.sd_text_to_img import StableDiffusionText2Img
 from app.actors.sd_upscaling import StableDiffusionUpscaling
-from app.integrations.db_client import DBClient
 from app.integrations.s3_client import S3Client
 from app.models.schemas import CategoryEnum, Generation, ModelRequest
+from sqlalchemy.orm import Session
 
 
 # for local testing
@@ -34,7 +33,6 @@ class ModelHandler:
 
         self.generator = self.get_generator().remote(**self.generator_args)
         self.s3_client = S3Client()
-        self.db_client = DBClient()
 
     def get_generator(self):
         generators = {
@@ -51,12 +49,13 @@ class ModelHandler:
 
         return generator
 
-    def handle_generation(self):
+    def handle_generation(self, db: Session):
         self.logger.info(f"Generating image for: {self.request}")
 
         try:
             # Create generation record in database
             self.db_client.create_generation(
+                db=db,
                 generation_id=uuid.UUID(self.request.task_id)
             )
 
@@ -74,7 +73,7 @@ class ModelHandler:
             )
 
             # Update generation in database
-            generation = self.db_client.update_generation(generation=Generation(
+            generation = self.db_client.update_generation(db=db, generation=Generation(
                 id=self.request.task_id,
                 results=image_urls,
                 status="COMPLETED"
@@ -85,7 +84,7 @@ class ModelHandler:
             return generation
         except Exception as e:
             self.logger.error(f"Error generating image: {e}")
-            self.db_client.update_generation(generation=Generation(
+            self.db_client.update_generation(db=db, generation=Generation(
                 id=self.request.task_id,
                 status="FAILED"
             ))

@@ -5,6 +5,7 @@ import ray
 from app.actors.magic_prompt import StableDiffusionMagicPrompt
 from app.integrations.db_client import DBClient
 from app.models.schemas import Generation, TextCategoryEnum, TextGenerationRequest
+from sqlalchemy.orm import Session
 
 
 @ray.remote
@@ -25,12 +26,13 @@ class TextModelHandler:
 
         return generator
 
-    def handle_generation(self, request: TextGenerationRequest):
+    def handle_generation(self, db: Session, request: TextGenerationRequest):
         self.logger.info(f"Generating text for: {request}")
 
         try:
             # Create generation record in database
             self.db_client.create_generation(
+                db=db,
                 generation_id=uuid.UUID(request.task_id)
             )
 
@@ -39,7 +41,7 @@ class TextModelHandler:
             generated_text = ray.get(text_future)
 
             # Update generation in database
-            generation = self.db_client.update_generation(generation=Generation(
+            generation = self.db_client.update_generation(db=db, generation=Generation(
                 id=request.task_id,
                 results=[generated_text],
                 status="COMPLETED"
@@ -50,7 +52,7 @@ class TextModelHandler:
             return generation
         except Exception as e:
             self.logger.error(f"Error generating text: {e}")
-            self.db_client.update_generation(generation=Generation(
+            self.db_client.update_generation(db=db, generation=Generation(
                 id=request.task_id,
                 status="FAILED"
             ))

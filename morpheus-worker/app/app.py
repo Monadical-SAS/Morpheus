@@ -1,16 +1,17 @@
 import logging
 import uuid
 
+from app.handlers.model_handler import ModelHandler
+from app.handlers.text_model_handler import TextModelHandler
+from app.integrations.db_client import DBClient
+from app.models.schemas import GenerationRequest, TextGenerationRequest, CategoryEnum, ModelRequest, TextCategoryEnum
+from app.settings.database import get_db
 from fastapi import FastAPI, UploadFile, Depends
 from fastapi.responses import Response
 from ray import serve
 from ray.util.state import get_task
 from ray.util.state import list_nodes
-
-from app.handlers.model_handler import ModelHandler
-from app.handlers.text_model_handler import TextModelHandler
-from app.integrations.db_client import DBClient
-from app.models.schemas import GenerationRequest, TextGenerationRequest, CategoryEnum, ModelRequest, TextCategoryEnum
+from sqlalchemy.orm import Session
 
 app = FastAPI()
 
@@ -36,14 +37,15 @@ class APIIngress:
     @app.post(f"/{CategoryEnum.TEXT_TO_IMAGE}")
     async def generate_text2img(
             self,
-            request: GenerationRequest = Depends()
+            request: GenerationRequest = Depends(),
+            db: Session = Depends(get_db),
     ):
         try:
             self.logger.info(f"StableDiffusionText2Img.generate: request: {request}")
             request.task_id = str(uuid.uuid4())
             model_request = ModelRequest(**request.dict())
             handler = ModelHandler.remote(endpoint=CategoryEnum.TEXT_TO_IMAGE, request=model_request)
-            handler.handle_generation.remote()
+            handler.handle_generation.remote(db=db)
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_text2img {e}")
@@ -54,6 +56,7 @@ class APIIngress:
             self,
             image: UploadFile,
             request: GenerationRequest = Depends(),
+            db: Session = Depends(get_db),
     ):
         try:
             self.logger.info(f"StableDiffusionImg2Img.generate: request: {request}")
@@ -61,7 +64,7 @@ class APIIngress:
             model_request = ModelRequest(**request.dict())
             model_request.image = await image.read()
             handler = ModelHandler.remote(endpoint=CategoryEnum.IMAGE_TO_IMAGE, request=model_request)
-            handler.handle_generation.remote()
+            handler.handle_generation.remote(db=db)
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_img2_img {e}")
@@ -72,6 +75,7 @@ class APIIngress:
             self,
             image: UploadFile,
             request: GenerationRequest = Depends(),
+            db: Session = Depends(get_db),
     ):
         try:
             self.logger.info(f"StableDiffusionControlnet.generate: request: {request}")
@@ -79,7 +83,7 @@ class APIIngress:
             model_request = ModelRequest(**request.dict())
             model_request.image = await image.read()
             handler = ModelHandler.remote(endpoint=CategoryEnum.CONTROLNET, request=model_request)
-            handler.handle_generation.remote()
+            handler.handle_generation.remote(db=db)
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_controlnet {e}")
@@ -90,6 +94,7 @@ class APIIngress:
             self,
             image: UploadFile,
             request: GenerationRequest = Depends(),
+            db: Session = Depends(get_db),
     ):
         try:
             self.logger.info(f"StableDiffusionPix2Pix.generate: request: {request}")
@@ -97,7 +102,7 @@ class APIIngress:
             model_request = ModelRequest(**request.dict())
             model_request.image = await image.read()
             handler = ModelHandler.remote(endpoint=CategoryEnum.PIX_TO_PIX, request=model_request)
-            handler.handle_generation.remote()
+            handler.handle_generation.remote(db=db)
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_pix2pix {e}")
@@ -108,6 +113,7 @@ class APIIngress:
             self,
             image: UploadFile,
             request: GenerationRequest = Depends(),
+            db: Session = Depends(get_db),
     ):
         try:
             self.logger.info(f"StableDiffusionUpscaling.generate: request: {request}")
@@ -115,7 +121,7 @@ class APIIngress:
             model_request = ModelRequest(**request.dict())
             model_request.image = await image.read()
             handler = ModelHandler.remote(endpoint=CategoryEnum.UPSCALING, request=model_request)
-            handler.handle_generation.remote()
+            handler.handle_generation.remote(db=db)
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_upscaling {e}")
@@ -127,6 +133,7 @@ class APIIngress:
             image: UploadFile,
             mask: UploadFile,
             request: GenerationRequest = Depends(),
+            db: Session = Depends(get_db),
     ):
         try:
             self.logger.info(f"StableDiffusionInpainting.generate: request: {request}")
@@ -135,7 +142,7 @@ class APIIngress:
             model_request.image = await image.read()
             model_request.mask = await mask.read()
             handler = ModelHandler.remote(endpoint=CategoryEnum.INPAINTING, request=model_request)
-            handler.handle_generation.remote()
+            handler.handle_generation.remote(db=db)
             return Response(content=model_request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_inpainting {e}")
@@ -145,12 +152,13 @@ class APIIngress:
     async def generate_inpainting(
             self,
             request: TextGenerationRequest = Depends(),
+            db: Session = Depends(get_db),
     ):
         try:
             self.logger.info(f"StableDiffusionMagicPrompt.generate: request: {request}")
             request.task_id = str(uuid.uuid4())
             handler = TextModelHandler.remote(endpoint=TextCategoryEnum.MAGIC_PROMPT)
-            handler.handle_generation.remote(request=request)
+            handler.handle_generation.remote(db=db, request=request)
             return Response(content=request.task_id)
         except Exception as e:
             self.logger.error(f"Error in generate_inpainting {e}")
@@ -162,9 +170,9 @@ class APIIngress:
         return Response(content=task.state)
 
     @app.get("/pending-tasks")
-    async def pending_tasks(self):
+    async def pending_tasks(self, db: Session = Depends(get_db)):
         self.logger.info(f"Getting pending tasks")
-        pending = self.db_client.count_pending_generations()
+        pending = self.db_client.count_pending_generations(db=db)
         return pending
 
     @app.get("/worker-number")
@@ -179,10 +187,10 @@ class APIIngress:
             return 1
 
     @app.get("/last-tasks")
-    async def last_tasks(self):
+    async def last_tasks(self, db: Session = Depends(get_db)):
         self.logger.info(f"Getting last tasks")
         try:
-            tasks = self.db_client.get_last_tasks()
+            tasks = self.db_client.get_last_tasks(db=db)
             return tasks
         except Exception as e:
             return Response(content=e)
