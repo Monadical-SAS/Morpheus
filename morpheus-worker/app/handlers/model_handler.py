@@ -24,12 +24,15 @@ class ModelHandler:
         self.endpoint = endpoint
         self.request = request
         self.logger = logging.getLogger("ray")
-        self.generator = self.get_generator().remote(
-            pipeline=self.request.pipeline,
-            model_id=self.request.model_id,
-            scheduler=self.request.scheduler,
-            controlnet_id=self.request.controlnet_id,
-        )
+        self.generator_args = {
+            "pipeline": self.request.pipeline,
+            "model_id": self.request.model_id,
+            "scheduler": self.request.scheduler,
+        }
+        if self.endpoint == CategoryEnum.CONTROLNET:
+            self.generator_args["controlnet_id"] = self.request.controlnet_id
+
+        self.generator = self.get_generator().remote(**self.generator_args)
         self.s3_client = S3Client()
         self.db_client = DBClient()
 
