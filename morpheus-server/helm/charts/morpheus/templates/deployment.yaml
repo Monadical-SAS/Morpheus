@@ -131,11 +131,11 @@ spec:
           - name: RAY_BACKEND_URL
             value: http://worker-ray:8000
           - name: WAITING_ROOM_ENABLED
-            value: true
+            value: "true"
           - name: MAX_TASKS_PER_WORKER
-            value: 10
+            value: "10"
           - name: ENABLE_FLOAT32
-            value: true
+            value: "true"
           - name: ENVIRONMENT
             value: prod
       affinity:
