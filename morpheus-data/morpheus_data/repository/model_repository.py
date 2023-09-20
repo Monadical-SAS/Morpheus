@@ -28,20 +28,22 @@ class ModelRepository:
         return db_model
 
     @classmethod
-    def get_models(cls, *, db: Session, skip: int = 0, limit: int = 100) -> List[MLModel]:
-        return db.query(MLModel).filter(MLModel.is_active).offset(skip).limit(limit).all()
+    def get_models(cls, *, db: Session, skip: int = 0, limit: int = 100, only_active: bool = True) -> List[MLModel]:
+        if only_active:
+            return db.query(MLModel).filter(MLModel.is_active).offset(skip).limit(limit).all()
+        return db.query(MLModel).offset(skip).limit(limit).all()
 
     @classmethod
     def get_model_by_id(cls, *, db: Session, model_id: UUID) -> MLModel:
-        return db.query(MLModel).filter(MLModel.id == model_id, MLModel.is_active).first()
+        return db.query(MLModel).filter(MLModel.id == model_id).first()
 
     @classmethod
     def get_models_by_category(cls, *, db: Session, category_id: UUID) -> list[MLModel]:
-        return db.query(MLModel).filter(MLModel.category.id == category_id, MLModel.is_active).all()
+        return db.query(MLModel).filter(MLModel.category.id == category_id).all()
 
     @classmethod
     def get_model_by_source(cls, *, db: Session, model_source: str) -> MLModel:
-        return db.query(MLModel).filter(MLModel.source == model_source, MLModel.is_active).first()
+        return db.query(MLModel).filter(MLModel.source == model_source).first()
 
     @classmethod
     def update_model(cls, *, db: Session, model: MLModelCreate) -> MLModel:
