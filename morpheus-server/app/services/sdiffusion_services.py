@@ -73,8 +73,8 @@ class StableDiffusionService:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         backend_request.pipeline = "StableDiffusionUpscalePipeline"
         image = self._validate_and_clean_image(image=image)
-        if image.width > 512 or image.height > 512:
-            raise ImageTooLargeError("Image size for upscaling must be less than 512x512")
+        if image.width > 768 or image.height > 768:
+            raise ImageTooLargeError("Image size for upscaling must be less than 768x768")
 
         prompt.width = image.width
         prompt.height = image.height
