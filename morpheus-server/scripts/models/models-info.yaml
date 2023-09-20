@@ -60,7 +60,7 @@ models:
     pix2pix: true
     upscaling: false
 
-  - name: "SD Inpainting"
+  - name: "Runway Inpainting"
     description: "Modify an existing image with a text prompt and an image mask."
     source: "runwayml/stable-diffusion-inpainting"
     is_active: true

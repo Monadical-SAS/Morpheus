@@ -64,7 +64,7 @@ class GenerativeAIStableDiffusionRay(GenerativeAIInterface):
     @staticmethod
     def generate_pix2pix_images(*, request: GenerationRequest, image: Image) -> str:
         logger.info(f"Running generate_pix2pix_images process with request: {request}")
-        task_id = send_request_to_ray_server(endpoint="pix2pux", request=request, image=image)
+        task_id = send_request_to_ray_server(endpoint="pix2pix", request=request, image=image)
         return str(task_id)
 
     @staticmethod
