@@ -20,3 +20,13 @@ class RayCapacityExceededError(Exception):
 
     def __str__(self):
         return self.msg
+
+
+class ImageTooLargeError(Exception):
+    """ Raised when the image is too large to be processed """
+
+    def __init__(self, msg=None):
+        self.msg = msg if msg else "The image is too large to be processed."
+
+    def __str__(self):
+        return self.msg

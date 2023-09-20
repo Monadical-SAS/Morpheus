@@ -3,7 +3,7 @@ from typing import Union
 from PIL import Image
 from app.config import get_settings
 from app.error.error import ImageNotProvidedError, ModelNotFoundError
-from app.error.generation import GenerationNotFoundError
+from app.error.generation import GenerationNotFoundError, ImageTooLargeError
 from app.integrations.generative_ai_engine.generative_ai_interface import GenerativeAIInterface
 from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
 from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
@@ -73,6 +73,9 @@ class StableDiffusionService:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         backend_request.pipeline = "StableDiffusionUpscalePipeline"
         image = self._validate_and_clean_image(image=image)
+        if image.width > 512 or image.height > 512:
+            raise ImageTooLargeError("Image size for upscaling must be less than 512x512")
+
         prompt.width = image.width
         prompt.height = image.height
         return self.sd_generator.generate_upscaling_images(request=backend_request, image=image)
