@@ -2,7 +2,6 @@ import logging
 import uuid
 
 import ray
-
 from app.actors.controlnet import StableDiffusionControlnet
 from app.actors.sd_img_to_img import StableDiffusionImageToImage
 from app.actors.sd_inpainting import StableDiffusionInpainting
@@ -34,7 +33,6 @@ class ModelHandler:
 
         self.generator = self.get_generator().remote(**self.generator_args)
         self.s3_client = S3Client()
-        self.db_client = DBClient()
 
     def get_generator(self):
         generators = {
@@ -53,10 +51,11 @@ class ModelHandler:
 
     def handle_generation(self):
         self.logger.info(f"Generating image for: {self.request}")
+        db_client = DBClient()
 
         try:
             # Create generation record in database
-            self.db_client.create_generation(
+            db_client.create_generation(
                 generation_id=uuid.UUID(self.request.task_id)
             )
 
@@ -74,7 +73,7 @@ class ModelHandler:
             )
 
             # Update generation in database
-            generation = self.db_client.update_generation(generation=Generation(
+            generation = db_client.update_generation(generation=Generation(
                 id=self.request.task_id,
                 results=image_urls,
                 status="COMPLETED"
@@ -85,7 +84,7 @@ class ModelHandler:
             return generation
         except Exception as e:
             self.logger.error(f"Error generating image: {e}")
-            self.db_client.update_generation(generation=Generation(
+            db_client.update_generation(generation=Generation(
                 id=self.request.task_id,
                 status="FAILED"
             ))

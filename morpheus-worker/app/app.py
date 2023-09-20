@@ -19,7 +19,6 @@ app = FastAPI()
 class APIIngress:
     def __init__(self) -> None:
         self.logger = logging.getLogger("ray")
-        self.db_client = DBClient()
         self.task_types = [
             "PENDING_OBJ_STORE_MEM_AVAIL",
             "PENDING_NODE_ASSIGNMENT",
@@ -170,7 +169,8 @@ class APIIngress:
     @app.get("/pending-tasks")
     async def pending_tasks(self):
         self.logger.info(f"Getting pending tasks")
-        pending = self.db_client.count_pending_generations()
+        db_client = DBClient()
+        pending = db_client.count_pending_generations()
         return Response(content=pending)
 
     @app.get("/worker-number")
@@ -188,7 +188,8 @@ class APIIngress:
     async def get_last_tasks(self):
         self.logger.info(f"Getting last tasks")
         try:
-            tasks = self.db_client.get_last_tasks()
+            db_client = DBClient()
+            tasks = db_client.get_last_tasks()
             return Response(content=tasks)
         except Exception as e:
             error_str = str(e)

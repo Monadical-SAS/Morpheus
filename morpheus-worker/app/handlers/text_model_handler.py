@@ -13,7 +13,6 @@ class TextModelHandler:
         self.endpoint = endpoint
         self.logger = logging.getLogger("ray")
         self.generator = self.get_generator().remote()
-        self.db_client = DBClient()
 
     def get_generator(self):
         generators = {
@@ -27,10 +26,11 @@ class TextModelHandler:
 
     def handle_generation(self, request: TextGenerationRequest):
         self.logger.info(f"Generating text for: {request}")
+        db_client = DBClient()
 
         try:
             # Create generation record in database
-            self.db_client.create_generation(
+            db_client.create_generation(
                 generation_id=uuid.UUID(request.task_id)
             )
 
@@ -39,7 +39,7 @@ class TextModelHandler:
             generated_text = ray.get(text_future)
 
             # Update generation in database
-            generation = self.db_client.update_generation(generation=Generation(
+            generation = db_client.update_generation(generation=Generation(
                 id=request.task_id,
                 results=[generated_text],
                 status="COMPLETED"
@@ -50,7 +50,7 @@ class TextModelHandler:
             return generation
         except Exception as e:
             self.logger.error(f"Error generating text: {e}")
-            self.db_client.update_generation(generation=Generation(
+            db_client.update_generation(generation=Generation(
                 id=request.task_id,
                 status="FAILED"
             ))
