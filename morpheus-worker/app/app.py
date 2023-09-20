@@ -20,7 +20,6 @@ app = FastAPI()
 class APIIngress:
     def __init__(self) -> None:
         self.logger = logging.getLogger("ray")
-        self.db_client = DBClient()
         self.task_types = [
             "PENDING_OBJ_STORE_MEM_AVAIL",
             "PENDING_NODE_ASSIGNMENT",
@@ -46,8 +45,9 @@ class APIIngress:
             handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
-            self.logger.error(f"Error in generate_text2img {e}")
-            return Response(content=e)
+            error_str = str(e)
+            self.logger.error(f"Error in generate_text2img {error_str}")
+            return Response(content=error_str)
 
     @app.post(f"/{CategoryEnum.IMAGE_TO_IMAGE}")
     async def generate_img2img(
@@ -64,8 +64,9 @@ class APIIngress:
             handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
-            self.logger.error(f"Error in generate_img2_img {e}")
-            return Response(content=e)
+            error_str = str(e)
+            self.logger.error(f"Error in generate_img2_img {error_str}")
+            return Response(content=error_str)
 
     @app.post(f"/{CategoryEnum.CONTROLNET}")
     async def generate_controlnet(
@@ -82,8 +83,9 @@ class APIIngress:
             handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
-            self.logger.error(f"Error in generate_controlnet {e}")
-            return Response(content=e)
+            error_str = str(e)
+            self.logger.error(f"Error in generate_controlnet {error_str}")
+            return Response(content=error_str)
 
     @app.post(f"/{CategoryEnum.PIX_TO_PIX}")
     async def generate_pix2pix(
@@ -100,8 +102,9 @@ class APIIngress:
             handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
-            self.logger.error(f"Error in generate_pix2pix {e}")
-            return Response(content=e)
+            error_str = str(e)
+            self.logger.error(f"Error in generate_pix2pix {error_str}")
+            return Response(content=error_str)
 
     @app.post(f"/{CategoryEnum.UPSCALING}")
     async def generate_upscaling(
@@ -118,8 +121,9 @@ class APIIngress:
             handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
-            self.logger.error(f"Error in generate_upscaling {e}")
-            return Response(content=e)
+            error_str = str(e)
+            self.logger.error(f"Error in generate_upscaling {error_str}")
+            return Response(content=error_str)
 
     @app.post(f"/{CategoryEnum.INPAINTING}")
     async def generate_inpainting(
@@ -138,11 +142,12 @@ class APIIngress:
             handler.handle_generation.remote()
             return Response(content=model_request.task_id)
         except Exception as e:
-            self.logger.error(f"Error in generate_inpainting {e}")
-            return Response(content=e)
+            error_str = str(e)
+            self.logger.error(f"Error in generate_inpainting {error_str}")
+            return Response(content=error_str)
 
     @app.post(f"/{TextCategoryEnum.MAGIC_PROMPT}")
-    async def generate_inpainting(
+    async def generate_magic_prompt(
             self,
             request: TextGenerationRequest = Depends(),
     ):
@@ -153,8 +158,9 @@ class APIIngress:
             handler.handle_generation.remote(request=request)
             return Response(content=request.task_id)
         except Exception as e:
-            self.logger.error(f"Error in generate_inpainting {e}")
-            return Response(content=e)
+            error_str = str(e)
+            self.logger.error(f"Error in generate_magic_prompt {error_str}")
+            return Response(content=error_str)
 
     @app.get("/task")
     async def task_status(self, task_id: str):
@@ -164,7 +170,8 @@ class APIIngress:
     @app.get("/pending-tasks")
     async def pending_tasks(self):
         self.logger.info(f"Getting pending tasks")
-        pending = self.db_client.count_pending_generations()
+        db_client = DBClient()
+        pending = db_client.count_pending_generations()
         return pending
 
     @app.get("/worker-number")
@@ -173,19 +180,22 @@ class APIIngress:
         try:
             nodes = list_nodes(filters=[("state", "=", "ALIVE"), ("is_head_node", "=", "False")])
             num_workers = len(nodes)
-            print("Getting num of workers ...")
+            self.logger.info(f"Number of workers: {num_workers}")
             return num_workers
         except:
             return 1
 
     @app.get("/last-tasks")
-    async def last_tasks(self):
+    async def get_last_tasks(self):
         self.logger.info(f"Getting last tasks")
         try:
-            tasks = self.db_client.get_last_tasks()
+            db_client = DBClient()
+            tasks = db_client.get_last_tasks()
             return tasks
         except Exception as e:
-            return Response(content=e)
+            error_str = str(e)
+            self.logger.error(f"Error in get_last_tasks {error_str}")
+            return Response(content=error_str)
 
 
 deployment = APIIngress.bind()
