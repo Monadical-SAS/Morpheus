@@ -2,26 +2,23 @@ import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { MainLayout } from "@/layout/MainLayout/MainLayout";
-import { CookiesStatus } from "@/utils/cookies";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import styles from "../styles/pages/Error.module.scss";
 
 const Page400 = () => {
-  const { cookiesStatus, sendAnalyticsRecord } = useAnalytics();
+  const { sendAnalyticsRecord } = useAnalytics();
   const router = useRouter();
   const handleClickToAction = useCallback(async () => {
     await router.push("/");
   }, [router]);
 
   useEffect(() => {
-    if (cookiesStatus === CookiesStatus.Accepted) {
-      sendAnalyticsRecord("page_view", {
-        page_location: window.location.href,
-        page_title: document?.title,
-        page_name: "Error",
-      });
-    }
-  }, [cookiesStatus, sendAnalyticsRecord]);
+    sendAnalyticsRecord("page_view", {
+      page_location: window.location.href,
+      page_title: document?.title,
+      page_name: "Error",
+    });
+  }, []);
 
   return (
     <MainLayout>

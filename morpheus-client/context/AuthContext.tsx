@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 import {
   loginWithEmailAndPasswordFirebase,
@@ -11,7 +17,6 @@ import { User, UserRegistration } from "@/models/models";
 import { getUserInfo, loadOrCreateUserInfo } from "@/services/users";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToastContext } from "@/context/ToastContext";
-import { clearStorageExceptCookies } from "@/utils/cookies";
 
 export enum AuthOption {
   Login = "login",
@@ -80,7 +85,9 @@ const AuthProvider = (props: { children: ReactNode }) => {
     }
   }, [user]);
 
-  const registerWithEmailAndPassword = (user: UserRegistration): Promise<void> => {
+  const registerWithEmailAndPassword = (
+    user: UserRegistration
+  ): Promise<void> => {
     return signUpWithEmailAndPasswordFirebase(user)
       .then((response) => {
         loadOrCreateMorpheusUser({ ...response, displayName: user.name });
@@ -136,7 +143,9 @@ const AuthProvider = (props: { children: ReactNode }) => {
         if (response.success) {
           setUser(response.data);
         } else {
-          showErrorAlert(response.error || "An error occurred while loading the user data");
+          showErrorAlert(
+            response.error || "An error occurred while loading the user data"
+          );
         }
       })
       .catch(() => {
@@ -162,8 +171,9 @@ const AuthProvider = (props: { children: ReactNode }) => {
   const logout = () => {
     return signOutFirebase()
       .then(() => {
-        clearStorageExceptCookies();
-        sessionStorage.clear();
+        localStorage.removeItem(USER);
+        localStorage.removeItem("token");
+        localStorage.removeItem("results");
         router.push("/");
         setUser({} as User);
         setLocalUser({} as User);
