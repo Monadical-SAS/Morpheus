@@ -25,21 +25,31 @@ import {
 import { Model } from "@/models/models";
 import styles from "./ImagineMenu.module.scss";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
-import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 const ImagineMenu = () => {
   const router = useRouter();
-  const { models, selectedModel, activeLink, setActiveLink, findValidModelForFeature } = useModels();
+  const {
+    models,
+    selectedModel,
+    activeLink,
+    setActiveLink,
+    findValidModelForFeature,
+  } = useModels();
   const imagineOptionPath = router.pathname.split("/").pop();
   const [openItem, setOpenItem] = useState<string>();
   const [showModelsModal, setShowModelsModal] = useState(false);
-  const { width } = useWindowDimensions();
-  const isMobile = width <= MOBILE_SCREEN_WIDTH;
+  const { isMobile } = useWindowDimensions();
 
   useEffect(() => {
     if (imagineOptionPath && selectedModel) {
-      if (!selectedModel.categories.some((category) => category.name === imagineOptionPath)) {
-        const validModel = findValidModelForFeature(imagineOptionPath as ModelCategory);
+      if (
+        !selectedModel.categories.some(
+          (category) => category.name === imagineOptionPath
+        )
+      ) {
+        const validModel = findValidModelForFeature(
+          imagineOptionPath as ModelCategory
+        );
         setActiveLink({
           model: validModel,
           feature: imagineOptionPath as ModelCategory,
@@ -67,7 +77,9 @@ const ImagineMenu = () => {
       itemId={model.source}
       title={model.name}
       setOpenedItem={setOpenItem}
-      isOpen={openItem === model.source || activeLink.model.source === model.source}
+      isOpen={
+        openItem === model.source || activeLink.model.source === model.source
+      }
     >
       <ModelMenuFeatures model={model} />
     </Accordion>
@@ -112,7 +124,10 @@ const ModelMenuFeatures = (props: ImagineMenuFeaturesProps) => {
   const { activeLink } = useModels();
 
   const getItemActive = (option: ModelCategory | string) => {
-    return activeLink.model.source === props.model.source && activeLink.feature === option;
+    return (
+      activeLink.model.source === props.model.source &&
+      activeLink.feature === option
+    );
   };
 
   const getIconColor = (option: ModelCategory | string) => {
@@ -162,12 +177,16 @@ const ModelMenuFeatures = (props: ImagineMenuFeaturesProps) => {
     <Fragment>
       {categoryConfigs.map(
         (category) =>
-          props.model.categories.some((modelCategory) => modelCategory.name === category.name) && (
+          props.model.categories.some(
+            (modelCategory) => modelCategory.name === category.name
+          ) && (
             <ImagineMenuItem
               key={`${props.model.source}-${category.name}-menu-item`}
               title={category.title}
               description={category.description}
-              icon={React.cloneElement(category.icon, { color: getIconColor(category.name) })}
+              icon={React.cloneElement(category.icon, {
+                color: getIconColor(category.name),
+              })}
               active={getItemActive(category.name)}
               option={category.name}
               model={props.model}
@@ -190,8 +209,8 @@ interface ImagineMenuItemProps {
 const ImagineMenuItem = (props: ImagineMenuItemProps) => {
   const router = useRouter();
   const { setActiveLink, activeLink } = useModels();
-  const { width } = useWindowDimensions();
-  const isMobile = width <= MOBILE_SCREEN_WIDTH;
+  const { isMobile } = useWindowDimensions();
+
   const getItemStyles = () => {
     return `${styles.menuItem}  ${props.active && styles.active}`;
   };
@@ -216,7 +235,9 @@ const ImagineMenuItem = (props: ImagineMenuItemProps) => {
       <div className={getItemStyles()} onClick={handleOnClick}>
         <span className={styles.icon}>{props.icon}</span>
 
-        <span className={`base-1 ${props.active ? "main" : "secondary"}`}>{props.title}</span>
+        <span className={`base-1 ${props.active ? "main" : "secondary"}`}>
+          {props.title}
+        </span>
       </div>
     </AppTooltip>
   );

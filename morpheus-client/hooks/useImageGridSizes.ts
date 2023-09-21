@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import useWindowDimensions from "./useWindowDimensions";
-import { MOBILE_SCREEN_WIDTH } from "../utils/constants";
 
 interface Size {
   width: number;
@@ -40,15 +39,10 @@ const imagesGridSizesMobile: { [key: number]: Size } = {
 };
 
 const useImageGridSizes = (props: ImageGridSizesProps) => {
-  const { width } = useWindowDimensions();
+  const { isMobile } = useWindowDimensions();
 
   const [imageWidth, setImageWidth] = useState(200);
   const [imageHeight, setImageHeight] = useState(200);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(width < MOBILE_SCREEN_WIDTH);
-  }, [width]);
 
   useEffect(() => {
     if (

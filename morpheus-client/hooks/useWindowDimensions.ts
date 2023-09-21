@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
+import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 type WindowDimensions = {
   width: number | undefined;
   height: number | undefined;
+  isMobile?: boolean;
 };
 
 const useWindowDimensions = (): WindowDimensions => {
   const [windowDimensions, setWindowDimensions] = useState<WindowDimensions>({
     width: undefined,
     height: undefined,
+    isMobile: undefined,
   });
+
   useEffect(() => {
     function handleResize(): void {
       setWindowDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
+        isMobile: window.innerWidth < MOBILE_SCREEN_WIDTH,
       });
     }
 
