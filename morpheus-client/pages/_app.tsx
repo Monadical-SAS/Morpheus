@@ -10,7 +10,6 @@ import { ControlNetProvider } from "@/context/CNContext";
 import { ImagineProvider } from "@/context/ImagineContext";
 import { FirebaseTrackingProvider } from "@/context/GoogleAnalyticsContext";
 import { Toaster } from "@/components/ui/toaster";
-import CookiesConsent from "@/components/CookiesConsent/CookiesConsent";
 import { ModelsProvider } from "@/context/ModelsContext";
 import { CookiesConsentProvider } from "@/context/CookiesConsentContext";
 
@@ -136,7 +135,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
                   <ControlNetProvider>
                     <ImagineProvider>
                       <Component {...pageProps} />
-                      <CookiesConsent />
                       <Toaster />
                     </ImagineProvider>
                   </ControlNetProvider>

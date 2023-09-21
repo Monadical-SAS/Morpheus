@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 
 import FullScreenLoader from "../components/Loaders/FullScreenLoader/Loader";
+import CookiesConsent from "@/components/CookiesConsent/CookiesConsent";
 import { Auth } from "@/components/Auth/Auth";
 import { isEmptyObject } from "@/utils/object";
 import { useAuth } from "@/context/AuthContext";
@@ -48,6 +49,8 @@ const Home = () => {
           <Auth />
         </div>
       </div>
+
+      <CookiesConsent />
     </div>
   );
 };
