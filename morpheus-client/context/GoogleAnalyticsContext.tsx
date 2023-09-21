@@ -1,26 +1,17 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { analytics } from "@/lib/firebaseClient";
 import { logEvent } from "firebase/analytics";
-import { CookiesStatus } from "@/utils/cookies";
+import { useCookiesConsent } from "@/context/CookiesConsentContext";
 
 export interface IAnalyticsContext {
   analytics: any;
-  cookiesStatus: string;
-  setCookiesStatus: (accept: string) => void;
+
   sendAnalyticsRecord: (type: string, message: any) => void;
 }
 
 const defaultState = {
   analytics: undefined,
-  cookiesStatus: "",
-  setCookiesStatus: () => {},
   sendAnalyticsRecord: () => {},
 };
 
@@ -28,11 +19,11 @@ const AnalyticsContext = createContext<IAnalyticsContext>(defaultState);
 
 const FirebaseTrackingProvider = (props: { children: ReactNode }) => {
   const router = useRouter();
-  const [cookiesStatus, setCookiesStatus] = useState("");
+  const { cookiesAccepted } = useCookiesConsent();
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      if (cookiesStatus === CookiesStatus.Accepted && analytics) {
+      if (!cookiesAccepted) {
         return;
       }
 
@@ -47,10 +38,10 @@ const FirebaseTrackingProvider = (props: { children: ReactNode }) => {
     return () => {
       router.events.off("routeChangeStart", handleRouteChange);
     };
-  }, [cookiesStatus, router.events]);
+  }, [cookiesAccepted, router.events]);
 
   const sendAnalyticsRecord = (type: string, parameters: object) => {
-    if (cookiesStatus === CookiesStatus.Accepted && analytics) {
+    if (cookiesAccepted && analytics) {
       logEvent(analytics, type, parameters);
     }
   };
@@ -59,8 +50,6 @@ const FirebaseTrackingProvider = (props: { children: ReactNode }) => {
     <AnalyticsContext.Provider
       value={{
         analytics,
-        cookiesStatus,
-        setCookiesStatus,
         sendAnalyticsRecord,
       }}
     >

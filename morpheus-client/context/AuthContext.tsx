@@ -17,7 +17,6 @@ import { User, UserRegistration } from "@/models/models";
 import { getUserInfo, loadOrCreateUserInfo } from "@/services/users";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToastContext } from "@/context/ToastContext";
-import { clearStorageExceptCookies } from "@/utils/cookies";
 
 export enum AuthOption {
   Login = "login",
@@ -170,8 +169,9 @@ const AuthProvider = (props: { children: ReactNode }) => {
   const logout = () => {
     return signOutFirebase()
       .then(() => {
-        clearStorageExceptCookies();
-        sessionStorage.clear();
+        localStorage.removeItem(USER);
+        localStorage.removeItem("token");
+        localStorage.removeItem("results");
         router.push("/");
         setUser({} as User);
         setLocalUser({} as User);

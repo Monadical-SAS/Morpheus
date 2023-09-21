@@ -1,38 +1,13 @@
-import { useEffect, useState } from "react";
-import { useAnalytics } from "@/context/GoogleAnalyticsContext";
-import { deleteAllCookies, CookiesStatus } from "@/utils/cookies";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
 import styles from "./CookiesConsent.module.scss";
-
-
+import {
+  CookiesStatus,
+  useCookiesConsent,
+} from "@/context/CookiesConsentContext";
 
 const CookiesConsent = () => {
-  const [isHydrated, setIsHydrated] = useState(false);
-  const { cookiesStatus, setCookiesStatus } = useAnalytics();
+  const { cookiesStatus, setCookiesStatus } = useCookiesConsent();
 
-  const [localCookies, setLocalCookies] = useLocalStorage<string | null>("cp:cookies", null);
-
-
-  useEffect(() => {
-    const newStatus = localCookies || cookiesStatus || "";
-    if (newStatus !== "") {
-      if (localCookies && localCookies !== "") setCookiesStatus(localCookies);
-    }
-    setIsHydrated(true)
-  }, [localCookies, setCookiesStatus, cookiesStatus]);
-
-  const handleActionCookies = (event: any, status: string) => {
-    event.preventDefault();
-
-    if (status === CookiesStatus.Declined) {
-      deleteAllCookies();
-    }
-
-    setCookiesStatus(status);
-    setLocalCookies(status);
-  };
-
-  return isHydrated && localCookies === null ? (
+  return cookiesStatus === CookiesStatus.EMPTY ? (
     <div className={styles.cookiesContainer}>
       <div className={styles.textContainer}>
         <p className="body-1 secondary">
@@ -47,14 +22,14 @@ const CookiesConsent = () => {
       <div className={styles.buttonsSection}>
         <button
           className="buttonSubmit"
-          onClick={(event) => handleActionCookies(event, CookiesStatus.Declined)}
+          onClick={() => setCookiesStatus(CookiesStatus.DECLINED)}
         >
           Decline
         </button>
 
         <button
           className="buttonSubmit"
-          onClick={(event) => handleActionCookies(event, CookiesStatus.Accepted)}
+          onClick={() => setCookiesStatus(CookiesStatus.ACCEPTED)}
         >
           Accept
         </button>

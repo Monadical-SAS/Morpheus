@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { slide as BurgerMenu } from "react-burger-menu";
@@ -8,7 +8,6 @@ import UserCard, { UserImage } from "../UserCard/UserCard";
 import { AuthOption, useAuth } from "@/context/AuthContext";
 import { isEmptyObject } from "@/utils/object";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import { User } from "@/models/models";
 import styles from "./Navbar.module.scss";
 
@@ -24,15 +23,9 @@ type NavMenuProps = {
 
 const NavMenu = (props: NavMenuProps) => {
   const router = useRouter();
-  const { width } = useWindowDimensions();
   const currentPath = router.pathname;
-  const [showUserCard, setShowUserCard] = useState(false);
-
-  useEffect(() => {
-    if (width !== 0 && width < MOBILE_SCREEN_WIDTH) {
-      setShowUserCard(true);
-    }
-  }, [width]);
+  const { isMobile } = useWindowDimensions();
+  const [showUserCard, setShowUserCard] = useState(isMobile || false);
 
   const getLinkStyles = (path: string) => {
     const current = currentPath.split("/")[1];
@@ -60,7 +53,10 @@ const NavMenu = (props: NavMenuProps) => {
       </div>
 
       <nav className={styles.auth}>
-        <span className={styles.avatarImage} onClick={() => setShowUserCard(true)}>
+        <span
+          className={styles.avatarImage}
+          onClick={() => setShowUserCard(true)}
+        >
           <UserImage />
         </span>
 
@@ -80,8 +76,7 @@ const Navbar = (props: NavbarProps) => {
   const router = useRouter();
   const { user, setAuthOption } = useAuth();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
+  const { isMobile } = useWindowDimensions();
 
   const redirectToHome = useCallback(async () => {
     if (isEmptyObject(user)) {
@@ -110,7 +105,10 @@ const Navbar = (props: NavbarProps) => {
     <div className={styles.navbarContainer}>
       {isMobile ? (
         <Fragment>
-          <BurgerMenu isOpen={showMobileMenu} onStateChange={(state) => setShowMobileMenu(state.isOpen)}>
+          <BurgerMenu
+            isOpen={showMobileMenu}
+            onStateChange={(state) => setShowMobileMenu(state.isOpen)}
+          >
             <div className={styles.burgerMenuContent}>
               <NavMenu
                 user={user}

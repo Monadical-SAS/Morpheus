@@ -13,7 +13,6 @@ import { CloseIcon } from "../icons/close";
 import { UploadImageIcon } from "../icons/uploadImage";
 import { PaintImageIcon } from "../icons/paintImage";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
-import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./ImagineImageInput.module.scss";
 import Link from "next/link";
 
@@ -32,8 +31,7 @@ interface DragDropFileProps {
 
 const ImagineImageInput = (props: DragDropFileProps) => {
   const inputRef = useRef<any>(null);
-  const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
+  const { isMobile, width } = useWindowDimensions();
 
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -116,7 +114,10 @@ const ImagineImageInput = (props: DragDropFileProps) => {
         >
           <div className={styles.dragInfo}>
             {props.icon ? props.icon : <UploadImageIcon />}
-            <a className="underline body-1 main pointer" onClick={onButtonClick}>
+            <a
+              className="underline body-1 main pointer"
+              onClick={onButtonClick}
+            >
               {isMobile ? "Upload" : "Upload an image"}
             </a>
             <span className="body-2 white">or drag and drop</span>
@@ -180,9 +181,7 @@ const ImagineImageInput = (props: DragDropFileProps) => {
     <Fragment>
       <div className={styles.imagineImageInput}>
         {props.label && (
-          <span className={`${styles.label} base-2 white`}>
-            {props.label}
-          </span>
+          <span className={`${styles.label} base-2 white`}>{props.label}</span>
         )}
 
         {imageSrc ? ImageResultDetail : ImageInputForm}
@@ -195,8 +194,8 @@ const ImagineImageInput = (props: DragDropFileProps) => {
         toggleModal={() => setShowEditModal(!showEditModal)}
       >
         <MaskPaintingCanvas
-          width={isMobile ? width - 88 : 512}
-          height={isMobile ? width - 88 : 512}
+          width={isMobile && width ? width - 88 : 512}
+          height={isMobile && width ? width - 88 : 512}
           closeModal={() => setShowEditModal(false)}
         />
       </Modal>

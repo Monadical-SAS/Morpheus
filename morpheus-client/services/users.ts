@@ -5,8 +5,9 @@ import { signOutFirebase } from "./auth";
 export const logout = () => {
   return signOutFirebase()
     .then(() => {
-      localStorage.clear();
-      sessionStorage.clear();
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("results");
       setTimeout(() => {
         window.location.href = "/";
       }, 1000);

@@ -81,7 +81,6 @@ const ImagineProvider = (props: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    console.log("img2ImgURL", img2ImgURL);
     if (img2ImgURL) {
       getFileBlobFromURL(img2ImgURL)
         .then((file: File) => {

@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 
-import { CookiesStatus } from "@/utils/cookies";
 import Loader from "@/components/Loaders/LoaderCircle/Loader";
 import CollectionForm from "@/components/CollectionForm/CollectionForm";
 import Modal from "@/components/Modal/Modal";
@@ -25,7 +24,7 @@ const CollectionDetail: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [collection, setCollection] = useState<Collection>();
   const [artWorks, setArtWorks] = useState<ArtWork[]>([]);
-  const { cookiesStatus, sendAnalyticsRecord } = useAnalytics();
+  const { sendAnalyticsRecord } = useAnalytics();
 
   useEffect(() => {
     if (collectionId) {
@@ -57,14 +56,12 @@ const CollectionDetail: NextPage = () => {
   }, [collectionId]);
 
   useEffect(() => {
-    if (cookiesStatus === CookiesStatus.Accepted && collection) {
-      sendAnalyticsRecord("page_view", {
-        page_location: window.location.href,
-        page_title: document?.title,
-        page_name: `Collection ${collection?.name} detail`,
-      });
-    }
-  }, [cookiesStatus, sendAnalyticsRecord, collection]);
+    sendAnalyticsRecord("page_view", {
+      page_location: window.location.href,
+      page_title: document?.title,
+      page_name: `Collection ${collection?.name} detail`,
+    });
+  }, [collection]);
 
   const handleEdit = () => {
     setShowForm(true);

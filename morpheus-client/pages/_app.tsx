@@ -10,12 +10,12 @@ import { ControlNetProvider } from "@/context/CNContext";
 import { ImagineProvider } from "@/context/ImagineContext";
 import { FirebaseTrackingProvider } from "@/context/GoogleAnalyticsContext";
 import { Toaster } from "@/components/ui/toaster";
-import CookiesConsent from "@/components/CookiesConsent/CookiesConsent";
+import { ModelsProvider } from "@/context/ModelsContext";
+import { CookiesConsentProvider } from "@/context/CookiesConsentContext";
 
 import "../App.scss";
 import "../styles/globals.css";
 import "../excalidraw/main.scss";
-import { ModelsProvider } from "@/context/ModelsContext";
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
@@ -126,23 +126,24 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         <meta name="google-site-verification" content="" />
       </Head>
 
-      <FirebaseTrackingProvider>
-        <ToastProvider>
-          <AuthProvider>
-            <ModelsProvider>
-              <DiffusionProvider>
-                <ControlNetProvider>
-                  <ImagineProvider>
-                    <Component {...pageProps} />
-                    <CookiesConsent />
-                    <Toaster />
-                  </ImagineProvider>
-                </ControlNetProvider>
-              </DiffusionProvider>
-            </ModelsProvider>
-          </AuthProvider>
-        </ToastProvider>
-      </FirebaseTrackingProvider>
+      <CookiesConsentProvider>
+        <FirebaseTrackingProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <ModelsProvider>
+                <DiffusionProvider>
+                  <ControlNetProvider>
+                    <ImagineProvider>
+                      <Component {...pageProps} />
+                      <Toaster />
+                    </ImagineProvider>
+                  </ControlNetProvider>
+                </DiffusionProvider>
+              </ModelsProvider>
+            </AuthProvider>
+          </ToastProvider>
+        </FirebaseTrackingProvider>
+      </CookiesConsentProvider>
     </Fragment>
   );
 };

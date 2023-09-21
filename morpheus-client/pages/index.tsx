@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { CookiesStatus } from "@/utils/cookies";
 import FullScreenLoader from "../components/Loaders/FullScreenLoader/Loader";
+import CookiesConsent from "@/components/CookiesConsent/CookiesConsent";
 import { Auth } from "@/components/Auth/Auth";
 import { isEmptyObject } from "@/utils/object";
 import { useAuth } from "@/context/AuthContext";
@@ -12,7 +12,7 @@ import styles from "../styles/pages/Home.module.scss";
 const Home = () => {
   const router = useRouter();
   const { authLoading, user } = useAuth();
-  const { cookiesStatus, sendAnalyticsRecord } = useAnalytics();
+  const { sendAnalyticsRecord } = useAnalytics();
 
   useEffect(() => {
     if (!isEmptyObject(user)) {
@@ -21,14 +21,12 @@ const Home = () => {
   }, [router, user]);
 
   useEffect(() => {
-    if (cookiesStatus === CookiesStatus.Accepted) {
-      sendAnalyticsRecord("page_view", {
-        page_location: window.location.href,
-        page_title: document?.title,
-        page_name: "Home",
-      });
-    }
-  }, [cookiesStatus, sendAnalyticsRecord]);
+    sendAnalyticsRecord("page_view", {
+      page_location: window.location.href,
+      page_title: document?.title,
+      page_name: "Home",
+    });
+  }, []);
 
   return authLoading ? (
     <FullScreenLoader isLoading={authLoading} />
@@ -41,7 +39,8 @@ const Home = () => {
               Morpheus - <br /> AI Art Generator
             </h1>
             <p className="body-2 secondary">
-              Explore visual AI and easily add new models, extending Morpheus for your own project needs. 🧙
+              Explore visual AI and easily add new models, extending Morpheus
+              for your own project needs. 🧙
             </p>
           </div>
         </div>
@@ -50,6 +49,8 @@ const Home = () => {
           <Auth />
         </div>
       </div>
+
+      <CookiesConsent />
     </div>
   );
 };

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 import FAQ from "../components/FAQ/FAQ";
 import ImagePrompt from "@/components/ImagePrompt/ImagePrompt";
-import { CookiesStatus } from "@/utils/cookies";
 import { MainLayout } from "@/layout/MainLayout/MainLayout";
 import { AppLink } from "@/components/AppLink/AppLink";
 import {
@@ -16,17 +15,15 @@ import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import styles from "../styles/pages/About.module.scss";
 
 const About = () => {
-  const { cookiesStatus, sendAnalyticsRecord } = useAnalytics();
+  const { sendAnalyticsRecord } = useAnalytics();
 
   useEffect(() => {
-    if (cookiesStatus === CookiesStatus.Accepted) {
-      sendAnalyticsRecord("page_view", {
-        page_location: window.location.href,
-        page_title: document?.title,
-        page_name: "About",
-      });
-    }
-  }, [cookiesStatus, sendAnalyticsRecord]);
+    sendAnalyticsRecord("page_view", {
+      page_location: window.location.href,
+      page_title: document?.title,
+      page_name: "About",
+    });
+  }, []);
 
   return (
     <MainLayout showFooter={true}>
