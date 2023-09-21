@@ -32,7 +32,7 @@ worker:
     resources:
       limits:
         cpu: "3"
-        memory: "10G"
+        memory: "15G"
         gpu: 1
 
 imagePullSecrets:
