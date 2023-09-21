@@ -11,7 +11,7 @@ sys.path.append(parentdir)
 
 CLOUDWATCH_REGION = os.getenv("CLOUDWATCH_REGION", "us-east-1")
 CLOUDWATCH_NAMESPACE = os.getenv("CLOUDWATCH_NAMESPACE", "morpheus")
-RAY_ENDPOINT = os.getenv("RAY_SERVICE_ENDPOINT", "ray-service")
+RAY_ENDPOINT = os.getenv("RAY_SERVICE_ENDPOINT", "http://worker-ray:8000")
 PENDING_TASKS_RESOURCE = os.getenv("PENDING_TASKS_RESOURCE", "pending-tasks")
 NUMBER_OF_WORKERS_RESOURCE = os.getenv("NUMBER_OF_WORKERS", "worker-number")
 
@@ -39,7 +39,7 @@ def cloudwatch_metric():
             pending_tasks_count = int(data)
     except Exception as e:
         print("Exception in pending tasks:" + str(e))
-
+    
     if num_workers != 0:
         metric = pending_tasks_count / num_workers
         cloudwatch = boto3.client("cloudwatch", region_name=CLOUDWATCH_REGION)
