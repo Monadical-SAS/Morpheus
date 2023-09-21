@@ -126,7 +126,7 @@ spec:
                 resources:
                   limits:
                     cpu: "{{ .Values.worker.workerGroup.resources.limits.cpu }}"
-                    memory: "{{ .Values.worker.workerGroup.resources.limits.memory }}"
+                    # memory: "{{ .Values.worker.workerGroup.resources.limits.memory }}"
                     nvidia.com/gpu: "{{ .Values.worker.workerGroup.resources.limits.gpu }}"
                 env:
                   - name: POSTGRES_USER
