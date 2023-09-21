@@ -82,50 +82,6 @@ variable "self_managed_web_nodes_ami" {
   default = "ami-081f4e51bfefc32f6"
 }
 
-variable "self_managed_gpu_node_group_name" {
-  default = "self-mng-gpu"
-}
-
-variable "self_managed_gpu_node_min_size" {
-  default = 1
-}
-
-variable "self_managed_gpu_node_max_size" {
-  default = 2
-}
-
-variable "self_managed_gpu_node_desired_size" {
-  default = 1
-}
-
-variable "self_managed_gpu_node_warm_pool_min_size" {
-  default = 2
-}
-
-variable "self_managed_gpu_node_warm_pool_max_group_prepared_capacity" {
-  default = 4
-}
-
-variable "self_managed_gpu_nodes_instance_type" {
-  default = "g4dn.xlarge"
-}
-
-variable "self_managed_gpu_nodes_ami" {
-  default = "ami-05f233de75731a6a4"
-}
-
-variable "self_managed_gpu_nodes_device_name" {
-  default = "/dev/sdh"
-}
-
-variable "self_managed_gpu_nodes_device_size" {
-  default = 20
-}
-
-variable "self_managed_gpu_iam_role_name" {
-  default = "self-managed-node-group-gpu"
-}
-
 variable "self_managed_gpu_adv_node_group_name" {
   default = "self-mng-gpu-adv"
 }
@@ -240,42 +196,6 @@ variable "client_hostname" {
 
 variable "api_hostname" {
   default = "morpheus-api.com"
-}
-
-variable "scale_up_queue_threshold" {
-  default = "4"
-}
-
-variable "scale_up_period" {
-  default = "10"
-}
-
-variable "scale_up_evaluation_period" {
-  default = "2"
-}
-
-variable "scale_up_scaling_adjustment" {
-  default = 2
-}
-
-variable "scale_up_cooldown" {
-  default = "120"
-}
-
-variable "scale_down_queue_threshold" {
-  default = "4"
-}
-
-variable "scale_down_period" {
-  default = "60"
-}
-
-variable "scale_down_evaluation_period" {
-  default = "60"
-}
-
-variable "scale_down_scaling_adjustment" {
-  default = -1
 }
 
 variable "scale_up_adv_queue_threshold" {

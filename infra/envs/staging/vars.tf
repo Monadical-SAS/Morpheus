@@ -45,33 +45,6 @@ variable "self_managed_web_iam_role_name" {
   default = "self-managed-node-group-web"
 }
 
-variable "self_managed_gpu_nodes_device_size" {
-}
-
-variable "self_managed_gpu_nodes_instance_type" {
-  default = "g4dn.xlarge"
-}
-
-variable "self_managed_gpu_node_min_size" {
-  default = 1
-}
-
-variable "self_managed_gpu_node_max_size" {
-  default = 3
-}
-
-variable "self_managed_gpu_node_desired_size" {
-  default = 1
-}
-
-variable "self_managed_gpu_node_group_name" {
-  default = "self-mng-gpu"
-}
-
-variable "self_managed_gpu_iam_role_name" {
-  default = "self-managed-node-group-gpu"
-}
-
 variable "self_managed_gpu_adv_nodes_device_size" {
 }
 
@@ -125,38 +98,6 @@ variable "self_managed_head_nodes_instance_type" {
 
 variable "self_managed_head_nodes_ami" {
   default = "ami-081f4e51bfefc32f6"
-}
-
-variable "scale_up_queue_threshold" {
-  default = "4"
-}
-
-variable "scale_up_period" {
-  default = "30"
-}
-
-variable "scale_up_evaluation_period" {
-  default = "2"
-}
-
-variable "scale_up_scaling_adjustment" {
-  default = 2
-}
-
-variable "scale_down_queue_threshold" {
-  default = "4"
-}
-
-variable "scale_down_period" {
-  default = "60"
-}
-
-variable "scale_down_evaluation_period" {
-  default = "60"
-}
-
-variable "scale_down_scaling_adjustment" {
-  default = -1
 }
 
 variable "api_hostname" {
