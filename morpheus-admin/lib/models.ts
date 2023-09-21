@@ -10,8 +10,9 @@ export interface Model {
     source: string;
     description?: string;
     url_docs?: string;
-    category: string;
+    categories: any[];
     is_active: boolean;
+    kind: string;
 }
 
 export interface ModelCategory {

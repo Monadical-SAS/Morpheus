@@ -6,6 +6,7 @@ interface TextInputProps extends ComponentPropsWithoutRef<"input"> {
   validationSchema?: any;
   errors?: any;
   value?: string;
+  setValue?: any;
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -15,6 +16,11 @@ export const TextInput = (props: TextInputProps) => {
     if (props.errors.type === "minLength") return "Min length is 5";
     if (props.errors.type === "maxLength") return "Max length is 20";
   };
+
+  const handleInputChange = ((event: React.ChangeEvent<HTMLInputElement>) => {
+    props.setValue(props.name, event.target.value);
+  }
+  );
 
   return (
     <div className="w-full form-control">
@@ -30,6 +36,7 @@ export const TextInput = (props: TextInputProps) => {
         type={props.type || "text"}
         placeholder={props.placeholder}
         className="w-full input input-bordered"
+        onChange={handleInputChange}
         {...props.register(props.name, props.validationSchema)}
       />
 

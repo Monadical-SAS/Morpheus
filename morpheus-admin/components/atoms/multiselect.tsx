@@ -1,5 +1,6 @@
 import React from "react";
-import Select from "react-select";
+import Select, { ActionMeta } from "react-select";
+
 
 const colorStyles = {
   control: (styles: any, { isFocused }: any) => ({
@@ -67,33 +68,34 @@ interface Option {
 
 type MultiValue<Option> = readonly Option[];
 
-interface ArrayObjectSelectState {
-  selectedOptions: MultiValue<Option> | null;
-  errors: string | null;
-}
-
 interface MultipleSelectProps {
+  name: string;
   label: string;
   options: any[];
   selectedValues?: string[];
-  value?: ArrayObjectSelectState | undefined | any;
-  onChange: React.Dispatch<React.SetStateAction<ArrayObjectSelectState>>;
+  value?: MultiValue<Option> | null;
+  onChange: React.Dispatch<React.SetStateAction<MultiValue<Option>>>;
   errors?: any;
-  
+  setValue?: any;
 }
+
+const onChangeValue = (newValue: MultiValue<Option>): MultiValue<Option> => {
+    return newValue || [];
+};
 
 export default function MultipleSelect(props: MultipleSelectProps) {
   const [isClient, setIsClient] = React.useState(false);
-  const onChange = (newValue: MultiValue<Option>) => {
-    console.log("newValue", newValue);
-    props.onChange({ selectedOptions: newValue, errors: null });
+  
+  const onChange = (newValue: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
+    const convertedValue: MultiValue<Option> = onChangeValue(newValue);
+    props.onChange(convertedValue);
+    props.setValue(props.name, convertedValue);
   };
 
   const getInputError = () => {
     if (!props.errors) return null;
     if (props.errors.type === "required") return "This field is required";
   };
-
 
   React.useEffect(() => {
     setIsClient(true);
@@ -103,14 +105,14 @@ export default function MultipleSelect(props: MultipleSelectProps) {
     <div className="w-full form-control">
       <label className="label">
         <span className="label-text">
-          {props.label } {"*"}
+          {props.label} {"*"}
         </span>
       </label>
       {isClient && (
         <Select
           inputId="categories"
           name="categories"
-          value={props.value ? props.value.selectedOptions : []}
+          value={props.value || []}
           onChange={onChange}
           getOptionLabel={(option: Option) => option.name}
           getOptionValue={(option: Option) => option.name}

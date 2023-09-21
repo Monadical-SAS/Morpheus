@@ -68,7 +68,6 @@ const InputText = (props: InputTextProps) => {
           id={props.id}
           type="text"
           placeholder={props.placeholder}
-          value={props.text.value}
           disabled={props.disabled}
           onChange={(event) => handleTextChange(event)}
           className={`${props.iconLeft && styles.pLeft} ${

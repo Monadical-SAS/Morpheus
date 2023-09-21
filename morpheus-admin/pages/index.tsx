@@ -16,6 +16,7 @@ export default function Home() {
   useEffect(() => {
     getAvailableModels()
       .then((response: Response) => {
+        console.log(response.data);
         setModels(response.data);
       })
       .catch((error) => {
@@ -25,6 +26,7 @@ export default function Home() {
 
   const handleActivateModel = (model: Model) => {
     const modelData = { ...model, is_active: !model.is_active };
+    console.log(modelData);
     updateModel(modelData)
       .then((response: Response) => {
         if (!response.success) {
@@ -120,8 +122,9 @@ export default function Home() {
                   source={editingModel.source}
                   description={editingModel.description}
                   url_docs={editingModel.url_docs}
-                  category={editingModel.category}
+                  categories={editingModel.categories}
                   is_active={editingModel.is_active}
+                  kind={editingModel.kind}
                 />
               </Modal>
             )}

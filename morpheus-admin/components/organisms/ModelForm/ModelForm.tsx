@@ -18,6 +18,7 @@ interface ModelFormProps {
   url_docs?: string;
   categories?: any[];
   is_active?: boolean;
+  kind?: string;
 }
 
 export function ModelForm(props: ModelFormProps) {
@@ -27,7 +28,17 @@ export function ModelForm(props: ModelFormProps) {
     setValue,
     formState: { errors },
     control,
-  } = useForm<ModelFormProps>();
+  } = useForm<ModelFormProps>({
+    defaultValues: {
+      name: props?.name,
+      source: props?.source,
+      description: props?.description,
+      url_docs: props?.url_docs,
+      categories: props?.categories,
+      is_active: props?.is_active,
+      kind: props?.kind,
+    },
+  });
 
   const [categories, setCategories] = useState<ModelCategory[]>([]);
   useEffect(() => {
@@ -47,7 +58,6 @@ export function ModelForm(props: ModelFormProps) {
         ...data,
         categories: data.categories.selectedOptions
       };
-      console.log(modelData);
       const response = await saveNewModel(modelData);
       if (response?.success) {
         alert("Model created successfully");
@@ -58,6 +68,7 @@ export function ModelForm(props: ModelFormProps) {
   };
 
   const handleUpdateModel = async (data: any) => {
+    console.log(data);
     const modelData = {
       ...data,
       categories: data.categories.selectedValues
@@ -82,7 +93,6 @@ export function ModelForm(props: ModelFormProps) {
       <TextInput
         name={"name"}
         label={"Name"}
-        value={props?.name}
         placeholder={"Public Model Name"}
         register={register}
         validationSchema={{
@@ -91,12 +101,12 @@ export function ModelForm(props: ModelFormProps) {
           maxLength: 64,
         }}
         errors={errors.name}
+        setValue={setValue}
       />
 
       <TextInput
         name={"source"}
         label={"Source"}
-        value={props?.source}
         placeholder={"Hugging Face Source"}
         register={register}
         validationSchema={{
@@ -105,6 +115,7 @@ export function ModelForm(props: ModelFormProps) {
           maxLength: 512,
         }}
         errors={errors.source}
+        setValue={setValue}
       />
 
       <Controller
@@ -113,11 +124,13 @@ export function ModelForm(props: ModelFormProps) {
         rules={{ required: true }}
         render={({ field }) => (
           <MultipleSelect
+            name="categories"
             label="Model Categories"
             options={categories}
             value={field.value}
-            onChange={(newValue) => {field.onChange(newValue); setValue('categories', newValue)}}
+            onChange={(newValue) => {field.onChange(newValue)}}
             errors={errors.categories}
+            setValue={setValue}
           />
         )}
       />
@@ -125,7 +138,6 @@ export function ModelForm(props: ModelFormProps) {
       <TextInput
         name={"description"}
         label={"Description"}
-        value={props?.description}
         placeholder={"Public Model description"}
         register={register}
         validationSchema={{
@@ -134,12 +146,12 @@ export function ModelForm(props: ModelFormProps) {
           maxLength: 512,
         }}
         errors={errors.description}
+        setValue={setValue}
       />
 
       <TextInput
         name={"url_docs"}
         label={"URL Docs"}
-        value={props?.url_docs}
         placeholder={"Public Model Docs"}
         register={register}
         validationSchema={{
@@ -148,12 +160,12 @@ export function ModelForm(props: ModelFormProps) {
           maxLength: 512,
         }}
         errors={errors.url_docs}
+        setValue={setValue}
       />
 
       <TextInput
         name={"kind"}
         label={"Kind"}
-        value={props?.url_docs}
         placeholder={"Kind of model"}
         register={register}
         validationSchema={{
@@ -162,6 +174,7 @@ export function ModelForm(props: ModelFormProps) {
           maxLength: 512,
         }}
         errors={errors.url_docs}
+        setValue={setValue}
       />
 
       <ToggleInput name={"is_active"} label={"Activate model"} register={register} />

@@ -60,6 +60,8 @@ class ModelService:
         return self.model_repository.get_model_by_source(db=db, model_source=model_source)
 
     async def update_model(self, *, db: Session, model: MLModel) -> MLModel:
+        print("Updating model")
+        print(model.__dict__)
         model_db = self.model_repository.get_model_by_source(db=db, model_source=model.source)
         model_categories = self.category_repository.get_categories_by_model(db=db, model=model)
         if model.categories != model_categories:
