@@ -233,7 +233,6 @@ module "eks" {
         aws s3 cp s3://$DEPLOYMENT_BUCKET/check-last-deploy-models.sh /bin/
         chmod +x /bin/deploy-models.sh
         chmod +x /bin/check-last-deploy-models.sh
-        sudo deploy-models.sh
         echo "PATH=/usr/bin:/bin:/usr/local/bin" > /etc/cron.d/morpheus
         echo "*/15 * * * * root deploy-models.sh" >> /etc/cron.d/morpheus
         echo "*/2 * * * * root check-last-deploy-models.sh" >> /etc/cron.d/morpheus
@@ -241,6 +240,7 @@ module "eks" {
         aws s3 cp s3://$DEPLOYMENT_BUCKET/$CLOUDWATCH_ETC_FILENAME "$CLOUDWATCH_ETC_FOLDER"
         sudo yum install -y amazon-cloudwatch-agent
         ./opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:$CLOUDWATCH_ETC_FOLDER/$CLOUDWATCH_ETC_FILENAME
+        sudo deploy-models.sh
       EOT
 
       block_device_mappings = {
