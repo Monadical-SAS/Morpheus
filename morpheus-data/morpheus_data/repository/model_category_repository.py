@@ -3,8 +3,8 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from morpheus_data.models.models import ModelCategory
-from morpheus_data.models.schemas import MLModelCreate
+from morpheus_data.models.models import MLModel as MLModelDB, ModelCategory
+from morpheus_data.models.schemas import MLModel
 
 
 class ModelCategoryRepository:
@@ -32,8 +32,9 @@ class ModelCategoryRepository:
         return db.query(ModelCategory).filter(ModelCategory.name == name).first()
 
     @classmethod
-    def get_categories_by_model(cls, *, db: Session, model: MLModelCreate) -> List[ModelCategory]:
-        return db.query(ModelCategory).filter(ModelCategory.models.id == model.id).all()
+    def get_categories_by_model(cls, *, db: Session, model: MLModel) -> List[ModelCategory]:
+        model = db.query(MLModelDB).filter(MLModelDB.id == model.id).first()
+        return model.categories
 
     @classmethod
     def update_category(cls, *, db: Session, category: ModelCategory) -> ModelCategory:

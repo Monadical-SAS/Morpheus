@@ -1,8 +1,3 @@
-export enum CookiesStatus {
-  Accepted = "accepted",
-  Declined = "declined",
-}
-
 const deleteAllCookies = () => {
   const cookies = document.cookie.split(";");
 
@@ -16,10 +11,10 @@ const deleteAllCookies = () => {
 
 const clearStorageExceptCookies = () => {
   const cookieKey = "cp:cookies";
-  
+
   Object.keys(window.localStorage)
-    .filter(key => key !== cookieKey)
-    .forEach(key => window.localStorage.removeItem(key));
+    .filter((key) => key !== cookieKey)
+    .forEach((key) => window.localStorage.removeItem(key));
 };
 
 export { deleteAllCookies, clearStorageExceptCookies };

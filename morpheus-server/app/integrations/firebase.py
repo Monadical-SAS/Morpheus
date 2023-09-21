@@ -1,10 +1,14 @@
+from app.config import get_settings
+from app.error.user import UserNotFoundError
 from fastapi import Depends, HTTPException, status, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from firebase_admin import auth, credentials, initialize_app
-
-from app.config import get_settings
+from morpheus_data.database.database import get_db
+from morpheus_data.repository.user_repository import UserRepository
 
 settings = get_settings()
+user_repository = UserRepository()
+db = next(get_db())
 
 credentials = credentials.Certificate(
     {
@@ -28,6 +32,9 @@ def get_user(res: Response, authorization: HTTPAuthorizationCredentials = Depend
         )
     try:
         decoded_token = auth.verify_id_token(authorization.credentials)
+        user = user_repository.get_user_by_email(db=db, email=decoded_token["email"])
+        if user is None:
+            raise UserNotFoundError(f"User with email {decoded_token['email']} not found")
     except Exception as error:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

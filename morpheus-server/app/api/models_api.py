@@ -25,8 +25,8 @@ async def create_model(*, db: Session = Depends(get_db), model: MLModelCreate):
 
 
 @router.get("", response_model=Union[Response, List[MLModel]])
-async def get_sd_models(db: Session = Depends(get_db)):
-    sd_model = await model_service.get_models(db=db)
+async def get_sd_models(db: Session = Depends(get_db), only_active: bool = True):
+    sd_model = await model_service.get_models(db=db, only_active=only_active)
     if not sd_model:
         return Response(success=False, message="No SD Models found")
 
@@ -44,7 +44,7 @@ async def get_sd_model_by_id(model_id: UUID, db: Session = Depends(get_db)):
 
 @router.get("/{category_id}", response_model=Union[Response, MLModel])
 async def get_category_model_by_id(category_id: UUID, db: Session = Depends(get_db)):
-    sd_model = await model_service.get_model_by_category(db=db, category_id=category_id)
+    sd_model = await model_service.get_models_by_category(db=db, category_id=category_id)
     if not sd_model:
         return Response(success=False, message=f"No SD Model found with id {category_id}")
 

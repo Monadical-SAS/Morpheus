@@ -3,7 +3,7 @@ from glob import glob
 from pathlib import Path
 
 import torch
-from diffusers import ControlNetModel, StableDiffusionPipeline
+from diffusers import ControlNetModel, StableDiffusionPipeline, StableDiffusionXLPipeline
 from dynamicprompts.generators import RandomPromptGenerator
 from dynamicprompts.generators.magicprompt import MagicPromptGenerator
 
@@ -24,15 +24,22 @@ def download_model_from_huggingface(params: MLModelCreate):
     if Path(path).exists():
         print(f"Model was already downloaded. You can find it in {path}")
         return output
+
+    pipeline = (
+        StableDiffusionXLPipeline
+        if params.source == "stabilityai/stable-diffusion-xl-base-1.0"
+        else StableDiffusionPipeline
+    )
+
     try:
-        model = StableDiffusionPipeline.from_pretrained(
+        model = pipeline.from_pretrained(
             params.source,
             revision="fp16",
             torch_dtype=torch.float16,
         )
     except OSError as e:
         print("OSerror", e)
-        model = StableDiffusionPipeline.from_pretrained(
+        model = pipeline.from_pretrained(
             params.source,
             # revision="fp16",
             torch_dtype=torch.float16,

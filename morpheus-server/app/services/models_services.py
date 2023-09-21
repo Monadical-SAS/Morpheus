@@ -3,12 +3,14 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.config import EnvironmentEnum, get_settings
 from morpheus_data.models.schemas import MLModel, MLModelCreate
 from morpheus_data.registry.model_manager import ModelManagerHuggingFace
 from morpheus_data.registry.s3_model_registry import S3ModelRegistry
 from morpheus_data.repository.model_category_repository import ModelCategoryRepository
 from morpheus_data.repository.model_repository import ModelRepository
+
+from app.config import EnvironmentEnum, get_settings
+
 
 settings = get_settings()
 
@@ -44,22 +46,20 @@ class ModelService:
         # 5. Create model in DB and return
         return self.model_repository.create_model(db=db, model=model, categories=db_categories)
 
-    async def get_models(self, *, db: Session) -> List[MLModel]:
-        models = self.model_repository.get_models(db=db)
+    async def get_models(self, *, db: Session, only_active: bool = True) -> List[MLModel]:
+        models = self.model_repository.get_models(db=db, only_active=only_active)
         return models
 
     async def get_model_by_id(self, *, db: Session, model_id: UUID) -> MLModel:
         return self.model_repository.get_model_by_id(db=db, model_id=model_id)
 
-    async def get_model_by_category(self, *, db: Session, category_id: UUID) -> MLModel:
-        return self.model_repository.get_model_by_category(db=db, category_id=category_id)
+    async def get_models_by_category(self, *, db: Session, category_id: UUID) -> List[MLModel]:
+        return self.model_repository.get_models_by_category(db=db, category_id=category_id)
 
     async def get_model_by_source(self, *, db: Session, model_source: str) -> MLModel:
         return self.model_repository.get_model_by_source(db=db, model_source=model_source)
 
-    async def update_model(self, *, db: Session, model: MLModelCreate) -> MLModel:
-        print("Updating model")
-        print(f"{model.__dict__=}")
+    async def update_model(self, *, db: Session, model: MLModel) -> MLModel:
         model_db = self.model_repository.get_model_by_source(db=db, model_source=model.source)
         model_categories = self.category_repository.get_categories_by_model(db=db, model=model)
         if model.categories != model_categories:
@@ -72,7 +72,6 @@ class ModelService:
                 self.s3_model_registry.register_model_in_storage(output_path=model.source)
             else:
                 self.s3_model_registry.delete_model_from_storage(name=model.source)
-        print("updated model")
         return self.model_repository.update_model(db=db, model=model)
 
     async def delete_model_by_source(self, *, db: Session, model_source: str) -> MLModel:

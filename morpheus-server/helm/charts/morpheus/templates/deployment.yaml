@@ -114,12 +114,28 @@ spec:
                 name: morpheus-secret
                 key: MODELS_BUCKET
                 optional: true
+          - name: HF_ACCESS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: morpheus-secret
+                key: HF_ACCESS_TOKEN
+                optional: true
           - name: ALLOWED_ORIGINS
             value: {{ .Values.domain }}
           - name: CELERY_BROKER_URL
             value: redis://redis:6379/0
           - name: CELERY_RESULT_BACKEND
             value: redis://redis:6379/0
+          - name: GENERATIVE_AI_BACKEND
+            value: ray
+          - name: RAY_BACKEND_URL
+            value: http://worker-ray:8000
+          - name: WAITING_ROOM_ENABLED
+            value: "true"
+          - name: MAX_TASKS_PER_WORKER
+            value: "10"
+          - name: ENABLE_FLOAT32
+            value: "true"
           - name: ENVIRONMENT
             value: prod
       affinity:

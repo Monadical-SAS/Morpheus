@@ -3,9 +3,8 @@ import importlib
 from PIL import Image
 from celery import Task
 from loguru import logger
+from morpheus_data.models.schemas import GenerationRequest
 from torch.cuda import OutOfMemoryError
-
-from morpheus_data.models.schemas import Prompt, PromptControlNet
 
 from app.celery.workers.stable_diffusion_app import app
 from app.config import get_settings, get_file_handlers
@@ -20,14 +19,14 @@ files_repository = get_file_handlers()
 file_service = FilesService(files_repository=files_repository)
 settings = get_settings()
 
-MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.model_default}"
-UPSCALING_MODEL_PATH_DEFAULT = f"{settings.model_parent_path}{settings.upscaling_model_default}"
+DEFAULT_MODEL_PATH = f"{settings.model_parent_path}{settings.default_model}"
+DEFAULT_UPSCALING_MODEL_PATH = f"{settings.model_parent_path}{settings.upscaling_model_default}"
 
 
 class DiffusionTask(Task):
     abstract = True
 
-    def __init__(self, name: str = MODEL_PATH_DEFAULT):
+    def __init__(self, name: str = DEFAULT_MODEL_PATH):
         super().__init__()
         self.model = None
         self.name_model = name
@@ -51,7 +50,7 @@ class DiffusionTask(Task):
 class UpscalingTask(Task):
     abstract = True
 
-    def __init__(self, name: str = UPSCALING_MODEL_PATH_DEFAULT):
+    def __init__(self, name: str = DEFAULT_UPSCALING_MODEL_PATH):
         super().__init__()
         self.model = None
         self.name_model = name
@@ -80,22 +79,22 @@ class UpscalingTask(Task):
     name=f"{__name__}.stable-diffusion-text2img",
 )
 @check_environment
-def generate_stable_diffusion_text2img_output_task(self, prompt: Prompt) -> list[str]:
+def generate_stable_diffusion_text2img_output_task(self, request: GenerationRequest) -> list[str]:
     try:
-        model_selected = prompt.model
-        sampler_selected = prompt.sampler
+        model_selected = request.model_id
+        scheduler_selected = request.scheduler
 
         logger.info(f"Current model: {self.model.model_name} - Model selected: {model_selected}")
-        logger.info(f"Current sampler: {self.model.sampler} - Sampler selected: {sampler_selected}")
+        logger.info(f"Current scheduler: {self.model.scheduler} - Sampler selected: {scheduler_selected}")
 
-        if self.model.model_name != model_selected or self.model.sampler != sampler_selected:
+        if self.model.model_name != model_selected or self.model.scheduler != scheduler_selected:
             self.model.__init__(
                 model_name=model_selected,
-                sampler=sampler_selected,
+                scheduler=scheduler_selected,
                 pipeline_name="StableDiffusionPipeline",
             )
 
-        images = self.model.generate_images(prompt=prompt)
+        images = self.model.generate_images(request=request)
         # upload to s3
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(images=images, user_bucket=settings.images_temp_bucket)
@@ -118,22 +117,22 @@ def generate_stable_diffusion_text2img_output_task(self, prompt: Prompt) -> list
     name=f"{__name__}.stable-diffusion-text2img-xl",
 )
 @check_environment
-def generate_stable_diffusion_xl_text2img_output_task(self, prompt: Prompt) -> list[str]:
+def generate_stable_diffusion_xl_text2img_output_task(self, request: GenerationRequest) -> list[str]:
     try:
-        model_selected = prompt.model
-        sampler_selected = prompt.sampler
+        model_selected = request.model_id
+        scheduler_selected = request.scheduler
 
         logger.info(f"Current model: {self.model.model_name} - Model selected: {model_selected}")
-        logger.info(f"Current sampler: {self.model.sampler} - Sampler selected: {sampler_selected}")
+        logger.info(f"Current scheduler: {self.model.scheduler} - Sampler selected: {scheduler_selected}")
 
-        if self.model.model_name != model_selected or self.model.sampler != sampler_selected:
+        if self.model.model_name != model_selected or self.model.scheduler != scheduler_selected:
             self.model.__init__(
                 model_name=model_selected,
-                sampler=sampler_selected,
+                scheduler=scheduler_selected,
                 pipeline_name="StableDiffusionXLPipeline",
             )
 
-        images = self.model.generate_images(prompt=prompt)
+        images = self.model.generate_images(request=request)
         # upload to s3
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(images=images, user_bucket=settings.images_temp_bucket)
@@ -156,22 +155,22 @@ def generate_stable_diffusion_xl_text2img_output_task(self, prompt: Prompt) -> l
     name=f"{__name__}.stable-diffusion-img2img",
 )
 @check_environment
-def generate_stable_diffusion_img2img_output_task(self, prompt: Prompt, image: Image) -> list[str]:
+def generate_stable_diffusion_img2img_output_task(self, request: GenerationRequest, image: Image) -> list[str]:
     try:
-        model_selected = prompt.model
-        sampler_selected = prompt.sampler
+        model_selected = request.model_id
+        scheduler_selected = request.scheduler
 
         logger.info(f"Current model: {self.model.model_name} - Model selected: {model_selected}")
-        logger.info(f"Current sampler: {self.model.sampler} - Sampler selected: {sampler_selected}")
+        logger.info(f"Current scheduler: {self.model.scheduler} - Sampler selected: {scheduler_selected}")
 
-        if self.model.model_name != model_selected or self.model.sampler != sampler_selected:
+        if self.model.model_name != model_selected or self.model.scheduler != scheduler_selected:
             self.model.__init__(
                 model_name=model_selected,
-                sampler=sampler_selected,
+                scheduler=scheduler_selected,
                 pipeline_name="StableDiffusionImg2ImgPipeline",
             )
 
-        images = self.model.generate_images(prompt=prompt, image=image)
+        images = self.model.generate_images(request=request, image=image)
         # upload to s3
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(images=images, user_bucket=settings.images_temp_bucket)
@@ -193,14 +192,14 @@ def generate_stable_diffusion_img2img_output_task(self, prompt: Prompt, image: I
     name=f"{__name__}.stable-diffusion-controlnet",
 )
 @check_environment
-def generate_stable_diffusion_controlnet_output_task(self, prompt: PromptControlNet, image: Image) -> list[str]:
+def generate_stable_diffusion_controlnet_output_task(self, request: GenerationRequest, image: Image) -> list[str]:
     try:
-        model_selected = prompt.model
-        sampler_selected = prompt.sampler
-        controlnet_model_selected = prompt.controlnet_model
+        model_selected = request.model_id
+        scheduler_selected = request.scheduler
+        controlnet_model_selected = request.controlnet_model
 
         logger.info(f"Current model: {self.model.model_name} - Model selected: {model_selected}")
-        logger.info(f"Current sampler: {self.model.sampler} - Sampler selected: {sampler_selected}")
+        logger.info(f"Current scheduler: {self.model.scheduler} - Sampler selected: {scheduler_selected}")
         logger.info(
             (
                 f"Current controlnet model: {self.model.controlnet_model_name} - "
@@ -210,17 +209,17 @@ def generate_stable_diffusion_controlnet_output_task(self, prompt: PromptControl
 
         if (
                 self.model.model_name != model_selected
-                or self.model.sampler != sampler_selected
+                or self.model.scheduler != scheduler_selected
                 or self.model.controlnet_model_name != controlnet_model_selected
         ):
             self.model.__init__(
                 model_name=model_selected,
                 controlnet_model_name=controlnet_model_selected,
-                sampler=sampler_selected,
+                scheduler=scheduler_selected,
                 pipeline_name="StableDiffusionControlNetPipeline",
             )
 
-        images = self.model.generate_images(prompt=prompt, image=image)
+        images = self.model.generate_images(request=request, image=image)
         # upload to s3
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(images=images, user_bucket=settings.images_temp_bucket)
@@ -242,22 +241,22 @@ def generate_stable_diffusion_controlnet_output_task(self, prompt: PromptControl
     name=f"{__name__}.stable-diffusion-pix2pix",
 )
 @check_environment
-def generate_stable_diffusion_pix2pix_output_task(self, prompt: Prompt, image: Image) -> list[str]:
+def generate_stable_diffusion_pix2pix_output_task(self, request: GenerationRequest, image: Image) -> list[str]:
     try:
-        model_selected = prompt.model
-        sampler_selected = prompt.sampler
+        model_selected = request.model_id
+        scheduler_selected = request.scheduler
 
         logger.info(f"Current model: {self.model.model_name} - Model selected: {model_selected}")
-        logger.info(f"Current sampler: {self.model.sampler} - Sampler selected: {sampler_selected}")
+        logger.info(f"Current scheduler: {self.model.scheduler} - Sampler selected: {scheduler_selected}")
 
-        if self.model.model_name != model_selected or self.model.sampler != sampler_selected:
+        if self.model.model_name != model_selected or self.model.scheduler != scheduler_selected:
             self.model.__init__(
                 model_name=model_selected,
-                sampler=sampler_selected,
+                scheduler=scheduler_selected,
                 pipeline_name="StableDiffusionInstructPix2PixPipeline",
             )
 
-        images = self.model.generate_images(prompt=prompt, image=image)
+        images = self.model.generate_images(request=request, image=image)
 
         # Upload generated images to s3.
         logger.info("Uploading image(s) to s3 and getting the url(s)")
@@ -280,22 +279,27 @@ def generate_stable_diffusion_pix2pix_output_task(self, prompt: Prompt, image: I
     name=f"{__name__}.stable-diffusion-inpainting",
 )
 @check_environment
-def generate_stable_diffusion_inpaint_output_task(self, prompt: Prompt, image: Image, mask: Image) -> list[str]:
+def generate_stable_diffusion_inpaint_output_task(
+        self,
+        request: GenerationRequest,
+        image: Image,
+        mask: Image
+) -> list[str]:
     try:
-        model_selected = prompt.model
-        sampler_selected = prompt.sampler
+        model_selected = request.model_id
+        scheduler_selected = request.scheduler
 
         logger.info(f"Current model: {self.model.model_name} - Model selected: {model_selected}")
-        logger.info(f"Current sampler: {self.model.sampler} - Sampler selected: {sampler_selected}")
+        logger.info(f"Current scheduler: {self.model.scheduler} - Sampler selected: {scheduler_selected}")
 
-        if self.model.model_name != model_selected or self.model.sampler != sampler_selected:
+        if self.model.model_name != model_selected or self.model.scheduler != scheduler_selected:
             self.model.__init__(
                 model_name=model_selected,
-                sampler=sampler_selected,
+                scheduler=scheduler_selected,
                 pipeline_name="StableDiffusionInpaintPipeline",
             )
 
-        images = self.model.generate_images(prompt=prompt, image=image, mask=mask)
+        images = self.model.generate_images(request=request, image=image, mask=mask)
 
         # Upload generated images to s3.
         logger.info("Uploading image(s) to s3 and getting the url(s)")
@@ -318,22 +322,22 @@ def generate_stable_diffusion_inpaint_output_task(self, prompt: Prompt, image: I
     name=f"{__name__}.stable-diffusion-upscale",
 )
 @check_environment
-def generate_stable_diffusion_upscale_output_task(self, prompt: Prompt, image: Image) -> list[str]:
+def generate_stable_diffusion_upscale_output_task(self, request: GenerationRequest, image: Image) -> list[str]:
     try:
-        model_selected = prompt.model
-        sampler_selected = prompt.sampler
+        model_selected = request.model_id
+        scheduler_selected = request.scheduler
 
         logger.info(f"Current model: {self.model.model_name} - Model selected: {model_selected}")
-        logger.info(f"Current sampler: {self.model.sampler} - Sampler selected: {sampler_selected}")
+        logger.info(f"Current scheduler: {self.model.scheduler} - Sampler selected: {scheduler_selected}")
 
-        if self.model.model_name != model_selected or self.model.sampler != sampler_selected:
+        if self.model.model_name != model_selected or self.model.scheduler != scheduler_selected:
             self.model.__init__(
                 model_name=model_selected,
-                sampler=sampler_selected,
+                scheduler=scheduler_selected,
                 pipeline_name="StableDiffusionUpscalePipeline",
             )
 
-        images = self.model.generate_images(prompt=prompt, image=image)
+        images = self.model.generate_images(request=request, image=image)
 
         # Upload generated images to s3.
         logger.info("Uploading image(s) to s3 and getting the url(s)")

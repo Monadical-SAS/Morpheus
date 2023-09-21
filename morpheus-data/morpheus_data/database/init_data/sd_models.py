@@ -7,7 +7,7 @@ sd_models = [
         "source": "stabilityai/stable-diffusion-xl-base-1.0",
         "kind": "diffusion",
         "url_docs": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0",
-        "categories": [text2img],
+        "categories": [text2img, img2img, inpainting],
     },
     {
         "name": "Stable Diffusion v2",

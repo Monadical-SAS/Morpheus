@@ -96,11 +96,11 @@ class Prompt(BaseModel):
 
     @validator("model")
     def check_if_empty_model(cls, model):
-        return model or settings.model_default
+        return model or settings.default_model
 
     @validator("sampler")
     def check_if_empty_sampler(cls, sampler):
-        return sampler or settings.sampler_default
+        return sampler or settings.default_scheduler
 
     @validator("negative_prompt")
     def check_if_empty_neg_prompt(cls, neg_prompt):
@@ -269,3 +269,45 @@ class SamplerModel(BaseModel):
     id: str
     name: str
     description: str
+
+
+class Generation(BaseModel):
+    id: UUID
+    results: List[str] = []
+    failed: bool = False
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
+                "results": ["https://imageurl.png"],
+                "failed": False,
+            }
+        }
+
+
+class GenerationRequest(BaseModel):
+    task_id: UUID = None
+    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    negative_prompt: str = "bad, low res, ugly, deformed"
+    width: int = 768
+    height: int = 768
+    num_inference_steps: int = 50
+    guidance_scale: int = 10
+    num_images_per_prompt: int = 1
+    generator: int = -1
+    strength: Optional[float] = 0.75
+    pipeline: str = settings.default_pipeline
+    scheduler: str = settings.default_scheduler
+    model_id: str = settings.default_model
+    controlnet_id: str = None
+    controlnet_type: str = None
+    user_id: str
+
+
+class TextGenerationRequest(BaseModel):
+    task_id: UUID = None
+    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    model_id: str = "Gustavosta/MagicPrompt-Stable-Diffusion"
+    user_id: str

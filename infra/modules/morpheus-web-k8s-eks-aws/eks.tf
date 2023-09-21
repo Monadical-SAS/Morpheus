@@ -44,38 +44,6 @@ module "eks" {
     }
   }
 
-  eks_managed_node_groups = {
-
-    eks-managed-services = {
-      name            = var.eks_managed_service_node_group_name
-      use_name_prefix = true
-
-      subnet_ids = module.vpc.private_subnets
-
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
-
-      force_update_version = true
-      instance_types       = [var.eks_managed_service_nodes_instance_type]
-
-      metadata_options = {
-        http_endpoint               = "enabled"
-        http_tokens                 = "required"
-        http_put_response_hop_limit = 2
-        instance_metadata_tags      = "disabled"
-      }
-
-      create_iam_role          = true
-      iam_role_name            = var.eks_managed_services_iam_role_name
-      iam_role_use_name_prefix = false
-      iam_role_description     = "EKS managed node group services"
-      labels = {
-        morpheus-type = "svc"
-      }
-    }
-  }
-
   self_managed_node_groups = {
     self-managed-web = {
       name            = var.self_managed_web_node_group_name
@@ -84,6 +52,16 @@ module "eks" {
       key_name = aws_key_pair.cluster_key.key_name
 
       bootstrap_extra_args = "--kubelet-extra-args '--node-labels=morpheus-type=web'"
+
+      post_bootstrap_user_data = <<-EOT
+        DEPLOYMENT_BUCKET="${local.s3_deployment_bucket_name}"
+        CLOUDWATCH_ETC_FOLDER="/etc/morpheus"
+        CLOUDWATCH_ETC_FILENAME="morpheus-cloudwatch-web-agent-config.json"
+        mkdir -p "$CLOUDWATCH_ETC_FOLDER"
+        aws s3 cp s3://$DEPLOYMENT_BUCKET/$CLOUDWATCH_ETC_FILENAME "$CLOUDWATCH_ETC_FOLDER"
+        sudo yum install -y amazon-cloudwatch-agent
+        ./opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:$CLOUDWATCH_ETC_FOLDER/$CLOUDWATCH_ETC_FILENAME
+      EOT
 
       subnet_ids = module.vpc.private_subnets
 
@@ -255,7 +233,6 @@ module "eks" {
         aws s3 cp s3://$DEPLOYMENT_BUCKET/check-last-deploy-models.sh /bin/
         chmod +x /bin/deploy-models.sh
         chmod +x /bin/check-last-deploy-models.sh
-        sudo deploy-models.sh
         echo "PATH=/usr/bin:/bin:/usr/local/bin" > /etc/cron.d/morpheus
         echo "*/15 * * * * root deploy-models.sh" >> /etc/cron.d/morpheus
         echo "*/2 * * * * root check-last-deploy-models.sh" >> /etc/cron.d/morpheus
@@ -263,6 +240,7 @@ module "eks" {
         aws s3 cp s3://$DEPLOYMENT_BUCKET/$CLOUDWATCH_ETC_FILENAME "$CLOUDWATCH_ETC_FOLDER"
         sudo yum install -y amazon-cloudwatch-agent
         ./opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:$CLOUDWATCH_ETC_FOLDER/$CLOUDWATCH_ETC_FILENAME
+        sudo deploy-models.sh
       EOT
 
       block_device_mappings = {
@@ -283,6 +261,12 @@ module "eks" {
       max_size     = var.self_managed_gpu_adv_node_max_size
       desired_size = var.self_managed_gpu_adv_node_desired_size
       ami_id       = var.self_managed_gpu_adv_nodes_ami
+
+      warm_pool = {
+        pool_state                  = "Stopped"
+        min_size                    = var.self_managed_gpu_adv_node_warm_pool_min_size
+        max_group_prepared_capacity = var.self_managed_gpu_adv_node_warm_pool_max_group_prepared_capacity
+      }
 
       instance_type = var.self_managed_gpu_adv_nodes_instance_type
 
@@ -346,6 +330,49 @@ resource "aws_autoscaling_policy" "scale_down" {
   policy_type            = "SimpleScaling"
   adjustment_type        = "ChangeInCapacity"
   scaling_adjustment     = var.scale_down_scaling_adjustment
+}
+
+resource "aws_cloudwatch_metric_alarm" "scale_up_adv" {
+  alarm_description   = "Queue size alarm to scale up"
+  alarm_actions       = [aws_autoscaling_policy.scale_up_adv.arn]
+  alarm_name          = local.scale_up_adv_alarm_name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  namespace           = local.cloudwatch_namespace_name
+  metric_name         = "avg-queue-size"
+  threshold           = var.scale_up_adv_queue_threshold
+  evaluation_periods  = var.scale_up_adv_evaluation_period
+  period              = var.scale_up_adv_period
+  statistic           = "Average"
+}
+
+resource "aws_autoscaling_policy" "scale_up_adv" {
+  autoscaling_group_name = module.eks.self_managed_node_groups["self-managed-gpu-adv"]["autoscaling_group_name"]
+  name                   = local.scale_up_adv_policy_name
+  policy_type            = "SimpleScaling"
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = var.scale_up_adv_cooldown
+  scaling_adjustment     = var.scale_up_adv_scaling_adjustment
+}
+
+resource "aws_cloudwatch_metric_alarm" "scale_down_adv" {
+  alarm_description   = "Queue size alarm to scale down"
+  alarm_actions       = [aws_autoscaling_policy.scale_down_adv.arn]
+  alarm_name          = local.scale_down_adv_alarm_name
+  comparison_operator = "LessThanThreshold"
+  namespace           = local.cloudwatch_namespace_name
+  metric_name         = "avg-queue-size"
+  threshold           = var.scale_down_adv_queue_threshold
+  evaluation_periods  = var.scale_down_adv_evaluation_period
+  period              = var.scale_down_adv_period
+  statistic           = "Average"
+}
+
+resource "aws_autoscaling_policy" "scale_down_adv" {
+  autoscaling_group_name = module.eks.self_managed_node_groups["self-managed-gpu-adv"]["autoscaling_group_name"]
+  name                   = local.scale_down_adv_policy_name
+  policy_type            = "SimpleScaling"
+  adjustment_type        = "ChangeInCapacity"
+  scaling_adjustment     = var.scale_down_adv_scaling_adjustment
 }
 
 resource "aws_security_group" "bastion" {

@@ -1,5 +1,3 @@
-# This file was generated using the `serve build` command on Ray v2.6.1.
-
 proxy_location: EveryNode
 
 http_options:
@@ -8,13 +6,19 @@ http_options:
 
   port: 8000
 
+grpc_options:
+
+  port: 9000
+
+  grpc_servicer_functions: []
+
 applications:
 
 - name: app1
 
   route_prefix: /
 
-  import_path: models:deployment
+  import_path: app.app:deployment
 
   runtime_env: {}
 

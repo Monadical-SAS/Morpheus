@@ -7,7 +7,6 @@ import ImagineLayout from "@/layout/ImagineLayout/ImagineLayout";
 import { UploadMaskIcon } from "@/components/icons/uploadMask";
 import { useImagine } from "@/context/ImagineContext";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
-import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 
 import styles from "./ImagineBase.module.scss";
 
@@ -20,9 +19,14 @@ interface MainContainerProps {
 
 const ImagineBase = (props: MainContainerProps) => {
   const { img2imgFile, setImg2imgFile, maskFile, setMaskFile } = useImagine();
-  const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_SCREEN_WIDTH;
-  const ImagineInputInstance = <ImagineInput isFormValid={props.formValid} handleGenerate={props.handleGenerate} />;
+  const { isMobile } = useWindowDimensions();
+
+  const ImagineInputInstance = (
+    <ImagineInput
+      isFormValid={props.formValid}
+      handleGenerate={props.handleGenerate}
+    />
+  );
 
   const ImageInputs = (props.showImageInput || props.showMaskInput) && (
     <div className={styles.imageInputsContainer}>

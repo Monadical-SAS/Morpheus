@@ -14,14 +14,14 @@ import {
   generateImageWithPix2Pix,
   generateImageWithText2Img,
   generateImageWithUpscaling,
-  getGeneratedDiffusionImagesWithRetry,
+  getGeneratedDataWithRetry,
 } from "@/services/sdiffusion";
 import { useDiffusion } from "./SDContext";
 import { useControlNet } from "./CNContext";
 import { ErrorResponse } from "@/utils/common";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToastContext } from "@/context/ToastContext";
-import { Prompt } from "@/models/models";
+import { Prompt, ServerResponse } from "@/models/models";
 
 type ImagineOptions =
   | "text2img"
@@ -81,7 +81,6 @@ const ImagineProvider = (props: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    console.log("img2ImgURL", img2ImgURL)
     if (img2ImgURL) {
       getFileBlobFromURL(img2ImgURL)
         .then((file: File) => {
@@ -109,14 +108,17 @@ const ImagineProvider = (props: { children: ReactNode }) => {
       option === "controlnet" ? buildControlNetPrompt() : buildPrompt();
     const request = { prompt: prompt.value, ...config };
 
-    const response = await enqueueTaskRequest(option, request);
-    if (!response || !response.success) {
+    const response: ServerResponse = await enqueueTaskRequest(option, request);
+    if (!response.success) {
       setIsLoading(false);
       showErrorAlert(response.message || "Error generating image");
       return;
     }
     const taskId = response.data;
-    const responseModel = await getGeneratedDiffusionImagesWithRetry(taskId);
+    const responseModel: ServerResponse = await getGeneratedDataWithRetry(
+      taskId
+    );
+    console.log("responseModel", responseModel);
     if (!responseModel.success) {
       setIsLoading(false);
       showErrorAlert(
@@ -125,7 +127,7 @@ const ImagineProvider = (props: { children: ReactNode }) => {
       return;
     }
 
-    appendResults(request, responseModel.data);
+    appendResults(request, responseModel.data.results);
     setIsLoading(false);
   };
 

@@ -118,3 +118,17 @@ resource "local_file" "cloudwatch_config" {
   content  = templatefile("${path.module}/scripts/deployment/morpheus-cloudwatch-agent-config.tftpl", { namespace_name = local.cloudwatch_namespace_name })
   filename = "${path.module}/scripts/deployment/morpheus-cloudwatch-agent-config.json"
 }
+
+resource "aws_s3_object" "cloudwatch_web_config_file" {
+  bucket = aws_s3_bucket.deployment.id
+  key    = "morpheus-cloudwatch-web-agent-config.json"
+  source = "${path.module}/scripts/deployment/morpheus-cloudwatch-web-agent-config.json"
+  depends_on = [
+    local_file.cloudwatch_web_config
+  ]
+}
+
+resource "local_file" "cloudwatch_web_config" {
+  content  = templatefile("${path.module}/scripts/deployment/morpheus-cloudwatch-web-agent-config.tftpl", { namespace_name = local.cloudwatch_namespace_name })
+  filename = "${path.module}/scripts/deployment/morpheus-cloudwatch-web-agent-config.json"
+}
