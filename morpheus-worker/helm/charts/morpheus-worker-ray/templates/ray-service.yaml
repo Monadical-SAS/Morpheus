@@ -3,8 +3,8 @@ kind: RayService
 metadata:
   name: morpheus-rayservice
 spec:
-  serviceUnhealthySecondThreshold: 600
-  deploymentUnhealthySecondThreshold: 600
+  serviceUnhealthySecondThreshold: 180
+  deploymentUnhealthySecondThreshold: 180
   serveConfig:
     importPath: app.app:deployment
   rayClusterConfig:
