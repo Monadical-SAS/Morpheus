@@ -6,7 +6,7 @@ spec:
   serviceUnhealthySecondThreshold: 600
   deploymentUnhealthySecondThreshold: 600
   serveConfig:
-    importPath: app.app.deployment
+    importPath: app.app:deployment
   rayClusterConfig:
     rayVersion: "{{ .Values.worker.rayVersion }}"
     enableInTreeAutoscaling: true
