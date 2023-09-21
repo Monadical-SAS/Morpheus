@@ -11,7 +11,7 @@ on:
         required: false
         type: string
 env:
-  WORKING_DIR: morpheus-worker/ray
+  WORKING_DIR: morpheus-worker
   MORPHEUS_WORKER_IMAGE_NAME: ${{ vars.MORPHEUS_WORKER_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-worker' }}
 jobs:
   ci-worker-ray:
@@ -59,6 +59,6 @@ jobs:
         if: ${{ inputs.called == 'true' }}
         uses: docker/build-push-action@v3
         with:
-          context: "{{defaultContext}}:morpheus-worker/ray"
+          context: "{{defaultContext}}:morpheus-worker"
           push: true
           tags: ${{ env.MORPHEUS_WORKER_IMAGE_NAME }}:${{ github.run_id }}

@@ -14,9 +14,12 @@ ENV PYTHONUNBUFFERED 1
 # Install system requirements
 RUN sudo apt-get update && sudo apt-get install -y jq build-essential libpq-dev && sudo rm -rf /var/lib/apt/lists/*
 
-# Install & use pipenv
-RUN pip install --upgrade pip pipenv
+# Install python requirements
 COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install torch
 RUN pip install -r requirements.txt
-COPY models.py .
+
+# Copy the application files
+COPY app app
 COPY models.yaml .

@@ -159,12 +159,10 @@ const AuthProvider = (props: { children: ReactNode }) => {
         if (response.success) {
           setUser(response.data);
           setLocalUser(response.data);
-        } else {
-          showErrorAlert("An error occurred while loading the user data");
         }
       })
-      .catch(() => {
-        showErrorAlert("An error occurred while loading the user data");
+      .catch((error) => {
+        console.log(error);
       });
   };
 
