@@ -13,7 +13,7 @@ image:
 worker:
   headNodeSelector: "worker-head"
   nodeSelector: "gpu-adv"
-  rayVersion: 2.3.0
+  rayVersion: 2.7.0
   head:
     rayStartParams:
       numCpus: "3"
