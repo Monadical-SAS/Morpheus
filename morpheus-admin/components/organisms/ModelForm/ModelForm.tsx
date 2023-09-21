@@ -9,6 +9,7 @@ import { ToggleInput } from "@/components/atoms/toggle";
 import { saveNewModel, updateModel } from "@/api/models";
 import { getAvailableCategories } from "@/api/model_categories";
 import { ModelCategory, Response } from "@/lib/models";
+import { Model } from "@/lib/models";
 
 interface ModelFormProps {
   name?: string;
@@ -19,6 +20,8 @@ interface ModelFormProps {
   categories?: any[];
   is_active?: boolean;
   kind?: string;
+  model?: Model;
+  formUpdate?: boolean;
 }
 
 export function ModelForm(props: ModelFormProps) {
@@ -51,12 +54,10 @@ export function ModelForm(props: ModelFormProps) {
       });
   }, []);
 
-  const onSubmit = async (data: any) => {
-    console.log(data);
+  const handleSaveModel = async (data: any) => {
     try {
       const modelData = {
         ...data,
-        categories: data.categories.selectedOptions
       };
       const response = await saveNewModel(modelData);
       if (response?.success) {
@@ -68,23 +69,22 @@ export function ModelForm(props: ModelFormProps) {
   };
 
   const handleUpdateModel = async (data: any) => {
-    console.log(data);
     const modelData = {
       ...data,
-      categories: data.categories.selectedValues
+      id: props?.model?.id,
     };
     updateModel(modelData)
       .then((response: Response) => {
-        if (!response.success) {
-          alert(response.message);
+        if (response.success) {
+          alert("Model updated successfully");
         }
       })
       .catch((error) => {
         alert(error);
       });
-
-    alert("Model updated successfully");
   };
+
+  const onSubmit = props?.formUpdate ? handleUpdateModel : handleSaveModel;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">

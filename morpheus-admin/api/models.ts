@@ -19,7 +19,7 @@ const createResponse = ({ success, data = [], message }: ResponseProps) => {
 
 export const getAvailableModels = async () => {
   try {
-    const response = await httpInstance.get("/models");
+    const response = await httpInstance.get("/models?only_active=false");
     if (response.status === 200 && response.data.length > 0) {
       return createResponse({ success: true, data: response.data });
     }

@@ -16,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     getAvailableModels()
       .then((response: Response) => {
-        console.log(response.data);
+
         setModels(response.data);
       })
       .catch((error) => {
@@ -34,7 +34,7 @@ export default function Home() {
         }
         const updatedModels = models.map((modelData) => {
           if (modelData.source === response.data.data.model_updated.source) {
-            return response.data;
+            return response.data.data.model_updated
           }
           return modelData;
         });
@@ -125,6 +125,8 @@ export default function Home() {
                   categories={editingModel.categories}
                   is_active={editingModel.is_active}
                   kind={editingModel.kind}
+                  model={editingModel}
+                  formUpdate={true}
                 />
               </Modal>
             )}
