@@ -105,6 +105,7 @@ spec:
           block: 'true'
           num-cpus: "{{ .Values.worker.workerGroup.rayStartParams.numCpus }}"
           num-gpus: "{{ .Values.worker.workerGroup.rayStartParams.numGpus }}"
+          resources: '"{\"WorkerCpu\": 4}"'
         template:
           spec:
             nodeSelector:
@@ -126,7 +127,7 @@ spec:
                 resources:
                   limits:
                     cpu: "{{ .Values.worker.workerGroup.resources.limits.cpu }}"
-                    memory: "{{ .Values.worker.workerGroup.resources.limits.memory }}"
+                    # memory: "{{ .Values.worker.workerGroup.resources.limits.memory }}"
                     nvidia.com/gpu: "{{ .Values.worker.workerGroup.resources.limits.gpu }}"
                 env:
                   - name: POSTGRES_USER
@@ -186,7 +187,6 @@ spec:
                 volumeMounts:
                 - name: models
                   mountPath: /mnt
-
             volumes:
             - name: models
               persistentVolumeClaim:

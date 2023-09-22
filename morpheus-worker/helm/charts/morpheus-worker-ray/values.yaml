@@ -31,8 +31,8 @@ worker:
       numGpus: "1"
     resources:
       limits:
-        cpu: "3"
-        memory: "15G"
+        cpu: "7"
+        # memory: "15G"
         gpu: 1
 
 imagePullSecrets:
