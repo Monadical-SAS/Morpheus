@@ -41,27 +41,27 @@ const ImagineMenu = () => {
   const { isMobile } = useWindowDimensions();
 
   useEffect(() => {
-    if (imagineOptionPath && selectedModel) {
-      if (
-        !selectedModel.categories.some(
+    if (!router.pathname.endsWith("paint")) {
+      const currentModelSupportsFeature =
+        selectedModel &&
+        selectedModel.categories &&
+        selectedModel.categories.some(
           (category) => category.name === imagineOptionPath
-        )
-      ) {
-        const validModel = findValidModelForFeature(
-          imagineOptionPath as ModelCategory
         );
-        setActiveLink({
-          model: validModel,
-          feature: imagineOptionPath as ModelCategory,
-        });
-      } else {
+
+      if (currentModelSupportsFeature) {
         setActiveLink({
           model: selectedModel,
           feature: imagineOptionPath as ModelCategory,
         });
+      } else {
+        setActiveLink({
+          model: findValidModelForFeature(imagineOptionPath as ModelCategory),
+          feature: imagineOptionPath as ModelCategory,
+        });
       }
     }
-  }, []);
+  }, [imagineOptionPath]);
 
   const getMobileTitle = () => {
     if (activeLink.model && activeLink.feature) {
@@ -223,7 +223,10 @@ const ImagineMenuItem = (props: ImagineMenuItemProps) => {
   };
 
   useEffect(() => {
-    router.push(activeLink.feature);
+    if (!router.pathname.endsWith("paint")) {
+      const baseUrl = !router.pathname.startsWith("imagine") ? "/imagine" : "";
+      router.push(`${baseUrl}/${activeLink.feature}`);
+    }
   }, [activeLink]);
 
   return (
