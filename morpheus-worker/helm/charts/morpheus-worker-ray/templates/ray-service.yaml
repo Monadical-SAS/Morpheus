@@ -105,6 +105,7 @@ spec:
           block: 'true'
           num-cpus: "{{ .Values.worker.workerGroup.rayStartParams.numCpus }}"
           num-gpus: "{{ .Values.worker.workerGroup.rayStartParams.numGpus }}"
+          resources: '"{\"WorkerCpu\": 4}"'
         template:
           spec:
             nodeSelector:
@@ -186,7 +187,6 @@ spec:
                 volumeMounts:
                 - name: models
                   mountPath: /mnt
-
             volumes:
             - name: models
               persistentVolumeClaim:
