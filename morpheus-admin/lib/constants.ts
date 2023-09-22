@@ -1,0 +1,1 @@
+export const KIND_MODELS = [{ name: "diffusion" }, { name: "controlnet" }, { name: "prompt" }]

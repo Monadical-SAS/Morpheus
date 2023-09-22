@@ -1,15 +1,16 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { TextInput } from "@/components/atoms/input";
 import { Button, ButtonVariant } from "@/components/atoms/button";
 import { useEffect, useState } from "react";
-import MultipleSelect from "@/components/atoms/multiselect";
 import { ToggleInput } from "@/components/atoms/toggle";
 import { saveNewModel, updateModel } from "@/api/models";
 import { getAvailableCategories } from "@/api/model_categories";
 import { ModelCategory, Response } from "@/lib/models";
 import { Model } from "@/lib/models";
+import MultipleSelect from "@/components/atoms/multipleSelect";
+import { KIND_MODELS } from "@/lib/constants";
 
 interface ModelFormProps {
   name?: string;
@@ -19,7 +20,7 @@ interface ModelFormProps {
   url_docs?: string;
   categories?: any[];
   is_active?: boolean;
-  kind?: string;
+  kind?: any;
   model?: Model;
   formUpdate?: boolean;
 }
@@ -39,7 +40,7 @@ export function ModelForm(props: ModelFormProps) {
       url_docs: props?.url_docs,
       categories: props?.categories,
       is_active: props?.is_active,
-      kind: props?.kind,
+      kind: [{ name: props?.kind }],
     },
   });
 
@@ -118,23 +119,14 @@ export function ModelForm(props: ModelFormProps) {
         setValue={setValue}
       />
 
-      <Controller
+      <MultipleSelect
         name="categories"
+        label="Model Categories"
+        options={categories}
         control={control}
         rules={{ required: true }}
-        render={({ field }) => (
-          <MultipleSelect
-            name="categories"
-            label="Model Categories"
-            options={categories}
-            value={field.value}
-            onChange={(newValue) => {field.onChange(newValue)}}
-            errors={errors.categories}
-            setValue={setValue}
-          />
-        )}
+        isMulti={true}
       />
-
       <TextInput
         name={"description"}
         label={"Description"}
@@ -163,18 +155,13 @@ export function ModelForm(props: ModelFormProps) {
         setValue={setValue}
       />
 
-      <TextInput
-        name={"kind"}
-        label={"Kind"}
-        placeholder={"Kind of model"}
-        register={register}
-        validationSchema={{
-          required: true,
-          minLength: 5,
-          maxLength: 512,
-        }}
-        errors={errors.url_docs}
-        setValue={setValue}
+      <MultipleSelect
+        name="kind"
+        label="Kind of model"
+        options={KIND_MODELS}
+        control={control}
+        rules={{ required: true }}
+        isMulti={false}
       />
 
       <ToggleInput name={"is_active"} label={"Activate model"} register={register} />
