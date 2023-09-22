@@ -1,13 +1,11 @@
 import logging
 import random
-from pathlib import Path
 
 import ray
-from dynamicprompts.generators import RandomPromptGenerator
-from dynamicprompts.generators.magicprompt import MagicPromptGenerator
-
 from app.models.schemas import ModelRequest
 from app.settings.settings import get_settings
+from dynamicprompts.generators import RandomPromptGenerator
+from dynamicprompts.generators.magicprompt import MagicPromptGenerator
 
 settings = get_settings()
 
@@ -18,18 +16,18 @@ class StableDiffusionMagicPrompt:
         self.logger = logging.getLogger("ray")
 
         # Get the model source, path for local model, model_id for hugin face remote model
-        self.local_model_path = Path(settings.models_folder).joinpath(model_id)
-        self.model_source = self.local_model_path if Path(self.local_model_path).exists() else model_id
+        # self.local_model_path = Path(settings.models_folder).joinpath(model_id)
+        # self.model_source = self.local_model_path if Path(self.local_model_path).exists() else model_id
 
         self.generator = RandomPromptGenerator()
         self.magic_generator = MagicPromptGenerator(
             prompt_generator=self.generator,
-            model_name=self.model_source,
+            model_name=model_id,
             device="cpu",
         )
 
-        if not Path(self.local_model_path).exists():
-            self.magic_generator.generator.save_pretrained(save_directory=str(self.local_model_path))
+        # if not Path(self.local_model_path).exists():
+        #     self.magic_generator.generator.save_pretrained(save_directory=str(self.local_model_path))
 
     def generate(self, request: ModelRequest):
         self.logger.info(f"StableDiffusionMagicPrompt.generate: request: {request}")
