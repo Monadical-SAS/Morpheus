@@ -21,7 +21,7 @@ async def create_model(*, db: Session = Depends(get_db), model: MLModelCreate):
     if not model_created:
         return Response(success=False, message="Model not created")
 
-    return model_created
+    return Response(success=True, message="Model created", model_created=model_created)
 
 
 @router.get("", response_model=Union[Response, List[MLModel]])
@@ -57,7 +57,7 @@ async def update_sd_model(model: MLModel, db: Session = Depends(get_db)):
     if not sd_model_updated:
         return Response(success=False, message=f"No SD Model found with source {model.source}")
     
-    return Response(success=True, message="SD Model updated", data={"model_updated": sd_model_updated})
+    return Response(success=True, message="SD Model updated", model_updated=sd_model_updated)
 
 
 @router.delete("/{model_source:path}", response_model=Union[Response, List[MLModel]])
@@ -66,4 +66,4 @@ async def delete_sd_model(model_source: str, db: Session = Depends(get_db)):
     if not sd_model:
         return Response(success=False, message="No SD Model found")
 
-    return Response(success=True, message="SD Model deleted", data={"model_deleted": sd_model})
+    return Response(success=True, message="SD Model deleted", model_deleted=sd_model)

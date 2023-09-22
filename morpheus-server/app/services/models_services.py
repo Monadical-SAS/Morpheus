@@ -60,26 +60,32 @@ class ModelService:
         return self.model_repository.get_model_by_source(db=db, model_source=model_source)
 
     async def update_model(self, *, db: Session, model: MLModel) -> MLModel:
-        print("Updating model")
-        print(model.__dict__)
         model_db = self.model_repository.get_model_by_source(db=db, model_source=model.source)
         model_categories = self.category_repository.get_categories_by_model(db=db, model=model)
+
         if model.categories != model_categories:
             model.categories = [
                 self.category_repository.get_category_by_name(db=db, name=category.name)
                 for category in model.categories
             ]
+
         if model_db.is_active != model.is_active and settings.environment == EnvironmentEnum.prod:
             if model.is_active:
                 self.s3_model_registry.register_model_in_storage(output_path=model.source)
             else:
                 self.s3_model_registry.delete_model_from_storage(name=model.source)
-        return self.model_repository.update_model(db=db, model=model)
+
+        model_updated = self.model_repository.update_model(db=db, model=model)
+        model_categories = self.category_repository.get_categories_by_model(db=db, model=model)
+        model_updated.categories = model_categories
+
+        return model_updated
 
     async def delete_model_by_source(self, *, db: Session, model_source: str) -> MLModel:
         # 1. Delete model from disk
         self.model_manager.remove_model(name=model_source)
         # 2. Delete model from S3
-        self.s3_model_registry.delete_model_from_storage(name=model_source)
+        if settings.environment == EnvironmentEnum.prod:
+            self.s3_model_registry.delete_model_from_storage(name=model_source)
         # 3. Delete model from DB and return
         return self.model_repository.delete_model_by_source(db=db, model_source=model_source)

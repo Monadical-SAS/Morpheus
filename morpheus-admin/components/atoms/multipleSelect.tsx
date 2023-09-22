@@ -20,7 +20,7 @@ type MultiValue<ModelCategory> = readonly ModelCategory[];
 
 export default function MultipleSelect(props: MultipleSelectProps) {
   const [isClient, setIsClient] = React.useState(false);
-  const [state, setState] = React.useState<ArrayObjectSelectState>({
+  const [state, setState] = React.useState<ArrayObjectSelectState | null>({
     selectedCategories: null,
   });
   const {
@@ -30,19 +30,24 @@ export default function MultipleSelect(props: MultipleSelectProps) {
     name: props.name,
     control: props.control,
     rules: props.rules,
-    defaultValue: props.isMulti ? [] : {},
   });
 
   React.useEffect(() => {
+    const isValueEmpty =
+      !value || (Array.isArray(value) && value.some((item: ModelCategory) => item.name === undefined));
+    if (isValueEmpty) {
+      setState(null);
+    } else {
+      setState({ selectedCategories: value });
+    }
     setIsClient(true);
-    setState({ selectedCategories: value });
   }, [value]);
 
   const errorMessages = {
-    "required": "This field is required",
-    "default": "Unknown error"
+    required: "This field is required",
+    default: "Unknown error",
   };
-  
+
   const getInputError = () => {
     if (error) {
       return errorMessages[error.type as keyof typeof errorMessages] || error.message || errorMessages.default;
@@ -59,7 +64,7 @@ export default function MultipleSelect(props: MultipleSelectProps) {
       </label>
       {isClient && (
         <Select
-          value={state.selectedCategories}
+          value={state ? state.selectedCategories : null}
           onChange={(
             newValue: MultiValue<ModelCategory> | ModelCategory | any,
             actionMeta: ActionMeta<ModelCategory>
@@ -75,9 +80,10 @@ export default function MultipleSelect(props: MultipleSelectProps) {
           isMulti={props.isMulti}
           styles={colorStyles}
           menuPortalTarget={document.body}
+          placeholder={"Select a category..."}
         />
       )}
-            {error && (
+      {error && (
         <label className="label">
           <span className="text-sm error text-error">{getInputError()}</span>
         </label>

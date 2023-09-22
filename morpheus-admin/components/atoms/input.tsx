@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef } from "react";
 
 interface TextInputProps extends ComponentPropsWithoutRef<"input"> {
-  label: string;
+  label?: string;
   register: any;
   validationSchema?: any;
   errors?: any;
@@ -17,18 +17,19 @@ export const TextInput = (props: TextInputProps) => {
     if (props.errors.type === "maxLength") return "Max length is 20";
   };
 
-  const handleInputChange = ((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     props.setValue(props.name, event.target.value);
-  }
-  );
+  };
 
   return (
     <div className="w-full form-control">
-      <label className="label">
-        <span className="label-text">
-          {props.label} {props.validationSchema.required && "*"}
-        </span>
-      </label>
+      {props.label && (
+        <label className="label">
+          <span className="label-text">
+            {props.label} {props.label && props.validationSchema.required && "*"}
+          </span>
+        </label>
+      )}
 
       <input
         name={props.name}

@@ -12,7 +12,8 @@ export interface Model {
     url_docs?: string;
     categories: any[];
     is_active: boolean;
-    kind: string;
+    kind: string | any;
+    extra_params?: any;
 }
 
 export interface ModelCategory {

@@ -16,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     getAvailableModels()
       .then((response: Response) => {
-
+        console.log(response.data);
         setModels(response.data);
       })
       .catch((error) => {
@@ -26,15 +26,14 @@ export default function Home() {
 
   const handleActivateModel = (model: Model) => {
     const modelData = { ...model, is_active: !model.is_active };
-    console.log(modelData);
     updateModel(modelData)
       .then((response: Response) => {
         if (!response.success) {
           alert(response.message);
         }
         const updatedModels = models.map((modelData) => {
-          if (modelData.source === response.data.data.model_updated.source) {
-            return response.data.data.model_updated
+          if (modelData.source === response.data.model_updated.source) {
+            return response.data.model_updated;
           }
           return modelData;
         });
@@ -51,9 +50,7 @@ export default function Home() {
         if (!response.success) {
           alert(response.message);
         }
-        const updatedModels = models.filter(
-          (modelData) => modelData.source !== response.data.data.model_deleted.source
-        );
+        const updatedModels = models.filter((modelData) => modelData.source !== response.data.model_deleted.source);
         setModels(updatedModels);
         setRemovingModel(null);
       })
@@ -75,7 +72,12 @@ export default function Home() {
             onClick={() => setOpen(true)}
           />
           <Modal open={open} onClose={() => setOpen(false)}>
-            <ModelForm title={"Add a new Model"} />
+            <ModelForm
+              title={"Add a new Model"}
+              models={models}
+              setModels={setModels}
+              handleModalClose={() => setOpen(false)}
+            />
           </Modal>
         </div>
 
@@ -105,10 +107,10 @@ export default function Home() {
                       />
                     </td>
                     <td>
-                      <span onClick={() => setEditingModel(model)}>Edit</span>
+                      <span onClick={() => setEditingModel(model)} className="cursor-pointer">Edit</span>
                     </td>
                     <td>
-                      <span onClick={() => setRemovingModel(model)}>Remove</span>
+                      <span onClick={() => setRemovingModel(model)} className="cursor-pointer">Remove</span>
                     </td>
                   </tr>
                 ))}
@@ -118,15 +120,11 @@ export default function Home() {
               <Modal open={editingModel !== null} onClose={() => setEditingModel(null)}>
                 <ModelForm
                   title={"Edit Model"}
-                  name={editingModel.name}
-                  source={editingModel.source}
-                  description={editingModel.description}
-                  url_docs={editingModel.url_docs}
-                  categories={editingModel.categories}
-                  is_active={editingModel.is_active}
-                  kind={editingModel.kind}
-                  model={editingModel}
+                  editingModel={editingModel}
+                  models={models}
+                  setModels={setModels}
                   formUpdate={true}
+                  handleModalClose={() => setEditingModel(null)}
                 />
               </Modal>
             )}
