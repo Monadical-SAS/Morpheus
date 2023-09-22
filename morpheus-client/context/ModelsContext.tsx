@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { getAvailableModels } from "@/services/models";
 import { getAvailableSamplers } from "@/services/samplers";
 import { Model } from "@/models/models";
@@ -61,7 +67,9 @@ const defaultState = {
 const mapModelBooleanFeaturesToStringFeatures = (model: Model) => {
   const features = [];
   for (let category of categories) {
-    if (model.categories.some((modelCategory) => modelCategory.name === category)) {
+    if (
+      model.categories.some((modelCategory) => modelCategory.name === category)
+    ) {
       features.push(category);
     }
   }
@@ -87,7 +95,9 @@ const ModelsProvider = (props: { children: ReactNode }) => {
       if (response.success && response.data) {
         if (response.data.length > 0) {
           const filteredModels = response.data.filter((model: any) =>
-            model.categories.every((category: any) => category.name !== ModelCategory.Processing)
+            model.categories.every(
+              (category: any) => category.name !== ModelCategory.Processing
+            )
           );
           const modelsWithFeatures = filteredModels.map((model: Model) => {
             return {
@@ -119,7 +129,11 @@ const ModelsProvider = (props: { children: ReactNode }) => {
   }, [activeLink]);
 
   const findValidModelForFeature = (feature: ModelCategory) => {
-    return models.find((model: Model) => model.categories.some((category) => category.name === feature)) || models[0];
+    return (
+      models.find((model: Model) =>
+        model.categories.some((category) => category.name === feature)
+      ) || models[0]
+    );
   };
 
   return (

@@ -17,7 +17,7 @@ interface MagicPromptProps {
 }
 
 const MagicPrompt = (props: MagicPromptProps) => {
-  const { showInfoAlert, showWarningAlert, showErrorAlert } = useToastContext();
+  const { showInfoAlert, showErrorAlert } = useToastContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { prompt, setPrompt } = useDiffusion();
 
@@ -41,7 +41,9 @@ const MagicPrompt = (props: MagicPromptProps) => {
       response.message || "MagicPrompt request queued successfully!"
     );
     const taskId = response.data;
-    const responseMagicPrompt: ServerResponse = await getGeneratedDataWithRetry(taskId);
+    const responseMagicPrompt: ServerResponse = await getGeneratedDataWithRetry(
+      taskId
+    );
 
     if (!responseMagicPrompt.success) {
       setIsLoading(false);
@@ -52,13 +54,13 @@ const MagicPrompt = (props: MagicPromptProps) => {
       return;
     }
 
-
     if (
-        !responseMagicPrompt.data ||
-        responseMagicPrompt.data.length === 0 ||
-        responseMagicPrompt.data.results.length === 0)
-    {
-      showWarningAlert(
+      !responseMagicPrompt.data ||
+      responseMagicPrompt.data.length === 0 ||
+      responseMagicPrompt.data.results.length === 0 ||
+      responseMagicPrompt.data.results[0] === prompt.value
+    ) {
+      showInfoAlert(
         "Magic Prompt did not generate a new prompt. " +
           "Please try again to get a new proposal or rewrite your prompt"
       );

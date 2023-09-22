@@ -22,11 +22,12 @@ class S3Client:
             aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY,
         )
 
-    def upload_file(self, *, file: Any, folder_name: str, file_name: str):
+    def upload_file(self, *, file: Any, file_name: str):
         img_byte_arr = BytesIO()
         file.save(img_byte_arr, format="png")
         img_byte_arr = img_byte_arr.getvalue()
-        key = f"{folder_name}/{file_name}"
+        key = f"{settings.images_temp_bucket}/{file_name}"
+
         try:
             self.s3_client.put_object(
                 Body=img_byte_arr,
@@ -39,11 +40,10 @@ class S3Client:
             self.logger.error(f"Error uploading image to S3: {key}")
             self.logger.error(e)
 
-    def upload_multiple_files(self, *, files: List[Any], folder_name: str, file_name: str):
+    def upload_multiple_files(self, *, files: List[Any], file_name: str):
         image_urls = [
             self.upload_file(
                 file=image,
-                folder_name=folder_name,
                 file_name=f"{file_name}-{index}.png"
             ) for index, image in enumerate(files)
         ]
