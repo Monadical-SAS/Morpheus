@@ -12,6 +12,10 @@
   max-height: 100%;
   overflow-y: auto;
   padding: 24px;
+  /* Hide scrollbar in Firefox */
+  scrollbar-width: none;
+  /* Hide scrollbar track */
+  scrollbar-track-color: transparent;
 
   &::-webkit-scrollbar {
     display: none;
