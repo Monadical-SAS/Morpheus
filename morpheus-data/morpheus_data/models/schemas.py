@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from typing import Optional, List
 from uuid import UUID
@@ -6,6 +7,11 @@ from morpheus_data.config import get_settings
 from pydantic import BaseModel, Field, validator
 
 settings = get_settings()
+
+
+class BasicModel(BaseModel):
+    created_at: datetime = None
+    updated_at: datetime = None
 
 
 class User(BaseModel):
@@ -208,7 +214,7 @@ class StableDiffusionSchema(BaseModel):
     prompt: str = Field(..., min_length=1)
 
 
-class ModelCategory(BaseModel):
+class ModelCategory(BasicModel):
     id: UUID = None
     name: str
     description: str = None
@@ -224,7 +230,7 @@ class ModelCategory(BaseModel):
         }
 
 
-class MLModelCreate(BaseModel):
+class MLModelCreate(BasicModel):
     name: str
     source: str
     kind: ModelKind = None
