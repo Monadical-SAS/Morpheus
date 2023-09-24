@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { TextInput } from "@/components/atoms/input";
 import { Button, ButtonVariant } from "@/components/atoms/button";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import { getAvailableCategories } from "@/api/model_categories";
 import { ModelCategory, Response } from "@/lib/models";
 import { Model } from "@/lib/models";
 import MultipleSelect from "@/components/atoms/multipleSelect";
-import { KIND_MODELS } from "@/lib/constants";
+import { KIND_MODELS, CONTROLNET } from "@/lib/constants";
 
 interface ModelFormProps {
   title?: string;
@@ -48,6 +48,16 @@ const extraParamsToArray = (extraParams: ExtraParam) => {
 
 export function ModelForm(props: ModelFormProps) {
   const [extraParams, setExtraParams] = useState<extraParams[]>([{ name: "", value: "" }]);
+  const defaultValues = {
+    name: props?.editingModel?.name,
+    source: props?.editingModel?.source,
+    description: props?.editingModel?.description,
+    url_docs: props?.editingModel?.url_docs,
+    categories: props?.editingModel?.categories,
+    is_active: props?.editingModel?.is_active,
+    extra_params: extraParamsToArray(props?.editingModel?.extra_params),
+    kind: { name: props?.editingModel?.kind },
+  };
   const {
     register,
     handleSubmit,
@@ -55,19 +65,16 @@ export function ModelForm(props: ModelFormProps) {
     formState: { errors },
     control,
     getValues,
-  } = useForm<Model>({
-    defaultValues: {
-      name: props?.editingModel?.name,
-      source: props?.editingModel?.source,
-      description: props?.editingModel?.description,
-      url_docs: props?.editingModel?.url_docs,
-      categories: props?.editingModel?.categories,
-      is_active: props?.editingModel?.is_active,
-      extra_params: extraParamsToArray(props?.editingModel?.extra_params),
-      kind: [{ name: props?.editingModel?.kind }],
-    },
-  });
+    watch,
+  } = useForm<Model>({ defaultValues });
   const [categories, setCategories] = useState<ModelCategory[]>([]);
+  const [extraParamsValidation, setExtraParamsValidation] = useState({
+    required: false,
+    maxLength: 64,
+  });
+
+  const watchKind = watch("kind");
+  const watchExtraParams = watch("extra_params");
 
   useEffect(() => {
     getAvailableCategories()
@@ -77,9 +84,11 @@ export function ModelForm(props: ModelFormProps) {
       .catch((error) => {
         alert(error);
       });
-    const extraParams = getValues("extra_params");
-    setExtraParams(extraParams);
   }, []);
+
+  useEffect(() => {
+    setExtraParams(watchExtraParams);
+  }, [watchExtraParams]);
 
   const handleSaveModel = async (data: any) => {
     try {
@@ -106,7 +115,6 @@ export function ModelForm(props: ModelFormProps) {
       kind: data.kind.name,
       extra_params: extraParamsToJson(data.extra_params),
     };
-    console.log(modelData);
     updateModel(modelData)
       .then((response: Response) => {
         if (!response.success) {
@@ -134,15 +142,27 @@ export function ModelForm(props: ModelFormProps) {
     setExtraParams([...extraParams, { name: "", value: "" }]);
   };
 
-  const handleRemoveFields = (field: extraParams) => {
-    console.log(field);
-    let values = [...extraParams];
-    values = values.filter((value) => value !== field);
-    setExtraParams(values);
-    let extraParams2 = getValues("extra_params");
-    extraParams2 = extraParams2.filter((value: extraParams) => value !== field);
-    setValue("extra_params", extraParams2);
+  const handleRemoveFields = (index: number) => {
+    const values = [...getValues("extra_params")];
+    if (values.length === 1) return;
+    values.splice(index, 1);
+    setValue("extra_params", values);
   };
+
+  const getExtraParamsErrors = (index: number) => {
+    if (errors.extra_params !== undefined && Array.isArray(errors.extra_params)) {
+      return errors.extra_params[index];
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    if (watchKind.name === CONTROLNET) {
+      setExtraParamsValidation({ required: true, maxLength: 64 });
+    } else {
+      setExtraParamsValidation({ required: false, maxLength: 64 });
+    }
+  }, [watchKind]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
@@ -221,55 +241,40 @@ export function ModelForm(props: ModelFormProps) {
         rules={{ required: true }}
         isMulti={false}
       />
-      <div className="label-text">Extra params</div>
-      {extraParams.map((field, index) => (
-        <div key={`${field}-${index}`} className="flex flex-row items-center justify-center space-x-2">
-          <button
-            type="button"
-            onClick={() => handleAddFields()}
-            className="block w-5 h-5 text-gray-900 bg-gray-100 rounded-md cursor-pointer"
-          >
-            +
-          </button>
-          <div className="flex flex-row justify-center space-x-2">
-            <TextInput
-              name={`extra_params[${index}].name`}
-              placeholder={"Insert key"}
-              register={register}
-              validationSchema={{
-                required: true,
-                minLength: 2,
-                maxLength: 64,
-              }}
-              errors={errors[`extra_params[${index}].name` as keyof typeof errors]}
-              setValue={setValue}
-            />
-
-            <TextInput
-              name={`extra_params[${index}].value`}
-              placeholder={"Insert value"}
-              register={register}
-              validationSchema={{
-                required: true,
-                minLength: 2,
-                maxLength: 64,
-              }}
-              errors={errors[`extra_params[${index}].name` as keyof typeof errors]}
-              setValue={setValue}
-            />
-          </div>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              handleRemoveFields(field);
-            }}
-            className="block w-5 h-5 text-gray-900 bg-gray-100 rounded-md cursor-pointer"
-          >
-            -
-          </button>
+      <div className="!mt-6 label-text">Extra params {extraParamsValidation.required && "*"}</div>
+      {extraParamsValidation.required && (
+        <div className="text-xs text-red-500 label-text">
+          <strong>Reminder:</strong> Please include the 'type' parameter in 'extra params'. It should be either 'canny',
+          'hed', 'depth', 'seg', 'normalmap', 'mlsd', 'scribble' or 'poses'.
         </div>
-      ))}
+      )}
+      {extraParams.map((field, index) => {
+        return (
+          <div key={`${field}-${index}`} className="flex flex-row justify-center space-x-2 items-top">
+            <Button onClick={() => handleAddFields()} text="+" type="button" />
+            <div className="flex flex-row justify-center space-x-2">
+              <TextInput
+                name={`extra_params[${index}].name`}
+                placeholder={"Insert key"}
+                register={register}
+                validationSchema={extraParamsValidation}
+                setValue={setValue}
+                errors={getExtraParamsErrors(index)?.name}
+              />
+
+              <TextInput
+                name={`extra_params[${index}].value`}
+                placeholder={"Insert value"}
+                register={register}
+                validationSchema={extraParamsValidation}
+                setValue={setValue}
+                errors={getExtraParamsErrors(index)?.value}
+              />
+            </div>
+            <Button onClick={() => handleRemoveFields(index)} type="button" text="-" />
+          </div>
+        );
+      })}
 
       <ToggleInput name={"is_active"} label={"Activate model"} register={register} />
 

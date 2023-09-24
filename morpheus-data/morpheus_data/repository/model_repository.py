@@ -64,7 +64,6 @@ class ModelRepository:
 
     @classmethod
     def delete_model_by_source(cls, *, db: Session, model_source: str) -> MLModel:
-        print(f"{model_source=}")
         record = cls.get_model_by_source(db=db, model_source=model_source)
         db.delete(record)
         db.commit()

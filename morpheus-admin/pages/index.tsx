@@ -16,7 +16,6 @@ export default function Home() {
   useEffect(() => {
     getAvailableModels()
       .then((response: Response) => {
-        console.log(response.data);
         setModels(response.data);
       })
       .catch((error) => {

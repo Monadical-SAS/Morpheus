@@ -1,3 +1,10 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 export enum ButtonSize {
   Xs = "btn-xs",
   Sm = "btn-sm",
@@ -29,14 +36,17 @@ export interface ButtonProps {
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
+  btnClass?: string;
+  type?: "button" | "submit" | "reset" | undefined;
 }
 
 export const Button = (props: ButtonProps) => {
   return (
     <button
-      className={`btn ${props.variant} ${props.fill} ${props.size} ${props.className}`}
+      className={cn(props.btnClass || "btn", props.variant, props.fill, props.size, props.className)}
       onClick={props.onClick}
       disabled={props.disabled}
+      type={props.type || undefined}
     >
       {props.text}
     </button>
