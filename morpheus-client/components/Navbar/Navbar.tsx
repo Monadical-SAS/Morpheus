@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { slide as BurgerMenu } from "react-burger-menu";
@@ -25,7 +25,13 @@ const NavMenu = (props: NavMenuProps) => {
   const router = useRouter();
   const currentPath = router.pathname;
   const { isMobile } = useWindowDimensions();
-  const [showUserCard, setShowUserCard] = useState(isMobile || false);
+  const [showUserCard, setShowUserCard] = useState(false);
+
+  useEffect(() => {
+    if (isMobile) {
+      setShowUserCard(true);
+    }
+  }, [isMobile]);
 
   const getLinkStyles = (path: string) => {
     const current = currentPath.split("/")[1];
@@ -61,7 +67,11 @@ const NavMenu = (props: NavMenuProps) => {
         </span>
 
         <div className={styles.userCardContainer}>
-          <UserCard showCard={showUserCard} setShowCard={setShowUserCard} />
+          <UserCard
+            showCard={showUserCard}
+            setShowCard={setShowUserCard}
+            isMobile={isMobile}
+          />
         </div>
       </nav>
     </Fragment>
