@@ -11,6 +11,8 @@ import { ModelCategory, Response } from "@/lib/models";
 import { Model } from "@/lib/models";
 import MultipleSelect from "@/components/atoms/multipleSelect";
 import { KIND_MODELS, CONTROLNET } from "@/lib/constants";
+import { useToastContext } from "@/context/ToastContext";
+
 
 interface ModelFormProps {
   title?: string;
@@ -48,6 +50,7 @@ const extraParamsToArray = (extraParams: ExtraParam) => {
 
 export function ModelForm(props: ModelFormProps) {
   const [extraParams, setExtraParams] = useState<extraParams[]>([{ name: "", value: "" }]);
+  const { showErrorAlert, showSuccessAlert } = useToastContext();
   const defaultValues = {
     name: props?.editingModel?.name,
     source: props?.editingModel?.source,
@@ -82,7 +85,7 @@ export function ModelForm(props: ModelFormProps) {
         if (response.success) setCategories(response.data);
       })
       .catch((error) => {
-        alert(error);
+        showErrorAlert("Something went wrong. Please try again later.");
       });
   }, []);
 
@@ -97,14 +100,16 @@ export function ModelForm(props: ModelFormProps) {
         kind: data.kind.name,
       };
       const response = (await saveNewModel(modelData)) as Response;
-      if (!response?.success) {
-        alert(response?.message);
+      if (response?.success) {
+        const updatedModels = [...(props?.models as Model[]), response?.data?.model_created as Model];
+        props?.setModels(updatedModels);
+        props?.handleModalClose();
+        showSuccessAlert("Model created successfully.");
+      } else {
+        showErrorAlert("Something went wrong. Please try again later.");
       }
-      const updatedModels = [...(props?.models as Model[]), response?.data?.model_created as Model];
-      props?.setModels(updatedModels);
-      props?.handleModalClose();
     } catch (error) {
-      alert(error);
+      showErrorAlert("Something went wrong. Please try again later.");
     }
   };
 

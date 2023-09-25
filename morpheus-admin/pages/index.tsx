@@ -13,7 +13,7 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const [editingModel, setEditingModel] = useState<Model | null>(null);
   const [removingModel, setRemovingModel] = useState<Model | null>(null);
-  const { showErrorAlert } = useToastContext();
+  const { showErrorAlert, showSuccessAlert } = useToastContext();
 
   useEffect(() => {
     getAvailableModels()
@@ -21,7 +21,7 @@ export default function Home() {
         setModels(response.data);
       })
       .catch((error) => {
-        alert(error);
+        showErrorAlert("Something went wrong. Please try again later.");
       });
   }, []);
 
@@ -29,16 +29,19 @@ export default function Home() {
     const modelData = { ...model, is_active: !model.is_active };
     updateModel(modelData)
       .then((response: Response) => {
-        if (!response.success) {
+        if (response.success) {
           showErrorAlert(response.message);
+          const updatedModels = models.map((modelData) => {
+            if (modelData.source === response.data.model_updated.source) {
+              return response.data.model_updated;
+            }
+            return modelData;
+          });
+          setModels(updatedModels);
+          showSuccessAlert("Model updated successfully.");
+        } else {
+          showErrorAlert("Something went wrong. Please try again later.")
         }
-        const updatedModels = models.map((modelData) => {
-          if (modelData.source === response.data.model_updated.source) {
-            return response.data.model_updated;
-          }
-          return modelData;
-        });
-        setModels(updatedModels);
       })
       .catch((error) => {
         showErrorAlert(error);
@@ -52,8 +55,9 @@ export default function Home() {
           const updatedModels = models.filter((modelData) => modelData.source !== response.data.model_deleted.source);
           setModels(updatedModels);
           setRemovingModel(null);
+          showSuccessAlert("Model removed successfully.");
         } else {
-          showErrorAlert(response.message);
+          showErrorAlert("Something went wrong. Please try again later.")
         }
       })
       .catch((error) => {
