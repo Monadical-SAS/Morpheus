@@ -6,12 +6,14 @@ import { Button, ButtonSize, ButtonVariant } from "@/components/atoms/button";
 import { getAvailableModels, updateModel, deleteModel } from "@/api/models";
 import { Model, Response } from "@/lib/models";
 import styles from "@/styles/pages/Home.module.scss";
+import { useToastContext } from "@/context/ToastContext";
 
 export default function Home() {
   const [models, setModels] = useState<Model[]>([]);
   const [open, setOpen] = useState(false);
   const [editingModel, setEditingModel] = useState<Model | null>(null);
   const [removingModel, setRemovingModel] = useState<Model | null>(null);
+  const { showErrorAlert } = useToastContext();
 
   useEffect(() => {
     getAvailableModels()
@@ -28,7 +30,7 @@ export default function Home() {
     updateModel(modelData)
       .then((response: Response) => {
         if (!response.success) {
-          alert(response.message);
+          showErrorAlert(response.message);
         }
         const updatedModels = models.map((modelData) => {
           if (modelData.source === response.data.model_updated.source) {
@@ -39,22 +41,23 @@ export default function Home() {
         setModels(updatedModels);
       })
       .catch((error) => {
-        alert(error);
+        showErrorAlert(error);
       });
   };
 
   const handleRemoveModel = (model: Model) => {
     deleteModel(model.source)
       .then((response: Response) => {
-        if (!response.success) {
-          alert(response.message);
+        if (response.success) {
+          const updatedModels = models.filter((modelData) => modelData.source !== response.data.model_deleted.source);
+          setModels(updatedModels);
+          setRemovingModel(null);
+        } else {
+          showErrorAlert(response.message);
         }
-        const updatedModels = models.filter((modelData) => modelData.source !== response.data.model_deleted.source);
-        setModels(updatedModels);
-        setRemovingModel(null);
       })
       .catch((error) => {
-        alert(error);
+        showErrorAlert(error);
       });
   };
 
@@ -106,10 +109,14 @@ export default function Home() {
                       />
                     </td>
                     <td>
-                      <span onClick={() => setEditingModel(model)} className="cursor-pointer">Edit</span>
+                      <span onClick={() => setEditingModel(model)} className="cursor-pointer">
+                        Edit
+                      </span>
                     </td>
                     <td>
-                      <span onClick={() => setRemovingModel(model)} className="cursor-pointer">Remove</span>
+                      <span onClick={() => setRemovingModel(model)} className="cursor-pointer">
+                        Remove
+                      </span>
                     </td>
                   </tr>
                 ))}
