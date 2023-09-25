@@ -24,8 +24,8 @@ worker:
         memory: "13G"
   workerGroup:
     replicas: 2
-    minReplicas: 2
-    maxReplicas: 6
+    minReplicas: 6
+    maxReplicas: 14
     rayStartParams:
       numCpus: "3"
       numGpus: "1"
