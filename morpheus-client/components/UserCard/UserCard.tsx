@@ -41,6 +41,7 @@ export const UserImage = (props: { size?: string }) => {
 interface UserCardProps {
   showCard: boolean;
   setShowCard: (show: boolean) => void;
+  isMobile?: boolean;
 }
 
 const UserCard = (props: UserCardProps) => {
@@ -62,7 +63,7 @@ const UserCard = (props: UserCardProps) => {
       {props.showCard && (
         <div
           className={styles.userCardWrapper}
-          onClick={() => props.setShowCard(false)}
+          onClick={() => !props.isMobile && props.setShowCard(false)}
         >
           <div className={styles.userCardContainer}>
             <div className={styles.userHeader}>
