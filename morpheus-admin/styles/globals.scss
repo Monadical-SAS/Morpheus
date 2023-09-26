@@ -5,6 +5,7 @@
 @import "variables";
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,18 +36,35 @@
   --radix-accordion-content-height: 100px;
 }
 
+//-------------------------------------------------------------------//
+// Global custom styles
+//--------------------------------------------------------------------//
 html,
 body {
-  max-width: 100vw;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  font-family: Poppins, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
   overflow-x: hidden;
 }
 
-body {
-  font-family: "Poppins", sans-serif;
-  font-size: 1rem;
-  line-height: 1.5;
-  font-weight: 400;
-  overflow-x: hidden;
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p, span {
+  &::selection {
+    background-color: $primary-color;
+    color: white;
+  }
+}
+
+code {
+  font-family: source-code-pro, Consolas, 'Courier New', monospace;
 }
 
 a {
@@ -54,8 +72,36 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.app-link {
+  text-decoration: none;
+  cursor: pointer !important;
+}
+
+//-------------------------------------------------------------------//
+// Scrollbar custom styles
+//--------------------------------------------------------------------//
+html {
+  scroll-behavior: smooth;
+}
+
+/* The scrollbar itself */
+::-webkit-scrollbar {
+  width: 8px; /* width of the entire scrollbar */
+}
+
+/* Track of the scrollbar */
+::-webkit-scrollbar-track {
+  background: $background-primary; /* color of the tracking area */
+}
+
+/* Handle of the scrollbar */
+::-webkit-scrollbar-thumb {
+  border-radius: 16px; /* roundness of the scroll thumb */
+  background-color: $background-primary-4; /* color of the scroll thumb */
+  border: 3px solid $background-primary-4; /* creates padding around scroll thumb */
+}
+
+* {
+  scrollbar-width: thin; /* "auto" or "thin"  */
+  scrollbar-color: $background-white $background-primary; /* thumb and track color */
 }

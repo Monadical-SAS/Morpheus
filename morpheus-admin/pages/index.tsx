@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import MainLayout from "@/layout/MainContainer/MainLayout";
 import Modal from "@/components/atoms/modal";
+import PrivateRoute from "@/layout/PrivateRoute/PrivateRoute";
 import { ModelForm } from "@/components/organisms/ModelForm/ModelForm";
 import { Button, ButtonSize, ButtonVariant } from "@/components/atoms/button";
-import { getAvailableModels, updateModel, deleteModel } from "@/api/models";
+import { deleteModel, getAvailableModels, updateModel } from "@/api/models";
+import { useToastContext } from "@/context/ToastContext";
 import { Model, Response } from "@/lib/models";
 import styles from "@/styles/pages/Home.module.scss";
-import { useToastContext } from "@/context/ToastContext";
 
 export default function Home() {
   const [models, setModels] = useState<Model[]>([]);
@@ -40,7 +41,7 @@ export default function Home() {
           setModels(updatedModels);
           showSuccessAlert("Model updated successfully.");
         } else {
-          showErrorAlert("Something went wrong. Please try again later.")
+          showErrorAlert("Something went wrong. Please try again later.");
         }
       })
       .catch((error) => {
@@ -52,12 +53,15 @@ export default function Home() {
     deleteModel(model.source)
       .then((response: Response) => {
         if (response.success) {
-          const updatedModels = models.filter((modelData) => modelData.source !== response.data.model_deleted.source);
+          const updatedModels = models.filter(
+            (modelData) =>
+              modelData.source !== response.data.model_deleted.source,
+          );
           setModels(updatedModels);
           setRemovingModel(null);
           showSuccessAlert("Model removed successfully.");
         } else {
-          showErrorAlert("Something went wrong. Please try again later.")
+          showErrorAlert("Something went wrong. Please try again later.");
         }
       })
       .catch((error) => {
@@ -66,96 +70,114 @@ export default function Home() {
   };
 
   return (
-    <MainLayout>
-      <main className={styles.main}>
-        <h1 className="text-5xl font-bold">Models</h1>
+    <PrivateRoute>
+      <MainLayout>
+        <main className={styles.main}>
+          <h1 className="text-5xl font-bold">Models</h1>
 
-        <div className="my-5">
-          <Button
-            text={"Add Model"}
-            variant={ButtonVariant.Primary}
-            size={ButtonSize.Md}
-            onClick={() => setOpen(true)}
-          />
-          <Modal open={open} onClose={() => setOpen(false)}>
-            <ModelForm
-              title={"Add a new Model"}
-              models={models}
-              setModels={setModels}
-              handleModalClose={() => setOpen(false)}
+          <div className="my-5">
+            <Button
+              text={"Add Model"}
+              variant={ButtonVariant.Primary}
+              size={ButtonSize.Md}
+              onClick={() => setOpen(true)}
             />
-          </Modal>
-        </div>
-
-        {models.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="table table-zebra">
-              <thead>
-                <tr>
-                  <th>Model Name</th>
-                  <th>Source</th>
-                  <th>Is Active</th>
-                  <th>Edit</th>
-                  <th>Remove</th>
-                </tr>
-              </thead>
-              <tbody>
-                {models.map((model, index) => (
-                  <tr key={model.id}>
-                    <th>{model.name}</th>
-                    <td>{model.source}</td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        className="toggle"
-                        checked={model.is_active}
-                        onChange={() => handleActivateModel(model)}
-                      />
-                    </td>
-                    <td>
-                      <span onClick={() => setEditingModel(model)} className="cursor-pointer">
-                        Edit
-                      </span>
-                    </td>
-                    <td>
-                      <span onClick={() => setRemovingModel(model)} className="cursor-pointer">
-                        Remove
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {editingModel && (
-              <Modal open={editingModel !== null} onClose={() => setEditingModel(null)}>
-                <ModelForm
-                  title={"Edit Model"}
-                  editingModel={editingModel}
-                  models={models}
-                  setModels={setModels}
-                  formUpdate={true}
-                  handleModalClose={() => setEditingModel(null)}
-                />
-              </Modal>
-            )}
-            {removingModel && (
-              <Modal open={removingModel !== null} onClose={() => setRemovingModel(null)}>
-                <div className="modal-body">
-                  <p>Are you sure you want to remove this model?</p>
-                  <div className="flex flex-row justify-center gap-8 pt-4">
-                    <Button text={"Cancel"} variant={ButtonVariant.Primary} onClick={() => setRemovingModel(null)} />
-                    <Button
-                      text={"Remove"}
-                      variant={ButtonVariant.Warning}
-                      onClick={() => handleRemoveModel(removingModel)}
-                    />
-                  </div>
-                </div>
-              </Modal>
-            )}
+            <Modal open={open} onClose={() => setOpen(false)}>
+              <ModelForm
+                title={"Add a new Model"}
+                models={models}
+                setModels={setModels}
+                handleModalClose={() => setOpen(false)}
+              />
+            </Modal>
           </div>
-        )}
-      </main>
-    </MainLayout>
+
+          {models.length > 0 && (
+            <div className="overflow-x-auto">
+              <table className="table table-zebra">
+                <thead>
+                  <tr>
+                    <th>Model Name</th>
+                    <th>Source</th>
+                    <th>Is Active</th>
+                    <th>Edit</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {models.map((model, index) => (
+                    <tr key={model.id}>
+                      <th>{model.name}</th>
+                      <td>{model.source}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          className="toggle"
+                          checked={model.is_active}
+                          onChange={() => handleActivateModel(model)}
+                        />
+                      </td>
+                      <td>
+                        <span
+                          onClick={() => setEditingModel(model)}
+                          className="cursor-pointer"
+                        >
+                          Edit
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          onClick={() => setRemovingModel(model)}
+                          className="cursor-pointer"
+                        >
+                          Remove
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {editingModel && (
+                <Modal
+                  open={editingModel !== null}
+                  onClose={() => setEditingModel(null)}
+                >
+                  <ModelForm
+                    title={"Edit Model"}
+                    editingModel={editingModel}
+                    models={models}
+                    setModels={setModels}
+                    formUpdate={true}
+                    handleModalClose={() => setEditingModel(null)}
+                  />
+                </Modal>
+              )}
+              {removingModel && (
+                <Modal
+                  open={removingModel !== null}
+                  onClose={() => setRemovingModel(null)}
+                >
+                  <div className="modal-body">
+                    <p>Are you sure you want to remove this model?</p>
+                    <div className="flex flex-row justify-center gap-8 pt-4">
+                      <Button
+                        text={"Cancel"}
+                        variant={ButtonVariant.Primary}
+                        onClick={() => setRemovingModel(null)}
+                      />
+                      <Button
+                        text={"Remove"}
+                        variant={ButtonVariant.Warning}
+                        onClick={() => handleRemoveModel(removingModel)}
+                      />
+                    </div>
+                  </div>
+                </Modal>
+              )}
+            </div>
+          )}
+        </main>
+      </MainLayout>
+    </PrivateRoute>
   );
 }

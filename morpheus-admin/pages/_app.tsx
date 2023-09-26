@@ -7,6 +7,7 @@ import "@/App.scss";
 import type { AppProps } from "next/app";
 import { ToastProvider } from "@/context/ToastContext";
 import { Toaster } from "@/components/organisms/toaster";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -35,7 +36,10 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Morpheus - AI Art Generator</title>
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#FFFFFF" />
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width"
+        />
         <meta
           name="description"
           content="Discover our cutting-edge web application that combines image editing tools with powerful
@@ -81,17 +85,43 @@ export default function App({ Component, pageProps }: AppProps) {
 
         {/* Favicon tags */}
         <link rel="icon" type="image/png" href="/favicon/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-chrome-192x192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/favicon/android-chrome-512x512.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon/favicon-16x16.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="/favicon/android-chrome-192x192.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="512x512"
+          href="/favicon/android-chrome-512x512.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/favicon/apple-touch-icon.png"
+        />
         <link rel="manifest" href="/manifest.json" />
         <meta name="google-site-verification" content="" />
       </Head>
       <ToastProvider>
-        <Component {...pageProps} />
-        <Toaster />
+        <AuthProvider>
+          <Component {...pageProps} />
+          <Toaster />
+        </AuthProvider>
       </ToastProvider>
     </Fragment>
   );

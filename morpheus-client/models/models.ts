@@ -9,7 +9,6 @@ export interface User {
   email: string;
   avatar: string;
   bio?: string;
-  phone?: string;
   is_active: boolean;
 }
 
@@ -65,11 +64,10 @@ export interface Model {
   is_active: boolean;
   url_docs?: string;
   categories: any[];
-
 }
 
 export interface ControlNetModel extends Model {
-  extra_params: Record<string, any>
+  extra_params: Record<string, any>;
 }
 
 export interface Sampler {
