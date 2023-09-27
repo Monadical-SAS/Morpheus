@@ -38,3 +38,4 @@ dynamicprompts[attentiongrabber,magicprompt]
 beautifulsoup4
 safetensors
 invisible-watermark>=0.2.0
+moto

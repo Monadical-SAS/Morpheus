@@ -15,6 +15,7 @@ class FilesService:
         self.files_repository = files_repository
         self.user_repository = UserRepository()
 
+    # missing folder name param? (collections / avatars)
     def get_user_images(self, *, db: Session, email: str):
         self.user_repository.get_user_data(db=db, email=email)
         return self.files_repository.get_files(folder_name=email)
@@ -33,6 +34,7 @@ class FilesService:
         else:
             logger.error("File extension not allowed")
 
+    # missing folder name param? (collections / avatars)
     def upload_multiple_files_to_s3(self, *, db: Session, files: list[Any], email: str):
         self.user_repository.get_user_data(db=db, email=email)
         file_urls = []
