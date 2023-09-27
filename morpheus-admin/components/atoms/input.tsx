@@ -2,11 +2,12 @@ import { ComponentPropsWithoutRef } from "react";
 
 interface TextInputProps extends ComponentPropsWithoutRef<"input"> {
   label?: string;
-  register: any;
+  register?: any;
   validationSchema?: any;
   errors?: any;
   value?: string;
   setValue?: any;
+  onChange?: any;
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -26,7 +27,8 @@ export const TextInput = (props: TextInputProps) => {
       {props.label && (
         <label className="label">
           <span className="label-text">
-            {props.label} {props.label && props.validationSchema.required && "*"}
+            {props.label}{" "}
+            {props.label && props.validationSchema?.required && "*"}
           </span>
         </label>
       )}
@@ -37,8 +39,10 @@ export const TextInput = (props: TextInputProps) => {
         type={props.type || "text"}
         placeholder={props.placeholder}
         className="w-full input input-bordered"
-        onChange={handleInputChange}
-        {...props.register(props.name, props.validationSchema)}
+        onChange={props.onChange || handleInputChange}
+        {...(props.register
+          ? props.register(props.name, props.validationSchema)
+          : {})}
       />
 
       {props.errors && (

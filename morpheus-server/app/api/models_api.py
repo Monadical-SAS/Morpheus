@@ -8,7 +8,6 @@ from sqlalchemy.orm import Session
 from morpheus_data.database.database import get_db
 from morpheus_data.models.schemas import MLModel, MLModelCreate
 
-from app.integrations.firebase import get_user
 from app.models.schemas import Response
 from app.services.models_services import ModelService
 
@@ -17,7 +16,7 @@ model_service = ModelService()
 
 
 @router.post("", response_model=Union[Response, MLModel])
-async def create_model(*, db: Session = Depends(get_db), model: MLModelCreate, user=Depends(get_user)):
+async def create_model(*, db: Session = Depends(get_db), model: MLModelCreate):
     model_created = await model_service.create_model(db=db, model=model)
     if not model_created:
         return Response(success=False, message="Model not created")
@@ -53,7 +52,7 @@ async def get_category_model_by_id(category_id: UUID, db: Session = Depends(get_
 
 
 @router.put("", response_model=Union[Response, MLModel])
-async def update_sd_model(model: MLModel, db: Session = Depends(get_db), user=Depends(get_user)):
+async def update_sd_model(model: MLModel, db: Session = Depends(get_db)):
     sd_model_updated = await model_service.update_model(db=db, model=model)
     if not sd_model_updated:
         return Response(success=False, message=f"No SD Model found with source {model.source}")
@@ -62,7 +61,7 @@ async def update_sd_model(model: MLModel, db: Session = Depends(get_db), user=De
 
 
 @router.delete("/{model_source:path}", response_model=Union[Response, List[MLModel]])
-async def delete_sd_model(model_source: str, db: Session = Depends(get_db), user=Depends(get_user)):
+async def delete_sd_model(model_source: str, db: Session = Depends(get_db)):
     sd_model = await model_service.delete_model_by_source(db=db, model_source=model_source)
     if not sd_model:
         return Response(success=False, message="No SD Model found")
