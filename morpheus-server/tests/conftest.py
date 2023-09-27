@@ -2,12 +2,13 @@ import pytest
 from httpx import AsyncClient
 
 from morpheus_data.database.database import get_db
-from morpheus_data.models.schemas import User, CollectionCreate, ArtWorkCreate, Collection, ArtWork, Prompt
+from morpheus_data.models.schemas import User, CollectionCreate, ArtWorkCreate, Collection, ArtWork, Prompt, ModelCategory
 from morpheus_data.repository.firebase_repository import FirebaseRepository
 from morpheus_data.repository.user_repository import UserRepository
 from morpheus_data.repository.collection_repository import CollectionRepository
 from morpheus_data.repository.artwork_repository import ArtWorkRepository
 from morpheus_data.repository.prompt_repository import PromptRepository
+from morpheus_data.repository.model_category_repository import ModelCategoryRepository
 from moto import mock_s3
 import boto3
 import os
@@ -99,6 +100,17 @@ def collection(demo_user):
     new_collection = collection_repository.create_collection(db=db, collection=collection_create, owner=demo_user)
     yield new_collection
     collection_repository.delete_collection(db=db, collection_id=new_collection.id)
+
+@pytest.fixture(scope="function")
+def model_category():
+    category = ModelCategory(
+        name="test_model_category",
+        description="test_description"
+    )
+    category_repository = ModelCategoryRepository()
+    new_category = category_repository.create_category(db=db, category=category)
+    yield new_category
+    category_repository.delete_category(db=db, category_id=new_category.id)
 
 @pytest.fixture(scope="function")
 def make_artwork(demo_user, collection):
