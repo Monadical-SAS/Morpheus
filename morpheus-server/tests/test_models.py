@@ -9,7 +9,7 @@ from tests.utils.prompts import generate_random_prompt
 
 
 @pytest.mark.anyio
-async def test_create_and_delete_model(model_category, async_app_client, auth_header) -> MLModel:
+async def test_create_model(model_category, async_app_client, auth_header) -> MLModel:
     model = MLModelCreate(**{
             "name": "test_create_model",
             "description": "Small dummy model",
@@ -59,9 +59,8 @@ async def test_get_category_model_by_id(model: MLModel, async_app_client, auth_h
 @pytest.mark.anyio
 async def test_update_sd_model(model: MLModel, async_app_client, auth_header):
     model.name = "test_update_model"
-
     model_json = json.loads(json.dumps(object_as_dict(model), cls=CustomEncoder))
-
+    assert object_as_dict(model).get("categories") is not None
     response = await async_app_client.put("/models", headers=auth_header, json=model_json)
     assert response.status_code == 200
     

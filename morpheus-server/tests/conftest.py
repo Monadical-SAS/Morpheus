@@ -20,6 +20,8 @@ from tests.utils.prompts import generate_random_prompt
 
 from app.app import app
 from unittest.mock import patch, MagicMock
+import os
+import shutil
 
 db = next(get_db())
 
@@ -29,6 +31,13 @@ class DemoUserCredentials:
         self.email = "demo@morpheus.com"
         self.name = "Demo User"
         self.password = "DemoPass88"
+
+@pytest.fixture(scope="session", autouse=True)
+def copy_models_to_tmp():
+    shutil.rmtree("./tmp", ignore_errors=True)
+    shutil.copytree("./test_models", "./tmp")
+    yield
+    shutil.rmtree("./tmp")
 
 @pytest.fixture(scope="session")
 def aws_credentials():
