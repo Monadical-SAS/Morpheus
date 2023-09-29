@@ -185,7 +185,8 @@ services:
           devices:
             - driver: nvidia
               count: 1
-              capabilities: [ gpu ]
+              capabilities: [gpu]
+
 
   worker-ray-deployer:
     image: morpheus-worker:latest
