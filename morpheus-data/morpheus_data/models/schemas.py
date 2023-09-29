@@ -14,12 +14,27 @@ class BasicModel(BaseModel):
     updated_at: datetime = None
 
 
+class Role(BaseModel):
+    id: UUID = None
+    name: str
+    description: str = None
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "name": "admin",
+                "description": "Administrator role",
+            }
+        }
+
+
 class User(BaseModel):
     email: str
     name: str = None
     bio: str = None
     avatar: str = None
-    roles: List[str] = None
+    roles: List[Role] = []
 
     class Config:
         orm_mode = True
@@ -34,21 +49,6 @@ class User(BaseModel):
                     "name": "admin",
                     "description": "Administrator role",
                 }],
-            }
-        }
-
-
-class Role(BaseModel):
-    id: UUID
-    name: str
-    description: str = None
-
-    class Config:
-        orm_mode = True
-        schema_extra = {
-            "example": {
-                "name": "admin",
-                "description": "Administrator role",
             }
         }
 

@@ -1,8 +1,10 @@
 from typing import Union, List
 
-from morpheus_data.models.models import User
+from morpheus_data.models.models import User, Role
+from morpheus_data.models.schemas import User as UserCreate
 from morpheus_data.repository.files.s3_files_repository import IMAGES_BUCKET
 from sqlalchemy.orm import Session
+from loguru import logger
 
 
 class UserRepository:
@@ -19,7 +21,7 @@ class UserRepository:
         if user_db:
             if user_db.avatar and not user_db.avatar.startswith("https://"):
                 user_db.avatar = f"https://{IMAGES_BUCKET}.s3.amazonaws.com/{user_db.avatar}"
-        user_db.roles = user_db.roles
+            user_db.roles = user_db.roles
         return user_db
 
     @classmethod
@@ -34,7 +36,19 @@ class UserRepository:
         return db.query(User).offset(skip).limit(limit).all()
 
     @classmethod
-    def create_user(cls, *, db: Session, user: User) -> User:
+    def create_user(cls, *, db: Session, user: UserCreate) -> User:
+        db_user = UserRepository.get_user_by_email(db=db, email=user.email)
+        if db_user:
+            raise ValueError(f"User with email {user.email} already exists")
+
+        db_roles = []
+        for role in user.roles:
+            db_role = db.query(Role).filter(Role.name == role.name).first()
+            if not db_role:
+                raise ValueError(f"Role {user.role} not found")
+            db_roles.append(db_role)
+
+        logger.info(f"Creating user {user.email} with roles {db_roles}")
         avatar_seed = user.name if user.name else user.email
         db_user = User(
             name=user.name,
@@ -42,12 +56,13 @@ class UserRepository:
             bio=user.bio,
             avatar=f"https://ui-avatars.com/api/?name={avatar_seed}&background=random&size=128",
         )
+        db_user.roles = db_roles
         db.add(db_user)
         db.commit()
         return db_user
 
     @classmethod
-    def update_user(cls, *, db: Session, user: User) -> Union[User, None]:
+    def update_user(cls, *, db: Session, user: UserCreate) -> Union[User, None]:
         db_user = UserRepository.get_user_by_email(db=db, email=user.email)
         if not db_user:
             return None

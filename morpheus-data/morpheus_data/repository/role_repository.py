@@ -1,7 +1,7 @@
 from typing import Union, List
 
 from morpheus_data.models.models import Role
-from morpheus_data.models.schemas import RoleCreate
+from morpheus_data.models.schemas import Role as RoleCreate
 from sqlalchemy.orm import Session
 
 
@@ -12,7 +12,7 @@ class RoleRepository:
 
     @classmethod
     def get_role_by_name(cls, *, db: Session, name: str) -> Role:
-        return db.query(Role).filter(Role.email == name).first()
+        return db.query(Role).filter(Role.name == name).first()
 
     @classmethod
     def get_roles(cls, *, db: Session, skip: int = 0, limit: int = 100) -> List[Role]:
