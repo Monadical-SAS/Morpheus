@@ -2,13 +2,14 @@ import pytest
 from httpx import AsyncClient
 
 from morpheus_data.database.database import get_db
-from morpheus_data.models.schemas import User, CollectionCreate, ArtWorkCreate, Collection, ArtWork, Prompt, ModelCategory
+from morpheus_data.models.schemas import User, CollectionCreate, ArtWorkCreate, Collection, ArtWork, Prompt, ModelCategory, MLModelCreate, MLModel
 from morpheus_data.repository.firebase_repository import FirebaseRepository
 from morpheus_data.repository.user_repository import UserRepository
 from morpheus_data.repository.collection_repository import CollectionRepository
 from morpheus_data.repository.artwork_repository import ArtWorkRepository
 from morpheus_data.repository.prompt_repository import PromptRepository
 from morpheus_data.repository.model_category_repository import ModelCategoryRepository
+from morpheus_data.repository.model_repository import ModelRepository
 from moto import mock_s3
 import boto3
 import os
@@ -18,6 +19,7 @@ from app.config import get_settings
 from tests.utils.prompts import generate_random_prompt
 
 from app.app import app
+from unittest.mock import patch, MagicMock
 
 db = next(get_db())
 
@@ -70,7 +72,9 @@ async def async_app_client(mock_settings):
             s3.create_bucket(Bucket=mock_settings.images_bucket)
             s3.create_bucket(Bucket=mock_settings.images_temp_bucket)
             s3.create_bucket(Bucket=mock_settings.models_bucket)
-            return app(*args, **kwargs)
+            mocked_app = app(*args, **kwargs)
+            return mocked_app
+            
     async with AsyncClient(app=mocked_app, base_url="https://servertest") as client:
         yield client
 
@@ -147,4 +151,23 @@ def make_artwork(demo_user, collection):
         # method not present in repository
         #prompt_repository.delete_prompt(db=db, prompt_id=prompt.id)
         pass
+
+@pytest.fixture(scope="function")
+def model(model_category) -> MLModel:
+    model_repository = ModelRepository()
+
+    model = MLModelCreate(**{
+            "name": "model",
+            "description": "Small dummy model",
+            "source": "hf-internal-testing/tiny-stable-diffusion-xl-pipe",
+            "kind": "diffusion",
+            "url_docs": "https://huggingface.co/hf-internal-testing/tiny-stable-diffusion-xl-pipe",
+            "categories": [model_category],
+        }
+    )
+
+    new_model = model_repository.create_model(db=db, model=model, categories=[model_category])
+    yield new_model
+    model_repository.delete_model_by_source(db=db, model_source=new_model.source)
+
 

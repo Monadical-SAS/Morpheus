@@ -60,10 +60,9 @@ async def update_sd_model(model: MLModel, db: Session = Depends(get_db)):
     return sd_model_updated
 
 
-@router.delete("/{model_source:path}", response_model=Union[Response, List[MLModel]])
+@router.delete("/{model_source:path}", response_model=Union[Response, MLModel])
 async def delete_sd_model(model_source: str, db: Session = Depends(get_db)):
     sd_model = await model_service.delete_model_by_source(db=db, model_source=model_source)
     if not sd_model:
         return Response(success=False, message="No SD Model found")
-
     return sd_model

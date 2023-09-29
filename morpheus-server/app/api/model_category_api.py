@@ -48,7 +48,7 @@ async def update_sd_model(category: ModelCategory, db: Session = Depends(get_db)
         return Response(success=False, message=str(e))
 
 
-@router.delete("/{category_id}", response_model=Union[Response, List[ModelCategory]])
+@router.delete("/{category_id}", response_model=Union[Response, ModelCategory])
 async def delete_sd_model(category_id: UUID, db: Session = Depends(get_db)):
     try:
         category_deleted = await category_service.delete_model_category(db=db, category_id=category_id)
