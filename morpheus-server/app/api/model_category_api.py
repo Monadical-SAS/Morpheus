@@ -19,9 +19,9 @@ category_service = ModelCategoryService()
 async def create_model_category(
         *, category: ModelCategory,
         db: Session = Depends(get_db),
-        user=Depends(get_user("admin"))
+        user=Depends(get_user)
 ):
-    logger.info("")
+    logger.info(f"User {user['email']} is creating a model category")
     try:
         category_created = await category_service.create_model_category(db=db, model_category=category)
         if not category_created:

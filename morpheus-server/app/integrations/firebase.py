@@ -27,7 +27,6 @@ initialize_app(credentials)
 def get_user(
         res: Response,
         authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
-        role: str = "user",
 ):
     if authorization is None:
         raise HTTPException(
@@ -42,12 +41,12 @@ def get_user(
             raise UserNotFoundError(f"User with email {decoded_token['email']} not found")
         user_roles = user.roles
         logger.info(f"User {user.email} has roles {user_roles}")
-        if role not in [user_role.name for user_role in user_roles]:
-            logger.error(f"User {user.email} does not have {role} permission to access this resource")
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"User {user.email} does not have {role} permission to access this resource",
-            )
+        # if role not in [user_role.name for user_role in user_roles]:
+        #     logger.error(f"User {user.email} does not have {role} permission to access this resource")
+        #     raise HTTPException(
+        #         status_code=status.HTTP_403_FORBIDDEN,
+        #         detail=f"User {user.email} does not have {role} permission to access this resource",
+        #     )
     except Exception as error:
         logger.error(f"Invalid authentication credentials. {error}")
         raise HTTPException(
