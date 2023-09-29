@@ -22,4 +22,5 @@ RUN pip install -r requirements.txt
 
 # Copy the application files
 COPY app app
+COPY ./bin/start.sh .
 COPY models.yaml .

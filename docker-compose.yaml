@@ -165,7 +165,7 @@ services:
     image: morpheus-worker:latest
     env_file:
       - morpheus-worker/secrets.env
-    command: ray start --head --num-gpus 1 --dashboard-host 0.0.0.0 --block
+    command: bash start.sh
     ports:
       - "8000:8000"
       - "8265:8265"

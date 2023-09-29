@@ -31,7 +31,7 @@ const ArtworkActions = (props: ImageActionsProps) => {
     useToastContext();
 
   const handleImageDownload = async () => {
-    downloadImage(props.artwork.image, props.artwork.prompt?.prompt)
+    downloadImage(props.artwork.image, `${props.artwork.prompt?.prompt}.png`)
       .then(() => {
         showSuccessAlert("Image downloaded successfully");
       })

@@ -24,15 +24,15 @@ worker:
         memory: "13G"
   workerGroup:
     replicas: 2
-    minReplicas: 2
-    maxReplicas: 6
+    minReplicas: 6
+    maxReplicas: 14
     rayStartParams:
       numCpus: "3"
       numGpus: "1"
     resources:
       limits:
-        cpu: "3"
-        memory: "15G"
+        cpu: "7"
+        # memory: "15G"
         gpu: 1
 
 imagePullSecrets:

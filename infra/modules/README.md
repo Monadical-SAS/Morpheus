@@ -41,23 +41,37 @@ This is an example. AMI values should be updated.
 
 * ***self_managed_web_nodes_ami:*** Default value ```"ami-081f4e51bfefc32f6"```.
 
-* ***self_managed_gpu_node_group_name:*** Name for the gpu node group. Default value ```"self-mng-gpu"```.
+* ***self_managed_gpu_adv_node_group_name:*** Name for the gpu node group. Default value ```"self-mng-gpu"```.
 
-* ***self_managed_gpu_node_min_size:*** Default value ```1```.
+* ***self_managed_gpu_adv_node_min_size:*** Default value ```1```.
 
-* ***self_managed_gpu_node_max_size:*** Default value ```2```.
+* ***self_managed_gpu_adv_node_max_size:*** Default value ```2```.
 
-* ***self_managed_gpu_node_desired_size:*** Default value ```1```.
+* ***self_managed_gpu_adv_node_desired_size:*** Default value ```1```.
 
-* ***self_managed_gpu_nodes_instance_type:*** Default value ```"g4dn.xlarge"```.
+* ***self_managed_gpu_adv_nodes_instance_type:*** Default value ```"g4dn.xlarge"```.
 
-* ***self_managed_gpu_nodes_ami:*** Default value ```"ami-05f233de75731a6a4"```.
+* ***self_managed_gpu_adv_nodes_ami:*** Default value ```"ami-05f233de75731a6a4"```.
 
-* ***self_managed_gpu_nodes_device_name:*** Default value ```"/dev/sdh"```.
+* ***self_managed_gpu_adv_nodes_device_name:*** Default value ```"/dev/sdh"```.
 
-* ***self_managed_gpu_nodes_device_size:*** Default value ```20```
+* ***self_managed_gpu_adv_nodes_device_size:*** Default value ```20```
 
-* ***self_managed_gpu_iam_role_name:*** Iam role for the gpu instances. It will be completed with a random number to avoid conflicts with existing resources. Default value ```"self-managed-node-group-gpu"```.
+* ***self_managed_gpu_adv_iam_role_name:*** Iam role for the gpu instances. It will be completed with a random number to avoid conflicts with existing resources. Default value ```"self-managed-node-group-gpu"```.
+
+* ***self_managed_gpu_adv_node_warm_pool_min_size:*** Default value ```2```.
+
+* ***self_managed_gpu_adv_node_warm_pool_max_group_prepared_capacity:*** Default value ```4```.
+
+* ***self_managed_head_node_min_size:*** Default value ```1```.
+
+* ***self_managed_head_node_max_size:*** Default value ```2```.
+
+* ***self_managed_head_node_desired_size:*** Default value ```2```.
+
+* ***scale_up_adv_scaling_adjustment:*** = Default value ```2```.
+
+* ***scale_down_adv_scaling_adjustment:*** = Default value ```-1```.
 
 * ***vpc_name:*** VPC name. It will be completed with a random number to avoid conflicts with existing resources. Default value ```"morpheus-vpc"```.
 
@@ -89,27 +103,3 @@ This is an example. AMI values should be updated.
 
 * ***env:*** Cluster environment. It will be used as tag in most of the cluster resources. Default value ```"dev"```.
 
-
-## morpheus-frontend-s3-aws
-
-### Usage
-
-```
-module "morpheus_frontend" {
-  source = "../modules/morpheus-frontend-s3-aws"
-  arn_ssl_certificate_cf_distribution = "arn:aws:acm:us-east-1:xxxxxxxxxxxx:certificate/xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx"
-  cname_frontend = "morpheus-test.monadical"
-}
-```
-
-### Inputs
-
-* ***s3_frontend_bucket_name:*** Default value ```"www.morpheus"```.
-
-* ***arn_ssl_certificate_cf_distribution***: Arn of the ssl certificate to install in the frontend. It needs to be created in the ACM management console in aws.
-
-* ***cname_frontend***: frontend url.
-
-* ***frontend_cloudfront_cache_policy:*** Cache policy for the cloudfront disitribution, by default it's "Managed-CachingOptimizedDefault". Default value ```"658327ea-f89d-4fab-a63d-7e88639e58f6"```.
-
-* ***env:*** Frontend environment. It will be used as tag in most of the resources. Default valueDefault value ```"dev"```.

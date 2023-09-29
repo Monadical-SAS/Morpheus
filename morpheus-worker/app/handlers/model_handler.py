@@ -12,7 +12,7 @@ from app.integrations.db_client import DBClient
 from app.integrations.s3_client import S3Client
 from app.models.schemas import CategoryEnum, Generation, ModelRequest
 # for local testing
-from app.utils.images import create_fake_images
+# from app.utils.images import create_fake_images
 
 
 @ray.remote
@@ -58,15 +58,14 @@ class ModelHandler:
             )
 
             # Generate images with Stable Diffusion models
-            # generated_images_future = self.generator.generate.remote(request=self.request)
-            # generated_images = ray.get(generated_images_future)
+            generated_images_future = self.generator.generate.remote(request=self.request)
+            generated_images = ray.get(generated_images_future)
             # for local testing
-            generated_images = create_fake_images(n_images=self.request.num_images_per_prompt)
+            # generated_images = create_fake_images(n_images=self.request.num_images_per_prompt)
 
             # Upload images to S3 Bucket
             image_urls = self.s3_client.upload_multiple_files(
                 files=generated_images,
-                folder_name=self.request.user_id,
                 file_name=f"{self.request.task_id}"
             )
 

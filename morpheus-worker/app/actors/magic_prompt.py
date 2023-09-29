@@ -3,16 +3,15 @@ import random
 from pathlib import Path
 
 import ray
-from dynamicprompts.generators import RandomPromptGenerator
-from dynamicprompts.generators.magicprompt import MagicPromptGenerator
-
 from app.models.schemas import ModelRequest
 from app.settings.settings import get_settings
+from dynamicprompts.generators import RandomPromptGenerator
+from dynamicprompts.generators.magicprompt import MagicPromptGenerator
 
 settings = get_settings()
 
 
-@ray.remote(num_cpus=1)
+@ray.remote(resources={"WorkerCpu": 1})
 class StableDiffusionMagicPrompt:
     def __init__(self, model_id: str = "Gustavosta/MagicPrompt-Stable-Diffusion"):
         self.logger = logging.getLogger("ray")
@@ -24,7 +23,7 @@ class StableDiffusionMagicPrompt:
         self.generator = RandomPromptGenerator()
         self.magic_generator = MagicPromptGenerator(
             prompt_generator=self.generator,
-            model_name=self.model_source,
+            model_name=model_id,
             device="cpu",
         )
 
