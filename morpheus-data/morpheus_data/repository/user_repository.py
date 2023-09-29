@@ -1,10 +1,10 @@
 from typing import Union, List
 
+from loguru import logger
 from morpheus_data.models.models import User, Role
 from morpheus_data.models.schemas import User as UserCreate
 from morpheus_data.repository.files.s3_files_repository import IMAGES_BUCKET
 from sqlalchemy.orm import Session
-from loguru import logger
 
 
 class UserRepository:
@@ -40,6 +40,9 @@ class UserRepository:
         db_user = UserRepository.get_user_by_email(db=db, email=user.email)
         if db_user:
             raise ValueError(f"User with email {user.email} already exists")
+
+        if not user.roles:
+            raise ValueError(f"User must have at least one role")
 
         db_roles = []
         for role in user.roles:

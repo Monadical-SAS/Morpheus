@@ -8,7 +8,7 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { auth } from "../lib/firebaseClient";
+import { auth } from "@/lib/firebaseClient";
 
 export const signUpWithEmailAndPasswordFirebase = async (user: any): Promise<any> => {
   return new Promise((resolve, reject) => {

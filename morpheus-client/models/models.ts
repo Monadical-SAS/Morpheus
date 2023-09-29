@@ -10,6 +10,7 @@ export interface User {
   avatar: string;
   bio?: string;
   is_active: boolean;
+  roles: string[];
 }
 
 export interface UserFirebase {
