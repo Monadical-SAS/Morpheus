@@ -9,9 +9,7 @@ export const Auth = () => {
   const { authOption } = useAuth();
 
   return (
-    <div
-      className={"w-full h-screen flex flex-col align-center justify-center"}
-    >
+    <div className={"grid h-screen place-items-center"}>
       <Brand styles={{ marginBottom: "30px" }} />
 
       <div className={"max-w-[500px] w-full self-center"}>

@@ -1,22 +1,27 @@
 from typing import List, Union
 from uuid import UUID
 
-from fastapi import APIRouter
-from fastapi import Depends
-from sqlalchemy.orm import Session
-
-from morpheus_data.database.database import get_db
-from morpheus_data.models.schemas import ModelCategory
-
+from app.integrations.firebase import get_user
 from app.models.schemas import Response
 from app.services.model_category_services import ModelCategoryService
+from fastapi import APIRouter
+from fastapi import Depends
+from loguru import logger
+from morpheus_data.database.database import get_db
+from morpheus_data.models.schemas import ModelCategory
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 category_service = ModelCategoryService()
 
 
 @router.post("", response_model=Union[Response, ModelCategory])
-async def create_model_category(*, db: Session = Depends(get_db), category: ModelCategory):
+async def create_model_category(
+        *, category: ModelCategory,
+        db: Session = Depends(get_db),
+        user=Depends(get_user("admin"))
+):
+    logger.info("")
     try:
         category_created = await category_service.create_model_category(db=db, model_category=category)
         if not category_created:
@@ -38,7 +43,7 @@ async def get_model_categories(db: Session = Depends(get_db)):
 
 
 @router.put("", response_model=Union[Response, ModelCategory])
-async def update_sd_model(category: ModelCategory, db: Session = Depends(get_db)):
+async def update_model_category(category: ModelCategory, db: Session = Depends(get_db)):
     try:
         category_updated = await category_service.update_model_category(db=db, model_category=category)
         if not category_updated:
@@ -49,7 +54,7 @@ async def update_sd_model(category: ModelCategory, db: Session = Depends(get_db)
 
 
 @router.delete("/{category_id}", response_model=Union[Response, List[ModelCategory]])
-async def delete_sd_model(category_id: UUID, db: Session = Depends(get_db)):
+async def delete_model_category(category_id: UUID, db: Session = Depends(get_db)):
     try:
         category_deleted = await category_service.delete_model_category(db=db, category_id=category_id)
         if not category_deleted:

@@ -27,6 +27,24 @@ class User(BaseModel):
     collections = relationship("Collection", back_populates="owner")
     prompts = relationship("Prompt", back_populates="owner")
     artworks = relationship("ArtWork", back_populates="owner")
+    roles = relationship("Role", secondary="user_role_association", back_populates="users")
+
+
+class Role(BaseModel):
+    __tablename__ = "role"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = Column(String(64), unique=True, index=True)
+    description = Column(String(512), nullable=True)
+    users = relationship("User", secondary="user_role_association", back_populates="roles")
+
+
+class UserRoleAssociation(BaseModel):
+    __tablename__ = "user_role_association"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
+    role_id = Column(UUID(as_uuid=True), ForeignKey("role.id"))
 
 
 class Collection(BaseModel):

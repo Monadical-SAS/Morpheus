@@ -5,6 +5,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from firebase_admin import auth, credentials, initialize_app
 from morpheus_data.database.database import get_db
 from morpheus_data.repository.user_repository import UserRepository
+from loguru import logger
 
 settings = get_settings()
 user_repository = UserRepository()
@@ -23,7 +24,11 @@ credentials = credentials.Certificate(
 initialize_app(credentials)
 
 
-def get_user(res: Response, authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
+def get_user(
+        res: Response,
+        authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
+        role: str = "user",
+):
     if authorization is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -35,7 +40,16 @@ def get_user(res: Response, authorization: HTTPAuthorizationCredentials = Depend
         user = user_repository.get_user_by_email(db=db, email=decoded_token["email"])
         if user is None:
             raise UserNotFoundError(f"User with email {decoded_token['email']} not found")
+        user_roles = user.roles
+        logger.info(f"User {user.email} has roles {user_roles}")
+        if role not in [user_role.name for user_role in user_roles]:
+            logger.error(f"User {user.email} does not have {role} permission to access this resource")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"User {user.email} does not have {role} permission to access this resource",
+            )
     except Exception as error:
+        logger.error(f"Invalid authentication credentials. {error}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Invalid authentication credentials. {error}",

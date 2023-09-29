@@ -1,15 +1,17 @@
 from typing import Union, List
 
-from sqlalchemy.orm import Session
-
 from morpheus_data.models.models import User
 from morpheus_data.repository.files.s3_files_repository import IMAGES_BUCKET
+from sqlalchemy.orm import Session
 
 
 class UserRepository:
     @classmethod
     def get_user(cls, *, db: Session, user_id: str) -> User:
-        return db.query(User).filter(User.id == user_id).first()
+        db_user = db.query(User).filter(User.id == user_id).first()
+        if db_user:
+            db_user.roles = db_user.roles
+        return db_user
 
     @classmethod
     def get_user_by_email(cls, *, db: Session, email: str) -> User:
@@ -17,6 +19,7 @@ class UserRepository:
         if user_db:
             if user_db.avatar and not user_db.avatar.startswith("https://"):
                 user_db.avatar = f"https://{IMAGES_BUCKET}.s3.amazonaws.com/{user_db.avatar}"
+        user_db.roles = user_db.roles
         return user_db
 
     @classmethod
