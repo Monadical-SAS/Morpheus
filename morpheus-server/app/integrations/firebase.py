@@ -3,9 +3,9 @@ from app.error.user import UserNotFoundError
 from fastapi import Depends, HTTPException, status, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from firebase_admin import auth, credentials, initialize_app
+from loguru import logger
 from morpheus_data.database.database import get_db
 from morpheus_data.repository.user_repository import UserRepository
-from loguru import logger
 
 settings = get_settings()
 user_repository = UserRepository()
@@ -24,10 +24,7 @@ credentials = credentials.Certificate(
 initialize_app(credentials)
 
 
-def get_user(
-        res: Response,
-        authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
-):
+def validate_firebase_user(authorization: HTTPAuthorizationCredentials):
     if authorization is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -36,17 +33,8 @@ def get_user(
         )
     try:
         decoded_token = auth.verify_id_token(authorization.credentials)
-        user = user_repository.get_user_by_email(db=db, email=decoded_token["email"])
-        if user is None:
-            raise UserNotFoundError(f"User with email {decoded_token['email']} not found")
-        user_roles = user.roles
-        logger.info(f"User {user.email} has roles {user_roles}")
-        # if role not in [user_role.name for user_role in user_roles]:
-        #     logger.error(f"User {user.email} does not have {role} permission to access this resource")
-        #     raise HTTPException(
-        #         status_code=status.HTTP_403_FORBIDDEN,
-        #         detail=f"User {user.email} does not have {role} permission to access this resource",
-        #     )
+        logger.info(f"User {decoded_token['email']} authenticated successfully with Firebase")
+        return decoded_token
     except Exception as error:
         logger.error(f"Invalid authentication credentials. {error}")
         raise HTTPException(
@@ -54,5 +42,37 @@ def get_user(
             detail=f"Invalid authentication credentials. {error}",
             headers={"WWW-Authenticate": 'Bearer error="invalid_token"'},
         )
+
+
+def validate_morpheus_user_and_role(user_email: str, role: str):
+    user = user_repository.get_user_by_email(db=db, email=user_email)
+    if user is None:
+        raise UserNotFoundError(f"User with email {user_email} not found")
+    user_roles = user.roles
+    if role not in [user_role.name for user_role in user_roles]:
+        logger.error(f"User {user.email} does not have {role} permission to access this resource")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"User {user.email} does not have {role} permission to access this resource",
+        )
+    logger.info(f"User {user.email} authenticated with role {role} successfully with Morpheus")
+
+
+def get_user(
+        res: Response,
+        authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
+):
+    decoded_token = validate_firebase_user(authorization=authorization)
+    validate_morpheus_user_and_role(user_email=decoded_token["email"], role="user")
+    res.headers["WWW-Authenticate"] = 'Bearer realm="auth_required"'
+    return decoded_token
+
+
+def get_admin(
+        res: Response,
+        authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
+):
+    decoded_token = validate_firebase_user(authorization=authorization)
+    validate_morpheus_user_and_role(user_email=decoded_token["email"], role="admin")
     res.headers["WWW-Authenticate"] = 'Bearer realm="auth_required"'
     return decoded_token
