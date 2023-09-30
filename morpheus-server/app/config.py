@@ -33,6 +33,7 @@ class Settings(SettingsData):
     enable_float32: bool = False
     max_num_images: int = 4
 
+    allowed_origins: str = "http://localhost:3000,http://localhost:3001"
     generative_ai_backend: str = GenerativeAIBackendEnum.ray
     ray_backend_url: str = "http://worker-ray:8000"
     waiting_room_enabled: bool = True

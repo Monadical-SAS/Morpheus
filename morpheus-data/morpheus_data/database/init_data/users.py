@@ -1,4 +1,7 @@
+from morpheus_data.config import get_settings
 from morpheus_data.database.init_data.roles import user_role, admin_role
+
+settings = get_settings()
 
 morpheus_user = {
     "email": "user@morpheus.com",
@@ -7,9 +10,8 @@ morpheus_user = {
 }
 
 morpheus_admin = {
-    "email": "admin@morpheus.com",
+    "email": settings.admin_email,
+    "password": settings.admin_password,
     "name": "Morpheus Admin",
     "roles": [admin_role]
 }
-
-all_users = [morpheus_user, morpheus_admin]

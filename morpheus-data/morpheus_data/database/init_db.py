@@ -5,9 +5,10 @@ from morpheus_data.database.init_data.collections import public_collection
 from morpheus_data.database.init_data.controlnet_models import controlnet_models
 from morpheus_data.database.init_data.roles import all_roles
 from morpheus_data.database.init_data.sd_models import sd_models
-from morpheus_data.database.init_data.users import all_users, morpheus_admin
+from morpheus_data.database.init_data.users import morpheus_admin, morpheus_user
 from morpheus_data.models.schemas import ModelCategory, User, CollectionCreate, MLModelCreate, Role
 from morpheus_data.repository.collection_repository import CollectionRepository
+from morpheus_data.repository.firebase_repository import FirebaseRepository
 from morpheus_data.repository.model_category_repository import ModelCategoryRepository
 from morpheus_data.repository.model_repository import ModelRepository
 from morpheus_data.repository.role_repository import RoleRepository
@@ -17,6 +18,7 @@ db = next(get_db())
 
 role_repository = RoleRepository()
 user_repository = UserRepository()
+firebase_repository = FirebaseRepository()
 categories_repository = ModelCategoryRepository()
 collections_repository = CollectionRepository()
 model_repository = ModelRepository()
@@ -32,12 +34,27 @@ def init_roles():
 
 
 def init_users():
-    for user in all_users:
-        user_email = user.get("email", None)
-        db_user = user_repository.get_user_by_email(db=db, email=user_email)
-        if not db_user:
-            user_repository.create_user(db=db, user=User(**user))
-        logger.info(f"Morpheus user {user_email} created")
+    user_email = morpheus_user.get("email", None)
+    db_user = user_repository.get_user_by_email(db=db, email=user_email)
+    if not db_user:
+        user_repository.create_user(db=db, user=User(**morpheus_user))
+    logger.info(f"Morpheus user {user_email} created")
+
+
+def init_admin():
+    admin_email = morpheus_admin.get("email", None)
+    db_admin = user_repository.get_user_by_email(db=db, email=admin_email)
+
+    if not db_admin:
+        firebase_admin = firebase_repository.get_firebase_user(email=admin_email)
+        if not firebase_admin:
+            firebase_admin = firebase_repository.register_firebase_user(
+                email=admin_email,
+                password=morpheus_admin.get("password", None)
+            )
+        if firebase_admin:
+            user_repository.create_user(db=db, user=User(**morpheus_admin))
+    logger.info(f"Morpheus admin {admin_email} created")
 
 
 def init_categories():
@@ -80,6 +97,7 @@ def init_models():
 def init_morpheus_data():
     init_roles()
     init_users()
+    init_admin()
     init_categories()
     init_collections()
     init_models()

@@ -32,15 +32,7 @@ class UserRepository:
         return db_user
 
     @classmethod
-    def get_users(cls, *, db: Session, skip: int = 0, limit: int = 100) -> List[User]:
-        return db.query(User).offset(skip).limit(limit).all()
-
-    @classmethod
-    def create_user(cls, *, db: Session, user: UserCreate) -> User:
-        db_user = UserRepository.get_user_by_email(db=db, email=user.email)
-        if db_user:
-            raise ValueError(f"User with email {user.email} already exists")
-
+    def get_user_roles(cls, *, db: Session, user: UserCreate) -> List[Role]:
         if not user.roles:
             raise ValueError(f"User must have at least one role")
 
@@ -50,7 +42,23 @@ class UserRepository:
             if not db_role:
                 raise ValueError(f"Role {user.role} not found")
             db_roles.append(db_role)
+        return db_roles
 
+    @classmethod
+    def get_users(cls, *, db: Session, skip: int = 0, limit: int = 100) -> List[User]:
+        return db.query(User).offset(skip).limit(limit).all()
+
+    @classmethod
+    def get_users_by_role(cls, *, db: Session, role: str) -> List[User]:
+        return db.query(User).join(User.roles).filter(Role.name == role).all()
+
+    @classmethod
+    def create_user(cls, *, db: Session, user: UserCreate) -> User:
+        db_user = UserRepository.get_user_by_email(db=db, email=user.email)
+        if db_user:
+            raise ValueError(f"User with email {user.email} already exists")
+
+        db_roles = UserRepository.get_user_roles(db=db, user=user)
         logger.info(f"Creating user {user.email} with roles {db_roles}")
         avatar_seed = user.name if user.name else user.email
         db_user = User(
@@ -68,11 +76,12 @@ class UserRepository:
     def update_user(cls, *, db: Session, user: UserCreate) -> Union[User, None]:
         db_user = UserRepository.get_user_by_email(db=db, email=user.email)
         if not db_user:
-            return None
-
+            raise ValueError(f"User with email {user.email} not found")
+        db_roles = UserRepository.get_user_roles(db=db, user=db_user)
         db_user.name = user.name
         db_user.bio = user.bio
         db_user.avatar = user.avatar
+        db_user.roles = db_roles
         db.commit()
         return db_user
 
