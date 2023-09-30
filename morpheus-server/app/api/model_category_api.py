@@ -1,7 +1,7 @@
 from typing import List, Union
 from uuid import UUID
 
-from app.integrations.firebase import get_user
+from app.integrations.firebase import get_admin
 from app.models.schemas import Response
 from app.services.model_category_services import ModelCategoryService
 from fastapi import APIRouter
@@ -19,9 +19,9 @@ category_service = ModelCategoryService()
 async def create_model_category(
         *, category: ModelCategory,
         db: Session = Depends(get_db),
-        user=Depends(get_user)
+        user=Depends(get_admin)
 ):
-    logger.info(f"User {user['email']} is creating a model category")
+    logger.info(f"Creating model category {category} by user {user}")
     try:
         category_created = await category_service.create_model_category(db=db, model_category=category)
         if not category_created:
@@ -43,7 +43,8 @@ async def get_model_categories(db: Session = Depends(get_db)):
 
 
 @router.put("", response_model=Union[Response, ModelCategory])
-async def update_model_category(category: ModelCategory, db: Session = Depends(get_db)):
+async def update_model_category(category: ModelCategory, db: Session = Depends(get_db), admin=Depends(get_admin)):
+    logger.info(f"Updating model category {category} by user {admin}")
     try:
         category_updated = await category_service.update_model_category(db=db, model_category=category)
         if not category_updated:
@@ -54,7 +55,8 @@ async def update_model_category(category: ModelCategory, db: Session = Depends(g
 
 
 @router.delete("/{category_id}", response_model=Union[Response, List[ModelCategory]])
-async def delete_model_category(category_id: UUID, db: Session = Depends(get_db)):
+async def delete_model_category(category_id: UUID, db: Session = Depends(get_db), admin=Depends(get_admin)):
+    logger.info(f"Deleting model category {category_id} by user {admin}")
     try:
         category_deleted = await category_service.delete_model_category(db=db, category_id=category_id)
         if not category_deleted:
