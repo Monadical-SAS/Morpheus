@@ -1,5 +1,6 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { getOrRefreshFirebaseToken } from "@/lib/firebaseClient";
+import { logout } from "@/api/auth";
 
 const httpInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -11,7 +12,7 @@ httpInstance.interceptors.response.use(
   },
   async (error: any) => {
     if (error.response.status === 401) {
-      alert("you are not logged in");
+      logout();
     }
 
     if (error.response.status === 403) {
@@ -26,24 +27,22 @@ httpInstance.interceptors.response.use(
   },
 );
 
-
 httpInstance.interceptors.request.use(
   async (request: any) => {
     const token = await getOrRefreshFirebaseToken();
-    
+
     if (token) {
       request?.headers &&
         (request.headers["Authorization"] = `Bearer ${token.replaceAll(
           '"',
-          ""
+          "",
         )}`);
     }
     return request;
   },
   (error) => {
     Promise.reject(error);
-  }
+  },
 );
-
 
 export default httpInstance;

@@ -1,21 +1,5 @@
 import axios from "./axiosClient";
 import { ErrorResponse, SuccessResponse, User } from "@/lib/models";
-import { signOutFirebase } from "./auth";
-
-export const logout = () => {
-  return signOutFirebase()
-    .then(() => {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      localStorage.removeItem("results");
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1000);
-    })
-    .catch((error) => {
-      alert(error);
-    });
-};
 
 export const getAdmins = async () => {
   try {

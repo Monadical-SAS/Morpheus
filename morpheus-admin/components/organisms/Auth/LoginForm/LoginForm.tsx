@@ -30,8 +30,6 @@ export const LoginForm = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const pathname = router.pathname;
-
   const handleFormSubmit = async (data: any) => {
     setLoading(true);
     loginWithEmailAndPassword(data)
@@ -39,8 +37,7 @@ export const LoginForm = () => {
         setLoading(false);
         if (response) {
           showSuccessAlert("User authenticated successfully");
-          const url = pathname !== "/" ? pathname : "/profile";
-          await router.push(url);
+          router.push("/");
         }
       })
       .catch(() => {

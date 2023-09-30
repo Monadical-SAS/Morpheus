@@ -66,7 +66,7 @@ export default function Home() {
             </Modal>
           </div>
 
-          {admins.length > 0 && (
+          {admins && admins.length > 0 && (
             <div className="overflow-x-auto">
               <table className="table table-zebra">
                 <thead>

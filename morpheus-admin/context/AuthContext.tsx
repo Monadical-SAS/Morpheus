@@ -52,12 +52,12 @@ const AuthProvider = (props: { children: ReactNode }) => {
 
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [authOption, setAuthOption] = useState<AuthOption>(AuthOption.Login);
-  const [admin, setUser] = useState<any>({});
-  const [localUser, setLocalUser] = useLocalStorage("admin", {} as User);
+  const [admin, setAdmin] = useState<any>({});
+  const [localAdmin, setLocalAdmin] = useLocalStorage("admin", {} as User);
 
   useEffect(() => {
-    if (localUser && localUser.email) {
-      loadAdminData(localUser.email)
+    if (localAdmin && localAdmin.email) {
+      loadAdminData(localAdmin.email)
         .then(() => {
           setTimeout(() => {
             setAuthLoading(false);
@@ -73,7 +73,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
 
   useEffect(() => {
     if (admin && admin.email) {
-      setLocalUser(admin);
+      setLocalAdmin(admin);
     }
   }, [admin]);
 
@@ -82,6 +82,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
       loginWithEmailAndPasswordFirebase(admin)
         .then((response: any) => {
           loadAdminData(response.email);
+          resolve(response);
         })
         .catch((error) => {
           showErrorAlert(error.message);
@@ -100,8 +101,8 @@ const AuthProvider = (props: { children: ReactNode }) => {
           userRoles &&
           userRoles.find((role: Role) => role.name === "admin")
         ) {
-          setUser(response.data);
-          setLocalUser(response.data);
+          setAdmin(response.data);
+          setLocalAdmin(response.data);
         }
       } else {
         showErrorAlert(`The user ${email} is not an admin`);
@@ -119,8 +120,8 @@ const AuthProvider = (props: { children: ReactNode }) => {
       localStorage.removeItem("admin");
       localStorage.removeItem("token");
       router.push("/");
-      setUser({} as User);
-      setLocalUser({} as User);
+      setAdmin({} as User);
+      setLocalAdmin({} as User);
     } catch (error: any) {
       showErrorAlert(error.message || "Something went wrong");
     }
