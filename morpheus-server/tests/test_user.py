@@ -6,6 +6,7 @@ async def test_post_user(async_app_client, demo_user):
     user = {
         "email": demo_user.email,
         "name": demo_user.name,
+        "roles": demo_user.roles,
     }
     response = await async_app_client.post("users", json=user)
     assert response.status_code == 200
