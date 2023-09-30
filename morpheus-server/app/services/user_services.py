@@ -1,11 +1,11 @@
 from typing import List, Union
 
-from sqlalchemy.orm import Session
-
 from morpheus_data.models.schemas import User
 from morpheus_data.repository.collection_repository import CollectionRepository
 from morpheus_data.repository.firebase_repository import FirebaseRepository
+from morpheus_data.repository.role_repository import RoleRepository
 from morpheus_data.repository.user_repository import UserRepository
+from sqlalchemy.orm import Session
 
 
 class UserService:
@@ -13,6 +13,7 @@ class UserService:
         self.user_repository = UserRepository()
         self.firebase_repository = FirebaseRepository()
         self.collection_repository = CollectionRepository()
+        self.role_repository = RoleRepository()
 
     async def load_or_create_user(self, *, db: Session, user: User) -> Union[User, None]:
         user_db = self.user_repository.get_user_by_email(db=db, email=user.email)
@@ -22,9 +23,26 @@ class UserService:
             self.collection_repository.create_initial_collection(db=db, owner=user_db)
         return user_db
 
+    async def create_admin(self, *, db: Session, user: User) -> Union[User, None]:
+        user_db = self.user_repository.get_user_by_email(db=db, email=user.email)
+        admin_role = self.role_repository.get_role_by_name(db=db, name="admin")
+        if user_db:
+            if any(role.name == "admin" for role in user_db.roles):
+                raise ValueError(f"User with email {user.email} is already an admin")
+            user.roles.append(admin_role)
+            self.user_repository.update_user(db=db, user=user)
+
+        else:
+            self.user_repository.create_user(db=db, user=user)
+        new_admin = self.user_repository.get_user_data(db=db, email=user.email)
+        return new_admin
+
     async def get_users(self, *, db: Session, email: str) -> List[User]:
         self.user_repository.get_user_data(db=db, email=email)
         return self.user_repository.get_users(db=db)
+
+    async def get_users_by_role(self, *, db: Session, role: str) -> List[User]:
+        return self.user_repository.get_users_by_role(db=db, role=role)
 
     async def get_user_by_id(self, *, db: Session, user_id: str) -> User:
         return self.user_repository.get_user(db=db, user_id=user_id)

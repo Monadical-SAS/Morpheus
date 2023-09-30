@@ -1,5 +1,5 @@
 import axios from "./axiosClient";
-import { User } from "@/lib/models";
+import { ErrorResponse, SuccessResponse, User } from "@/lib/models";
 import { signOutFirebase } from "./auth";
 
 export const logout = () => {
@@ -17,41 +17,51 @@ export const logout = () => {
     });
 };
 
-export const getUserInfo = async (email: string) => {
+export const getAdmins = async () => {
   try {
-    const response = await axios.get(`users/email/${email}`);
-    if (response.status === 200 && response.data.email) {
-      return { success: true, data: response.data };
+    const response = await axios.get(`users/admins`);
+    if (response.status === 200 && response.data) {
+      return response.data;
     }
-    return { success: false, error: "User not found" };
+    return ErrorResponse("No admins found");
   } catch (error) {
-    return { success: false, error: error };
+    return ErrorResponse(String(error));
   }
 };
 
-export const loadOrCreateUserInfo = async (user: User) => {
+export const getAdminInfo = async (email: string) => {
   try {
-    const response = await axios.post(`users`, user);
-    return { success: true, data: response.data };
+    const response = await axios.get(`users/admin/email/${email}`);
+    if (response.status === 200 && response.data.email) {
+      return SuccessResponse(response.data);
+    }
+    return ErrorResponse("Admin not found");
   } catch (error) {
-    return { success: false, error: error };
+    return ErrorResponse(String(error));
   }
 };
 
-export const updateUserInfo = async (user: User) => {
+export const createNewAdmin = async (admin: User) => {
   try {
-    const response = await axios.put(`users`, user);
-    return { success: true, data: response.data };
+    const adminData: User = { ...admin, roles: [{ name: "admin" }] };
+    const response = await axios.post(`users/admin`, adminData);
+    if (response.status === 200 && response.data) {
+      return SuccessResponse(response.data);
+    }
+    return ErrorResponse("Admin not found");
   } catch (error) {
-    return { success: false, error: error };
+    return ErrorResponse(String(error));
   }
 };
 
-export const removeUserInfo = async (email: string) => {
+export const deleteAdmin = async (email: string) => {
   try {
-    const response = await axios.delete(`users/${email}`);
-    return { success: true, data: response.data };
+    const response = await axios.delete(`users/admin/${email}`);
+    if (response.status === 200 && response.data) {
+      return SuccessResponse(response.data);
+    }
+    return ErrorResponse("Admin not found");
   } catch (error) {
-    return { success: false, error: error };
+    return ErrorResponse(String(error));
   }
 };

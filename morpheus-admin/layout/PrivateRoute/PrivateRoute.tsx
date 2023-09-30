@@ -9,11 +9,11 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute = (props: PrivateRouteProps) => {
-  const { authLoading, user } = useAuth();
+  const { authLoading, admin } = useAuth();
 
   if (authLoading) return <FullScreenLoader isLoading={authLoading} />;
 
-  if (isEmptyObject(user)) {
+  if (isEmptyObject(admin)) {
     return <Auth />;
   } else {
     return <Fragment>{props.children}</Fragment>;

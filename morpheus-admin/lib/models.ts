@@ -22,6 +22,11 @@ export interface ModelCategory {
   description?: string;
 }
 
+export interface Role {
+  name: string;
+  description?: string;
+}
+
 export interface User {
   name: string;
   email: string;
@@ -29,6 +34,7 @@ export interface User {
   bio?: string;
   phone?: string;
   is_active: boolean;
+  roles: Role[];
 }
 
 export const ErrorResponse = (

@@ -6,7 +6,7 @@ import styles from "./Navbar.module.scss";
 
 const Navbar = () => {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { admin, logout } = useAuth();
   const currentPath = router.pathname;
 
   const redirectToHome = async () => {
@@ -20,7 +20,7 @@ const Navbar = () => {
       </div>
 
       <div className={"flex flex-row gap-5"}>
-        <span>{user.email}</span>
+        <span>{admin.email}</span>
         <span onClick={logout} className={"cursor-pointer"}>
           Logout
         </span>

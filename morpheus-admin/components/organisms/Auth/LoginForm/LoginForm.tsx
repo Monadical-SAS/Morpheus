@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-
-import { SignUpWithGoogle } from "../SocialSignUp/SignUpWithGoogle";
 import { useToastContext } from "@/context/ToastContext";
 import { AuthOption, useAuth } from "@/context/AuthContext";
 import { TextInput } from "@/components/atoms/input";
 import { useForm } from "react-hook-form";
-import { Separator } from "@/components/atoms/Separator/Separator";
 import { Button, ButtonVariant } from "@/components/atoms/button";
 import styles from "./LoginForm.module.scss";
 
@@ -53,10 +50,7 @@ export const LoginForm = () => {
 
   return (
     <div className={styles.loginContainer}>
-      <h1 className="text-2xl">Login Form</h1>
-
-      <SignUpWithGoogle />
-      <Separator />
+      <h1 className="text-2xl text-center mt-[100px]">Login Form</h1>
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-2">
         <TextInput
@@ -77,6 +71,7 @@ export const LoginForm = () => {
           name={"password"}
           label={"Password"}
           placeholder={"*********"}
+          type={"password"}
           register={register}
           validationSchema={{
             required: true,

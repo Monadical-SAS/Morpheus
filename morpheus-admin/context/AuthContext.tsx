@@ -8,12 +8,11 @@ import {
 import { useRouter } from "next/router";
 import {
   loginWithEmailAndPasswordFirebase,
-  loginWithGoogleFirebase,
   sendUserPasswordResetEmail,
   signOutFirebase,
 } from "@/api/auth";
-import { User } from "@/lib/models";
-import { getUserInfo, loadOrCreateUserInfo } from "@/api/users";
+import { Response, Role, User } from "@/lib/models";
+import { getAdminInfo } from "@/api/users";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToastContext } from "@/context/ToastContext";
 import { LoginFormModel } from "@/components/organisms/Auth/LoginForm/LoginForm";
@@ -23,16 +22,13 @@ export enum AuthOption {
   Reset = "reset",
 }
 
-const USER = "user";
-
 export interface IAuthContext {
   authLoading: boolean;
   authOption: AuthOption;
   setAuthOption: (authOption: AuthOption) => void;
-  user: User;
-  loadUserData: (email: string) => void;
-  loginWithGoogle: () => Promise<any>;
-  loginWithEmailAndPassword: (user: LoginFormModel) => Promise<any>;
+  admin: User;
+  loadAdminData: (authOption: AuthOption) => void;
+  loginWithEmailAndPassword: (admin: LoginFormModel) => Promise<any>;
   logout: () => Promise<any>;
   resetPassword: (email: string) => Promise<any>;
 }
@@ -41,9 +37,8 @@ const defaultState = {
   authLoading: false,
   authOption: AuthOption.Login,
   setAuthOption: () => {},
-  user: {} as User,
-  loadUserData: async () => {},
-  loginWithGoogle: async () => {},
+  admin: {} as User,
+  loadAdminData: async () => {},
   loginWithEmailAndPassword: async () => {},
   logout: async () => {},
   resetPassword: async () => {},
@@ -57,12 +52,12 @@ const AuthProvider = (props: { children: ReactNode }) => {
 
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [authOption, setAuthOption] = useState<AuthOption>(AuthOption.Login);
-  const [user, setUser] = useState<any>({});
-  const [localUser, setLocalUser] = useLocalStorage(USER, {} as User);
+  const [admin, setUser] = useState<any>({});
+  const [localUser, setLocalUser] = useLocalStorage("admin", {} as User);
 
   useEffect(() => {
     if (localUser && localUser.email) {
-      loadUserData(localUser.email)
+      loadAdminData(localUser.email)
         .then(() => {
           setTimeout(() => {
             setAuthLoading(false);
@@ -77,16 +72,16 @@ const AuthProvider = (props: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (user && user.email) {
-      setLocalUser(user);
+    if (admin && admin.email) {
+      setLocalUser(admin);
     }
-  }, [user]);
+  }, [admin]);
 
-  const loginWithEmailAndPassword = (user: LoginFormModel): Promise<any> => {
+  const loginWithEmailAndPassword = (admin: LoginFormModel): Promise<any> => {
     return new Promise((resolve, reject) => {
-      loginWithEmailAndPasswordFirebase(user)
+      loginWithEmailAndPasswordFirebase(admin)
         .then((response: any) => {
-          loadOrCreateMorpheusUser(response);
+          loadAdminData(response.email);
         })
         .catch((error) => {
           showErrorAlert(error.message);
@@ -95,79 +90,49 @@ const AuthProvider = (props: { children: ReactNode }) => {
     });
   };
 
-  const loginWithGoogle = (): Promise<any> => {
-    return loginWithGoogleFirebase()
-      .then((response) => {
-        loadOrCreateMorpheusUser(response.user);
-      })
-      .catch((error) => {
-        showErrorAlert(error.message);
-      });
-  };
-
-  const loadOrCreateMorpheusUser = (firebaseUser: any) => {
-    const user = {
-      name: firebaseUser.displayName,
-      email: firebaseUser.email,
-    };
-    if (!user.email) {
-      showErrorAlert("Email is required");
-    }
-    loadOrCreateUser(user);
-  };
-
-  const loadOrCreateUser = (user: any) => {
-    const newData = { ...user, role: USER };
-    loadOrCreateUserInfo(newData)
-      .then((response: any) => {
-        if (response.success) {
-          setUser(response.data);
-        } else {
-          showErrorAlert(
-            response.error || "An error occurred while loading the user data",
-          );
-        }
-      })
-      .catch(() => {
-        showErrorAlert("An error occurred while loading the user data");
-      });
-  };
-
-  const loadUserData = (email: string) => {
-    return getUserInfo(email)
-      .then((response: any) => {
-        if (response.success) {
+  const loadAdminData = async (email: string) => {
+    try {
+      const response: Response = await getAdminInfo(email);
+      if (response.success) {
+        console.log(response.data);
+        const userRoles = response.data.roles;
+        if (
+          userRoles &&
+          userRoles.find((role: Role) => role.name === "admin")
+        ) {
           setUser(response.data);
           setLocalUser(response.data);
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      } else {
+        showErrorAlert(`The user ${email} is not an admin`);
+      }
+    } catch (error: any) {
+      showErrorAlert(
+        error.message || "An error occurred while loading the admin data",
+      );
+    }
   };
 
-  const logout = (): Promise<any> => {
-    return signOutFirebase()
-      .then(() => {
-        localStorage.removeItem(USER);
-        localStorage.removeItem("token");
-        router.push("/");
-        setUser({} as User);
-        setLocalUser({} as User);
-      })
-      .catch((error) => {
-        showErrorAlert(error.message);
-      });
+  const logout = async (): Promise<any> => {
+    try {
+      await signOutFirebase();
+      localStorage.removeItem("admin");
+      localStorage.removeItem("token");
+      router.push("/");
+      setUser({} as User);
+      setLocalUser({} as User);
+    } catch (error: any) {
+      showErrorAlert(error.message || "Something went wrong");
+    }
   };
 
-  const resetPassword = (email: string): Promise<any> => {
-    return sendUserPasswordResetEmail(email)
-      .then(() => {
-        showSuccessAlert("Email sent successfully");
-      })
-      .catch((error) => {
-        showErrorAlert(error.message || "Something went wrong");
-      });
+  const resetPassword = async (email: string): Promise<any> => {
+    try {
+      await sendUserPasswordResetEmail(email);
+      showSuccessAlert("Email sent successfully");
+    } catch (error: any) {
+      showErrorAlert(error.message || "Something went wrong");
+    }
   };
 
   return (
@@ -176,9 +141,8 @@ const AuthProvider = (props: { children: ReactNode }) => {
         authLoading,
         authOption,
         setAuthOption,
-        user,
-        loadUserData,
-        loginWithGoogle,
+        admin,
+        loadAdminData,
         loginWithEmailAndPassword,
         logout,
         resetPassword,

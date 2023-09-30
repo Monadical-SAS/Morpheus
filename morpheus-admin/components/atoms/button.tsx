@@ -1,5 +1,5 @@
-import { Fragment, ReactNode } from "react";
-import { type ClassValue, clsx } from "clsx";
+import { CSSProperties, Fragment, ReactNode } from "react";
+import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -41,6 +41,7 @@ export interface ButtonProps {
   type?: "button" | "submit" | "reset" | undefined;
   icon?: ReactNode;
   loading?: boolean;
+  style?: CSSProperties;
 }
 
 export const Button = (props: ButtonProps) => {
@@ -56,6 +57,7 @@ export const Button = (props: ButtonProps) => {
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type || undefined}
+      style={props.style}
     >
       {props.loading ? (
         <span className="loading loading-ring loading-md"></span>
