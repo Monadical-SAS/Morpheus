@@ -174,15 +174,20 @@ services:
     depends_on:
       api:
         condition: service_started
+    healthcheck:
+      test: [ "CMD-SHELL", "ray status" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   worker-ray-deployer:
     image: morpheus-worker:latest
-    command: bash -c "sleep 5 && ray job submit -- serve deploy models.yaml"
+    command: bash -c "sleep 10 && ray job submit -- serve deploy models.yaml"
     environment:
       - RAY_ADDRESS=http://worker-ray:8265
     depends_on:
       worker-ray:
-        condition: service_started
+        condition: service_healthy
 
   magicprompt_worker:
     build:
