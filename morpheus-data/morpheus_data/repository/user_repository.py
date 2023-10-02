@@ -20,7 +20,9 @@ class UserRepository:
         user_db = db.query(User).filter(User.email == email).first()
         if user_db:
             if user_db.avatar and not user_db.avatar.startswith("https://"):
-                user_db.avatar = f"https://{IMAGES_BUCKET}.s3.amazonaws.com/{user_db.avatar}"
+                user_db.avatar = (
+                    f"https://{IMAGES_BUCKET}.s3.amazonaws.com/{user_db.avatar}"
+                )
             user_db.roles = user_db.roles
         return user_db
 
@@ -34,7 +36,7 @@ class UserRepository:
     @classmethod
     def get_user_roles(cls, *, db: Session, user: UserCreate) -> List[Role]:
         if not user.roles:
-            raise ValueError(f"User must have at least one role")
+            raise ValueError("User must have at least one role")
 
         db_roles = []
         for role in user.roles:
@@ -87,7 +89,9 @@ class UserRepository:
         return db_user
 
     @classmethod
-    def add_admin_role_to_user(cls, *, db: Session, user: UserCreate) -> Union[User, None]:
+    def add_admin_role_to_user(
+        cls, *, db: Session, user: UserCreate
+    ) -> Union[User, None]:
         db_user = UserRepository.get_user_by_email(db=db, email=user.email)
         if not db_user:
             raise ValueError(f"User with email {user.email} not found")
