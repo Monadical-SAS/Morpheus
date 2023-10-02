@@ -5,4 +5,4 @@ docker compose build datalib
 docker compose build api
 docker compose build worker-ray
 docker compose build
-docker compose --profile staging up --force-recreate
+docker compose --profile staging up --force-recreate --remove-orphans
