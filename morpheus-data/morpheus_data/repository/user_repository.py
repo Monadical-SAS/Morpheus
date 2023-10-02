@@ -77,10 +77,24 @@ class UserRepository:
         db_user = UserRepository.get_user_by_email(db=db, email=user.email)
         if not db_user:
             raise ValueError(f"User with email {user.email} not found")
+
         db_roles = UserRepository.get_user_roles(db=db, user=db_user)
         db_user.name = user.name
         db_user.bio = user.bio
         db_user.avatar = user.avatar
+        db_user.roles = db_roles
+        db.commit()
+        return db_user
+
+    @classmethod
+    def add_admin_role_to_user(cls, *, db: Session, user: UserCreate) -> Union[User, None]:
+        db_user = UserRepository.get_user_by_email(db=db, email=user.email)
+        if not db_user:
+            raise ValueError(f"User with email {user.email} not found")
+
+        db_roles = UserRepository.get_user_roles(db=db, user=db_user)
+        admin_role = db.query(Role).filter(Role.name == "admin").first()
+        db_roles.append(admin_role)
         db_user.roles = db_roles
         db.commit()
         return db_user

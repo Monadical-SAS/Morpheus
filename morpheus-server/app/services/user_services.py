@@ -25,12 +25,10 @@ class UserService:
 
     async def create_admin(self, *, db: Session, user: User) -> Union[User, None]:
         user_db = self.user_repository.get_user_by_email(db=db, email=user.email)
-        admin_role = self.role_repository.get_role_by_name(db=db, name="admin")
         if user_db:
             if any(role.name == "admin" for role in user_db.roles):
                 raise ValueError(f"User with email {user.email} is already an admin")
-            user.roles.append(admin_role)
-            self.user_repository.update_user(db=db, user=user)
+            self.user_repository.add_admin_role_to_user(db=db, user=user)
 
         else:
             self.user_repository.create_user(db=db, user=user)
@@ -56,11 +54,30 @@ class UserService:
 
     async def delete_user(self, *, db: Session, email: str, request_email: str) -> bool:
         self.validate_user(db=db, email=email, request_email=request_email)
-        remove_local = self.user_repository.delete_user(db=db, email=email)
-        if remove_local:
+        removed_user = self.user_repository.delete_user(db=db, email=email)
+        if removed_user:
             self.firebase_repository.remove_firebase_user(email=email)
-
         return True
+
+    async def delete_admin(self, *, db: Session, email: str) -> bool:
+        admin_to_remove = self.user_repository.get_user_by_email(db=db, email=email)
+        if not admin_to_remove:
+            raise ValueError("Admin to remove not found")
+
+        admin_roles = self.user_repository.get_user_roles(db=db, user=admin_to_remove)
+        if not any(role.name == "admin" for role in admin_roles):
+            raise ValueError("Admin to remove doesn't have admin role")
+
+        if len(admin_roles) == 1:
+            removed_admin = self.user_repository.delete_user(db=db, email=email)
+            if removed_admin:
+                self.firebase_repository.remove_firebase_user(email=email)
+            return True
+        else:
+            admin_roles = [role for role in admin_roles if role.name != "admin"]
+            admin_to_remove.roles = admin_roles
+            self.user_repository.update_user(db=db, user=admin_to_remove)
+            return True
 
     def validate_user(self, *, db: Session, email: str, request_email: str):
         if email != request_email:

@@ -81,3 +81,13 @@ async def delete_user_data(email: str, db: Session = Depends(get_db), user=Depen
         return Response(success=False, message="error deleting the user")
 
     return Response(success=True, message="user deleted successfully")
+
+
+@router.delete("/admin/{email}", response_model=Union[Response, bool])
+async def delete_admin(email: str, db: Session = Depends(get_db), admin=Depends(get_admin)):
+    logger.info(f"deleting admin {email} by {admin}")
+    deleted_user = await user_service.delete_admin(db=db, email=email)
+    if not deleted_user:
+        return Response(success=False, message="error deleting the user")
+
+    return Response(success=True, message="user deleted successfully")
