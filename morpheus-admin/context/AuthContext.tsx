@@ -95,7 +95,6 @@ const AuthProvider = (props: { children: ReactNode }) => {
     try {
       const response: Response = await getAdminInfo(email);
       if (response.success) {
-        console.log(response.data);
         const userRoles = response.data.roles;
         if (
           userRoles &&
@@ -103,6 +102,9 @@ const AuthProvider = (props: { children: ReactNode }) => {
         ) {
           setAdmin(response.data);
           setLocalAdmin(response.data);
+          if (router.pathname === "/") {
+            router.push("/models");
+          }
         }
       } else {
         showErrorAlert(`The user ${email} is not an admin`);

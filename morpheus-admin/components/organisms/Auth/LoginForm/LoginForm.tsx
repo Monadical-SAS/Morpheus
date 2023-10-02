@@ -35,10 +35,6 @@ export const LoginForm = () => {
     loginWithEmailAndPassword(data)
       .then(async (response) => {
         setLoading(false);
-        if (response) {
-          showSuccessAlert("User authenticated successfully");
-          router.push("/");
-        }
       })
       .catch(() => {
         setLoading(false);

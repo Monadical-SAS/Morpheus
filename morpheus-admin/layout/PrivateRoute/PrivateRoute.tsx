@@ -15,7 +15,7 @@ const PrivateRoute = (props: PrivateRouteProps) => {
   if (authLoading) return <FullScreenLoader isLoading={authLoading} />;
 
   if (isEmptyObject(admin)) {
-    router.push("/auth");
+    router.push("/");
   }
   return <Fragment>{props.children}</Fragment>;
 };

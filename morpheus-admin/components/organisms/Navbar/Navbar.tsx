@@ -8,7 +8,6 @@ import Link from "next/link";
 const Navbar = () => {
   const router = useRouter();
   const { admin, logout } = useAuth();
-  const currentPath = router.pathname;
 
   const redirectToHome = async () => {
     await router.push("/");

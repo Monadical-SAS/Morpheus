@@ -104,19 +104,17 @@ export const signOutFirebase = async (): Promise<any> => {
   });
 };
 
-export const logout = () => {
-  return signOutFirebase()
-    .then(() => {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      localStorage.removeItem("results");
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1000);
-    })
-    .catch((error) => {
-      alert(error);
-    });
+export const logout = async () => {
+  try {
+    await signOutFirebase();
+    localStorage.removeItem("admin");
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
+  } catch (error) {
+    alert(error);
+  }
 };
 
 const mapAuthCodeToMessage: { [key: string]: string } = {
