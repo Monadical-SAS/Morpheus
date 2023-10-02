@@ -39,6 +39,7 @@ export default function Home() {
       .then((response: Response) => {
         if (response.success) {
           showSuccessAlert("Admin removed successfully.");
+          handleRefresh();
         } else {
           showErrorAlert("Something went wrong. Please try again later.");
         }
