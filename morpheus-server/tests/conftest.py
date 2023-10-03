@@ -2,7 +2,8 @@ import pytest
 from httpx import AsyncClient
 
 from morpheus_data.database.database import get_db
-from morpheus_data.models.schemas import User, CollectionCreate, ArtWorkCreate, Collection, ArtWork, Prompt, ModelCategory, MLModelCreate, MLModel
+from morpheus_data.models.schemas import User, CollectionCreate, ArtWorkCreate, Collection, ArtWork, Prompt, ModelCategory, MLModelCreate, MLModel, Generation
+from morpheus_data.models.models import Generation as GenerationModel
 from morpheus_data.repository.firebase_repository import FirebaseRepository
 from morpheus_data.repository.user_repository import UserRepository
 from morpheus_data.repository.collection_repository import CollectionRepository
@@ -10,6 +11,7 @@ from morpheus_data.repository.artwork_repository import ArtWorkRepository
 from morpheus_data.repository.prompt_repository import PromptRepository
 from morpheus_data.repository.model_category_repository import ModelCategoryRepository
 from morpheus_data.repository.model_repository import ModelRepository
+from morpheus_data.repository.generation_repository import GenerationRepository
 from moto import mock_s3
 import boto3
 import os
@@ -123,7 +125,10 @@ def model_category():
     category_repository = ModelCategoryRepository()
     new_category = category_repository.create_category(db=db, category=category)
     yield new_category
-    category_repository.delete_category(db=db, category_id=new_category.id)
+    try:
+        category_repository.delete_category(db=db, category_id=new_category.id)
+    except:
+        pass # category deleted during test
 
 @pytest.fixture(scope="function")
 def make_artwork(demo_user, collection):
@@ -180,3 +185,21 @@ def model(model_category) -> MLModel:
     model_repository.delete_model_by_source(db=db, model_source=new_model.source)
 
 
+@pytest.fixture(scope="function")
+def generation() -> GenerationModel:
+    generation_repository = GenerationRepository()
+    generation = generation_repository.create_generation(db=db)
+
+    generation_input = Generation(
+        id=generation.id,
+        results = [
+            "https://commons.wikimedia.org/wiki/File:Trier_100_Millionen.jpg"
+        ]
+    )
+    generation = generation_repository.update_generation(db=db, generation=generation_input)
+    return generation
+
+@pytest.fixture(scope="session")
+def test_image():
+    # load file from ./data
+    return open("tests/images/morpheus.png", "rb")
