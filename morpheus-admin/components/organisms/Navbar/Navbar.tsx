@@ -10,7 +10,7 @@ const Navbar = () => {
   const { admin, logout } = useAuth();
 
   const redirectToHome = async () => {
-    await router.push("/");
+    await router.push("/models");
   };
 
   return (
