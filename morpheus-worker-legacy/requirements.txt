@@ -1,0 +1,16 @@
+celery
+redis
+diffusers==0.20.0
+transformers
+ftfy
+scipy
+accelerate
+torch==1.13.1
+torchvision
+xformers==0.0.16
+controlnet-aux==0.0.1
+opencv-contrib-python-headless
+dynamicprompts[attentiongrabber,magicprompt]
+beautifulsoup4
+safetensors
+invisible-watermark>=0.2.0
