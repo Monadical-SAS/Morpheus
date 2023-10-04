@@ -175,7 +175,7 @@ services:
       api:
         condition: service_started
     healthcheck:
-      test: ["CMD-SHELL", "ray status"]
+      test: [ "CMD-SHELL", "ray status" ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -183,10 +183,8 @@ services:
       resources:
         reservations:
           devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-
+            - count: 1
+              capabilities: [ gpu ]
 
   worker-ray-deployer:
     image: morpheus-worker:latest
