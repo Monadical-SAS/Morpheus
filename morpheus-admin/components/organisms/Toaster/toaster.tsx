@@ -7,8 +7,8 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "@/components/organisms/toast";
-import {useToast} from "@/components/organisms/use-toast";
+} from "@/components/organisms/Toaster/toast";
+import {useToast} from "@/components/organisms/Toaster/use-toast";
 import {isValidElement} from "react";
 import {buildStringFromObject} from "@/lib/strings";
 

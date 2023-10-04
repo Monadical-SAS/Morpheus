@@ -1,6 +1,6 @@
 import React from "react";
-import { useToast } from "@/components/organisms/use-toast";
-import { ToastAction } from "@/components/organisms/toast";
+import { useToast } from "@/components/organisms/Toaster/use-toast";
+import { ToastAction } from "@/components/organisms/Toaster/toast";
 
 export interface IToastContext {
   showSuccessAlert: (message: string) => void;
