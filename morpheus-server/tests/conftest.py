@@ -12,6 +12,7 @@ from morpheus_data.repository.prompt_repository import PromptRepository
 from morpheus_data.repository.model_category_repository import ModelCategoryRepository
 from morpheus_data.repository.model_repository import ModelRepository
 from morpheus_data.repository.generation_repository import GenerationRepository
+from sqlalchemy.orm.exc import UnmappedInstanceError
 from moto import mock_s3
 import boto3
 import os
@@ -21,9 +22,7 @@ from app.config import get_settings
 from tests.utils.prompts import generate_random_prompt
 
 from app.app import app
-from unittest.mock import patch, MagicMock
 import os
-import shutil
 
 db = next(get_db())
 
@@ -120,7 +119,7 @@ def model_category():
     yield new_category
     try:
         category_repository.delete_category(db=db, category_id=new_category.id)
-    except:
+    except UnmappedInstanceError:
         pass # category deleted during test
 
 @pytest.fixture(scope="function")
