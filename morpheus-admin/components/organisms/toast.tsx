@@ -33,8 +33,7 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        success:
-          "group success border-success bg-success text-success-foreground",
+        success: "group success border-success bg-success text-success-foreground",
         info: "group info border-info bg-info text-info-foreground",
         warning:
           "group warning border-warning bg-warning text-warning-foreground",
