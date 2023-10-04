@@ -1,11 +1,8 @@
-from morpheus_data.models.schemas import ArtWork, ArtWorkCreate, Prompt, Collection, CollectionCreate, ModelCategory, MLModel, MLModelCreate
-from morpheus_data.models.models import ArtWork as ArtWorkModel, Collection as CollectionModel, ModelCategory as ModelCategoryModel, MLModel as MLModelModel
+from morpheus_data.models.schemas import MLModel, MLModelCreate
 from tests.utils.serializers import CustomEncoder
 from tests.utils.sqlalchemy import object_as_dict
 import pytest
-from uuid import UUID, uuid4
 import json
-from tests.utils.prompts import generate_random_prompt
 
 
 @pytest.mark.anyio

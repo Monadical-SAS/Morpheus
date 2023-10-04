@@ -1,5 +1,4 @@
 import pytest
-import json
 from tests.utils.prompts import generate_random_prompt
 
 

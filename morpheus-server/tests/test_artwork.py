@@ -1,12 +1,11 @@
-from morpheus_data.models.schemas import ArtWork, ArtWorkCreate, Prompt, Collection
+from morpheus_data.models.schemas import ArtWorkCreate, Collection
 from morpheus_data.models.models import ArtWork as ArtWorkModel
 from tests.utils.serializers import CustomEncoder
 from tests.utils.sqlalchemy import object_as_dict
 import pytest
-from uuid import UUID, uuid4
 import json
 from tests.utils.prompts import generate_random_prompt
-
+from uuid import uuid4
 
 @pytest.mark.anyio
 async def test_add_artwork(collection: Collection, async_app_client, auth_header):
@@ -80,11 +79,17 @@ async def test_get_artworks_by_collection_id(make_artwork, collection: Collectio
     assert response.status_code == 200
     assert len(response.json()) > 0
 
+# Marking as xfail because of this error:
 # ValueError: Collection with id d33a48de-dc7f-46ae-9212-450af7ea1166 not found
-# @pytest.mark.anyio
-# async def test_get_artworks_by_collection_id_not_found(async_app_client, auth_header):
-#     response = await async_app_client.get(f"/artworks/collection/{str(uuid4())}", headers=auth_header)
-#     assert response.json()["success"] == False
+# This propagates to the test probably because pytest itself starts FastAPI
+# and the exception was not caught in the API
+@pytest.mark.anyio
+@pytest.mark.xfail(raises=ValueError) 
+async def test_get_artworks_by_collection_id_not_found(async_app_client, auth_header):
+    response = await async_app_client.get(f"/artworks/collection/{str(uuid4())}", headers=auth_header)
+    assert response.status_code == 200
+    assert response.json()["success"] == False
+
 
 @pytest.mark.anyio
 async def test_get_artwork_detail_by_id(make_artwork, async_app_client, auth_header):
