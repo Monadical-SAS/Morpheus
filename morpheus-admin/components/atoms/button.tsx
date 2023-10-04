@@ -1,6 +1,7 @@
 import { CSSProperties, Fragment, ReactNode } from "react";
 import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import CircleLoader from "../molecules/CircleLoader/CircleLoader";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -47,20 +48,14 @@ export interface ButtonProps {
 export const Button = (props: ButtonProps) => {
   return (
     <button
-      className={cn(
-        props.btnClass || "btn",
-        props.variant,
-        props.fill,
-        props.size,
-        props.className,
-      )}
+      className={cn(props.btnClass || "btn", props.variant, props.fill, props.size, props.className)}
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type || undefined}
       style={props.style}
     >
       {props.loading ? (
-        <span className="loading loading-ring loading-md"></span>
+        <CircleLoader isLoading={true} color="white" width={25} height={25} />
       ) : (
         <Fragment>
           {props.text}
