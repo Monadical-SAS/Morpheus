@@ -7,7 +7,7 @@ async def test_upload_file_to_s3(async_app_client, auth_header):
     folder = "avatars"
     print(async_app_client.base_url) 
 
-    response = await async_app_client.post(f"/files/upload", headers=auth_header, files=files, params={"folder": folder})
+    response = await async_app_client.post("/files/upload", headers=auth_header, files=files, params={"folder": folder})
         
     assert response.status_code == 200
     assert folder in response.text
@@ -20,7 +20,7 @@ async def test_upload_multiple_files_to_s3(async_app_client, auth_header):
     files = [("files", ("morpheus.png", file, "image/png")),
         ("files", ("morpheus2.png", file, "image/png"))]
 
-    response = await async_app_client.post(f"/files/upload/multiple", headers=auth_header, files=files)
+    response = await async_app_client.post("/files/upload/multiple", headers=auth_header, files=files)
     
     assert response.status_code == 200
     assert len(response.json()) == len(files)
@@ -32,13 +32,13 @@ async def test_get_user_images(async_app_client, auth_header):
     files = {"file": ("test_get_user_images.png", file, "image/png")}
     folder = "collections"
 
-    response = await async_app_client.post(f"/files/upload", headers=auth_header, files=files, params={"folder": folder})
+    response = await async_app_client.post("/files/upload", headers=auth_header, files=files, params={"folder": folder})
         
     assert response.status_code == 200
     assert folder in response.text
     assert files["file"][0] in response.text
 
-    response = await async_app_client.get(f"/files/user", headers=auth_header)
+    response = await async_app_client.get("/files/user", headers=auth_header)
 
     assert response.status_code == 200
     assert len(response.json()) > 0
