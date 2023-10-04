@@ -59,7 +59,7 @@ export function ModelForm(props: ModelFormProps) {
     categories: props?.editingModel?.categories,
     is_active: props?.editingModel?.is_active,
     extra_params: extraParamsToArray(props?.editingModel?.extra_params),
-    kind: { name: props?.editingModel?.kind },
+    kind: [{ name: props?.editingModel?.kind }],
   };
   const {
     register,
