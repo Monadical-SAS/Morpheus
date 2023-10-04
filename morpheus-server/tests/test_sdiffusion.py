@@ -88,5 +88,5 @@ async def test_get_image_generation_result(generation, async_app_client, auth_he
     response = await async_app_client.get(f"/sdiffusion/results/{generation.id}", headers=auth_header)
     assert response.status_code == 200
     response_json = response.json()
-    assert response_json["success"] == True
+    assert response_json["success"] is True
     assert set(response_json["data"]["results"]) == set(generation.results)
