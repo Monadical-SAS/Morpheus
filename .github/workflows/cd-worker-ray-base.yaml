@@ -33,8 +33,8 @@ jobs:
         with:
           context: "{{defaultContext}}:morpheus-worker"
           file: "Dockerfile.base"
-          platforms:
-          - "linux/arm64"
-          - "linux/amd64"
+          platforms: |
+            linux/arm64
+            linux/amd64
           push: true
           tags: ${{ env.MORPHEUS_WORKER_IMAGE_NAME }}:base
