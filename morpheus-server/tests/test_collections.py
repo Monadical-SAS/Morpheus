@@ -11,7 +11,7 @@ async def test_add_collection(async_app_client, auth_header):
     collection = CollectionCreate(
         name = "test collection",
         description = "test description",
-        image = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Folies_Berg%C3%A8re%2C_sir_Edmunds_1904.jpg/1280px-Folies_Berg%C3%A8re%2C_sir_Edmunds_1904.jpg",
+        image = "https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png",
     )
     
     collection_json = json.loads(json.dumps(collection.dict(), cls=CustomEncoder))
@@ -49,4 +49,4 @@ async def test_update_collection_data(collection: Collection, async_app_client, 
 async def test_delete_collection_data(collection: Collection, async_app_client, auth_header):
     response = await async_app_client.delete(f"/collections/{collection.id}", headers=auth_header)
     assert response.status_code == 200
-    assert response.json()["success"] == True
+    assert response.json()["success"] is True
