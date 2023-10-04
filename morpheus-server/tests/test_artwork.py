@@ -11,7 +11,7 @@ from uuid import uuid4
 async def test_add_artwork(collection: Collection, async_app_client, auth_header):
     artwork = ArtWorkCreate(
         title="test title",
-        image="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Folies_Berg%C3%A8re%2C_sir_Edmunds_1904.jpg/1280px-Folies_Berg%C3%A8re%2C_sir_Edmunds_1904.jpg",
+        image="https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png",
         collection_id=collection.id,
         prompt=generate_random_prompt(),
     )
@@ -27,13 +27,13 @@ async def test_add_artworks(collection: Collection, async_app_client, auth_heade
     artworks = [
         ArtWorkCreate(
             title="test title 1",
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Folies_Berg%C3%A8re%2C_sir_Edmunds_1904.jpg/1280px-Folies_Berg%C3%A8re%2C_sir_Edmunds_1904.jpg",
+            image="https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png",
             collection_id=collection.id,
             prompt=generate_random_prompt(),
         ).dict(),
         ArtWorkCreate(
             title="test title 2",
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Folies_Berg%C3%A8re%2C_sir_Edmunds_1904.jpg/1280px-Folies_Berg%C3%A8re%2C_sir_Edmunds_1904.jpg",
+            image="https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png",
             collection_id=collection.id,
             prompt=generate_random_prompt(),
         ).dict()
@@ -70,7 +70,7 @@ async def test_search_artworks_not_found(async_app_client, auth_header):
         "search": "asdfghjkl"
     }
     response = await async_app_client.get("/artworks/search", headers=auth_header, params=params)
-    assert response.json()["success"] == False
+    assert response.json()["success"] is False
     
 @pytest.mark.anyio
 async def test_get_artworks_by_collection_id(make_artwork, collection: Collection, async_app_client, auth_header):
@@ -88,7 +88,7 @@ async def test_get_artworks_by_collection_id(make_artwork, collection: Collectio
 async def test_get_artworks_by_collection_id_not_found(async_app_client, auth_header):
     response = await async_app_client.get(f"/artworks/collection/{str(uuid4())}", headers=auth_header)
     assert response.status_code == 200
-    assert response.json()["success"] == False
+    assert response.json()["success"] is False
 
 
 @pytest.mark.anyio
@@ -107,6 +107,6 @@ async def test_update_artwork_data(make_artwork, async_app_client, auth_header):
     # needed to serialize UUIDs and datetime
     artwork_json = json.loads(json.dumps(object_as_dict(artwork), cls=CustomEncoder))
 
-    response = await async_app_client.put(f"/artworks", headers=auth_header, json=artwork_json)
+    response = await async_app_client.put("/artworks", headers=auth_header, json=artwork_json)
     assert response.status_code == 200
     assert response.json()["title"] == "updated title"
