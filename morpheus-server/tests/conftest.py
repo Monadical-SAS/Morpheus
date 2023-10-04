@@ -22,7 +22,6 @@ from app.config import get_settings
 from tests.utils.prompts import generate_random_prompt
 
 from app.app import app
-import os
 
 db = next(get_db())
 
