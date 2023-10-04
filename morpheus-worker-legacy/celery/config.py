@@ -9,6 +9,7 @@ from pydantic import PostgresDsn
 
 class EnvironmentEnum(str, Enum):
     local = "local"
+    local_mps = "local-mps"
     dev = "dev"
     stage = "stage"
     prod = "prod"
@@ -32,10 +33,16 @@ class Settings(SettingsData):
     enable_float32: bool = False
     max_num_images: int = 4
 
-    generative_ai_backend: str = GenerativeAIBackendEnum.ray
-    ray_backend_url: str = "http://worker-ray:8000"
+    generative_ai_backend: str = GenerativeAIBackendEnum.celery
     waiting_room_enabled: bool = True
     max_tasks_per_worker: int = 8
+
+    celery_broker_url: str = "redis://redis:6379/0"
+    celery_result_backend: str = "redis://redis:6379/0"
+    celery_stable_diffusion_queue: str = "stable_diffusion"
+    celery_magic_prompt_queue: str = "magic_prompt"
+    celery_default_queue: str = "default"
+    celery_worker_prefetch_multiplier: int = 1
 
     class Config:
         env_file = "secrets.env"
