@@ -16,7 +16,10 @@ export const uploadFileToServer = async (file: File, destFolder: string) => {
   }
 };
 
-export const uploadMultipleFilesToServer = async (files: File[]) => {
+export const uploadMultipleFilesToServer = async (
+  files: File[],
+  destFolder: string
+) => {
   try {
     const formData = new FormData();
     files.forEach((file) => {
@@ -29,6 +32,7 @@ export const uploadMultipleFilesToServer = async (files: File[]) => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        params: { folder: destFolder },
       }
     );
     return { success: true, data: response.data };
