@@ -3,7 +3,7 @@
 import { set, useForm } from "react-hook-form";
 import { TextInput } from "@/components/atoms/input";
 import { Button, ButtonVariant } from "@/components/atoms/button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { ToggleInput } from "@/components/atoms/toggle";
 import { saveNewModel, updateModel } from "@/api/models";
 import { getAvailableCategories } from "@/api/model_categories";
@@ -12,7 +12,7 @@ import { Model } from "@/lib/models";
 import MultipleSelect from "@/components/atoms/multipleSelect";
 import { KIND_MODELS, CONTROLNET } from "@/lib/constants";
 import { useToastContext } from "@/context/ToastContext";
-
+import { LoadingContext } from "@/context/LoadingContext";
 
 interface ModelFormProps {
   title?: string;
@@ -75,6 +75,7 @@ export function ModelForm(props: ModelFormProps) {
     required: false,
     maxLength: 64,
   });
+  const { loading, setLoading } = useContext(LoadingContext);
 
   const watchKind = watch("kind");
   const watchExtraParams = watch("extra_params");
@@ -94,6 +95,8 @@ export function ModelForm(props: ModelFormProps) {
   }, [watchExtraParams]);
 
   const handleSaveModel = async (data: any) => {
+    if (loading) return;
+    setLoading(true);
     try {
       const modelData = {
         ...data,
@@ -105,15 +108,20 @@ export function ModelForm(props: ModelFormProps) {
         props?.setModels(updatedModels);
         props?.handleModalClose();
         showSuccessAlert("Model created successfully.");
+        setLoading(false);
       } else {
         showErrorAlert("Something went wrong. Please try again later.");
+        setLoading(false);
       }
     } catch (error) {
       showErrorAlert("Something went wrong. Please try again later.");
+      setLoading(false);
     }
   };
 
   const handleUpdateModel = async (data: any) => {
+    if (loading) return;
+    setLoading(true);
     const modelData = {
       ...data,
       id: props?.editingModel?.id,
@@ -122,22 +130,25 @@ export function ModelForm(props: ModelFormProps) {
     };
     updateModel(modelData)
       .then((response: Response) => {
-        if (!response.success) {
-          alert(response.message);
+        if (response.success) {
+          const updatedModels = props?.models?.map((modelData: Model) => {
+            if (modelData.source === response.data.model_updated.source) {
+              return response.data.model_updated;
+            }
+            return modelData;
+          });
+          props?.setModels(updatedModels);
+          props?.handleModalClose();
+          showSuccessAlert("Model updated successfully.");
+          setLoading(false);
+        } else {
+          showErrorAlert("Something went wrong. Please try again later.");
+          setLoading(false);
         }
-        const updatedModels = props?.models?.map((modelData: Model) => {
-          if (modelData.source === response.data.model_updated.source) {
-            return response.data.model_updated;
-          }
-          return modelData;
-        });
-
-        props?.setModels(updatedModels);
-        props?.handleModalClose();
       })
-
       .catch((error) => {
-        alert(error);
+        showErrorAlert("Something went wrong. Please try again later.");
+        setLoading(false);
       });
   };
 
@@ -162,11 +173,11 @@ export function ModelForm(props: ModelFormProps) {
   };
 
   useEffect(() => {
-    if (watchKind.name === CONTROLNET) {
-      setExtraParamsValidation({ required: true, maxLength: 64 });
-    } else {
-      setExtraParamsValidation({ required: false, maxLength: 64 });
-    }
+    const isControlNet = Array.isArray(watchKind) ? watchKind[0].name === CONTROLNET : watchKind.name === CONTROLNET;
+    setExtraParamsValidation({
+      required: isControlNet,
+      maxLength: 64,
+    });
   }, [watchKind]);
 
   return (
@@ -266,7 +277,6 @@ export function ModelForm(props: ModelFormProps) {
                 setValue={setValue}
                 errors={getExtraParamsErrors(index)?.name}
               />
-
               <TextInput
                 name={`extra_params[${index}].value`}
                 placeholder={"Insert value"}
@@ -283,7 +293,14 @@ export function ModelForm(props: ModelFormProps) {
 
       <ToggleInput name={"is_active"} label={"Activate model"} register={register} />
 
-      <Button text={"Submit"} variant={ButtonVariant.Primary} className={"w-full"} />
+      <Button
+        text={"Submit"}
+        variant={ButtonVariant.Primary}
+        className={"w-full"}
+        loading={loading}
+        disabled={loading}
+      />
+      {loading && <div className="flex justify-center w-full mt-2 text-sm">This may take a few minutes...</div>}
     </form>
   );
 }

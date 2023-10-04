@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import MainLayout from "@/layout/MainContainer/MainLayout";
 import Modal from "@/components/atoms/modal";
 import PrivateRoute from "@/layout/PrivateRoute/PrivateRoute";
@@ -8,12 +8,14 @@ import { useToastContext } from "@/context/ToastContext";
 import styles from "@/styles/pages/Home.module.scss";
 import { Response, User } from "@/lib/models";
 import { deleteAdmin, getAdmins } from "@/api/users";
+import { LoadingContext } from "@/context/LoadingContext";
 
 export default function Home() {
   const [admins, setAdmins] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
   const [removingAdmin, setRemovingAdmin] = useState<User | null>(null);
   const { showErrorAlert, showSuccessAlert } = useToastContext();
+  const { loading, setLoading } = useContext(LoadingContext);
 
   useEffect(() => {
     getAdminUsers();
@@ -35,18 +37,24 @@ export default function Home() {
   };
 
   const handleRemoveAdmin = (admin: User) => {
-    deleteAdmin(admin.email)
-      .then((response: Response) => {
-        if (response.success) {
-          showSuccessAlert("Admin removed successfully.");
-          handleRefresh();
-        } else {
-          showErrorAlert("Something went wrong. Please try again later.");
-        }
-      })
-      .catch((error: Error) => {
-        showErrorAlert(error.message);
-      });
+    if (!loading) {
+      setLoading(true);
+      deleteAdmin(admin.email)
+        .then((response: Response) => {
+          if (response.success) {
+            showSuccessAlert("Admin removed successfully.");
+            handleRefresh();
+            setRemovingAdmin(null);
+          } else {
+            showErrorAlert("Something went wrong. Please try again later.");
+          }
+          setLoading(false);
+        })
+        .catch((error: Error) => {
+          showErrorAlert(error.message);
+          setLoading(false);
+        });
+    }
   };
 
   return (
@@ -83,10 +91,7 @@ export default function Home() {
                       <th>{admin.email}</th>
                       <td>{admin.name}</td>
                       <td>
-                        <span
-                          onClick={() => setRemovingAdmin(admin)}
-                          className="cursor-pointer"
-                        >
+                        <span onClick={() => setRemovingAdmin(admin)} className="cursor-pointer">
                           Remove
                         </span>
                       </td>
@@ -96,18 +101,11 @@ export default function Home() {
               </table>
 
               {removingAdmin && (
-                <Modal
-                  open={!!removingAdmin}
-                  onClose={() => setRemovingAdmin(null)}
-                >
+                <Modal open={!!removingAdmin} onClose={() => setRemovingAdmin(null)}>
                   <div className="modal-body">
                     <p>Are you sure you want to remove this admin?</p>
                     <div className="flex flex-row justify-center gap-8 pt-4">
-                      <Button
-                        text={"Cancel"}
-                        variant={ButtonVariant.Primary}
-                        onClick={() => setRemovingAdmin(null)}
-                      />
+                      <Button text={"Cancel"} variant={ButtonVariant.Primary} onClick={() => setRemovingAdmin(null)} />
                       <Button
                         text={"Remove"}
                         variant={ButtonVariant.Warning}
