@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     default_model: str = "stabilityai/stable-diffusion-xl-base-1.0"
     max_num_images: int = 4
 
+    admin_email: str = "admin@morpheus.com"
+    admin_password: str = "morpheusAdmin"
+
     class Config:
         env_file = "secrets.env"
 

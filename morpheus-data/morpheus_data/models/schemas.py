@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from typing import Optional, List
 from uuid import UUID
@@ -8,11 +9,32 @@ from pydantic import BaseModel, Field, validator
 settings = get_settings()
 
 
+class BasicModel(BaseModel):
+    created_at: datetime = None
+    updated_at: datetime = None
+
+
+class Role(BaseModel):
+    id: UUID = None
+    name: str
+    description: str = None
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "name": "admin",
+                "description": "Administrator role",
+            }
+        }
+
+
 class User(BaseModel):
     email: str
     name: str = None
     bio: str = None
     avatar: str = None
+    roles: List[Role] = []
 
     class Config:
         orm_mode = True
@@ -21,7 +43,12 @@ class User(BaseModel):
                 "email": "juan.david@monadical.com",
                 "name": "Juan Arias",
                 "bio": "Juan Arias biography",
-                "avatar": "https://upload.wikimedia.org/wikipedia/en/8/86/Avatar_Aang.png",  # noqa
+                "avatar": "https://upload.wikimedia.org/wikipedia/en/8/86/Avatar_Aang.png",
+                "roles": [{
+                    "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
+                    "name": "admin",
+                    "description": "Administrator role",
+                }],
             }
         }
 
@@ -208,7 +235,7 @@ class StableDiffusionSchema(BaseModel):
     prompt: str = Field(..., min_length=1)
 
 
-class ModelCategory(BaseModel):
+class ModelCategory(BasicModel):
     id: UUID = None
     name: str
     description: str = None
@@ -224,7 +251,7 @@ class ModelCategory(BaseModel):
         }
 
 
-class MLModelCreate(BaseModel):
+class MLModelCreate(BasicModel):
     name: str
     source: str
     kind: ModelKind = None

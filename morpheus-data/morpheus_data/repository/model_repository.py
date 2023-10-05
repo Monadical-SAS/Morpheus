@@ -46,7 +46,7 @@ class ModelRepository:
         return db.query(MLModel).filter(MLModel.source == model_source).first()
 
     @classmethod
-    def update_model(cls, *, db: Session, model: MLModelCreate) -> MLModel:
+    def update_model(cls, *, db: Session, model: MLModel) -> MLModel:
         db_model: MLModel = db.query(MLModel).filter(MLModel.source == model.source).first()
 
         db_model.name = model.name
@@ -58,11 +58,12 @@ class ModelRepository:
         db_model.extra_params = model.extra_params
         db_model.is_active = model.is_active
         db.commit()
+        db.refresh(db_model)
+
         return db_model
 
     @classmethod
     def delete_model_by_source(cls, *, db: Session, model_source: str) -> MLModel:
-        print(f"{model_source=}")
         record = cls.get_model_by_source(db=db, model_source=model_source)
         db.delete(record)
         db.commit()

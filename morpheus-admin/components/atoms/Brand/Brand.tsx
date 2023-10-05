@@ -13,7 +13,7 @@ const Brand = (props: BrandProps) => {
       className={`headline-1 ${styles.morpheusTitle}`}
       style={props.styles}
     >
-      Morpheus
+      Morpheus Admin
     </h2>
   );
 };

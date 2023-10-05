@@ -11,8 +11,6 @@ from app.actors.sd_upscaling import StableDiffusionUpscaling
 from app.integrations.db_client import DBClient
 from app.integrations.s3_client import S3Client
 from app.models.schemas import CategoryEnum, Generation, ModelRequest
-
-
 # for local testing
 # from app.utils.images import create_fake_images
 

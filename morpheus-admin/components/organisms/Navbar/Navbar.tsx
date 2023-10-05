@@ -1,19 +1,16 @@
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 import Brand from "@/components/atoms/Brand/Brand";
+import { useAuth } from "@/context/AuthContext";
 import styles from "./Navbar.module.scss";
+import Link from "next/link";
 
 const Navbar = () => {
   const router = useRouter();
-  const currentPath = router.pathname;
+  const { admin, logout } = useAuth();
 
   const redirectToHome = async () => {
-    await router.push("/");
-  };
-  const getLinkStyles = (path: string) => {
-    const current = currentPath.split("/")[1];
-    return `base-1 secondary ${current === path && styles.activeLink}`;
+    await router.push("/models");
   };
 
   return (
@@ -23,23 +20,16 @@ const Navbar = () => {
       </div>
 
       <div className={styles.links}>
-        <Link className={getLinkStyles("models")} href={"/models"}>
-          SD Models
-        </Link>
-        <Link className={getLinkStyles("controlnet")} href={"/controlnet"}>
-          ControlNet
-        </Link>
-        <Link className={getLinkStyles("lora")} href={"/lora"}>
-          LoRa
-        </Link>
-        <Link className={getLinkStyles("embeddings")} href={"/embeddings"}>
-          Embeddings
-        </Link>
+        <Link href={"/models"}>Models</Link>
+        <Link href={"/admins"}>Admins</Link>
       </div>
 
-      <nav className={styles.auth}>
-        <span className="base-1 secondary">user</span>
-      </nav>
+      <div className={styles.auth}>
+        <span>{admin.email}</span>
+        <span onClick={logout} className={"cursor-pointer"}>
+          Logout
+        </span>
+      </div>
     </div>
   );
 };

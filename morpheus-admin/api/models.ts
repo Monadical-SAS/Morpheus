@@ -19,7 +19,7 @@ const createResponse = ({ success, data = [], message }: ResponseProps) => {
 
 export const getAvailableModels = async () => {
   try {
-    const response = await httpInstance.get("/models");
+    const response = await httpInstance.get("/models?only_active=false");
     if (response.status === 200 && response.data.length > 0) {
       return createResponse({ success: true, data: response.data });
     }
@@ -62,3 +62,19 @@ export const updateModel = async (modelData: Model) => {
     return createResponse({ success: false, message: error as Error });
   }
 };
+
+export const deleteModel = async (modelSource: string) => {
+  try {
+    const model_source = modelSource;
+    const response = await httpInstance.delete(`/models/${model_source}`);
+    if (response.status === 200 && response.data) {
+      return createResponse({ success: true, data: response.data });
+    }
+    return createResponse({
+      success: false,
+      message: response.data.message || "Error deleting model",
+    });
+  } catch (error) {
+    return createResponse({ success: false, message: error as Error });
+  }
+}

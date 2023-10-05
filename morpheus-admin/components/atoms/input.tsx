@@ -1,10 +1,13 @@
 import { ComponentPropsWithoutRef } from "react";
 
 interface TextInputProps extends ComponentPropsWithoutRef<"input"> {
-  label: string;
-  register: any;
+  label?: string;
+  register?: any;
   validationSchema?: any;
   errors?: any;
+  value?: string;
+  setValue?: any;
+  onChange?: any;
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -15,25 +18,36 @@ export const TextInput = (props: TextInputProps) => {
     if (props.errors.type === "maxLength") return "Max length is 20";
   };
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    props.setValue(props.name, event.target.value);
+  };
+
   return (
-    <div className="form-control w-full">
-      <label className="label">
-        <span className="label-text">
-          {props.label} {props.validationSchema.required && "*"}
-        </span>
-      </label>
+    <div className="w-full form-control">
+      {props.label && (
+        <label className="label">
+          <span className="label-text">
+            {props.label}{" "}
+            {props.label && props.validationSchema?.required && "*"}
+          </span>
+        </label>
+      )}
 
       <input
         name={props.name}
+        value={props.value}
         type={props.type || "text"}
         placeholder={props.placeholder}
-        className="input input-bordered w-full"
-        {...props.register(props.name, props.validationSchema)}
+        className="w-full input input-bordered"
+        onChange={props.onChange || handleInputChange}
+        {...(props.register
+          ? props.register(props.name, props.validationSchema)
+          : {})}
       />
 
       {props.errors && (
         <label className="label">
-          <span className="error text-sm text-error">{getInputError()}</span>
+          <span className="text-sm error text-error">{getInputError()}</span>
         </label>
       )}
     </div>

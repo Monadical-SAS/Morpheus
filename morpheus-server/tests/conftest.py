@@ -1,6 +1,5 @@
 import pytest
 from httpx import AsyncClient
-
 from morpheus_data.database.database import get_db
 from morpheus_data.models.schemas import User
 from morpheus_data.repository.firebase_repository import FirebaseRepository
@@ -16,6 +15,7 @@ class DemoUser:
         self.email = "demo@morpheus.com"
         self.name = "Demo User"
         self.password = "DemoPass88"
+        self.roles = [{"name": "user"}]
 
 
 @pytest.fixture(scope="session")
@@ -45,7 +45,7 @@ async def auth_header(async_app_client, demo_user):
     user_repository = UserRepository()
     user = user_repository.get_user_by_email(db=db, email=demo_user.email)
     if user is None:
-        new_user = User(email=demo_user.email, name=demo_user.name)
+        new_user = User(email=demo_user.email, name=demo_user.name, roles=demo_user.roles)
         user_repository.create_user(db=db, user=new_user)
 
     response = await firebase_repository.sign_in_with_email_and_password(

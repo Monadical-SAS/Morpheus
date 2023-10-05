@@ -1,0 +1,28 @@
+@use "styles/media";
+
+.loginContainer {
+  width: 100%;
+
+  button {
+    margin-top: 32px;
+    width: 100%;
+  }
+
+  .titleContainer {
+    display: flex;
+    align-items: center;
+
+    span {
+      cursor: pointer;
+    }
+
+    .resetTitle {
+      margin-left: 16px;
+    }
+  }
+
+  .linkForget {
+    display: block;
+    margin-top: 0;
+  }
+}

@@ -13,6 +13,8 @@ from app.integrations.firebase import get_user
 from app.models.schemas import Response
 from app.services.collection_services import CollectionService
 
+from loguru import logger
+
 router = APIRouter()
 files_repository = get_file_handlers()
 collection_service = CollectionService(files_repository=files_repository)
@@ -20,8 +22,8 @@ collection_service = CollectionService(files_repository=files_repository)
 
 @router.post("", response_model=Union[Response, Collection])
 async def add_collection(collection: CollectionCreate, db: Session = Depends(get_db), user=Depends(get_user)):
-    email = user["email"]
-    new_collection = await collection_service.add_collection(db=db, collection=collection, email=email)
+    logger.info(f"adding collection {collection} by user {user}")
+    new_collection = await collection_service.add_collection(db=db, collection=collection)
     if not new_collection:
         return Response(success=False, message="error adding the collection")
 

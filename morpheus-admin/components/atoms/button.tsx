@@ -1,3 +1,12 @@
+import { CSSProperties, Fragment, ReactNode } from "react";
+import { ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import CircleLoader from "../molecules/CircleLoader/CircleLoader";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 export enum ButtonSize {
   Xs = "btn-xs",
   Sm = "btn-sm",
@@ -29,16 +38,30 @@ export interface ButtonProps {
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
+  btnClass?: string;
+  type?: "button" | "submit" | "reset" | undefined;
+  icon?: ReactNode;
+  loading?: boolean;
+  style?: CSSProperties;
 }
 
 export const Button = (props: ButtonProps) => {
   return (
     <button
-      className={`btn ${props.variant} ${props.fill} ${props.size} ${props.className}`}
+      className={cn(props.btnClass || "btn", props.variant, props.fill, props.size, props.className)}
       onClick={props.onClick}
       disabled={props.disabled}
+      type={props.type || undefined}
+      style={props.style}
     >
-      {props.text}
+      {props.loading ? (
+        <CircleLoader isLoading={true} color="white" width={25} height={25} />
+      ) : (
+        <Fragment>
+          {props.text}
+          {props.icon && <span className="ml-2">{props.icon}</span>}
+        </Fragment>
+      )}
     </button>
   );
 };

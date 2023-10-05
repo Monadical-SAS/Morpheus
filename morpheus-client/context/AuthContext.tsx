@@ -128,7 +128,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
     const user = {
       name: firebaseUser.displayName,
       email: firebaseUser.email,
-      phone: firebaseUser.phoneNumber,
+      roles: [{name: "user"}],
     };
     if (!user.email) {
       showErrorAlert("Email is required");
