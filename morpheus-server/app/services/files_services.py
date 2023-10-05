@@ -2,10 +2,9 @@ import logging
 from typing import Any
 
 from PIL import Image
-from sqlalchemy.orm import Session
-
 from morpheus_data.repository.files.files_interface import FileRepositoryInterface
 from morpheus_data.repository.user_repository import UserRepository
+from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 
@@ -15,12 +14,12 @@ class FilesService:
         self.files_repository = files_repository
         self.user_repository = UserRepository()
 
-    def get_user_images(self, *, db: Session, email: str):
-        self.user_repository.get_user_data(db=db, email=email)
-        return self.files_repository.get_files(folder_name=email)
+    def get_user_images(self, *, email: str, folder: str = None):
+        destination_folder = email if folder is None else f"{folder}/{email}"
+        return self.files_repository.get_files(folder_name=destination_folder)
 
     def upload_file_to_s3(
-        self, *, db: Session, file: Any, email: str, folder: str = None, skip_validation: bool = False
+            self, *, db: Session, file: Any, email: str, folder: str = None, skip_validation: bool = False
     ):
         if not skip_validation:
             self.user_repository.get_user_data(db=db, email=email)
@@ -33,11 +32,18 @@ class FilesService:
         else:
             logger.error("File extension not allowed")
 
-    def upload_multiple_files_to_s3(self, *, db: Session, files: list[Any], email: str):
+    # missing folder name param? (collections / avatars)
+    def upload_multiple_files_to_s3(self, *, db: Session, files: list[Any], email: str, folder: str = None):
         self.user_repository.get_user_data(db=db, email=email)
         file_urls = []
         for file in files:
-            file_url = self.upload_file_to_s3(db=db, file=file, email=email, skip_validation=True)
+            file_url = self.upload_file_to_s3(
+                db=db,
+                file=file,
+                email=email,
+                folder=folder,
+                skip_validation=True
+            )
             if file_url is not None:
                 file_urls.append(file_url)
         return file_urls
