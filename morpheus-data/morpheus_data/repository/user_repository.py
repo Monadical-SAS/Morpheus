@@ -42,7 +42,7 @@ class UserRepository:
         for role in user.roles:
             db_role = db.query(Role).filter(Role.name == role.name).first()
             if not db_role:
-                raise ValueError(f"Role {user.role} not found")
+                raise ValueError(f"Role {role.name} not found")
             db_roles.append(db_role)
         return db_roles
 
@@ -90,7 +90,7 @@ class UserRepository:
 
     @classmethod
     def add_admin_role_to_user(
-        cls, *, db: Session, user: UserCreate
+            cls, *, db: Session, user: UserCreate
     ) -> Union[User, None]:
         db_user = UserRepository.get_user_by_email(db=db, email=user.email)
         if not db_user:
