@@ -44,8 +44,8 @@ class RoleRepository:
         return db_role
 
     @classmethod
-    def delete_role(cls, *, db: Session, email: str) -> bool:
-        db_role = RoleRepository.get_role_by_id(db=db, role_id=email)
+    def delete_role(cls, *, db: Session, name: str) -> bool:
+        db_role = RoleRepository.get_role_by_name(db=db, name=name)
         if not db_role:
             return True
         db.delete(db_role)
