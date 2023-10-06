@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 AWS_ACCESS_KEY_ID = settings.aws_access_key_id
 AWS_SECRET_ACCESS_KEY = settings.aws_secret_access_key
 MODELS_BUCKET = settings.models_bucket
+TEMP_MODEL_FOLDER = settings.temp_model_folder
 
 
 class S3ModelFileRepository(ModelRepositoryInterface):
@@ -75,4 +76,4 @@ class S3ModelFileRepository(ModelRepositoryInterface):
 
     @staticmethod
     def get_file_name(*, file: str, **kwargs):
-        return file.removeprefix("./tmp/")
+        return file.removeprefix(f"{TEMP_MODEL_FOLDER}/")

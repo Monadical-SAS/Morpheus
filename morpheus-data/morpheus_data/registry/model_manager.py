@@ -3,7 +3,12 @@ from glob import glob
 from pathlib import Path
 
 import torch
-from diffusers import ControlNetModel, StableDiffusionPipeline, StableDiffusionXLPipeline
+from diffusers import (
+    ControlNetModel,
+    StableDiffusionPipeline,
+    StableDiffusionXLPipeline,
+    StableDiffusionUpscalePipeline,
+)
 from dynamicprompts.generators import RandomPromptGenerator
 from dynamicprompts.generators.magicprompt import MagicPromptGenerator
 
@@ -15,6 +20,11 @@ from morpheus_data.utils.decorators import validate_stable_diffusion_upscaler
 settings = get_settings()
 TEMP_MODEL_FOLDER = settings.temp_model_folder
 
+pipelines = {
+    "stable-diffusion-xl": StableDiffusionXLPipeline,
+    "x4-upscaler": StableDiffusionUpscalePipeline,
+}
+
 
 @validate_stable_diffusion_upscaler
 def download_model_from_huggingface(params: MLModelCreate):
@@ -25,11 +35,7 @@ def download_model_from_huggingface(params: MLModelCreate):
         print(f"Model was already downloaded. You can find it in {path}")
         return output
 
-    pipeline = (
-        StableDiffusionXLPipeline
-        if params.source == "stabilityai/stable-diffusion-xl-base-1.0"
-        else StableDiffusionPipeline
-    )
+    pipeline = next((value for key, value in pipelines.items() if key in params.source), StableDiffusionPipeline)
 
     try:
         model = pipeline.from_pretrained(
