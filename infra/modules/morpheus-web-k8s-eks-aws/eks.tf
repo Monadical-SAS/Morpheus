@@ -53,15 +53,16 @@ module "eks" {
 
       bootstrap_extra_args = "--kubelet-extra-args '--node-labels=morpheus-type=web'"
 
-      post_bootstrap_user_data = <<-EOT
-        DEPLOYMENT_BUCKET="${local.s3_deployment_bucket_name}"
-        CLOUDWATCH_ETC_FOLDER="/etc/morpheus"
-        CLOUDWATCH_ETC_FILENAME="morpheus-cloudwatch-web-agent-config.json"
-        mkdir -p "$CLOUDWATCH_ETC_FOLDER"
-        aws s3 cp s3://$DEPLOYMENT_BUCKET/$CLOUDWATCH_ETC_FILENAME "$CLOUDWATCH_ETC_FOLDER"
-        sudo yum install -y amazon-cloudwatch-agent
-        ./opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:$CLOUDWATCH_ETC_FOLDER/$CLOUDWATCH_ETC_FILENAME
-      EOT
+      # Uncomment to enable web node logs in cloudwatch
+      # post_bootstrap_user_data = <<-EOT
+      #  DEPLOYMENT_BUCKET="${local.s3_deployment_bucket_name}"
+      #  CLOUDWATCH_ETC_FOLDER="/etc/morpheus"
+      #  CLOUDWATCH_ETC_FILENAME="morpheus-cloudwatch-web-agent-config.json"
+      #  mkdir -p "$CLOUDWATCH_ETC_FOLDER"
+      #  aws s3 cp s3://$DEPLOYMENT_BUCKET/$CLOUDWATCH_ETC_FILENAME "$CLOUDWATCH_ETC_FOLDER"
+      #  sudo yum install -y amazon-cloudwatch-agent
+      #  ./opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:$CLOUDWATCH_ETC_FOLDER/$CLOUDWATCH_ETC_FILENAME
+      # EOT
 
       subnet_ids = module.vpc.private_subnets
 
