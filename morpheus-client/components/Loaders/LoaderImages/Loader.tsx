@@ -5,7 +5,9 @@ const Loader = () => {
   return (
     <div className={styles.loaderContainer}>
       <span className={styles.loaderLayers}></span>
-      <p className="body-1 white">Making the magic happen...</p>
+      <p className="body-1 white">
+        ✨ hang tight... <br /> we're making the magic happen ✨
+      </p>
     </div>
   );
 };

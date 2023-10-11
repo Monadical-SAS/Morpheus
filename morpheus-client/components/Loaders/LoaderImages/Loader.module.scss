@@ -1,4 +1,5 @@
 @use "styles/colors";
+@use "styles/media";
 
 .loaderContainer {
   display: flex;
@@ -7,9 +8,14 @@
   align-items: center;
   width: 100%;
   height: 100%;
+  text-align: center;
 
   p {
     margin-top: 24px;
+  }
+
+  @include media.mobile {
+    margin-bottom: 24px;
   }
 }
 
