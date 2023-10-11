@@ -1,7 +1,7 @@
 # The base-deps Docker image installs main libraries needed to run Ray
 
 # The GPU options are NVIDIA CUDA developer images.
-ARG BASE_IMAGE="nvidia/cuda:11.7.1-base-ubuntu22.04"
+ARG BASE_IMAGE="nvidia/cuda:12.2.0-base-ubuntu22.04"
 FROM ${BASE_IMAGE}
 # FROM directive resets ARG
 ARG BASE_IMAGE
