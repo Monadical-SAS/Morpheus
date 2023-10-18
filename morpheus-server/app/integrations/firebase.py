@@ -6,6 +6,7 @@ from firebase_admin import auth, credentials, initialize_app
 from loguru import logger
 from morpheus_data.database.database import get_db
 from morpheus_data.repository.user_repository import UserRepository
+from sqlalchemy.exc import PendingRollbackError
 
 settings = get_settings()
 user_repository = UserRepository()
@@ -45,17 +46,28 @@ def validate_firebase_user(authorization: HTTPAuthorizationCredentials):
 
 
 def validate_morpheus_user_and_role(user_email: str, role: str):
-    user = user_repository.get_user_by_email(db=db, email=user_email)
-    if user is None:
-        raise UserNotFoundError(f"User with email {user_email} not found")
-    user_roles = user.roles
-    if role not in [user_role.name for user_role in user_roles]:
-        logger.error(f"User {user.email} does not have {role} permission to access this resource")
+    try:
+        user = user_repository.get_user_by_email(db=db, email=user_email)
+        if user is None:
+            raise UserNotFoundError(f"User with email {user_email} not found")
+        user_roles = user.roles
+        if role not in [user_role.name for user_role in user_roles]:
+            logger.error(f"User {user.email} does not have {role} permission to access this resource")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"User {user.email} does not have {role} permission to access this resource",
+            )
+        logger.info(f"User {user.email} authenticated with role {role} successfully with Morpheus")
+    except PendingRollbackError as e:
+        logger.error("PendingRollbackError occurred: {}".format(str(e)))
+        db.rollback()
+        db.close()
+    except Exception as e:
+        logger.error("Exception occurred: {}".format(str(e)))
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"User {user.email} does not have {role} permission to access this resource",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Exception occurred: {str(e)}",
         )
-    logger.info(f"User {user.email} authenticated with role {role} successfully with Morpheus")
 
 
 def get_user(
