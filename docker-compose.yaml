@@ -167,18 +167,6 @@ services:
       - ./etc/cloudflare/client/config.yml:/home/nonroot/.cloudflared/config.yml
       - ./etc/cloudflare/client/credentials.json:/home/nonroot/.cloudflared/credentials.json
 
-  flower:
-    build: ./morpheus-server
-    command: celery flower --basic_auth=admin:password
-    profiles: [ "staging", "local" ]
-    volumes:
-      - ./morpheus-server:/opt/api
-    ports:
-      - "5555:5555"
-    depends_on:
-      api:
-        condition: service_started
-
   model-script:
     build:
       context: morpheus-server
