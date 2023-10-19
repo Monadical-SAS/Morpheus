@@ -1,10 +1,9 @@
 import logging
 
+from app.settings.settings import get_settings
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
-from app.settings.settings import get_settings
 
 logger = logging.getLogger("ray")
 
@@ -22,6 +21,10 @@ def get_db():
     try:
         logger.info("Yielding database session")
         yield db
+    except Exception as e:
+        logger.error("Exception occurred: {}".format(str(e)))
+        db.rollback()
+        raise
     finally:
         logger.info("Closing database session")
         db.close()
