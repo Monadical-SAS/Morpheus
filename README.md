@@ -51,6 +51,8 @@ Before starting, ensure you have the following:
   you can download Docker from <a href="https://docs.docker.com/get-docker/">here</a> and Docker-Compose from  <a
   href="https://docs.docker.com/compose/install/#install-using-pip">here</a>. Skip this step if you're using a
   Kubernetes setup.
+3. **Hardware**: The hardware requirements for this setup will vary depending on the specific application that you are developing. However, it is generally recommended to have a machine with at least 16 GB of RAM and a GPU with 16 GB of VRAM. If you don't have a GPU, you can use a cloud
+  provider like AWS, GCP, or Azure. Skip this step if you're using a Kubernetes setup.
 <br/>
 
 ## Setup Steps
@@ -210,133 +212,9 @@ To run the Morpheus project, execute the following command:
 ```bash
 docker compose up
 ```
-If you do not have a GPU, you need to edit the `docker-compose.yml` file and comment out all lines related to Ray. To do
-this:
-1. Open the `docker-compose.yml` file in a text editor.
-2. Find the following lines:
-```bash
-  # worker-ray:
-  #   build:
-  #     context: ./morpheus-worker
-  #   # If you are using a mac, uncomment the args below
-  #   # args:
-  #   #   RAY_IMAGE_TAG: latest-gpu-aarch64
-  #   image: morpheus-worker:latest
-  #   env_file:
-  #     - morpheus-worker/secrets.env
-  #   command: bash start.sh
-  #   ports:
-  #     - "8000:8000"
-  #     - "8265:8265"
-  #   volumes:
-  #     - sd_model:/mnt/
-  #   depends_on:
-  #     api:
-  #       condition: service_started
-  #   healthcheck:
-  #     test: [ "CMD-SHELL", "ray status" ]
-  #     interval: 5s
-  #     timeout: 5s
-  #     retries: 10
-  #   # If you don't have a gpu, comment the deploy section below
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - count: 1
-  #             capabilities: [ gpu ]
 
-  # worker-ray-deployer:
-  #   image: morpheus-worker:latest
-  #   command: bash -c "sleep 10 && ray job submit -- serve deploy models.yaml"
-  #   environment:
-  #     - RAY_ADDRESS=http://worker-ray:8265
-  #   depends_on:
-  #     worker-ray:
-  #       condition: service_healthy
-```
-3. Add a `#` symbol to the beginning of each line.
-4. Save the file.
-
-Once you have edited the `docker-compose.yml` file, you can run the Morpheus project without a GPU by executing the
-following command:
-
-```bash
-docker compose up
-```
 The Morpheus project will be running on your local machine at localhost:3000 (client), localhost:3001 (admin), and
-localhost:8001 (api). 
-
-Observation: Morpheus can't generate images in a local environment without GPU, this returns fixed fake images from the models. If you want to generate images, you need
-to run Morpheus in a cloud environment or with a GPU. 
-
-**Step 8. Installing models locally**
-
-1. **Build the model installer**
-   
-if you are running the model installer for the first time or have made changes to it, you will need to build it:
-
-```sh
-docker compose --profile manage build
-
-#or 
-
-docker compose build model-script
-```
-2. **Install Stable Diffusion models**
-   
-### Installing models locally
-
-To use the Stable Diffusion models locally, you must first download and register them in the database:
-```bash
-# Only at first time
-mkdir morpheus-server/tmp
-
-# register models specified in morpheus-server/scripts/models/models-info.yaml
-docker compose run --rm model-script upload local sdiffusion
-```
-This script downloads the models to your local machine (`morpheus-server/tmp`) and registers them in the S3 bucket and the database. Note that the project must be running for the database registration to work.
-
-If the model is already registered in the database, this command updates the register. To update the register without
-interacting with the database, run the following command:
-
-```bash
-docker compose run --rm model-script db update local sdiffusion
-```
-To add a new Stable Diffusion model, you only need to add its information in the file `models-info.yaml` (located at `./morpheus-server/scripts/models/models-info.yaml`).
-
-3. **Install ControlNet models**
-
-To use ControlNet models **locally**, you must first download and register them in the application:
-
-```bash
-# register models specified in morpheus-server/scripts/models/controlnet-models-info.yaml
-docker compose run --rm model-script upload local controlnet
-```
-
-ControlNet models will also be downloaded to the directory `morpheus-server/tmp`. To add a new ControlNet model, you only need to add its information in the file `controlnet-models-info.yaml` (located at `./morpheus-server/scripts/models/controlnet-models-info.yaml`).
-
-If the model is already registered in the database, this command updates the register. To update the register without interacting with the database, run the following command:
-
-```bash
-docker compose run --rm model-script db update local controlnet
-```
-
-4. **Install MagicPrompt models**
-
-To use MagicPrompt models locally, you must first download and upload the model to the S3 bucket:
-
-```bash
-# register models specified in morpheus-server/scripts/models/magicprompt-models-info.yaml
-docker compose run --rm model-script upload local magicprompt
-```
-
-MagicPrompt model will also be downloaded to the directory `morpheus-server/tmp`. If you want to add a new model, you
-only
-need to add its information in the
-file `magicprompt-models-info.yaml` (located at `./morpheus-server/scripts/models/magicprompt-models-info.yaml`).
-
-For more information about this script, you can read the [README](./morpheus-server/scripts/models/README.md).
+localhost:8001 (api). Morpheus use an model for default, you can change puede hacerlo desde el panel de administración
 
 # Development
 
@@ -380,11 +258,11 @@ docker compose build api
 
 # Building alltogether
 #---------------------------------------------
-docker compose --profile <local|staging|manage> build
+docker compose build
 
 # Run
 #---------------------------------------------
-docker compose --profile <local|staging> up
+docker compose up
 ```
 
 **Note**: You need to build `morpheus-data` and the `morpheus-server` API service (or any other microservice that uses it) every time you make a change to `morpheus-data`. This is necessary because you need to rebuild the wheel file and install it in the `morpheus-server` API service or any other service that uses it. For more information, see the `morpheus-data` [README](./morpheus-data/README.md).
@@ -412,9 +290,28 @@ docker-compose up
 ```
 
 ### Add new diffusion models
+There are two ways to add new diffusion models to Morpheus:
+* Using the admin panel
+* Using the command-line interface (CLI)
 
-To add/list/delete models, you can use the script found in morpheus server directory:  `scripts/models/cli.py` and the
-file `scripts/models/models-info.yaml`
+**Using the admin panel**
+
+To use the admin panel, go to localhost:3001. For more details on how to use the admin panel, see
+[here](https://github.com/Monadical-SAS/Morpheus/wiki/Morpheus-Admin-webUI).
+
+**Using the CLI**
+
+To use the CLI, you must first build the Morpheus server:
+
+```bash
+docker compose --profile manage build
+
+#or 
+
+docker compose build model-script
+```
+
+Once the `model-script` is built, you can use the `scripts/models/cli.py` script to add, list, and delete models. You can also use the `scripts/models/models-info.yaml` file to specify information about the models.
 
 ```bash
 # To show the help
@@ -449,6 +346,9 @@ docker compose run --rm model-script db delete <model-source> <server> --target 
 
 ```
 
+To use the admin panel, go to localhost:3001. For more details on how to use the admin panel, see
+[here](https://github.com/Monadical-SAS/Morpheus/wiki/Morpheus-Admin-CLI).
+
 ### Adding a new feature
 
 If you want to add a new feature, you should follow the next steps:
@@ -478,11 +378,6 @@ docker-compose run --rm api pytest
 ```
 
 If all the checks pass, you can push your changes
-
-## See also
-
-[Backend documentation](./morpheus-server/README.md)  
-[Frontend documentation](./morpheus-client/README.md)
 
 # Production Setup
 
@@ -674,36 +569,6 @@ Apply the nvidia plugin.
 ```bash
 kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.13.0/nvidia-device-plugin.yml
 ```
-
-## Run with supervisor
-
-```bash
-# In repo directory
-mkdir -p data/logs
-
-sudo supervisortctl reread
-sudo supervisortctl update
-```
-
-This starts all supervisor services automatically
-
-### Start/Stop/Status check with supervisor
-
-```bash
-# To check status
-sudo supervisorctl status 
-
-# To start stable-diffusion-webui
-sudo supervisorctl start stablediffusion
-
-# To stop stable-diffusion-webui
-sudo supervisorctl stop stablediffusion
-docker compose down
-```
-
-When using the stop instruction, you need to down the containers manually using docker compose because supervisor can't
-handle docker
-processes, only start and check that the service is running
 
 # CI/CD configuration
 
