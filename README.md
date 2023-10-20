@@ -314,7 +314,7 @@ To use ControlNet models **locally**, you must first download and register them 
 docker compose run --rm model-script upload local controlnet
 ```
 
-ControlNet models will also be downloaded to the directory `morpheus-server/tmp`. To add a new ControlNet model, you only need to add its information in the file `controlnet-models-info.yaml`` (located at `./morpheus-server/scripts/models/controlnet-models-info.yaml`).
+ControlNet models will also be downloaded to the directory `morpheus-server/tmp`. To add a new ControlNet model, you only need to add its information in the file `controlnet-models-info.yaml` (located at `./morpheus-server/scripts/models/controlnet-models-info.yaml`).
 
 If the model is already registered in the database, this command updates the register. To update the register without interacting with the database, run the following command:
 
