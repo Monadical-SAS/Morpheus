@@ -56,17 +56,20 @@ Before starting, ensure you have the following:
 ## Setup Steps
 
 **Step 1: Verify that Docker is installed and running**
+
 Ensure that Docker and Docker-Compose are installed on your system. If not, install them using the links above. For
 Linux users, you might also need to add your user to the docker group. For more information, see the <a href="https://docs.docker.com/engine/install/linux-postinstall/">Docker
 documentation</a> for more details.
 
 **Step 2: Clone the repository**
+
 Clone the repository to your local system using the command below:
 
 ```bash
 git clone git@github.com:Monadical-SAS/Morpheus.git
 ```
 **Step 3: Navigate to the Morpheus directory**
+
 Change your current directory to the cloned repository:
 
 ```bash
@@ -75,6 +78,7 @@ cd Morpheus
 
 
 **Step 4: Create a secrets file**
+
 Create the secrets file by copying the distributed `.env` files:
 
 ```bash
@@ -84,10 +88,12 @@ cp -p morpheus-client/env.local.dist morpheus-admin/.env.local
 ```
 
 **Step 5: Edit the `morpheus-server/secrets.env` file with your values**
+
 This step involves editing the `secrets.env` file to provide the application with the necessary secrets to connect to
 the database, Firebase, AWS, and other services.
 
 **Parameters:**
+
 * `POSTGRES_USER`: The username for the PostgreSQL database.
 * `POSTGRES_DB`: The name of the PostgreSQL database.
 * `POSTGRES_PASSWORD`: The password for the PostgreSQL database.
@@ -107,6 +113,7 @@ the database, Firebase, AWS, and other services.
 * `ENVIRONMENT`: The environment where the application is running. This can be `local`, `staging`, or `production`.
 
 **Instructions:**
+
 1. Open the `secrets.env` file in your preferred text editor.
 2. Replace all content with the following:
 
@@ -150,10 +157,12 @@ Once you have updated the `secrets.env` file, the application will be able to co
 and other services using the secrets that you provided.
 
 **Step 6. Edit the `morpheus-client/.env.local` and `morpheus-admin/.env.local` files with your values**
+
 This step involves editing the `.env.local` files in the `morpheus-client` and `morpheus-admin` directories to provide
 the client application with the necessary values to connect to the backend API, Firebase, and other services.
 
 **Parameters:**
+
 * `NEXT_PUBLIC_API_URL`: The URL of the backend API.
 * `NEXT_PUBLIC_FIREBASE_CONFIG`: The Firebase configuration for your Firebase project. This can be found in the
   Firebaase console.
@@ -167,6 +176,7 @@ the client application with the necessary values to connect to the backend API, 
 * `FAST_REFRESH`: A boolean value indicating whether to enable Fast Refresh.
 
 **Instructions:**
+
 1. Open the `secrets.env` file in your preferred text editor.
 2. Replace all content with the following:
 
@@ -195,6 +205,7 @@ FAST_REFRESH=false
 Once you have updated the `.env.local` file, the client application will be able to connect to the backend API, Firebase, and other services using the values that you provided.
 
 **Step 7. Run the Morpheus project**
+
 To run the Morpheus project, execute the following command:
 ```bash
 docker compose up
@@ -258,8 +269,11 @@ localhost:8001 (api).
 
 Observation: Morpheus can't generate images in a local environment without GPU, this returns fixed fake images from the models. If you want to generate images, you need
 to run Morpheus in a cloud environment or with a GPU. 
+
 **Step 8. Installing models locally**
+
 1. **Build the model installer**
+   
 if you are running the model installer for the first time or have made changes to it, you will need to build it:
 
 ```sh
@@ -270,7 +284,9 @@ docker compose --profile manage build
 docker compose build model-script
 ```
 2. **Install Stable Diffusion models**
+   
 ### Installing models locally
+
 To use the Stable Diffusion models locally, you must first download and register them in the database:
 ```bash
 # Only at first time
@@ -371,7 +387,7 @@ docker compose --profile <local|staging|manage> build
 docker compose --profile <local|staging> up
 ```
 
-**Note**:  You need to build `morpheus-data` and the `morpheus-server` API service (or any other microservice that uses it) every time you make a change to `morpheus-data`. This is necessary because you need to rebuild the wheel file and install it in the `morpheus-server` API service or any other service that uses it. For more information, see the `morpheus-data` [README](./morpheus-data/README.md).
+**Note**: You need to build `morpheus-data` and the `morpheus-server` API service (or any other microservice that uses it) every time you make a change to `morpheus-data`. This is necessary because you need to rebuild the wheel file and install it in the `morpheus-server` API service or any other service that uses it. For more information, see the `morpheus-data` [README](./morpheus-data/README.md).
 
 
 ## Adding a new dependency to the backend
@@ -500,6 +516,7 @@ self_managed_gpu_nodes_device_size = 30
 region = "us-east-1"
 ```
 where:
+
 * `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` are your AWS credentials. You can obtain these credentials from the AWS Management Console.
 * `ACCOUNT_ID` is your AWS account ID. You can find this information in the AWS Management Console.
 * `db_password_secret_manager_name` is the name of the DB secret that you created in step 2.
@@ -615,27 +632,27 @@ data:
 ```
 
 where:
-`apiVersion`: This field specifies the version of the Kubernetes API that the secret is compatible with. In this case, the secret is compatible with Kubernetes API version 1.
-`kind`: This field specifies the type of object that the manifest represents. In this case, the manifest represents a secret object.
-`metadata`: This field contains information about the secret, such as its name and labels. The name field is required and must be unique within the namespace where the secret is created.
-`type`: This field specifies the type of secret. In this case, the secret is an Opaque secret. Opaque secrets are used to store sensitive data that should be encrypted at rest.
-`data`: This field contains the secret data. The data is stored as a map of key-value pairs. The keys must be unique and the values can be any type of data.
+* `apiVersion`: This field specifies the version of the Kubernetes API that the secret is compatible with. In this case, the secret is compatible with Kubernetes API version 1.
+* `kind`: This field specifies the type of object that the manifest represents. In this case, the manifest represents a secret object.
+* `metadata`: This field contains information about the secret, such as its name and labels. The name field is required and must be unique within the namespace where the secret is created.
+* `type`: This field specifies the type of secret. In this case, the secret is an Opaque secret. Opaque secrets are used to store sensitive data that should be encrypted at rest.
+* `data`: This field contains the secret data. The data is stored as a map of key-value pairs. The keys must be unique and the values can be any type of data.
 The following are the secrets that are stored in the morpheus-secret:
 
-`POSTGRES_USER`: The username for the PostgreSQL database.
-`POSTGRES_DB`: The name of the PostgreSQL database.
-`POSTGRES_PASSWORD`: The password for the PostgreSQL database.
-`POSTGRES_HOST`: The hostname or IP address of the PostgreSQL database server.
-`FIREBASE_PROJECT_ID`: The ID of the Firebase project.
-`FIREBASE_PRIVATE_KEY`: The private key for the Firebase project.
-`FIREBASE_CLIENT_EMAIL`: The client email address for the Firebase project.
-`AWS_ACCESS_KEY_ID`: The AWS access key ID.
-`AWS_SECRET_ACCESS_KEY`: The AWS secret access key.
-`SENTRY_DSN`: The Sentry DSN.
-`FLOWER_ADMIN_STRING`: The Flower admin string.
-`IMAGES_BUCKET`: The name of the S3 bucket where the Morpheus images are stored.
-`IMAGES_TEMP_BUCKET`: The name of the S3 bucket where the Morpheus temporary images are stored.
-`MODELS_BUCKET`: The name of the S3 bucket where the Morpheus models are stored.
+* `POSTGRES_USER`: The username for the PostgreSQL database.
+* `POSTGRES_DB`: The name of the PostgreSQL database.
+* `POSTGRES_PASSWORD`: The password for the PostgreSQL database.
+* `POSTGRES_HOST`: The hostname or IP address of the PostgreSQL database server.
+* `FIREBASE_PROJECT_ID`: The ID of the Firebase project.
+* `FIREBASE_PRIVATE_KEY`: The private key for the Firebase project.
+* `FIREBASE_CLIENT_EMAIL`: The client email address for the Firebase project.
+* `AWS_ACCESS_KEY_ID`: The AWS access key ID.
+* `AWS_SECRET_ACCESS_KEY`: The AWS secret access key.
+* `SENTRY_DSN`: The Sentry DSN.
+* `FLOWER_ADMIN_STRING`: The Flower admin string.
+* `IMAGES_BUCKET`: The name of the S3 bucket where the Morpheus images are stored.
+* `IMAGES_TEMP_BUCKET`: The name of the S3 bucket where the Morpheus temporary images are stored.
+* `MODELS_BUCKET`: The name of the S3 bucket where the Morpheus models are stored.
 
 Apply secrets:
 
