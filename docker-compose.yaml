@@ -145,6 +145,28 @@ services:
       worker-ray:
         condition: service_healthy
 
+  cloudflare-api:
+    image: cloudflare/cloudflared
+    profiles: [ "staging-old" ]
+    network_mode: 'service:api'
+    command: tunnel --url http://api:8001 run morpheus-staging-api-tunnel
+    depends_on:
+      - api
+    volumes:
+      - ./etc/cloudflare/api/config.yml:/home/nonroot/.cloudflared/config.yml
+      - ./etc/cloudflare/api/credentials.json:/home/nonroot/.cloudflared/credentials.json
+
+  cloudflare-client:
+    image: cloudflare/cloudflared
+    profiles: [ "staging-old" ]
+    network_mode: 'service:client'
+    command: tunnel --url http://client:3000 run morpheus-staging-client-tunnel
+    depends_on:
+      - client
+    volumes:
+      - ./etc/cloudflare/client/config.yml:/home/nonroot/.cloudflared/config.yml
+      - ./etc/cloudflare/client/credentials.json:/home/nonroot/.cloudflared/credentials.json
+
   model-script:
     build:
       context: morpheus-server
