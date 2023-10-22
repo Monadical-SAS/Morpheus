@@ -179,7 +179,7 @@ the client application with the necessary values to connect to the backend API, 
 
 **Instructions:**
 
-1. Open the `secrets.env` file in your preferred text editor.
+1. Open the `.env.local` file in your preferred text editor.
 2. Replace all content with the following:
 
 ```bash
@@ -228,8 +228,14 @@ localhost:8001 (api). Morpheus use an model for default, you can change puede ha
 To use `morpheus-data` image to run the migrations, you need to create a secrets.env file in the morpheus-server 
 directory. For more information, you can read the morpheus-data [README](./morpheus-data/README.md).
 
-* To create a migration: `docker-compose run --rm datalib alembic revision --autogenerate -m "Initial migration"`.
-* To migrate or update to the head: `docker-compose run --rm datalib alembic upgrade head`.
+* To create a migration: 
+```bash
+docker compose run --rm datalib alembic revision --autogenerate -m "Initial migration"
+```
+* To migrate or update to the head:
+```bash
+docker compose run --rm datalib alembic upgrade head
+```
 
 ## PG admin
 PGadmin is available in: localhost:8002. The user and password must be added in secrets.env file.
@@ -268,25 +274,25 @@ docker compose up
 **Note**: You need to build `morpheus-data` and the `morpheus-server` API service (or any other microservice that uses it) every time you make a change to `morpheus-data`. This is necessary because you need to rebuild the wheel file and install it in the `morpheus-server` API service or any other service that uses it. For more information, see the `morpheus-data` [README](./morpheus-data/README.md).
 
 
-## Adding a new dependency to the backend
+##3 Adding a new dependency to the backend
 
 1. Add the new dependency directly to the respective `requirements.txt` file.
 2. Update the docker image: `docker compose build api`.
 3. Run the image: `docker compose up`.
 
-**Note:** This project uses `requirements.lint.txt`` only for caching in CI workflow linting job.
+**Note:** This project uses `requirements.lint.txt` only for caching in CI workflow linting job.
 
-## Adding a new dependency to the frontend
+##3 Adding a new dependency to the frontend
 
 ```shell
 # Add a new dependency to the npm package.json file
 yarn install <dependency>
 
 # Update the docker image
-docker-compose build client
+docker compose build client
 
 # Run the image
-docker-compose up
+docker compose up
 ```
 
 ### Add new diffusion models
@@ -370,11 +376,11 @@ Before pushing your changes, make sure to run the QA tools and the tests
 
 ```bash
 # Run the QA tools
-docker-compose run --rm api flake8 --max-line-length 120 --exclude app/migrations/ .
-docker-compose run --rm api black --line-length 120 --exclude app/migrations/ .
+docker compose run --rm api flake8 --max-line-length 120 --exclude app/migrations/ .
+docker compose run --rm api black --line-length 120 --exclude app/migrations/ .
   
 # Run the tests
-docker-compose run --rm api pytest
+docker compose run --rm api pytest
 ```
 
 If all the checks pass, you can push your changes
