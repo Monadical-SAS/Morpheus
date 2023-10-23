@@ -97,7 +97,7 @@ variable "self_managed_head_nodes_instance_type" {
 }
 
 variable "self_managed_head_nodes_ami" {
-  default = "ami-081f4e51bfefc32f6"
+  default = "ami-014a830d5fade0c04"
 }
 
 variable "api_hostname" {
