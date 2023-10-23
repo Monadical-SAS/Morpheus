@@ -274,7 +274,7 @@ docker compose up
 **Note**: You need to build `morpheus-data` and the `morpheus-server` API service (or any other microservice that uses it) every time you make a change to `morpheus-data`. This is necessary because you need to rebuild the wheel file and install it in the `morpheus-server` API service or any other service that uses it. For more information, see the `morpheus-data` [README](./morpheus-data/README.md).
 
 
-##3 Adding a new dependency to the backend
+### Adding a new dependency to the backend
 
 1. Add the new dependency directly to the respective `requirements.txt` file.
 2. Update the docker image: `docker compose build api`.
@@ -282,7 +282,7 @@ docker compose up
 
 **Note:** This project uses `requirements.lint.txt` only for caching in CI workflow linting job.
 
-##3 Adding a new dependency to the frontend
+### Adding a new dependency to the frontend
 
 ```shell
 # Add a new dependency to the npm package.json file
