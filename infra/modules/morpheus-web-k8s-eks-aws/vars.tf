@@ -3,7 +3,7 @@ variable "cluster_name_prefix" {
 }
 
 variable "cluster_version" {
-  default = "1.22"
+  default = "1.23"
 }
 
 variable "cluster_ssh_key_name" {
@@ -63,7 +63,7 @@ variable "self_managed_head_nodes_instance_type" {
 }
 
 variable "self_managed_head_nodes_ami" {
-  default = "ami-081f4e51bfefc32f6"
+  default = "ami-014a830d5fade0c04"
 }
 
 variable "eks_managed_service_node_group_name" {
@@ -79,7 +79,7 @@ variable "eks_managed_service_nodes_instance_type" {
 }
 
 variable "self_managed_web_nodes_ami" {
-  default = "ami-081f4e51bfefc32f6"
+  default = "ami-014a830d5fade0c04"
 }
 
 variable "self_managed_gpu_adv_node_group_name" {
@@ -103,7 +103,7 @@ variable "self_managed_gpu_adv_nodes_instance_type" {
 }
 
 variable "self_managed_gpu_adv_nodes_ami" {
-  default = "ami-05f233de75731a6a4"
+  default = "ami-0ae1369165269f8f8"
 }
 
 variable "self_managed_gpu_adv_nodes_device_name" {

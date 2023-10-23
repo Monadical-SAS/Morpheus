@@ -51,7 +51,7 @@ module "eks" {
 
       key_name = aws_key_pair.cluster_key.key_name
 
-      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=morpheus-type=web'"
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=morpheus-type=web' --container-runtime 'containerd'"
 
       # Uncomment to enable web node logs in cloudwatch
       # post_bootstrap_user_data = <<-EOT
@@ -100,7 +100,7 @@ module "eks" {
 
       key_name = aws_key_pair.cluster_key.key_name
 
-      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=morpheus-type=worker-head'"
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=morpheus-type=worker-head' --container-runtime 'containerd'"
 
       subnet_ids = module.vpc.private_subnets
 
