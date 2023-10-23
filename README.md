@@ -317,7 +317,7 @@ docker compose --profile manage build
 docker compose build model-script
 ```
 
-Once the `model-script` is built, you can use the `scripts/models/cli.py` script to add, list, and delete models. You can also use the `scripts/models/models-info.yaml` file to specify information about the models.
+Once the `model-script` is built, you can use the `morpheus-server/scripts/models/cli.py` script to add, list, and delete models. You can also use the `morpheus-server/scripts/models/models-info.yaml` file to specify information about the models.
 
 ```bash
 # To show the help
