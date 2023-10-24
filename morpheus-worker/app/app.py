@@ -1,3 +1,4 @@
+import datetime
 import logging
 import uuid
 
@@ -27,6 +28,8 @@ class APIIngress:
             "PENDING_ARGS_FETCH",
             "SUBMITTED_TO_WORKER"
         ]
+        self.num_workers = 0
+        self.last_update_num_workers = datetime.datetime.now()
 
     @app.get("/")
     async def root(self):
@@ -180,8 +183,30 @@ class APIIngress:
         try:
             nodes = list_nodes(filters=[("state", "=", "ALIVE"), ("is_head_node", "=", "False")])
             num_workers = len(nodes)
-            self.logger.info(f"Number of workers: {num_workers}")
+            print("Getting num of workers ...")
+            print("Updating num of workers cache")
+            self.num_workers = num_workers
+            self.last_update_num_workers = datetime.datetime.now()
             return num_workers
+        except:
+            return 1
+    
+    @app.get("/worker-number-cache")
+    async def worker_number_cache(self):
+        self.logger.info(f"Getting number of workers from cached endpoint")
+        try:
+            current_timestamp = datetime.datetime.now()
+            time_difference = current_timestamp - self.last_update_num_workers
+            if self.num_workers == 0 or time_difference.total_seconds() > 60:
+                print("Getting num of workers ...")
+                nodes = list_nodes(filters=[("state", "=", "ALIVE"), ("is_head_node", "=", "False")])
+                num_workers = len(nodes)
+                print("Updating num of workers cache ...")
+                self.num_workers = num_workers
+                self.last_update_num_workers = datetime.datetime.now()
+                return self.num_workers
+            else:
+                return self.num_workers
         except:
             return 1
 
