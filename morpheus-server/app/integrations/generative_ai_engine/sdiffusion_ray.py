@@ -79,7 +79,7 @@ def ray_pending_tasks() -> int:
 
 
 def ray_worker_number() -> int:
-    url = f"{RAY_BACKEND_URL}/worker-number"
+    url = f"{RAY_BACKEND_URL}/worker-number-cache"
     response = requests.get(url)
     if response.status_code == 200:
         return int(response.text)
