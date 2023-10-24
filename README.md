@@ -27,11 +27,11 @@ using image editing and stable diffusion models.**
 
 ## Key Features
 
-- **Free & open source**, you can create your own server and keep your data
-- **Powerful, modular design to support and load many models**
-- **Several use cases supported**, we provide Image to image support, Controlnet and Pix2pix
-- **Local Setup or Cloud**
-- **Infrastructure as Code**, We also open source the infrastructure as code to run it on scale.
+- **Freedom & Open Source**: Create your personal server and maintain complete control over your data.
+- **Robust & Modular Design**: Our design supports and loads multiple models with ease.
+- **Versatility**: We offer Image-to-Image support, Controlnet, and Pix2pix among other use cases.
+- **Local or Cloud Setup**: Choose the setup that suits your needs best.
+- **Infrastructure as Code**: We've open-sourced our infrastructure code to facilitate scalability.
 
 <br/><br/>
 
@@ -44,256 +44,213 @@ using image editing and stable diffusion models.**
 
 **🖥&nbsp; Supported OSs:** Linux, macOS (M1-M2) &nbsp; **👾**
 
-Prequisites:
-
-> Morpheus uses Firebase for authentication: Generate a service account credentials JSON file in Firebase before
-> starting.
-
-> Install <a href="https://docs.docker.com/get-docker/">Docker</a>
-> and <a href="https://docs.docker.com/compose/install/#install-using-pip">Docker Compose</a> on your system (if not
-> already installed, skip if using k8s setup)
+## Prequisites:
+Before starting, ensure you have the following:
+1. **Firebase account**: You need a Firebase account for this setup. If you don't have one, create it and generate a service account credentials JSON file. This file will be used later in the setup process.
+2. **Docker & Docker Compose**: Both Docker and Docker-Compose should be installed on your system. If not installed yet,
+  you can download Docker from <a href="https://docs.docker.com/get-docker/">here</a> and Docker-Compose from  <a
+  href="https://docs.docker.com/compose/install/#install-using-pip">here</a>. Skip this step if you're using a
+  Kubernetes setup.
+3. **Hardware**: The hardware requirements for this setup will vary depending on the specific application that you are developing. However, it is generally recommended to have a machine with at least 16 GB of RAM and a GPU with 16 GB of VRAM. If you don't have a GPU, you can use a cloud
+  provider like AWS, GCP, or Azure. Skip this step if you're using a Kubernetes setup.
 <br/>
 
+## Setup Steps
+
+**Step 1: Verify that Docker is installed and running**
+
+Ensure that Docker and Docker-Compose are installed on your system. If not, install them using the links above. For
+Linux users, you might also need to add your user to the docker group. For more information, see the <a href="https://docs.docker.com/engine/install/linux-postinstall/">Docker
+documentation</a> for more details.
+
+**Step 2: Clone the repository**
+
+Clone the repository to your local system using the command below:
+
 ```bash
-# make sure you've installed docker: https://docs.docker.com/engine/install/
-# and docker-compose: https://docs.docker.com/compose/install/
-# you may also have to add your user to the docker group: https://docs.docker.com/engine/install/linux-postinstall/
-
-# Clone the repository
 git clone git@github.com:Monadical-SAS/Morpheus.git
+```
+**Step 3: Navigate to the Morpheus directory**
 
-# Move to the directory
+Change your current directory to the cloned repository:
+
+```bash
 cd Morpheus
+```
 
-# Create secrets file
+
+**Step 4: Create a secrets file**
+
+Create the secrets file by copying the distributed `.env` files:
+
+```bash
 cp -p morpheus-server/secrets.env.dist morpheus-server/secrets.env
 cp -p morpheus-client/env.local.dist morpheus-client/.env.local
-
-# Edit the secrets file with your values
-# Make sure to replace the firebase variables with the ones from the firebase-admin-dk.json file from your firebase account
-nano morpheus-server/secrets.env
-nano morpheus-client/.env.local
-
-# Check that there is a .env file in the morpheus directory if you run the project locally
-cat .env
-# Output :  TAG=dev
-
-# Build the docker images
-docker-compose build
+cp -p morpheus-client/env.local.dist morpheus-admin/.env.local
 ```
 
-Follow one,
+**Step 5: Edit the `morpheus-server/secrets.env` file with your values**
 
-<details>
-<summary><b><img src="https://user-images.githubusercontent.com/511499/117447182-29758200-af0b-11eb-97bd-58723fee62ab.png" alt="Docker" height="28px" align="top"/> <code>docker-compose</code></b>  (Linux/Nvidia GPU) &nbsp; <b>👈&nbsp; recommended</b> &nbsp; <i>(click to expand)</i></summary>
-<br/>
+This step involves editing the `secrets.env` file to provide the application with the necessary secrets to connect to
+the database, Firebase, AWS, and other services.
+
+**Parameters:**
+
+* `POSTGRES_USER`: The username for the PostgreSQL database.
+* `POSTGRES_DB`: The name of the PostgreSQL database.
+* `POSTGRES_PASSWORD`: The password for the PostgreSQL database.
+* `POSTGRES_HOST`: The hostname or IP address of the PostgreSQL database server.
+* `POSTGRES_PORT`: The port number of the PostgreSQL database server.
+* `PGADMIN_DEFAULT_EMAIL`: The email address for the PGAdmin default user.
+* `PGADMIN_DEFAULT_PASSWORD`: The password for the PGAdmin default user.
+* `FIREBASE_PROJECT_ID`: The ID of your Firebase project.
+* `FIREBASE_PRIVATE_KEY`: The private key for your Firebase project.
+* `FIREBASE_CLIENT_EMAIL`: The client email for your Firebase project.
+* `FIREBASE_WEB_API_KEY`: The web API key for your Firebase project.
+* `AWS_ACCESS_KEY_ID`: The access key ID for your AWS account.
+* `AWS_SECRET_ACCESS_KEY`: The secret access key for your AWS account.
+* `IMAGES_BUCKET`: The name of the S3 bucket where images are stored.
+* `MODELS_BUCKET`: The name of the S3 bucket where models are stored.
+* `IMAGES_TEMP_BUCKET`: The name of the S3 bucket where temporary images are stored.
+* `ENVIRONMENT`: The environment where the application is running. This can be `local`, `staging`, or `production`.
+
+**Instructions:**
+
+1. Open the `secrets.env` file in your preferred text editor.
+2. Replace all content with the following:
+
 
 ```bash
-# Run using the staging profile
-docker-compose --profile=staging up
+POSTGRES_USER=morpheus
+POSTGRES_DB=morpheus
+POSTGRES_PASSWORD=password
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+
+# PGAdmin credentials
+PGADMIN_DEFAULT_EMAIL=admin@admin.com
+PGADMIN_DEFAULT_PASSWORD=admin
+
+FIREBASE_PROJECT_ID="XXXXXXX="
+FIREBASE_PRIVATE_KEY="XXXXXXX="
+FIREBASE_CLIENT_EMAIL="XXXXXXX="
+FIREBASE_WEB_API_KEY="XXXXXXX="
+
+# AWS credentials
+AWS_ACCESS_KEY_ID=XXXXXXX=
+AWS_SECRET_ACCESS_KEY=XXXXXXX=
+
+# S3 BUCKETS ID
+#------------------------
+# Bucket name where images are stored
+IMAGES_BUCKET="XXXXXXX="
+# Bucket name where models are stored
+MODELS_BUCKET="XXXXXXX="
+# Bucket/Folder where temporal images are stored
+IMAGES_TEMP_BUCKET="ßXXXXXXX="
+
+# App config
+ENVIRONMENT="local"
 ```
-</details>
+3. Update the values with your own.
+4. Save the file.
 
-<details>
-<summary><b><img src="https://user-images.githubusercontent.com/511499/117447182-29758200-af0b-11eb-97bd-58723fee62ab.png" alt="Docker" height="28px" align="top"/> <code>docker-compose</code></b>  (Linux/Without Nvidia GPU) &nbsp;</summary>
-<br/>
+Once you have updated the `secrets.env` file, the application will be able to connect to the database, Firebase, AWS,
+and other services using the secrets that you provided.
 
-It emulates the use of AI pipeline when you don't have a GPU available. It returns fixed fake images from the models.
-This is because it is mandatory to have GPU to use Generative AI. It's a good way to test the application locally 
-```bash
-# Run using the no-gpu profile
-docker-compose --profile=local up
-```
+**Step 6. Edit the `morpheus-client/.env.local` and `morpheus-admin/.env.local` files with your values**
 
-</details>
+This step involves editing the `.env.local` files in the `morpheus-client` and `morpheus-admin` directories to provide
+the client application with the necessary values to connect to the backend API, Firebase, and other services.
 
-<details>
-<summary><b><img src="https://user-images.githubusercontent.com/511499/117447182-29758200-af0b-11eb-97bd-58723fee62ab.png" alt="Docker" height="28px" align="top"/> <code>docker-compose</code></b>  (macOS/M1-M2)</summary>
-<br/>
+**Parameters:**
 
-Update the environment variable for environment in `morpheus-server/secrets.env`
+* `NEXT_PUBLIC_API_URL`: The URL of the backend API.
+* `NEXT_PUBLIC_FIREBASE_CONFIG`: The Firebase configuration for your Firebase project. This can be found in the
+  Firebaase console.
+* `NEXT_TELEMETRY_DISABLED`: A boolean value indicating whether to disable telemetry.
+* `NEXT_PUBLIC_BACKEND_V2_GET_URL`: The URL of the Excalidraw backend v2 GET endpoint.
+* `NEXT_PUBLIC_BACKEND_V2_POST_URL`: The URL of the Excalidraw backend v2 POST endpoint.
+* `NEXT_PUBLIC_LIBRARY_URL`: The URL of the Excalidraw libraries page.
+* `NEXT_PUBLIC_LIBRARY_BACKEND`: The URL of the Excalidraw library backend.
+* `NEXT_PUBLIC_WS_SERVER_URL`: The URL of the WebSocket server.
+* `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID`: The Google Analytics ID for the client application.
+* `FAST_REFRESH`: A boolean value indicating whether to enable Fast Refresh.
 
-```shell
-ENVIRONMENT=local-mps
-```
+**Instructions:**
 
-Run the image locally if you have an M1/M2 Mac
-
-```shell
-# Make sure you don't have any other morpheus docker containers running or images built
-docker-compose --file docker-compose-local-mps.yaml up
-```
-
-In a new terminal window, run the following commands to run the celery workers (for stable-diffusion and magic-prompt)
-locally:
-
-```shell
-# Move to the morpheus-server directory
-cd morpheus-server
-
-# Check your python version
-python --version
-
-# If you have python 3.10 or higher installed, run the following commands
-# create a virtual environmen.
-python3 -m venv venv
-
-# Activate the virtual environment
-source venv/bin/activate
-
-# Install the dependencies
-pip install -r requirements.txt
-
-# If you encounter a problem with torch try installing torch first
-pip install torch && pip install -r requirements.txt
-
-# And then run the celery locally in other terminals or in separate tabs within a terminal
-
-# 1. Stable Diffusion worker
-CELERY_BROKER_URL=redis://localhost:6379/0 CELERY_RESULT_BACKEND=redis://localhost:6379/0 celery -A app.celery.
-workers.stable_diffusion_app worker --loglevel=info --max-tasks-per-child=1 --pool=threads -Q stable_diffusion
-
-# 2.MagicPrompt worker 
-CELERY_BROKER_URL=redis://localhost:6379/0 CELERY_RESULT_BACKEND=redis://localhost:6379/0 celery -A app.celery.
-workers.magic_prompt_app worker --loglevel=info --max-tasks-per-child=1 --pool=threads -Q magic_prompt
-```
-
-</details>
-
-</br>
-
-
-
-The Morpheus client should be running at https://localhost:3000
-
-### Installing models locally
-
-#### Build model-script
-
-If you are running this script for the first time or have made changes to it, you will need to perform a build:
-
-```sh
-docker compose --profile manage build
-
-#or 
-
-docker compose build model-script
-```
-
-Once you have completed the build process, you will be able to use it.
-
-#### Stable diffusion models
-
-In order to be able to use SD models and therefore Morpheus **locally**, they must first be downloaded and
-registered in the database:
+1. Open the `.env.local` file in your preferred text editor.
+2. Replace all content with the following:
 
 ```bash
-# Only at first time
-mkdir morpheus-server/tmp
+# API CONFIG
+NEXT_PUBLIC_API_URL=http://localhost:8001
 
-# register models specified in morpheus-server/scripts/models/models-info.yaml
-docker compose run --rm model-script upload local sdiffusion
+# Firebase configuration
+NEXT_PUBLIC_FIREBASE_CONFIG='{"apiKey":"XXXXXXXXXXXX","authDomain":"xxxxxxxxxx.firebaseapp.com","projectId":"xxxxxxx","storageBucket":"xxxxxx.appspot.com","messagingSenderId":"123456789","appId":"1:123456789:web:xxxxxx","measurementId":"G-XXXXXXXXXX"}'
+
+# NEXT CONFIG
+NEXT_TELEMETRY_DISABLED=1
+
+# EXCALIDRAW CONFIG
+NEXT_PUBLIC_BACKEND_V2_GET_URL=https://json-dev.excalidraw.com/api/v2/
+NEXT_PUBLIC_BACKEND_V2_POST_URL=https://json-dev.excalidraw.com/api/v2/post/
+NEXT_PUBLIC_LIBRARY_URL=https://libraries.excalidraw.com
+NEXT_PUBLIC_LIBRARY_BACKEND=https://us-central1-excalidraw-room-persistence.cloudfunctions.net/libraries
+NEXT_PUBLIC_WS_SERVER_URL=ws://localhost:3002
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+FAST_REFRESH=false
 ```
+3. Update the values with your own.
+4. Save the file.
 
-This script allows you to download the models on your local machine (`morpheus-server/tmp`) and register them in the S3
-bucket and in the database. Note that *you need to have the project running to be able to do the database registration*.
+Once you have updated the `.env.local` file, the client application will be able to connect to the backend API, Firebase, and other services using the values that you provided.
 
-In case that model is already registered on database, this command allows you update the register on it. If you want
-only interact with the database, you can run this command to update the register:
+**Step 7. Run the Morpheus project**
 
+To run the Morpheus project, execute the following command:
 ```bash
-docker compose run --rm model-script db update local sdiffusion
+docker compose up
 ```
 
-You only need to change the information in yaml file in order to update the information in db.
+The Morpheus project will be running on your local machine at localhost:3000 (client), localhost:3001 (admin), and
+localhost:8001 (api). Morpheus use an model for default, you can change puede hacerlo desde el panel de administración
 
-If you want to add a new model, you only need to add its information in the
-file [models-info.yaml](./morpheus-server/scripts/models/models-info.yaml)
+# Development
 
-#### ControlNet models
+## Running the backend tests
+* To run all the tests: `docker compose run --rm api pytest`.
+* To run a specific test: `docker compose run --rm api pytest tests/«test_module».py`.
+* To run a specific test function: `docker compose run --rm api pytest tests/«test_module».py::«test_function»`.
 
-In order to use ControlNet **locally**, you need to download and register the model in the application:
 
-```bash
-# register models specified in morpheus-server/scripts/models/controlnet-models-info.yaml
-docker compose run --rm model-script upload local controlnet
-```
-
-ControlNet models will also be downloaded to the directory `morpheus-server/tmp`. If you want to add a new model, you
-only
-need to add its information in the
-file [controlnet-models-info.yaml](./morpheus-server/scripts/models/controlnet-models-info.yaml)
-
-In the same way, if model is already registered on database, this command allows you update the register on it. If you
-want only interact with the database, you can run this command to update the register:
-
-```bash
-docker compose run --rm model-script db update local controlnet
-```
-
-You only need to change the information in yaml file in order to update the information in db.
-
-#### MagicPrompt model
-
-In order to use MagicPrompt **locally**, you need to download and upload the model to the S3 bucket:
-
-```bash
-# register models specified in morpheus-server/scripts/models/magicprompt-models-info.yaml
-docker compose run --rm model-script upload local magicprompt
-```
-
-MagicPrompt model will also be downloaded to the directory `morpheus-server/tmp`. If you want to add a new model, you
-only
-need to add its information in the
-file [magicprompt-models-info.yaml](./morpheus-server/scripts/models/magicprompt-models-info.yaml)
-
-For more information about this script, you can read the [README](./morpheus-server/scripts/models/README.md).
-
-## Development
-
-### Running the backend tests
-
-```shell
-# Running all the tests
-docker compose run --rm api pytest
-
-# Running a specific test
-docker compose run --rm api pytest tests/test_module.py
-
-# Running a specific test function
-docker compose run --rm api pytest tests/test_module.py::test_function
-```
-
-### Running the migrations
-To use morpheus-data image to run the migrations, you need to create a secrets.env file in the morpheus-server 
+## Running the migrations
+To use `morpheus-data` image to run the migrations, you need to create a secrets.env file in the morpheus-server 
 directory. For more information, you can read the morpheus-data [README](./morpheus-data/README.md).
 
-```shell
-# Create migration
-docker-compose run --rm datalib alembic revision --autogenerate -m "Initial migration"
-
-# Migrate / Update the head
-docker-compose run --rm datalib alembic upgrade head
+* To create a migration: 
+```bash
+docker compose run --rm datalib alembic revision --autogenerate -m "Initial migration"
+```
+* To migrate or update to the head:
+```bash
+docker compose run --rm datalib alembic upgrade head
 ```
 
-### PG admin
+## PG admin
+PGadmin is available in: localhost:8002. The user and password must be added in secrets.env file.
 
-PGadmin is available in: localhost:8002
-
-The user and password must be added in secrets.env file.
-
+### example values
 ```
-# example values
 PGADMIN_DEFAULT_EMAIL=admin@admin.com
 PGADMIN_DEFAULT_PASSWORD=password
 ```
 
 ### Implement changes in morpheus-data
 
-`morpheus-data` works as a package to have a transverse Python library to manage all ORM-related operations in Morpheus.
-Other Morpheus microservices can import into them and use it.
+`morpheus-data` is a Python library that provides a unified interface for managing all ORM-related operations in Morpheus. Other Morpheus microservices can import and use it.
 
-To run Morpheus locally using morpheus-data as a library, you need to do this:
+To run Morpheus locally using `morpheus-data` as a library:
 
 ```bash
 
@@ -307,50 +264,60 @@ docker compose build api
 
 # Building alltogether
 #---------------------------------------------
-docker compose --profile <local|staging|manage> build
+docker compose build
 
 # Run
 #---------------------------------------------
-docker compose --profile <local|staging> up
+docker compose up
 ```
 
-**Note**:  You need to build `morpheus-data` and `morpheus-server` API service (or any other microservice that uses it)
-every time you make a change inside `morpheus-data`. This build is necessary because you need to build the wheel 
-file again and install it in the `morpheus-server` API service or any other service that uses it
-For more information, you can read the morpheus-data [README](./morpheus-data/README.md).
+**Note**: You need to build `morpheus-data` and the `morpheus-server` API service (or any other microservice that uses it) every time you make a change to `morpheus-data`. This is necessary because you need to rebuild the wheel file and install it in the `morpheus-server` API service or any other service that uses it. For more information, see the `morpheus-data` [README](./morpheus-data/README.md).
 
 
 ### Adding a new dependency to the backend
 
-1. Add the new dependency directly to the respective `requirements.txt` file
-2. Update the docker image
-   ```shell
-    docker-compose build api
-   ```
-3. Run the image
-   ```shell
-    docker-compose up
-   ```
+1. Add the new dependency directly to the respective `requirements.txt` file.
+2. Update the docker image: `docker compose build api`.
+3. Run the image: `docker compose up`.
 
-**Note:** This project uses requirements.lint.txt only for caching in ci workflow linting job.
+**Note:** This project uses `requirements.lint.txt` only for caching in CI workflow linting job.
 
 ### Adding a new dependency to the frontend
 
 ```shell
 # Add a new dependency to the npm package.json file
-docker-compose run --rm client yarn install <dependency>
+yarn install <dependency>
 
 # Update the docker image
-docker-compose build client
+docker compose build client
 
 # Run the image
-docker-compose up
+docker compose up
 ```
 
 ### Add new diffusion models
+There are two ways to add new diffusion models to Morpheus:
+* Using the admin panel
+* Using the command-line interface (CLI)
 
-To add/list/delete models, you can use the script found in morpheus server directory:  `scripts/models/cli.py` and the
-file `scripts/models/models-info.yaml`
+**Using the admin panel**
+
+To use the admin panel, go to localhost:3001. For more details on how to use the admin panel, see
+[here](https://github.com/Monadical-SAS/Morpheus/wiki/Morpheus-Admin-webUI).
+
+**Using the CLI**
+
+To use the CLI, you must first build the Morpheus server:
+
+```bash
+docker compose --profile manage build
+
+#or 
+
+docker compose build model-script
+```
+
+Once the `model-script` is built, you can use the `morpheus-server/scripts/models/cli.py` script to add, list, and delete models. You can also use the `morpheus-server/scripts/models/models-info.yaml` file to specify information about the models.
 
 ```bash
 # To show the help
@@ -385,15 +352,8 @@ docker compose run --rm model-script db delete <model-source> <server> --target 
 
 ```
 
-### Running without GPU (this returns fixed fake images from the models)
-
-```shell
-# Build the docker image if you don't have gpu
-docker-compose --profile=local build
-
-# Run the image locally if you don't have gpu
-docker-compose --profile=local up
-```
+To use the admin panel, go to localhost:3001. For more details on how to use the admin panel, see
+[here](https://github.com/Monadical-SAS/Morpheus/wiki/Morpheus-Admin-CLI).
 
 ### Adding a new feature
 
@@ -416,38 +376,31 @@ Before pushing your changes, make sure to run the QA tools and the tests
 
 ```bash
 # Run the QA tools
-docker-compose run --rm api flake8 --max-line-length 120 --exclude app/migrations/ .
-docker-compose run --rm api black --line-length 120 --exclude app/migrations/ .
+docker compose run --rm api flake8 --max-line-length 120 --exclude app/migrations/ .
+docker compose run --rm api black --line-length 120 --exclude app/migrations/ .
   
 # Run the tests
-docker-compose run --rm api pytest
+docker compose run --rm api pytest
 ```
 
 If all the checks pass, you can push your changes
-
-## See also
-
-[Backend documentation](./morpheus-server/README.md)  
-[Frontend documentation](./morpheus-client/README.md)
 
 # Production Setup
 
 ## Configuring k8s cluster
 
-Some templates have been included to help create the Kubernetes cluster and the necessary infrastructure. For additional
-configuration documentation, please refer to
-this [link](https://github.com/Monadical-SAS/Morpheus/tree/main/infra/modules).
+Some templates have been included to help create the Kubernetes cluster and the necessary infrastructure. For more information on configuration, see this link: [link](https://github.com/Monadical-SAS/Morpheus/tree/main/infra/modules).
 
 To configure Terraform, please follow these steps:
 
 * Create a new SSL certificate using the ACM (Amazon Certificate Manager) service in AWS to obtain the ARN (Amazon
-  Resource Name). Remember to save the ARN for the next steps.
+  Resource Name). This certificate will be used to secure the Morpheus web application. The ARN (Amazon Resource Name) of the certificate is a unique identifier that you will need in the next step.
 * Create a DB secret using the "Secrets Manager" service in the AWS console. The secret should be an "Other type of
-  secret". The value must be in this format: ```{"username":"username","password":"xxxxxxxxxxxxxxxxx"}```. Save the
+  secret". The value must be in this format: `{"username":"username","password":"xxxxxxxxxxxxxxxxx"}`. Save the
   secret name for the next steps.
-* Create a terraform.tfvars file in the ./infra/envs/staging/ folder with the information obtained from your AWS
+* Create a terraform.tfvars file in the `./infra/envs/staging/` folder with the information obtained from your AWS
   account. Use the ARN for the <em>arn_ssl_certificate_cf_distribution</em> field and the DB secret name for <em>
-  db_password_secret_manager_name</em>. Additionally, update cname_frontend with a domain that you manage.
+  db_password_secret_manager_name</em>. Additionally, update `cname_frontend` with a domain that you manage. Here is an example:
 
 ```
 AWS_ACCESS_KEY = ""
@@ -463,11 +416,24 @@ db_allocated_storage = 20
 self_managed_gpu_nodes_device_size = 30
 region = "us-east-1"
 ```
+where:
+
+* `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` are your AWS credentials. You can obtain these credentials from the AWS Management Console.
+* `ACCOUNT_ID` is your AWS account ID. You can find this information in the AWS Management Console.
+* `db_password_secret_manager_name` is the name of the DB secret that you created in step 2.
+* `arn_ssl_certificate_cf_distribution` is the ARN of the SSL certificate that you created in step 1.
+* `cname_frontend` is the domain name that you want to use for the Morpheus web application.
+* `vpc_cidr` is the CIDR block for the VPC that Terraform will create.
+* `vpc_public_subnets` and `vpc_private_subnets` are the CIDR blocks for the public and private subnets that Terraform will create.
+* `db_allocated_storage` is the size of the EBS volume that Terraform will create for the Morpheus database.
+* `self_managed_gpu_nodes_device_size` is the size of the GPU for the self-managed GPU nodes that Terraform will create.
+* `region` is the AWS region where you want to create the Kubernetes cluster and the necessary infrastructure.
+
 
 To manage Terraform backends, follow these steps:
 
-* Create an S3 bucket to manage the Terraform backends.
-* Create a backend.conf file in ./infra/envs/staging/ based on backend.conf.dist. Make sure to update the route if you
+1. Create an S3 bucket to manage the Terraform backends.
+2. Create a backend.conf file in ./infra/envs/staging/ based on backend.conf.dist. Make sure to update the route if you
   prefer to use a different one.
 
 ```conf
@@ -476,26 +442,40 @@ key = "env/staging/infra/state.tfstate"
 region = "us-east-1"
 ```
 
-* Create the cluster:
-
+3. Create the cluster:
+* Navigate to the ./infra/envs/staging directory. This is where the Terraform configuration files for the staging environment are located.
 ```bash
 cd ./infra/envs/staging
+```
+* Initialize Terraform. This command will download the necessary modules and providers.
+```bash
 terraform init -backend-config=backend.conf
-# write yes to apply changes
+```
+* Apply the Terraform configuration. This command will create the Kubernetes cluster and the necessary infrastructure. You will be prompted to confirm the changes before they are applied.
+```bash
 terraform apply
 ```
-
 * Save the Terraform outputs to a separate file.
+```bash
+terraform output > outputs.tfvars
+```
+The Terraform outputs are the values of the variables that Terraform created when it applied the configuration. These values can be useful for configuring other applications, such as kubectl.
+Saving the outputs to a file will make it easy to access them in the next step, when you create the kubectl configuration file.
+
 * Create a kubectl configuration file to access the cluster. Use the Terraform outputs to complete the arguments for the
   region and cluster name.
 
 ```bash
 aws eks --region us-east-1 update-kubeconfig --name cluster-name-from-outputs
 ```
+* The kubectl configuration file is used to tell kubectl how to connect to the Kubernetes cluster.
+* The aws eks update-kubeconfig command will create a kubectl configuration file for the specified cluster in the specified region.
+* You will need to replace cluster-name-from-outputs with the name of the Kubernetes cluster that was created by Terraform.
+Once you have completed these steps, you will be able to use kubectl to manage the Kubernetes cluster.
 
 ### Installing helm charts - Nginx ingress
 
-* Create a backend.conf file in the ./infra/charts/staging/ folder based on the backend.conf.dist file provided.
+1. Create a backend.conf file in the ./infra/charts/staging/ folder based on the backend.conf.dist file provided.
 
 ```
 bucket = "morpheus-infra-backend"
@@ -503,14 +483,14 @@ key = "env/staging/charts/state.tfstate"
 region = "us-east-1"
 ```
 
-* Create a terraform.tfvars file in the ./infra/envs/staging/ folder that includes the path to your Kubernetes
+2. Create a terraform.tfvars file in the ./infra/envs/staging/ folder that includes the path to your Kubernetes
   configuration.
 
 ```
 kubeconfig_path = "/home/user/.kube/config"
 ```
 
-* To apply the Ingress Helm chart (this step should be performed after creating the cluster):
+3. To apply the Ingress Helm chart (this step should be performed after creating the cluster):
 
 ```bash
 cd ./infra/test/eks-charts
@@ -552,6 +532,29 @@ data:
   MODELS_BUCKET: XXXXXXX
 ```
 
+where:
+* `apiVersion`: This field specifies the version of the Kubernetes API that the secret is compatible with. In this case, the secret is compatible with Kubernetes API version 1.
+* `kind`: This field specifies the type of object that the manifest represents. In this case, the manifest represents a secret object.
+* `metadata`: This field contains information about the secret, such as its name and labels. The name field is required and must be unique within the namespace where the secret is created.
+* `type`: This field specifies the type of secret. In this case, the secret is an Opaque secret. Opaque secrets are used to store sensitive data that should be encrypted at rest.
+* `data`: This field contains the secret data. The data is stored as a map of key-value pairs. The keys must be unique and the values can be any type of data.
+The following are the secrets that are stored in the morpheus-secret:
+
+* `POSTGRES_USER`: The username for the PostgreSQL database.
+* `POSTGRES_DB`: The name of the PostgreSQL database.
+* `POSTGRES_PASSWORD`: The password for the PostgreSQL database.
+* `POSTGRES_HOST`: The hostname or IP address of the PostgreSQL database server.
+* `FIREBASE_PROJECT_ID`: The ID of the Firebase project.
+* `FIREBASE_PRIVATE_KEY`: The private key for the Firebase project.
+* `FIREBASE_CLIENT_EMAIL`: The client email address for the Firebase project.
+* `AWS_ACCESS_KEY_ID`: The AWS access key ID.
+* `AWS_SECRET_ACCESS_KEY`: The AWS secret access key.
+* `SENTRY_DSN`: The Sentry DSN.
+* `FLOWER_ADMIN_STRING`: The Flower admin string.
+* `IMAGES_BUCKET`: The name of the S3 bucket where the Morpheus images are stored.
+* `IMAGES_TEMP_BUCKET`: The name of the S3 bucket where the Morpheus temporary images are stored.
+* `MODELS_BUCKET`: The name of the S3 bucket where the Morpheus models are stored.
+
 Apply secrets:
 
 ```
@@ -573,36 +576,6 @@ Apply the nvidia plugin.
 kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.13.0/nvidia-device-plugin.yml
 ```
 
-## Run with supervisor
-
-```bash
-# In repo directory
-mkdir -p data/logs
-
-sudo supervisortctl reread
-sudo supervisortctl update
-```
-
-This starts all supervisor services automatically
-
-### Start/Stop/Status check with supervisor
-
-```bash
-# To check status
-sudo supervisorctl status 
-
-# To start stable-diffusion-webui
-sudo supervisorctl start stablediffusion
-
-# To stop stable-diffusion-webui
-sudo supervisorctl stop stablediffusion
-docker compose down
-```
-
-When using the stop instruction, you need to down the containers manually using docker compose because supervisor can't
-handle docker
-processes, only start and check that the service is running
-
 # CI/CD configuration
 
 The platform currently uses GitHub Actions for deployment. To integrate this with your custom project, you should set
@@ -610,26 +583,26 @@ the following secrets in GitHub:
 
 AWS access variables:
 
-- AWS_ACCESS_KEY_ID: Aws credential
-- AWS_SECRET_ACCESS_KEY: Aws credential
-- AWS_CLUSTER_NAME: Name of the eks cluster. This is used to generate the kube config.
-- AWS_REGION: Aws region where is located the eks cluster. Eg. us-east-1
+- `AWS_ACCESS_KEY_ID`: Your AWS access key ID.
+- `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
+- `AWS_CLUSTER_NAME`: The name of your EKS cluster.
+- `AWS_REGION`: The AWS region where your EKS cluster is located.
 
 Cloudflare tokens to clear the cache:
 
-- CLOUDFLARE_API_TOKEN
-- CLOUDFLARE_ZONE_ID
+- `CLOUDFLARE_API_TOKEN`:Your Cloudflare API token.
+- `CLOUDFLARE_ZONE_ID`:The ID of your Cloudflare zone.
 
 Dockerhub tokens to push and pull images in the deploy process:
 
-- DOCKER_HUB_TOKEN
-- DOCKER_HUB_USER
+- `DOCKER_HUB_TOKEN`:Your Dockerhub token.
+- `DOCKER_HUB_USER`:Your Dockerhub username.
 
 Firebase configuration:
 
-- FIREBASE_CLIENT_EMAIL
-- FIREBASE_PRIVATE_KEY
-- FIREBASE_PROJECT_ID
+- `FIREBASE_CLIENT_EMAIL`:Your Firebase client email address.
+- `FIREBASE_PRIVATE_KEY`:Your Firebase private key.
+- `FIREBASE_PROJECT_ID`:Your Firebase project ID.
 
 Other infra configuration:
 
@@ -637,11 +610,11 @@ Other infra configuration:
 
 Sentry configuration:
 
-- SENTRY_AUTH_TOKEN
-- SENTRY_ENV
-- SENTRY_ORG
-- SENTRY_PROJECT
-- SENTRY_URL
+- `SENTRY_AUTH_TOKEN`:Your Sentry authentication token.
+- `SENTRY_ENV`: The Sentry environment name.
+- `SENTRY_ORG`:The Sentry organization name.
+- `SENTRY_PROJECT`:The Sentry project name.
+- `SENTRY_URL`:The Sentry URL.
 
 Monorepo configuration:
 
