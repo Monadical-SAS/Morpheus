@@ -14,6 +14,10 @@ variable "cluster_ssh_key_pem_name" {
   default = "morpheus-key.pem"
 }
 
+variable "cluster_enabled_log_types" {
+  default = []
+}
+
 variable "self_managed_web_node_group_name" {
   default = "self-mng-web"
 }
