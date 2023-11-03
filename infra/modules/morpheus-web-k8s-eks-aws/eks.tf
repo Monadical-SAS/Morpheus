@@ -15,6 +15,8 @@ module "eks" {
   create_aws_auth_configmap = var.create_aws_auth_configmap
   manage_aws_auth_configmap = var.manage_aws_auth_configmap
 
+  cluster_enabled_log_types = var.cluster_enabled_log_types
+
   node_security_group_additional_rules = {
     ingress_bastion = {
       description     = "Ingress"
