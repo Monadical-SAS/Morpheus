@@ -150,6 +150,10 @@ variable "db_name" {
   default = "morpheus"
 }
 
+variable "cluster_enabled_log_types" {
+  default = []
+}
+
 variable "db_identifier" {
   default = "morpheus"
 }

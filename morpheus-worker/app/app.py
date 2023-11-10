@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import uuid
 
@@ -21,6 +22,7 @@ app = FastAPI()
 class APIIngress:
     def __init__(self) -> None:
         self.logger = logging.getLogger("ray")
+        self.prometheus_sd_file = "/tmp/ray/prom_metrics_service_discovery.json"
         self.task_types = [
             "PENDING_OBJ_STORE_MEM_AVAIL",
             "PENDING_NODE_ASSIGNMENT",
@@ -221,6 +223,16 @@ class APIIngress:
             error_str = str(e)
             self.logger.error(f"Error in get_last_tasks {error_str}")
             return Response(content=error_str)
+        
+    @app.get("/get-prometheus-sd-file")
+    async def get_prometheus_sd(self):
+        try:
+            with open(self.prometheus_sd_file, "r") as file:
+                data = json.load(file)
+            return data
+        except FileNotFoundError:
+            # Return an empty JSON if the file is not found
+            return {}
 
 
 deployment = APIIngress.bind()
