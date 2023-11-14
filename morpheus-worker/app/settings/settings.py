@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     enable_float32: bool = False
     enable_attention_slicing: bool = True
 
+    # Prometheus
+    prometheus_instance_name: str = "morpheus"
+
     def get_db_url(self) -> str:
         return PostgresDsn.build(
             scheme="postgresql",

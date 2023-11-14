@@ -13,6 +13,9 @@ from app.handlers.model_handler import ModelHandler
 from app.handlers.text_model_handler import TextModelHandler
 from app.integrations.db_client import DBClient
 from app.models.schemas import GenerationRequest, TextGenerationRequest, CategoryEnum, ModelRequest, TextCategoryEnum
+from app.settings.settings import get_settings
+
+settings = get_settings()
 
 app = FastAPI()
 
@@ -229,6 +232,9 @@ class APIIngress:
         try:
             with open(self.prometheus_sd_file, "r") as file:
                 data = json.load(file)
+            for item in data:
+                if 'labels' in item:
+                    item['labels']['ray_instance_name'] = settings.prometheus_instance_name
             return data
         except FileNotFoundError:
             # Return an empty JSON if the file is not found
