@@ -11,8 +11,8 @@ sections explain how to do this.
 
 # Client Credential Setup
 
-1. Visit https://console.firebase.google.com/
-2. Create a new project.
+1. Visit https://console.firebase.google.com/    
+2. Create a new project.  
    <img src="./images/1-add-project.png" width="800" style="display: block" />
 3. Assign a name to the project and follow the instructions. Makes sure to enable Google Analytics.
    <img src="./images/2-project-name.png" width="800" style="display: block" />
