@@ -1,0 +1,68 @@
+@use "styles/colors";
+@use "styles/media";
+@use "styles/variables";
+
+
+.cookiesContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  min-height: 50px;
+  height: auto;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 20px;
+
+  @include media.mobile {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .textContainer {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    a {
+      display: block;
+      text-decoration: underline;
+    }
+
+    @include media.mobile {
+      width: 100%;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .buttonsSection {
+    width: auto;
+    margin-left: 24px;
+    display: flex;
+    justify-content: space-between;
+    min-width: 400px;
+    padding-right: 24px;
+
+    @include media.mobile {
+      width: 100%;
+      flex-direction: column;
+      margin: 24px 0 0 0;
+    }
+
+    button {
+      :first-child {
+        margin-right: 24px !important;
+      }
+
+      @include media.mobile {
+        width: 100%;
+        margin: 8px !important;
+      }
+    }
+  }
+}

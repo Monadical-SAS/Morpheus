@@ -12,14 +12,17 @@ const getImageBlob = async (url: string): Promise<any> => {
   }
 };
 
-export const downloadImage = async (url: string): Promise<any> => {
+export const downloadImage = async (
+  url: string,
+  name?: string
+): Promise<any> => {
   const blob = await getImageBlob(url);
   if (!blob) {
     return;
   }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = getImageFilename(url);
+  a.download = name || getImageFilename(url);
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -45,7 +48,7 @@ export const getFileFromBlob = (blob: Blob, filename: string) => {
   return new File([blob], filename, { type: "image/png" });
 };
 
-export const convertMaskToInpaintingMask = (imageData: ImageData) => {
+export const convertMaskToInpaintingMask = (imageData: any) => {
   const data = imageData.data;
   for (let i = 0; i < data.length; i += 4) {
     const r = data[i];
@@ -70,7 +73,7 @@ export const convertMaskToInpaintingMask = (imageData: ImageData) => {
   return imageData;
 };
 
-export const convertInpaintingMaskToMask = (imageData: ImageData) => {
+export const convertInpaintingMaskToMask = (imageData: any) => {
   const data = imageData.data;
 
   for (let i = 0; i < data.length; i += 4) {

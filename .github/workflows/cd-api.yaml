@@ -5,6 +5,8 @@ on:
 env:
   MAX_LINE_LENGTH: 120
   WORKING_DIR_BACKEND: morpheus-server
+  MORPHEUS_DATA_IMAGE_NAME: ${{ vars.MORPHEUS_DATA_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-data' }}
+  MORPHEUS_API_IMAGE_NAME: ${{ vars.MORPHEUS_API_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-api' }}
 jobs:
   ci-backend:
     uses: ./.github/workflows/ci-api.yaml
@@ -30,7 +32,7 @@ jobs:
       - name: Deploy
         run: |
           # Running migrations by a pod
-          kubectl run morpheus-migrations --pod-running-timeout=15m --rm -i --image monadicalsas/morpheus-api:${{ github.run_id }} --overrides="{
+          kubectl run morpheus-migrations --pod-running-timeout=15m --rm -i --image ${{env.MORPHEUS_DATA_IMAGE_NAME}}:latest --overrides="{
             \"spec\": {
               \"imagePullSecrets\": [
                 {
@@ -40,7 +42,7 @@ jobs:
               \"containers\": [
                 {
                   \"name\": \"morpheus\",
-                  \"image\": \"monadicalsas/morpheus-api:${{ github.run_id }}\",
+                  \"image\": \"${{env.MORPHEUS_DATA_IMAGE_NAME}}:latest\",
                   \"imagePullPolicy\": \"Always\",
                   \"command\": [
                     \"alembic\", \"upgrade\", \"head\"
@@ -160,7 +162,15 @@ jobs:
                 }                                        
               ]                                                                                                                                                           
             }                                            
-          }"                                
+          }"
+          sleep 20
+          # Remove stuck pods
+          kubectl get pods --all-namespaces | grep Terminating | while read line; do
+            pod_name=$(echo $line | awk '{print $2}' ) \
+            name_space=$(echo $line | awk '{print $1}' ); \
+            kubectl delete pods $pod_name -n $name_space --grace-period=0 --force || true
+          done
+          # Helm upgrade 
           helm upgrade --timeout 15m0s --install --atomic morpheus ./morpheus-server/helm/charts/morpheus/ \
             --set image.tag=${{ github.run_id }} --set domain=${{secrets.FRONTEND_DOMAIN}}
       -
@@ -171,6 +181,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Push Docker Image
         run: |
-          docker pull monadicalsas/morpheus-api:${{ github.run_id }}
-          docker tag monadicalsas/morpheus-api:${{ github.run_id }} monadicalsas/morpheus-api:latest
-          docker push monadicalsas/morpheus-api:latest
+          docker pull ${{env.MORPHEUS_API_IMAGE_NAME}}:${{ github.run_id }}
+          docker tag ${{env.MORPHEUS_API_IMAGE_NAME}}:${{ github.run_id }} ${{env.MORPHEUS_API_IMAGE_NAME}}:latest
+          docker push ${{env.MORPHEUS_API_IMAGE_NAME}}:latest

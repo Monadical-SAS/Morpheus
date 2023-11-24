@@ -3,7 +3,7 @@ variable "cluster_name_prefix" {
 }
 
 variable "cluster_version" {
-  default = "1.22"
+  default = "1.24"
 }
 
 variable "cluster_ssh_key_name" {
@@ -12,6 +12,10 @@ variable "cluster_ssh_key_name" {
 
 variable "cluster_ssh_key_pem_name" {
   default = "morpheus-key.pem"
+}
+
+variable "cluster_enabled_log_types" {
+  default = []
 }
 
 variable "self_managed_web_node_group_name" {
@@ -38,48 +42,48 @@ variable "self_managed_web_nodes_instance_type" {
   default = "t3.medium"
 }
 
-variable "self_managed_service_nodes_instance_type" {
+variable "self_managed_head_node_group_name" {
+  default = "self-mng-head"
+}
+
+variable "self_managed_head_node_min_size" {
+  default = 1
+}
+
+variable "self_managed_head_node_max_size" {
+  default = 2
+}
+
+variable "self_managed_head_node_desired_size" {
+  default = 2
+}
+
+variable "self_managed_head_iam_role_name" {
+  default = "self-managed-node-group-head"
+}
+
+variable "self_managed_head_nodes_instance_type" {
+  default = "t3.xlarge"
+}
+
+variable "self_managed_head_nodes_ami" {
+  default = "ami-014a830d5fade0c04"
+}
+
+variable "eks_managed_service_node_group_name" {
+  default = "eks-mng-services"
+}
+
+variable "eks_managed_services_iam_role_name" {
+  default = "eks-managed-node-group-services"
+}
+
+variable "eks_managed_service_nodes_instance_type" {
   default = "t3.small"
 }
 
 variable "self_managed_web_nodes_ami" {
-  default = "ami-081f4e51bfefc32f6"
-}
-
-variable "self_managed_gpu_node_group_name" {
-  default = "self-mng-gpu"
-}
-
-variable "self_managed_gpu_node_min_size" {
-  default = 1
-}
-
-variable "self_managed_gpu_node_max_size" {
-  default = 2
-}
-
-variable "self_managed_gpu_node_desired_size" {
-  default = 1
-}
-
-variable "self_managed_gpu_nodes_instance_type" {
-  default = "g4dn.xlarge"
-}
-
-variable "self_managed_gpu_nodes_ami" {
-  default = "ami-05f233de75731a6a4"
-}
-
-variable "self_managed_gpu_nodes_device_name" {
-  default = "/dev/sdh"
-}
-
-variable "self_managed_gpu_nodes_device_size" {
-  default = 20
-}
-
-variable "self_managed_gpu_iam_role_name" {
-  default = "self-managed-node-group-gpu"
+  default = "ami-014a830d5fade0c04"
 }
 
 variable "self_managed_gpu_adv_node_group_name" {
@@ -103,7 +107,7 @@ variable "self_managed_gpu_adv_nodes_instance_type" {
 }
 
 variable "self_managed_gpu_adv_nodes_ami" {
-  default = "ami-05f233de75731a6a4"
+  default = "ami-0ae1369165269f8f8"
 }
 
 variable "self_managed_gpu_adv_nodes_device_name" {
@@ -116,6 +120,14 @@ variable "self_managed_gpu_adv_nodes_device_size" {
 
 variable "self_managed_gpu_adv_iam_role_name" {
   default = "self-managed-node-group-gpu-adv"
+}
+
+variable "self_managed_gpu_adv_node_warm_pool_min_size" {
+  default = 2
+}
+
+variable "self_managed_gpu_adv_node_warm_pool_max_group_prepared_capacity" {
+  default = 4
 }
 
 variable "vpc_name" {
@@ -136,6 +148,10 @@ variable "vpc_private_subnets" {
 
 variable "db_name" {
   default = "morpheus"
+}
+
+variable "cluster_enabled_log_types" {
+  default = []
 }
 
 variable "db_identifier" {
@@ -190,38 +206,46 @@ variable "api_hostname" {
   default = "morpheus-api.com"
 }
 
-variable "scale_up_queue_threshold" {
+variable "scale_up_adv_queue_threshold" {
   default = "4"
 }
 
-variable "scale_up_period" {
-  default = "30"
+variable "scale_up_adv_period" {
+  default = "10"
 }
 
-variable "scale_up_evaluation_period" {
+variable "scale_up_adv_evaluation_period" {
   default = "2"
 }
 
-variable "scale_up_scaling_adjustment" {
+variable "scale_up_adv_scaling_adjustment" {
   default = 2
 }
 
-variable "scale_up_cooldown" {
-  default = "480"
+variable "scale_up_adv_cooldown" {
+  default = "120"
 }
 
-variable "scale_down_queue_threshold" {
+variable "scale_down_adv_queue_threshold" {
   default = "4"
 }
 
-variable "scale_down_period" {
+variable "scale_down_adv_period" {
   default = "60"
 }
 
-variable "scale_down_evaluation_period" {
+variable "scale_down_adv_evaluation_period" {
   default = "60"
 }
 
-variable "scale_down_scaling_adjustment" {
+variable "scale_down_adv_scaling_adjustment" {
   default = -1
+}
+
+variable "create_aws_auth_configmap" {
+  default = true
+}
+
+variable "manage_aws_auth_configmap" {
+  default = true
 }

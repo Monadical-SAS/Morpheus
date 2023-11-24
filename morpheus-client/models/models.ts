@@ -9,8 +9,8 @@ export interface User {
   email: string;
   avatar: string;
   bio?: string;
-  phone?: string;
   is_active: boolean;
+  roles: string[];
 }
 
 export interface UserFirebase {
@@ -62,19 +62,15 @@ export interface ArtWork {
 export interface Model {
   id?: string;
   name: string;
-  source?: string;
+  source: string;
   description?: string;
   is_active: boolean;
   url_docs?: string;
-  text2img?: boolean;
-  img2img?: boolean;
-  inpainting?: boolean;
-  controlnet?: boolean;
-  pix2pix?: boolean;
+  categories: any[];
 }
 
 export interface ControlNetModel extends Model {
-  type?: string;
+  extra_params: Record<string, any>;
 }
 
 export interface Sampler {
@@ -83,7 +79,7 @@ export interface Sampler {
   description?: string;
 }
 
-export interface Response {
+export interface ServerResponse {
   success: boolean;
   message?: string;
   error?: string;

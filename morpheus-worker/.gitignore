@@ -1,0 +1,10 @@
+.env
+.venv
+venv/
+__pycache__
+.idea
+.pytest_cache
+*.env
+tmp
+*.pyc
+prometheus.yml

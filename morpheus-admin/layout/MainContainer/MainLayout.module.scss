@@ -1,0 +1,17 @@
+@use "styles/colors";
+@use "styles/media";
+
+.mainContainer {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-y: auto;
+
+  .main {
+    position: relative;
+    display: flex;
+    flex: 1 auto;
+  }
+}

@@ -1,7 +1,9 @@
-import MainContainer from "../layout/MainContainer/MainContainer";
+import { useEffect } from "react";
+
 import FAQ from "../components/FAQ/FAQ";
-import { AppLink } from "@/components/AppLink/AppLink";
 import ImagePrompt from "@/components/ImagePrompt/ImagePrompt";
+import { MainLayout } from "@/layout/MainLayout/MainLayout";
+import { AppLink } from "@/components/AppLink/AppLink";
 import {
   ControlNetDescription,
   Img2ImgDescription,
@@ -9,11 +11,22 @@ import {
   Pix2PixDescription,
   Text2ImgDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import styles from "../styles/pages/About.module.scss";
 
 const About = () => {
+  const { sendAnalyticsRecord } = useAnalytics();
+
+  useEffect(() => {
+    sendAnalyticsRecord("page_view", {
+      page_location: window.location.href,
+      page_title: document?.title,
+      page_name: "About",
+    });
+  }, []);
+
   return (
-    <MainContainer showFooter={true} style={{ justifyContent: "center" }}>
+    <MainLayout showFooter={true}>
       <div className={styles.aboutContainer}>
         <section className={styles.header}>
           <div className={styles.headerInfo}>
@@ -57,13 +70,13 @@ const About = () => {
           <p className="body-1 secondary">
             We’re hoping to get some feedback from users like you! Do you find
             this useful? Are there features missing from our{" "}
-            <a className="app-link body-1 main underline" href="#roadmap">
+            <a className="underline app-link body-1 main" href="#roadmap">
               roadmap
             </a>{" "}
             that you would like to see? Run into any problems or bugs? We want
             to hear about it! Contact us via{" "}
             <a
-              className="body-1 main underline"
+              className="underline body-1 main"
               href="mailto:hello@monadical.com"
             >
               email
@@ -209,7 +222,7 @@ const About = () => {
           <FAQ />
         </section>
       </div>
-    </MainContainer>
+    </MainLayout>
   );
 };
 

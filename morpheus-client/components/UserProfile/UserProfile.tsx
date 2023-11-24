@@ -5,15 +5,13 @@ import { logout, removeUserInfo } from "@/services/users";
 import { useAuth } from "@/context/AuthContext";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { useToastContext } from "@/context/ToastContext";
-import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./UserProfile.module.scss";
 
 export const UserProfile = () => {
   const { user } = useAuth();
-  const { width } = useWindowDimensions();
   const { showSuccessAlert, showWarningAlert, showErrorAlert } =
     useToastContext();
-  const isMobile = width <= MOBILE_SCREEN_WIDTH;
+  const { isMobile } = useWindowDimensions();
 
   const confirmRemove = () => {
     showWarningAlert(
@@ -52,14 +50,12 @@ export const UserProfile = () => {
           <UserIcon width={"16"} height={"16"} color={"white"} />
           <p className="base-2 white">Edit profile</p>
         </div>
-
         {!isMobile && DeleteAccount}
       </div>
 
       <div className={styles.userProfileContent}>
         <EditProfileForm />
       </div>
-
       {isMobile && (
         <div className={styles.mobileDeleteAccount}>{DeleteAccount}</div>
       )}

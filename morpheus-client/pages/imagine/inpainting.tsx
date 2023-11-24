@@ -1,57 +1,32 @@
 import { NextPage } from "next";
-import ImageDraggable from "@/components/ImageDraggable/ImageDraggable";
-import ImageGallery from "@/components/ImageGallery/ImageGallery";
-import { UploadMaskIcon } from "@/components/icons/uploadMask";
-import ImagineInput from "@/components/ImagineInput/ImagineInput";
-import PrivateRoute from "@/components/Auth/PrivateRoute/PrivateRoute";
+
+import ImagineBase from "@/components/ImagineBase/ImagineBase";
 import { useDiffusion } from "@/context/SDContext";
 import { useImagine } from "@/context/ImagineContext";
-import styles from "../../styles/pages/StableDiffusion.module.scss";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 
 const Inpainting: NextPage = () => {
   const { prompt } = useDiffusion();
-  const { img2imgFile, setImg2imgFile, maskFile, setMaskFile, generateImages } =
-    useImagine();
+  const { img2imgFile, maskFile, generateImages } = useImagine();
+  const { sendAnalyticsRecord } = useAnalytics();
   const isFormValid =
     prompt.value.length > 0 && img2imgFile !== null && maskFile !== null;
 
   const handleGenerate = async () => {
     generateImages("inpainting");
+    sendAnalyticsRecord("generate_images", {
+      prompt: prompt.value,
+      model: "inpainting",
+    });
   };
 
   return (
-    <PrivateRoute showLeftBar={true}>
-      <div className={styles.imagineContainer}>
-        <div className={styles.SDOutputContainer}>
-          <div className={styles.imagesContent}>
-            <div className={styles.inputImage}>
-              <ImageDraggable
-                imageFile={img2imgFile}
-                setImageFile={setImg2imgFile}
-                showEditImage={true}
-                title="Input Image"
-              />
-              <ImageDraggable
-                imageFile={maskFile}
-                setImageFile={setMaskFile}
-                styles={{ marginTop: "24px" }}
-                icon={<UploadMaskIcon />}
-                title="Mask Image"
-              />
-            </div>
-
-            <div className={styles.SDResults}>
-              <ImageGallery />
-            </div>
-          </div>
-        </div>
-
-        <ImagineInput
-          isFormValid={isFormValid}
-          handleGenerate={handleGenerate}
-        />
-      </div>
-    </PrivateRoute>
+    <ImagineBase
+      formValid={isFormValid}
+      showImageInput={true}
+      showMaskInput={true}
+      handleGenerate={handleGenerate}
+    />
   );
 };
 

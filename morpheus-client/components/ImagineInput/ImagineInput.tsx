@@ -1,20 +1,37 @@
+import { useState } from "react";
+
 import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
+import { initialText, TextState } from "../Inputs/InputText/InputText";
 import MagicPrompt from "../MagicPrompt/MagicPrompt";
 import ImagineSettings from "../ImagineSettings/ImagineSettings";
 import { useDiffusion } from "@/context/SDContext";
 import { useImagine } from "@/context/ImagineContext";
+import { useModels } from "@/context/ModelsContext";
 import styles from "./ImagineInput.module.scss";
+import { PROMPTS } from "@/utils/constants";
 
 interface ImagineInputProps {
   isFormValid: boolean;
   handleGenerate: () => void;
 }
 
+interface PromptProps {
+  prompt: TextState;
+  setPrompt: (value: any) => void;
+}
+
+const clearPrompt = (props: PromptProps) => {
+  if (PROMPTS.includes(props.prompt?.value)) {
+    props.setPrompt(initialText);
+  }
+};
+
 const ImagineInput = (props: ImagineInputProps) => {
+  const { selectedModel } = useModels();
   const { prompt, setPrompt } = useDiffusion();
   const { isLoading } = useImagine();
-
+  const isRequestValid = props.isFormValid && !!selectedModel;
   return (
     <div className={styles.imagineInputWrapper}>
       <div className={styles.imagineInputContainer}>
@@ -28,6 +45,9 @@ const ImagineInput = (props: ImagineInputProps) => {
             isRequired={true}
             rightIcon={<MagicPrompt />}
             disableGrammarly={true}
+            onClick={() => clearPrompt({ prompt, setPrompt })}
+            automaticValidation={false}
+            inputStyles={{ backgroundColor: "#14172D" }}
           />
         </div>
 
@@ -35,7 +55,7 @@ const ImagineInput = (props: ImagineInputProps) => {
           <ButtonPrimary
             loading={isLoading}
             onClick={props.handleGenerate}
-            disabled={!props.isFormValid}
+            disabled={!isRequestValid}
             text={"Generate"}
           />
           <ImagineSettings />

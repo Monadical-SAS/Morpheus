@@ -13,6 +13,7 @@ on:
 env:
   MAX_LINE_LENGTH: 120
   WORKING_DIR: morpheus-server
+  MORPHEUS_API_IMAGE_NAME: ${{ vars.MORPHEUS_API_IMAGE_NAME_REPOSITORY || 'monadicalsas/morpheus-api' }}
 jobs:
   linters:
     runs-on: ubuntu-latest
@@ -56,6 +57,20 @@ jobs:
         ports:
             - 5432:5432
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with: # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: false
+          swap-storage: true
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v4
         id: python-cache
@@ -67,6 +82,8 @@ jobs:
           pip install pytest
       - name: Install dependencies
         run: |
+          pip install build
+          pip install -e ../morpheus-data
           pip install -r requirements.txt
           pip install torch --index-url https://download.pytorch.org/whl/cpu
       - name: Run tests
@@ -108,4 +125,4 @@ jobs:
           build-args: |
             BUILD_ENV=copy
           push: true
-          tags: monadicalsas/morpheus-api:${{ github.run_id }}
+          tags: ${{ env.MORPHEUS_API_IMAGE_NAME }}:${{ github.run_id }}

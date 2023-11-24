@@ -1,0 +1,194 @@
+@use "styles/colors";
+@use "styles/media";
+
+.imagineImageInput {
+  min-width: 244px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @include media.tablet {
+    min-width: auto;
+  }
+
+  @include media.mobile {
+    padding: 0 24px;
+    min-width: auto;
+    width: auto;
+    flex: 1;
+  }
+
+  @include media.xsmall {
+    max-width: 100%;
+  }
+
+  .label {
+    z-index: 9;
+    max-width: 250px;
+  }
+
+  .formContainer {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23312E47FF' stroke-width='4' stroke-dasharray='10%2c 10' stroke-dashoffset='53' stroke-linecap='round'/%3e%3c/svg%3e");
+    border-radius: 8px;
+    padding: 48px 24px;
+
+    @include media.mobile {
+      width: 100%;
+      height: auto;
+      background-image: none;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 0;
+      gap: 24px;
+    }
+
+    .verticalSeparator {
+      display: block;
+      position: relative;
+      width: 2px;
+      height: 100%;
+      margin: 0 48px;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-image: repeating-linear-gradient(
+                        to bottom, transparent 0, transparent 10px, #312E47FF 10px, #312E47FF 22px
+        );
+      }
+
+      @include media.tablet {
+        margin: 0 8px;
+      }
+
+      @include media.mobile {
+        display: none;
+      }
+    }
+  }
+
+  .formInputItem {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 150px;
+    max-width: 170px;
+
+    @include media.tablet {
+      span {
+        display: none;
+      }
+    }
+
+    @include media.mobile {
+      width: 160px;
+      height: 160px;
+      padding: 5px;
+      border-radius: 8px;
+      border: 1px solid colors.$background-border;
+      background-color: colors.$background-primary;
+
+      a {
+        font-size: 18px !important;
+      }
+
+      span {
+        display: none;
+      }
+    }
+
+    .inputFileUpload {
+      display: none;
+    }
+
+    .labelFileUpload {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-width: 2px;
+      border-radius: 1rem;
+      border-style: dashed;
+      border-color: transparent;
+      background-color: transparent;
+    }
+
+    .labelFileUpload.dragActive {
+      background-color: transparent;
+    }
+
+    .dragInfo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .uploadButton:hover {
+      text-decoration-line: underline;
+    }
+
+    .dragFileElement {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 1rem;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+  }
+}
+
+.selectedFile {
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+  max-height: 400px;
+  position: relative;
+  background-color: colors.$background-secondary;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+
+  @include media.mobile {
+    max-width: 100%;
+    max-height: initial;
+    margin-top: -40px;
+    padding: 0;
+  }
+
+  .header {
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 0 8px 0;
+
+    span {
+      margin-left: 8px;
+      cursor: pointer;
+    }
+  }
+
+  img {
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: colors.$box-shadow;
+  }
+}

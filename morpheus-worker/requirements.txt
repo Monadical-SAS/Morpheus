@@ -1,0 +1,29 @@
+# Web serving
+ray[serve]
+loguru
+
+# Image handling and upload
+boto3
+python-multipart
+pillow
+
+# Database integration
+sqlalchemy
+psycopg2-binary
+
+# Image generation
+torch
+diffusers==0.21.1
+transformers
+accelerate
+xformers
+safetensors
+invisible-watermark>=0.2.0
+controlnet-aux==0.0.1
+opencv-contrib-python-headless
+
+# Text generation
+dynamicprompts[attentiongrabber,magicprompt]
+
+# Utils
+pytz

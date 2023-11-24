@@ -27,11 +27,11 @@ const ControlNetModelSelect = () => {
   useEffect(() => {
     if (controlNetModels && controlNetModels.length > 0 && selectedModel) {
       if (selectedModel && selectedModel !== selectedCNModel) {
-        const selected = controlNetModels.find(
+        const selected: ControlNetModel = controlNetModels.find(
           (m: ControlNetModel) => m.name === selectedModel
         );
         setSelectedCNModel(selected?.source || "");
-        setControlNetType(selected.type || "");
+        setControlNetType(selected.extra_params.type || "");
       }
     }
   }, [selectedModel]);

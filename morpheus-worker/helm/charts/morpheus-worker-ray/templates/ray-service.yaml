@@ -1,0 +1,195 @@
+apiVersion: ray.io/v1alpha1
+kind: RayService
+metadata:
+  name: morpheus-rayservice
+spec:
+  serviceUnhealthySecondThreshold: 180
+  deploymentUnhealthySecondThreshold: 180
+  serveConfig:
+    importPath: app.app:deployment
+  rayClusterConfig:
+    rayVersion: "{{ .Values.worker.rayVersion }}"
+    enableInTreeAutoscaling: true
+    headGroupSpec:
+      serviceType: ClusterIP
+      rayStartParams:
+        port: '6379'
+        dashboard-host: '0.0.0.0'
+        num-cpus: "{{ .Values.worker.head.rayStartParams.numCpus }}"
+        num-gpus: "{{ .Values.worker.head.rayStartParams.numGpus }}"
+        block: 'true'
+      template:
+        spec:
+          nodeSelector:
+            morpheus-type: "{{ .Values.worker.headNodeSelector }}"
+          imagePullSecrets:
+            - name: regcred
+          containers:
+            - name: ray-head
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: IfNotPresent
+              resources:
+                limits:
+                  cpu: "{{ .Values.worker.head.resources.limits.cpu }}"
+                  memory: "{{ .Values.worker.head.resources.limits.memory }}"
+              env:
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: morpheus-secret
+                      key: POSTGRES_USER
+                      optional: false
+                - name: POSTGRES_DB
+                  valueFrom:
+                    secretKeyRef:
+                      name: morpheus-secret
+                      key: POSTGRES_DB
+                      optional: false
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: morpheus-secret
+                      key: POSTGRES_PASSWORD
+                      optional: false
+                - name: POSTGRES_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: morpheus-secret
+                      key: POSTGRES_HOST
+                      optional: false
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: morpheus-secret
+                      key: AWS_ACCESS_KEY_ID
+                      optional: true
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: morpheus-secret
+                      key: AWS_SECRET_ACCESS_KEY
+                      optional: true
+                - name: IMAGES_BUCKET
+                  valueFrom:
+                    secretKeyRef:
+                      name: morpheus-secret
+                      key: IMAGES_BUCKET
+                      optional: true
+                - name: IMAGES_TEMP_BUCKET
+                  valueFrom:
+                    secretKeyRef:
+                      name: morpheus-secret
+                      key: IMAGES_TEMP_BUCKET
+                      optional: true
+                - name: HF_ACCESS_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: morpheus-secret
+                      key: HF_ACCESS_TOKEN
+                      optional: true
+              ports:
+                - containerPort: 6379
+                  name: gcs-server
+                - containerPort: 8265 # Ray dashboard
+                  name: dashboard
+                - containerPort: 10001
+                  name: client
+                - containerPort: 8000
+                  name: serve
+    workerGroupSpecs:
+      - replicas: {{ .Values.worker.workerGroup.replicas }}
+        minReplicas: {{ .Values.worker.workerGroup.minReplicas }}
+        maxReplicas: {{ .Values.worker.workerGroup.maxReplicas }}
+        groupName: ray-worker-group
+        rayStartParams:
+          block: 'true'
+          num-cpus: "{{ .Values.worker.workerGroup.rayStartParams.numCpus }}"
+          num-gpus: "{{ .Values.worker.workerGroup.rayStartParams.numGpus }}"
+          resources: '"{\"WorkerCpu\": 4}"'
+        template:
+          spec:
+            nodeSelector:
+              morpheus-type: "{{ .Values.worker.nodeSelector }}"
+            initContainers:
+              - name: init
+                image: busybox:1.28
+                command: ['sh', '-c', "until nslookup $RAY_IP.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for K8s Service $RAY_IP; sleep 2; done"]
+            imagePullSecrets:
+            - name: regcred
+            containers:
+              - name: ray-worker
+                image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+                imagePullPolicy: IfNotPresent
+                lifecycle:
+                  preStop:
+                    exec:
+                      command: ["/bin/sh","-c","ray stop"]
+                resources:
+                  limits:
+                    cpu: "{{ .Values.worker.workerGroup.resources.limits.cpu }}"
+                    # memory: "{{ .Values.worker.workerGroup.resources.limits.memory }}"
+                    nvidia.com/gpu: "{{ .Values.worker.workerGroup.resources.limits.gpu }}"
+                env:
+                  - name: POSTGRES_USER
+                    valueFrom:
+                      secretKeyRef:
+                        name: morpheus-secret
+                        key: POSTGRES_USER
+                        optional: false
+                  - name: POSTGRES_DB
+                    valueFrom:
+                      secretKeyRef:
+                        name: morpheus-secret
+                        key: POSTGRES_DB
+                        optional: false
+                  - name: POSTGRES_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: morpheus-secret
+                        key: POSTGRES_PASSWORD
+                        optional: false
+                  - name: POSTGRES_HOST
+                    valueFrom:
+                      secretKeyRef:
+                        name: morpheus-secret
+                        key: POSTGRES_HOST
+                        optional: false
+                  - name: AWS_ACCESS_KEY_ID
+                    valueFrom:
+                      secretKeyRef:
+                        name: morpheus-secret
+                        key: AWS_ACCESS_KEY_ID
+                        optional: true
+                  - name: AWS_SECRET_ACCESS_KEY
+                    valueFrom:
+                      secretKeyRef:
+                        name: morpheus-secret
+                        key: AWS_SECRET_ACCESS_KEY
+                        optional: true
+                  - name: IMAGES_BUCKET
+                    valueFrom:
+                      secretKeyRef:
+                        name: morpheus-secret
+                        key: IMAGES_BUCKET
+                        optional: true
+                  - name: IMAGES_TEMP_BUCKET
+                    valueFrom:
+                      secretKeyRef:
+                        name: morpheus-secret
+                        key: IMAGES_TEMP_BUCKET
+                        optional: true
+                  - name: HF_ACCESS_TOKEN
+                    valueFrom:
+                      secretKeyRef:
+                        name: morpheus-secret
+                        key: HF_ACCESS_TOKEN
+                        optional: true
+                volumeMounts:
+                - name: models
+                  mountPath: /mnt
+            volumes:
+            - name: models
+              persistentVolumeClaim:
+                claimName: models-claim
+                readOnly: true
+    headServiceAnnotations: {}

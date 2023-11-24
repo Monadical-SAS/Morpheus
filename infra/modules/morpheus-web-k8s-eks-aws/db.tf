@@ -24,6 +24,12 @@ resource "aws_db_instance" "db_postgres" {
   tags = {
     env = var.env
   }
+
+  lifecycle {
+    ignore_changes = [
+      engine_version,
+    ]
+  } 
 }
 
 resource "aws_security_group" "db_postgres" {

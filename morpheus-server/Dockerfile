@@ -1,4 +1,6 @@
 ARG BUILD_ENV="no_copy"
+ARG TAG="latest"
+FROM monadicalsas/morpheus-data:${TAG} as lib
 FROM nvidia/cuda:11.7.1-base-ubuntu22.04 as base
 
 # Configuration defaults
@@ -17,7 +19,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install system requirements
-RUN apt-get update && apt-get install -y jq build-essential python3-dev libpq-dev python3-pip python3-venv && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y jq build-essential curl python3-dev libpq-dev python3-pip python3-venv && rm -rf /var/lib/apt/lists/*
 
 WORKDIR "$API_ROOT"
 
@@ -25,10 +27,19 @@ RUN pip3 install virtualenv && \
     virtualenv "/opt/$VENV_NAME"
 ENV PATH="/opt/$VENV_NAME/bin:${PATH}"
 
+# Install rust for some wheel building processes
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
 # Install dependencies
 RUN pip install --upgrade pip
 COPY requirements.txt .
-RUN pip install torch==1.13.1 && pip install -r requirements.txt
+RUN pip install torch==1.13.1 && pip install -r requirements.txt --no-cache-dir
+
+# Find the latest wheel file of morpheus-data in the /wheels directory and install it
+COPY --from=lib /wheels /wheels
+RUN latest_wheel=$(ls -1 /wheels/*.whl | sort -V | tail -n 1) && \
+    pip install $latest_wheel
 
 # Create api user
 RUN userdel "$API_USER" && addgroup --system --gid "$API_USER_ID" "$API_USER" && \

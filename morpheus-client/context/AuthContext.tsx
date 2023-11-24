@@ -24,6 +24,8 @@ export enum AuthOption {
   Reset = "reset",
 }
 
+const USER = "user";
+
 export interface IAuthContext {
   authLoading: boolean;
   authOption: AuthOption;
@@ -59,7 +61,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [authOption, setAuthOption] = useState<AuthOption>(AuthOption.Login);
   const [user, setUser] = useState<any>({});
-  const [localUser, setLocalUser] = useLocalStorage("user", {} as User);
+  const [localUser, setLocalUser] = useLocalStorage(USER, {} as User);
 
   useEffect(() => {
     if (localUser && localUser.email) {
@@ -90,8 +92,8 @@ const AuthProvider = (props: { children: ReactNode }) => {
       .then((response) => {
         loadOrCreateMorpheusUser({ ...response, displayName: user.name });
       })
-      .catch(() => {
-        showErrorAlert("An error occurred while creating the new user");
+      .catch((error) => {
+        showErrorAlert(error.message);
       });
   };
 
@@ -102,7 +104,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
           loadOrCreateMorpheusUser(response);
         })
         .catch((error) => {
-          showErrorAlert( "An error occurred while authenticating the user");
+          showErrorAlert(error.message);
           reject(error);
         });
     });
@@ -116,7 +118,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
           resolve();
         })
         .catch((error) => {
-          showErrorAlert( "An error occurred while authenticating the user");
+          showErrorAlert(error.message);
           reject(error);
         });
     });
@@ -126,7 +128,7 @@ const AuthProvider = (props: { children: ReactNode }) => {
     const user = {
       name: firebaseUser.displayName,
       email: firebaseUser.email,
-      phone: firebaseUser.phoneNumber,
+      roles: [{name: "user"}],
     };
     if (!user.email) {
       showErrorAlert("Email is required");
@@ -135,13 +137,15 @@ const AuthProvider = (props: { children: ReactNode }) => {
   };
 
   const loadOrCreateUser = (user: any) => {
-    const newData = { ...user, role: "user" };
+    const newData = { ...user, role: USER };
     loadOrCreateUserInfo(newData)
       .then((response: any) => {
         if (response.success) {
           setUser(response.data);
         } else {
-          showErrorAlert(response.error || "An error occurred while loading the user data");
+          showErrorAlert(
+            response.error || "An error occurred while loading the user data"
+          );
         }
       })
       .catch(() => {
@@ -155,26 +159,25 @@ const AuthProvider = (props: { children: ReactNode }) => {
         if (response.success) {
           setUser(response.data);
           setLocalUser(response.data);
-        } else {
-          showErrorAlert("An error occurred while loading the user data");
         }
       })
-      .catch(() => {
-        showErrorAlert("An error occurred while loading the user data");
+      .catch((error) => {
+        console.log(error);
       });
   };
 
   const logout = () => {
     return signOutFirebase()
       .then(() => {
-        localStorage.clear();
-        sessionStorage.clear();
+        localStorage.removeItem(USER);
+        localStorage.removeItem("token");
+        localStorage.removeItem("results");
         router.push("/");
         setUser({} as User);
         setLocalUser({} as User);
       })
-      .catch(() => {
-        showErrorAlert("An error occurred while logging out");
+      .catch((error) => {
+        showErrorAlert(error.message);
       });
   };
 

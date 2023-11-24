@@ -1,11 +1,9 @@
 import React, { CSSProperties, Fragment } from "react";
-import { useRouter } from "next/router";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
 import ShareButton from "../ShareButton/ShareButton";
 import ButtonSetImage2 from "../buttons/ButtonImg2Img/ButtonSetImage2";
 import { DownloadIcon } from "@/components/icons/download";
 import { PencilIcon } from "@/components/icons/pencil";
-import { GalleryIcon } from "@/components/icons/gallery";
 import { DeleteIcon } from "@/components/icons/delete";
 import { SaveIcon } from "lucide-react";
 import { InpaintingIcon } from "../icons/inpainting";
@@ -29,12 +27,11 @@ interface ImageActionsProps {
 }
 
 const ArtworkActions = (props: ImageActionsProps) => {
-  const router = useRouter();
   const { showSuccessAlert, showWarningAlert, showErrorAlert } =
     useToastContext();
 
   const handleImageDownload = async () => {
-    downloadImage(props.artwork.image)
+    downloadImage(props.artwork.image, `${props.artwork.prompt?.prompt}.png`)
       .then(() => {
         showSuccessAlert("Image downloaded successfully");
       })
@@ -71,10 +68,6 @@ const ArtworkActions = (props: ImageActionsProps) => {
           "An error occurred while deleting artwork, please try again later"
         );
       });
-  };
-
-  const redirectToGallery = () => {
-    router.push(`/gallery`);
   };
 
   const showForm = () => {
@@ -115,12 +108,6 @@ const ArtworkActions = (props: ImageActionsProps) => {
           )}
 
           <ShareButton artwork={props.artwork} />
-
-          <AppTooltip content={"Open gallery"} direction={"top"}>
-            <span onClick={redirectToGallery}>
-              <GalleryIcon width={"24"} height={"24"} />
-            </span>
-          </AppTooltip>
         </div>
 
         <div className={styles.imagineActions}>

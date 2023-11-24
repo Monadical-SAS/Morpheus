@@ -1,5 +1,7 @@
 import { sleep } from "@/utils/timer";
 import httpInstance from "./httpClient";
+import { ErrorResponse, SuccessResponse } from "@/utils/common";
+import { ServerResponse } from "@/models/models";
 
 interface IRequest {
   prompt: string;
@@ -20,7 +22,7 @@ export const generateImageWithText2Img = async (request: IRequest) => {
     );
     return response.data;
   } catch (error) {
-    return { success: false, message: error };
+    return ErrorResponse(String(error));
   }
 };
 
@@ -42,7 +44,7 @@ export const sendImageRequestToSDBackend = async (
     });
     return response.data;
   } catch (error) {
-    return { success: false, error: error };
+    return ErrorResponse(String(error));
   }
 };
 
@@ -106,20 +108,31 @@ export const generateImageWithInpainting = async (
     );
     return response.data;
   } catch (error) {
-    return { success: false, error: error };
+    return ErrorResponse(String(error));
   }
 };
 
 export const generateMagicPrompt = async (request: IRequest) => {
   try {
     const response = await httpInstance.post(
-      "/sdiffusion/magicprompt/prompt/",
+      "/sdiffusion/magic_prompt/prompt/",
       request
     );
     return response.data;
   } catch (error) {
-    return { success: false, error: error };
+    return ErrorResponse(String(error));
   }
+};
+
+export const generateImageWithUpscaling = async (
+  request: IRequest,
+  image: File | null
+) => {
+  return await sendImageRequestToSDBackend(
+    request,
+    image,
+    "/sdiffusion/upscale/prompt/"
+  );
 };
 
 export const fetchTaskResult = async (taskId: string) => {
@@ -127,7 +140,7 @@ export const fetchTaskResult = async (taskId: string) => {
     const response = await httpInstance.get(`/sdiffusion/results/${taskId}`);
     return response.data;
   } catch (error) {
-    return { success: false, error: error };
+    return ErrorResponse(String(error));
   }
 };
 
@@ -136,32 +149,29 @@ export const fetchDataWithRetry = async (
   retryCount: number,
   maxCount: number = MAX_RETRY_COUNT
 ): Promise<any> => {
+  await sleep(5000);
   if (retryCount > maxCount) {
-    return {
-      success: false,
-      message: "Failed to fetch data from server",
-      data: null,
-    };
+    return ErrorResponse(
+      "Failed to fetch results from server after maximum retries exceeded"
+    );
   }
 
   try {
     await sleep(mapCounterToSleepTime(retryCount));
-    const response = await fetchTaskResult(taskId);
-    if (response?.status === "Failed") {
-      return { success: false, message: response?.message, data: null };
-    }
-    if (response?.status === "Processing") {
+    const response: ServerResponse = await fetchTaskResult(taskId);
+    if (!response.success) return ErrorResponse(response.message);
+    if (response.data.status === "FAILED") {
+      return ErrorResponse(response.data.message);
+    } else if (response.data.status === "COMPLETED") {
+      return SuccessResponse(response.data, response.message);
+    } else if (response.data.status === "PENDING") {
       return fetchDataWithRetry(taskId, retryCount + 1, maxCount);
     } else {
-      return { success: true, data: response.data, message: null };
+      return fetchDataWithRetry(taskId, retryCount + 1, maxCount);
     }
   } catch (error) {
     if (retryCount === maxCount) {
-      return {
-        success: false,
-        message: "Failed to fetch data from server",
-        data: null,
-      };
+      return ErrorResponse("Failed to fetch results from server");
     }
     await sleep(mapCounterToSleepTime(retryCount));
     return fetchDataWithRetry(taskId, retryCount + 1, maxCount);
@@ -178,25 +188,9 @@ export const getGeneratedDataWithRetry = async (
   return await fetchDataWithRetry(taskId, retryCount, maxCount);
 };
 
-export const getGeneratedDiffusionImagesWithRetry = async (
-  taskId: string,
-  retryCount = 0,
-  maxCount: number = MAX_RETRY_COUNT
-): Promise<any> => {
-  return await getGeneratedDataWithRetry(taskId, retryCount, maxCount);
-};
-
-export const getGeneratedMagicPromptWithRetry = async (
-  taskId: string,
-  retryCount = 0,
-  maxCount: number = MAX_RETRY_COUNT
-): Promise<any> => {
-  return await getGeneratedDataWithRetry(taskId, retryCount, maxCount);
-};
-
 const mapCounterToSleepTime = (counter: number) => {
-  if (counter <= 5) return 5000;
-  if (counter <= 10) return 10000;
-  if (counter <= 20) return 30000;
-  return 5000;
+  if (counter <= 5) return 1000;
+  if (counter <= 10) return 2000;
+  if (counter <= 20) return 3000;
+  return 1000;
 };

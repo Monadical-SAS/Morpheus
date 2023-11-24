@@ -1,58 +1,98 @@
 models:
   - name: "Canny edges"
-    type: "canny"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Canny edges."
     source: "lllyasviel/sd-controlnet-canny"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-canny"
+    categories:
+      - name: "controlnet"
+      - name: "processing"
+    extra_params:
+      type: "canny"
 
   - name: "Depth"
-    type: "depth"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Depth estimation."
     source: "lllyasviel/sd-controlnet-depth"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-depth"
+    categories:
+      - name: "controlnet"
+      - name: "processing"
+    extra_params:
+      type: "depth"
 
   - name: "Segmentation"
-    type: "seg"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Image Segmentation."
     source: "lllyasviel/sd-controlnet-seg"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-seg"
+    categories:
+      - name: "controlnet"
+      - name: "processing"
+    extra_params:
+      type: "seg"
 
   - name: "Soft edges (HED)"
-    type: "hed"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on HED Boundary."
     source: "lllyasviel/sd-controlnet-hed"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-hed"
+    categories:
+      - name: "controlnet"
+      - name: "processing"
+    extra_params:
+      type: "hed"
   
   - name: "Lines (M-LSD)"
-    type: "mlsd"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on M-LSD straight line detection."
     source: "lllyasviel/sd-controlnet-mlsd"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-mlsd"
+    categories:
+      - name: "controlnet"
+      - name: "processing"
+    extra_params:
+      type: "mlsd"
 
   - name: "Normals"
-    type: "normalmap"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Normal Map Estimation."
     source: "lllyasviel/sd-controlnet-normal"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-normal"
+    categories:
+      - name: "controlnet"
+      - name: "processing"
+    extra_params:
+      type: "normalmap"
 
   - name: "Pose"
-    type: "poses"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Human Pose Estimation."
     source: "lllyasviel/sd-controlnet-openpose"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-openpose"
+    categories:
+      - name: "controlnet"
+      - name: "processing"
+    extra_params:
+      type: "poses"
 
   - name: "Scribbles"
-    type: "scribble"
     description: "ControlNet is a neural network structure to control diffusion models by adding extra conditions. This checkpoint corresponds to the ControlNet conditioned on Scribble images."
     source: "lllyasviel/sd-controlnet-scribble"
+    kind: "controlnet"
     is_active: true
     url_docs: "https://huggingface.co/lllyasviel/sd-controlnet-scribble"
+    categories:
+      - name: "controlnet"
+      - name: "processing"
+    extra_params:
+      type: "scribble"
 
   

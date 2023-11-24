@@ -12,21 +12,23 @@ import {
   generateImageWithInpainting,
   generateImageWithPix2Pix,
   generateImageWithText2Img,
-  getGeneratedDiffusionImagesWithRetry,
+  generateImageWithUpscaling,
+  getGeneratedDataWithRetry,
 } from "@/services/sdiffusion";
 import { useDiffusion } from "./SDContext";
 import { useControlNet } from "./CNContext";
 import { ErrorResponse } from "@/utils/common";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToastContext } from "@/context/ToastContext";
-import { Prompt } from "@/models/models";
+import { Prompt, ServerResponse } from "@/models/models";
 
 type ImagineOptions =
   | "text2img"
   | "img2img"
   | "controlnet"
   | "pix2pix"
-  | "inpainting";
+  | "inpainting"
+  | "upscaling";
 
 export type ImagineResult = {
   prompt: Prompt;
@@ -131,14 +133,17 @@ const ImagineProvider = (props: { children: ReactNode }) => {
       option === "controlnet" ? buildControlNetPrompt() : buildPrompt();
     const request = { prompt: prompt.value, ...config };
 
-    const response = await enqueueTaskRequest(option, request);
-    if (!response || !response.success) {
+    const response: ServerResponse = await enqueueTaskRequest(option, request);
+    if (!response.success) {
       setIsLoading(false);
       showErrorAlert(response.message || "Error generating image");
       return;
     }
     const taskId = response.data;
-    const responseModel = await getGeneratedDiffusionImagesWithRetry(taskId);
+    const responseModel: ServerResponse = await getGeneratedDataWithRetry(
+      taskId
+    );
+    console.log("responseModel", responseModel);
     if (!responseModel.success) {
       setIsLoading(false);
       showErrorAlert(
@@ -147,7 +152,7 @@ const ImagineProvider = (props: { children: ReactNode }) => {
       return;
     }
 
-    appendResults(request, responseModel.data);
+    appendResults(request, responseModel.data.results);
     setIsLoading(false);
   };
 
@@ -167,6 +172,8 @@ const ImagineProvider = (props: { children: ReactNode }) => {
           img2imgFile,
           maskFile
         );
+      } else if (option === "upscaling") {
+        return await generateImageWithUpscaling(request, img2imgFile);
       } else {
         return ErrorResponse("Please select a valid option");
       }

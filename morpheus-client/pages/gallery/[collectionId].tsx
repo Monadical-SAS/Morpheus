@@ -1,14 +1,16 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import PrivateRoute from "@/components/Auth/PrivateRoute/PrivateRoute";
+
 import Loader from "@/components/Loaders/LoaderCircle/Loader";
 import CollectionForm from "@/components/CollectionForm/CollectionForm";
 import Modal from "@/components/Modal/Modal";
+import { MainLayoutPrivate } from "@/layout/MainLayout/MainLayout";
 import ArtWorkList from "@/components/ArtWorkList/ArtWorkList";
 import { getCollectionArtWorks } from "@/services/artworks";
 import { deleteCollection, getCollectionDetails } from "@/services/collection";
 import { useToastContext } from "@/context/ToastContext";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import { ArtWork, Collection } from "@/models/models";
 import styles from "@/styles/pages/CollectionDetails.module.scss";
 
@@ -22,6 +24,7 @@ const CollectionDetail: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [collection, setCollection] = useState<Collection>();
   const [artWorks, setArtWorks] = useState<ArtWork[]>([]);
+  const { sendAnalyticsRecord } = useAnalytics();
 
   useEffect(() => {
     if (collectionId) {
@@ -51,6 +54,14 @@ const CollectionDetail: NextPage = () => {
         });
     }
   }, [collectionId]);
+
+  useEffect(() => {
+    sendAnalyticsRecord("page_view", {
+      page_location: window.location.href,
+      page_title: document?.title,
+      page_name: `Collection ${collection?.name} detail`,
+    });
+  }, [collection]);
 
   const handleEdit = () => {
     setShowForm(true);
@@ -82,7 +93,7 @@ const CollectionDetail: NextPage = () => {
   };
 
   return (
-    <PrivateRoute>
+    <MainLayoutPrivate>
       {isLoading ? (
         <Loader
           isLoading={isLoading}
@@ -151,7 +162,7 @@ const CollectionDetail: NextPage = () => {
           </Modal>
         </Fragment>
       )}
-    </PrivateRoute>
+    </MainLayoutPrivate>
   );
 };
 

@@ -3,7 +3,7 @@ from functools import lru_cache
 
 from pydantic import BaseSettings
 
-from utils import (
+from morpheus_data.registry.model_manager import (
     download_controlnet_model_from_huggingface,
     download_magicprompt_model_from_huggingface,
     download_model_from_huggingface,
@@ -29,6 +29,7 @@ class Target(str, Enum):
 class DBTarget(str, Enum):
     sdiffusion = "sdiffusion"
     controlnet = "controlnet"
+    magicprompt = "magicprompt"
 
 
 class Settings(BaseSettings):
@@ -43,7 +44,7 @@ def get_settings() -> Settings:
 
 api_server_urls = {
     "local": "http://api:8001",
-    "staging": "http://216.153.52.83:8001",
+    "staging": "http://198.176.97.61:8001",
     "production": "https://api-morpheus.monadical.io",
 }
 

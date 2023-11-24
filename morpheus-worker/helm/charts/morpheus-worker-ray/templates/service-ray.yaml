@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker-ray
+  labels:
+    name: worker-ray
+spec:
+  type: ExternalName
+  externalName: morpheus-rayservice-serve-svc.default.svc.cluster.local
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: worker-ray

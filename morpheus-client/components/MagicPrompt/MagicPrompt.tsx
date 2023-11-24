@@ -6,17 +6,18 @@ import { useDiffusion } from "@/context/SDContext";
 import { useToastContext } from "@/context/ToastContext";
 import {
   generateMagicPrompt,
-  getGeneratedMagicPromptWithRetry,
+  getGeneratedDataWithRetry,
 } from "@/services/sdiffusion";
 import { getInputValidators } from "../Inputs/validators";
 import styles from "./MagicPrompt.module.scss";
+import { ServerResponse } from "@/models/models";
 
 interface MagicPromptProps {
   styles?: CSSProperties;
 }
 
 const MagicPrompt = (props: MagicPromptProps) => {
-  const { showInfoAlert, showWarningAlert, showErrorAlert } = useToastContext();
+  const { showInfoAlert, showErrorAlert } = useToastContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { prompt, setPrompt } = useDiffusion();
 
@@ -27,7 +28,7 @@ const MagicPrompt = (props: MagicPromptProps) => {
     if (!prompt.value) return;
 
     setIsLoading(true);
-    const response = await generateMagicPrompt({
+    const response: ServerResponse = await generateMagicPrompt({
       prompt: prompt.value,
     });
     if (!response.success) {
@@ -40,7 +41,9 @@ const MagicPrompt = (props: MagicPromptProps) => {
       response.message || "MagicPrompt request queued successfully!"
     );
     const taskId = response.data;
-    const responseMagicPrompt = await getGeneratedMagicPromptWithRetry(taskId);
+    const responseMagicPrompt: ServerResponse = await getGeneratedDataWithRetry(
+      taskId
+    );
 
     if (!responseMagicPrompt.success) {
       setIsLoading(false);
@@ -51,17 +54,22 @@ const MagicPrompt = (props: MagicPromptProps) => {
       return;
     }
 
-    let generatedPrompt = responseMagicPrompt.data;
-    generatedPrompt = generatedPrompt.replace(prompt.value, "");
-
-    if (generatedPrompt.length === 0) {
-      showWarningAlert(
+    if (
+      !responseMagicPrompt.data ||
+      responseMagicPrompt.data.length === 0 ||
+      responseMagicPrompt.data.results.length === 0 ||
+      responseMagicPrompt.data.results[0] === prompt.value
+    ) {
+      showInfoAlert(
         "Magic Prompt did not generate a new prompt. " +
           "Please try again to get a new proposal or rewrite your prompt"
       );
       setIsLoading(false);
       return;
     }
+
+    let generatedPrompt = responseMagicPrompt.data.results[0];
+    generatedPrompt = generatedPrompt.replace(prompt.value, "");
 
     // To show result with typewriter effect
     let i = -1;

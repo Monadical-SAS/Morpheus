@@ -1,14 +1,24 @@
-import MainContainer from "../layout/MainContainer/MainContainer";
+import { useEffect } from "react";
+
 import Excalidraw from "../components/Excalidraw/Excalidraw";
-import styles from "../styles/pages/Paint.module.scss";
+import ImagineLayout from "@/layout/ImagineLayout/ImagineLayout";
+import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 
 const Paint = () => {
+  const { sendAnalyticsRecord } = useAnalytics();
+
+  useEffect(() => {
+    sendAnalyticsRecord("page_view", {
+      page_location: window.location.href,
+      page_title: document?.title,
+      page_name: "Paint",
+    });
+  }, []);
+
   return (
-    <MainContainer>
-      <div className={styles.mainContent}>
-        <Excalidraw />
-      </div>
-    </MainContainer>
+    <ImagineLayout>
+      <Excalidraw />
+    </ImagineLayout>
   );
 };
 

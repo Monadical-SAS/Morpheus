@@ -1,0 +1,77 @@
+@use "styles/colors";
+@use "styles/media";
+
+.imageInputsContainer {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 24px;
+  flex: 1;
+  margin-bottom: 48px;
+
+  @include media.mobile {
+    margin-bottom: 16px;
+  }
+}
+
+.imagineBase {
+  height: 100%;
+  flex: 1 auto;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 80px);
+  min-width: 300px;
+  max-width: 100vw;
+
+  @include media.mobile {
+    flex-direction: column;
+    max-height: 100%;
+    background-color: colors.$background-secondary;
+  }
+
+  .imagesContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    border-bottom-left-radius: 24px;
+    background-color: colors.$background-primary;
+
+    @include media.tablet {
+      border-bottom-left-radius: 0;
+    }
+
+    @include media.mobile {
+      flex-direction: column;
+      padding: 48px 24px 48px 24px;
+      height: 100%;
+      max-height: 100%;
+      border-bottom-left-radius: 0;
+    }
+
+    .results {
+      width: 100%;
+      height: 100%;
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+
+      @include media.mobile {
+        width: 100%;
+      }
+
+      &.fullWidth {
+        width: 100%;
+
+        @include media.mobile {
+          height: 100%;
+        }
+      }
+    }
+  }
+}

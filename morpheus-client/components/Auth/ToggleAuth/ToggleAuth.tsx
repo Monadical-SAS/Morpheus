@@ -1,5 +1,5 @@
 import React from "react";
-import { AuthOption, useAuth } from "../../../context/AuthContext";
+import { AuthOption, useAuth } from "@/context/AuthContext";
 import styles from "./ToggleAuth.module.scss";
 
 export const ToggleAuthOption = () => {

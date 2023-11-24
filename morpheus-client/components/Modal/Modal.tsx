@@ -8,7 +8,6 @@ import React, {
 import ReactDOM from "react-dom";
 import { CloseIcon } from "../icons/close";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
-import { MOBILE_SCREEN_WIDTH } from "@/utils/constants";
 import styles from "./Modal.module.scss";
 
 interface ModalProps {
@@ -23,10 +22,9 @@ interface ModalProps {
 }
 
 const Modal = (props: ModalProps) => {
-  const { width } = useWindowDimensions();
+  const { isMobile } = useWindowDimensions();
 
   const initialStyles = useMemo(() => {
-    const isMobile = width < MOBILE_SCREEN_WIDTH;
     const defaultSize = isMobile ? 90 : 80;
 
     return {

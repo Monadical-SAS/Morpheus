@@ -1,0 +1,40 @@
+@use "styles/media";
+@use "styles/colors";
+
+.authContainer {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  background-image: url("/images/landing.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  .prompt {
+    position: absolute;
+    top: 48px;
+    left: 48px;
+    width: 600px;
+    max-width: 100%;
+    height: auto;
+    background-color: colors.$background-primary;
+    opacity: 0.8;
+    z-index: 1;
+    padding: 24px;
+    border-radius: 16px;
+  }
+
+  .formsContainer {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 100px;
+    padding: 64px 48px;
+    background-color: colors.$background-primary;
+    border-radius: 16px;
+  }
+}
