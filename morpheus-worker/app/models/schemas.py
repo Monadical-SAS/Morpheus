@@ -2,10 +2,9 @@ from enum import Enum
 from typing import Optional, List
 from uuid import UUID
 
-from pydantic import BaseModel
-
 from app.settings.settings import get_settings
 from app.utils.prompts import generate_random_prompt
+from pydantic import BaseModel
 
 settings = get_settings()
 
@@ -25,7 +24,7 @@ class TextCategoryEnum(str, Enum):
 
 class GenerationRequest(BaseModel):
     task_id: str = None
-    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    prompt: str = "a beautiful cat with blue eyes, artwork, trending on artstation"
     negative_prompt: str = "bad, low res, ugly, deformed"
     width: int = 768
     height: int = 768
@@ -50,11 +49,12 @@ class GenerationRequest(BaseModel):
 class ModelRequest(GenerationRequest):
     image: Optional[bytes] = None
     mask: Optional[bytes] = None
+    palette_image: Optional[bytes] = None
 
 
 class TextGenerationRequest(BaseModel):
     task_id: str = None
-    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    prompt: str = "a beautiful cat with blue eyes, artwork, trending on artstation"
     model_id: str = "Gustavosta/MagicPrompt-Stable-Diffusion"
     user_id: str
 

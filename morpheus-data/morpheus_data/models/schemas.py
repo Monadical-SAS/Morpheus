@@ -115,6 +115,8 @@ class Prompt(BaseModel):
     num_images_per_prompt: int = 1
     generator: int = -1
     strength: Optional[float] = 0.75
+    color_palette: Optional[str] = "None"
+    controlnet_input_type: Optional[str] = "None"
     use_lora: Optional[bool] = False
     lora_path: Optional[str] = ""
     lora_scale: Optional[float] = 1.0
@@ -157,6 +159,8 @@ class Prompt(BaseModel):
                 "num_images_per_prompt": 1,
                 "generator": -1,
                 "strength": 0.75,
+                "color_palette": "None",
+                "controlnet_input_type": "Text-to-Image",
                 "use_lora": False,
                 "lora_path": "",
                 "lora_scale": 1.0,

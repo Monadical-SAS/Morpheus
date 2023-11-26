@@ -25,6 +25,7 @@ const Img2Img: NextPage = () => {
       formValid={isFormValid}
       showImageInput={true}
       showMaskInput={false}
+      showPaletteInput={true}
       handleGenerate={handleGenerate}
     />
   );

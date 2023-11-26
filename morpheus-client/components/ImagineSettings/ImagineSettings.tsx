@@ -127,23 +127,6 @@ const ImagineSettings = () => {
         </div>
 
         <div className={styles.settingItem}>
-          <OptionInfo title={"Model"} description={"Select a model to use."} />
-          <ModelSelect />
-        </div>
-
-        {selectedOption === SDOption.ControlNet && (
-          <div className={styles.settingItem}>
-            <OptionInfo
-              title={"ControlNet Model"}
-              description={
-                "Select a ControlNet model to use. This only works with stable diffusion v1.5."
-              }
-            />
-            <ControlNetModelSelect />
-          </div>
-        )}
-
-        <div className={styles.settingItem}>
           <OptionInfo
             title={"Sampler"}
             description={"Select a sampler to use."}
@@ -228,7 +211,7 @@ const ImagineSettings = () => {
 
         <p className="headline-4 white my-10">Model settings</p>
 
-        {selectedOption === SDOption.Image2Image && (
+        {activeFeature === ModelCategory.Image2Image && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"Color Palette"}
@@ -261,7 +244,7 @@ const ImagineSettings = () => {
           </div>
         )}
 
-        {selectedOption === SDOption.ControlNet &&
+        {activeFeature === ModelCategory.ControlNet &&
           controlNetType === "Image-to-Image" && (
             <div className={styles.settingItem}>
               <OptionInfo
@@ -290,7 +273,7 @@ const ImagineSettings = () => {
             </div>
           )}
 
-        {selectedOption === SDOption.ControlNet && (
+        {activeFeature === ModelCategory.ControlNet && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"ControlNet Type"}

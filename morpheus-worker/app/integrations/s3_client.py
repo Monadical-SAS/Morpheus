@@ -26,7 +26,11 @@ class S3Client:
         img_byte_arr = BytesIO()
         file.save(img_byte_arr, format="png")
         img_byte_arr = img_byte_arr.getvalue()
-        key = f"{settings.images_temp_bucket}/{file_name}"
+        key = f"{settings.temp_images_folder}/{file_name}"
+
+        self.logger.info(f"StableDiffusionV2Text2Img.generate: key: {key}")
+        self.logger.info(f"StableDiffusionV2Text2Img.generate: file_name: {file_name}")
+        self.logger.info(f"https://{self.IMAGES_BUCKET}.s3.amazonaws.com/{key}")
 
         try:
             self.s3_client.put_object(
@@ -42,10 +46,8 @@ class S3Client:
 
     def upload_multiple_files(self, *, files: List[Any], file_name: str):
         image_urls = [
-            self.upload_file(
-                file=image,
-                file_name=f"{file_name}-{index}.png"
-            ) for index, image in enumerate(files)
+            self.upload_file(file=image, file_name=f"{file_name}-{index}.png")
+            for index, image in enumerate(files)
         ]
         self.logger.info(f"StableDiffusionV2Text2Img.generate: all_data: {image_urls}")
         return image_urls

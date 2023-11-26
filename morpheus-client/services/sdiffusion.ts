@@ -30,7 +30,7 @@ export const sendImageRequestToSDBackend = async (
   request: IRequest,
   image: File | null,
   palette_img: File | null,
-  url: string,
+  url: string
 ) => {
   try {
     const formData = new FormData();
@@ -131,6 +131,7 @@ export const generateImageWithUpscaling = async (
   return await sendImageRequestToSDBackend(
     request,
     image,
+    null,
     "/sdiffusion/upscale/prompt/"
   );
 };

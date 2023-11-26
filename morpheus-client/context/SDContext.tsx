@@ -1,22 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { createContext, ReactNode, useContext, useState } from "react";
-import {
-  CheckboxState,
-  initializeCheckbox,
-} from "@/components/Inputs/InputCheckbox/InputCheckbox";
-import {
-  initializeNumber,
-  NumberState,
-} from "@/components/Inputs/InputNumber/InputNumber";
-import {
-  initializeText,
-  TextState,
-} from "@/components/Inputs/InputText/InputText";
-import { getRandomStringFromArray } from "@/utils/arrays";
-import { generateRandomNumber } from "@/utils/random";
-import { useModels } from "@/context/ModelsContext";
-import { Prompt } from "@/models/models";
-import { PROMPTS, DEFAULT_NEGATIVE_PROMPT } from "@/utils/constants";
+import {createContext, ReactNode, useContext, useState} from "react";
+import {CheckboxState, initializeCheckbox,} from "@/components/Inputs/InputCheckbox/InputCheckbox";
+import {initializeNumber, NumberState,} from "@/components/Inputs/InputNumber/InputNumber";
+import {initializeText, TextState,} from "@/components/Inputs/InputText/InputText";
+import {getRandomStringFromArray} from "@/utils/arrays";
+import {generateRandomNumber} from "@/utils/random";
+import {useModels} from "@/context/ModelsContext";
+import {Prompt} from "@/models/models";
+import {DEFAULT_NEGATIVE_PROMPT, PROMPTS} from "@/utils/constants";
 
 export interface IDiffusionContext {
   prompt: TextState;
@@ -39,7 +30,7 @@ export interface IDiffusionContext {
   setRandomizeSeed: (randomize: CheckboxState) => void;
   colorPalette: string;
   setColorPalette: (colorPalette: string) => void;
-  controlNetType: string
+  controlNetType: string;
   setControlNetType: (controlNetType: string) => void;
   embeddingPath: TextState;
   setEmbeddingPath: (embeddingPath: TextState) => void;
@@ -76,45 +67,9 @@ const initialConfig = {
   loraScale: initializeNumber(1.0),
 };
 
-const defaultState = {
-  prompt: initialConfig.prompt,
-  setPrompt: () => {},
-  negativePrompt: initialConfig.negativePrompt,
-  setNegativePrompt: () => {},
-  imageSize: initialConfig.size,
-  setImageSize: () => {},
-  scale: initialConfig.scale,
-  setScale: () => {},
-  strength: initialConfig.strength,
-  setStrength: () => {},
-  steps: initialConfig.steps,
-  setSteps: () => {},
-  amount: initialConfig.amount,
-  setAmount: () => {},
-  seed: initialConfig.seed,
-  setSeed: () => {},
-  randomizeSeed: initialConfig.randomizeSeed,
-  setRandomizeSeed: () => {},
-  embeddingPath: initialConfig.embeddingPath,
-  setEmbeddingPath: () => {},
-  useEmbedding: initialConfig.useEmbedding,
-  setEmbedding: () => {},
-  loraPath: initialConfig.loraPath,
-  setLoraPath: () => {},
-  useLora: initialConfig.useLora,
-  setLora: () => {},
-  loraScale: initialConfig.scale,
-  setLoraScale: () => {},
-  buildPrompt: () => {},
-  restartSDSettings: () => {},
-  colorPalette: initialConfig.colorPalette,
-  setColorPalette: () => {},
-  controlNetType: initialConfig.controlNetType,
-  setControlNetType: () => {}
-};
-
-const DiffusionContext = createContext<IDiffusionContext>(defaultState);
-
+const DiffusionContext = createContext<IDiffusionContext>(
+  {} as IDiffusionContext
+);
 const DiffusionProvider = (props: { children: ReactNode }) => {
   const { selectedModel, sampler } = useModels();
 
@@ -132,10 +87,18 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
   const [randomizeSeed, setRandomizeSeed] = useState<CheckboxState>(
     initialConfig.randomizeSeed
   );
-  const [colorPalette, setColorPalette] = useState<string>(initialConfig.colorPalette);
-  const [controlNetType, setControlNetType] = useState<string>(initialConfig.controlNetType);
-  const [embeddingPath, setEmbeddingPath] = useState<TextState>(initialConfig.embeddingPath);
-  const [useEmbedding, setEmbedding] = useState<CheckboxState>(initialConfig.useEmbedding);
+  const [colorPalette, setColorPalette] = useState<string>(
+    initialConfig.colorPalette
+  );
+  const [controlNetType, setControlNetType] = useState<string>(
+    initialConfig.controlNetType
+  );
+  const [embeddingPath, setEmbeddingPath] = useState<TextState>(
+    initialConfig.embeddingPath
+  );
+  const [useEmbedding, setEmbedding] = useState<CheckboxState>(
+    initialConfig.useEmbedding
+  );
   const [loraPath, setLoraPath] = useState<TextState>(initialConfig.loraPath);
   const [useLora, setLora] = useState<CheckboxState>(initialConfig.useLora);
   const [loraScale, setLoraScale] = useState<NumberState>(

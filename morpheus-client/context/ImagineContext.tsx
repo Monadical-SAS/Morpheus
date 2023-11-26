@@ -42,7 +42,7 @@ export interface ImagineContextProps {
   setImg2imgFile: (image: File | null) => void;
   maskFile: File | null;
   setMaskFile: (image: File | null) => void;
-  setcolorPaletteURL: (image: string) => void;
+  setColorPaletteURL: (image: string) => void;
   colorPaletteFile: File | null;
   setColorPaletteFile: (image: File | null) => void;
   generateImages: (option: ImagineOptions) => void;
@@ -57,7 +57,7 @@ const defaultState = {
   setImg2imgFile: () => console.log("setImg2imgFile"),
   maskFile: null,
   setMaskFile: () => console.log("setMaskFile"),
-  setcolorPaletteURL: () => console.log("setcolorPaletteURL"),
+  setColorPaletteURL: () => console.log("setColorPaletteURL"),
   colorPaletteFile: null,
   setColorPaletteFile: () => console.log("setColorPaletteFile"),
   generateImages: () => console.log("generateImages"),
@@ -76,7 +76,7 @@ const ImagineProvider = (props: { children: ReactNode }) => {
   const [img2ImgURL, setImg2ImgURL] = useState<string>("");
   const [img2imgFile, setImg2imgFile] = useState<File | null>(null);
   const [maskFile, setMaskFile] = useState<File | null>(null);
-  const [colorPaletteURL, setcolorPaletteURL] = useState<string>("");
+  const [colorPaletteURL, setColorPaletteURL] = useState<string>("");
   const [colorPaletteFile, setColorPaletteFile] = useState<File | null>(null);
 
   // Image results
@@ -106,7 +106,7 @@ const ImagineProvider = (props: { children: ReactNode }) => {
       getFileBlobFromURL(colorPaletteURL)
         .then((file: File) => {
           setColorPaletteFile(file);
-          setcolorPaletteURL("");
+          setColorPaletteURL("");
         })
         .catch((err) => {
           showErrorAlert("Error getting file from URL");
@@ -161,9 +161,17 @@ const ImagineProvider = (props: { children: ReactNode }) => {
       if (option === "text2img") {
         return await generateImageWithText2Img(request);
       } else if (option === "img2img") {
-        return await generateImageWithImg2Img(request, img2imgFile, colorPaletteFile);
+        return await generateImageWithImg2Img(
+          request,
+          img2imgFile,
+          colorPaletteFile
+        );
       } else if (option === "controlnet") {
-        return await generateImageWithControlNet(request, img2imgFile, colorPaletteFile);
+        return await generateImageWithControlNet(
+          request,
+          img2imgFile,
+          colorPaletteFile
+        );
       } else if (option === "pix2pix") {
         return await generateImageWithPix2Pix(request, img2imgFile);
       } else if (option === "inpainting") {
@@ -214,7 +222,7 @@ const ImagineProvider = (props: { children: ReactNode }) => {
         setImg2imgFile,
         maskFile,
         setMaskFile,
-        setcolorPaletteURL,
+        setColorPaletteURL: setColorPaletteURL,
         colorPaletteFile,
         setColorPaletteFile,
         generateImages,

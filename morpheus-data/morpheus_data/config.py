@@ -24,13 +24,12 @@ class Settings(BaseSettings):
     firebase_client_email: str
     firebase_web_api_key: str
 
-    bucket_type: str = "S3"
-    images_bucket: str
-    images_temp_bucket: str
-    models_bucket: str
-
     aws_access_key_id: str = ""
     aws_secret_access_key: str = ""
+    bucket_type: str = "S3"
+    models_bucket: str
+    images_bucket: str
+    temp_images_folder: str
 
     temp_model_folder: str = "./tmp"
     default_scheduler: str = "DDPMScheduler"

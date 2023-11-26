@@ -24,6 +24,7 @@ const ControlNetImg: NextPage = () => {
       formValid={isFormValid}
       showImageInput={true}
       showMaskInput={false}
+      showPaletteInput={true}
       handleGenerate={handleGenerate}
     />
   );
