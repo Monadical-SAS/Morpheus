@@ -35,8 +35,6 @@ def generate_random_prompt():
         "num_images_per_prompt": random.randint(1, 4),
         "generator": -1,
         "strength": 0.75,
-        "pipeline": settings.default_pipeline,
         "scheduler": settings.default_scheduler,
-        "model_id": settings.default_model,
         "user_id": "ray@morpheus.com",
     }

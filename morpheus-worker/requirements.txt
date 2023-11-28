@@ -21,6 +21,8 @@ safetensors
 invisible-watermark>=0.2.0
 controlnet-aux==0.0.1
 opencv-contrib-python-headless
+scikit-image
+scikit-learn
 
 # Text generation
 dynamicprompts[attentiongrabber,magicprompt]

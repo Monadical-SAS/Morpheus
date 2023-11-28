@@ -3,6 +3,7 @@ import logging
 from abc import ABC
 from pathlib import Path
 
+import torch
 from app.settings.settings import get_settings
 
 settings = get_settings()
@@ -10,33 +11,41 @@ settings = get_settings()
 
 class StableDiffusionAbstract(ABC):
     def __init__(
-            self, *,
-            pipeline: str = settings.default_pipeline,
-            model_id: str = settings.default_model,
-            scheduler: str = settings.default_scheduler,
-            controlnet_id: str = None
+        self,
+        *,
+        pipeline: str = settings.default_pipeline,
+        model_id: str = settings.default_model,
+        scheduler: str = settings.default_scheduler,
+        controlnet_id: str = None
     ):
-        import torch
         self.logger = logging.getLogger("ray")
         self.generator = None
         self.controlnet = None
 
         # Get the model source, path for local model, model_id for hugin face remote model
         self.local_model_path = Path(settings.models_folder).joinpath(model_id)
-        self.model_source = self.local_model_path if Path(self.local_model_path).exists() else model_id
+        self.model_source = (
+            self.local_model_path if Path(self.local_model_path).exists() else model_id
+        )
 
         # Get the controlnet source, path for local controlnet, controlnet_id for hugin face remote controlnet
         if controlnet_id is not None:
-            self.local_controlnet_path = Path(settings.models_folder).joinpath(controlnet_id)
-            self.controlnet_source = self.local_controlnet_path if Path(
+            self.local_controlnet_path = Path(settings.models_folder).joinpath(
+                controlnet_id
+            )
+            self.controlnet_source = (
                 self.local_controlnet_path
-            ).exists() else controlnet_id
+                if Path(self.local_controlnet_path).exists()
+                else controlnet_id
+            )
 
         # Check the environment variable/settings file to determine if we should
         # be using 16 bit or 32 bit precision when generating images.  16 bit
         # will be faster, but 32 bit may have higher image quality.
         self.dtype = torch.float32 if settings.enable_float32 else torch.float16
-        self.logger.info("Floating point precision during image generation: " + str(self.dtype))
+        self.logger.info(
+            "Floating point precision during image generation: " + str(self.dtype)
+        )
 
         # Check to see if we have CUDA available via an NVidia GPU.
         if torch.cuda.is_available() and torch.backends.cuda.is_built():
@@ -72,8 +81,7 @@ class StableDiffusionAbstract(ABC):
         if controlnet_id is not None:
             controlnet_import = getattr(self.diffusers_import, "ControlNetModel")
             self.controlnet = controlnet_import.from_pretrained(
-                self.controlnet_source,
-                torch_dtype=self.dtype
+                self.controlnet_source, torch_dtype=self.dtype
             )
 
         # Build the pipeline parameters
@@ -104,7 +112,6 @@ class StableDiffusionAbstract(ABC):
         pass
 
     def set_generator(self, generator: int):
-        import torch
         self.generator = torch.Generator(self.generator_device).manual_seed(generator)
 
     def save_model(self):

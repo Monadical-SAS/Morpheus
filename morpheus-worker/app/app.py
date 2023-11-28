@@ -3,7 +3,13 @@ import json
 import logging
 import uuid
 
-from app.handlers.model_handler import ModelHandler
+from fastapi import FastAPI, UploadFile, Depends
+from fastapi.responses import Response
+from ray import serve
+from ray.util.state import get_task
+from ray.util.state import list_nodes
+
+from app.handlers.image_model_handler import ModelHandler
 from app.handlers.text_model_handler import TextModelHandler
 from app.integrations.db_client import DBClient
 from app.models.schemas import (
@@ -14,11 +20,6 @@ from app.models.schemas import (
     TextCategoryEnum,
 )
 from app.settings.settings import get_settings
-from fastapi import FastAPI, UploadFile, Depends
-from fastapi.responses import Response
-from ray import serve
-from ray.util.state import get_task
-from ray.util.state import list_nodes
 
 settings = get_settings()
 
