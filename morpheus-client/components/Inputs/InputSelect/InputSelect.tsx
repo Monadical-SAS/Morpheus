@@ -14,14 +14,15 @@ export interface InputSelectProps {
   selected: string;
   setSelected: (selected: string) => void;
   styles?: CSSProperties;
+  optional?: boolean;
 }
 
 const InputSelect = (props: InputSelectProps) => {
   useEffect(() => {
-    if (props.options.length > 0 && !props.selected) {
+    if (!props.optional && !props.selected && props.options.length > 0) {
       props.setSelected(props.options[0]);
     }
-  }, [props.options]);
+  }, [props.optional, props.selected, props.options]);
 
   return (
     <Select
@@ -34,6 +35,7 @@ const InputSelect = (props: InputSelectProps) => {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
+          {props.optional && <SelectItem value={""}>None</SelectItem>}
           {props.options.map((option) => (
             <SelectItem key={option} value={option}>
               {option}

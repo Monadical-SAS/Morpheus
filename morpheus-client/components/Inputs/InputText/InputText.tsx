@@ -1,4 +1,4 @@
-import React, { CSSProperties, Fragment, ReactNode } from "react";
+import React, { CSSProperties, Fragment, ReactNode, useEffect } from "react";
 import { buildStringFromArray } from "@/utils/strings";
 import { getInputValidators } from "../validators";
 import styles from "../Input.module.scss";
@@ -73,6 +73,7 @@ const InputText = (props: InputTextProps) => {
           className={`${props.iconLeft && styles.pLeft} ${
             props.iconRight && styles.pRight
           }`}
+          value={props.text.value}
         />
 
         {props.iconRight && (

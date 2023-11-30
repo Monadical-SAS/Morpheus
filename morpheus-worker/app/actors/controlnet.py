@@ -41,7 +41,7 @@ class StableDiffusionControlnet(StableDiffusionAbstract):
 
         if request.palette_image:
             palette_image = get_controlnet_palette_base(
-                palette_option=request.palette_option,
+                palette_technique=request.palette_technique,
                 base_image=image,
                 palette_image=Image.open(BytesIO(request.palette_image)).convert("RGB"),
             )

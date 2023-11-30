@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {createContext, ReactNode, useContext, useState} from "react";
+import {createContext, ReactNode, useContext, useEffect, useState,} from "react";
 import {CheckboxState, initializeCheckbox,} from "@/components/Inputs/InputCheckbox/InputCheckbox";
 import {initializeNumber, NumberState,} from "@/components/Inputs/InputNumber/InputNumber";
 import {initializeText, TextState,} from "@/components/Inputs/InputText/InputText";
@@ -28,10 +28,8 @@ export interface IDiffusionContext {
   setSeed: (seed: TextState) => void;
   randomizeSeed: CheckboxState;
   setRandomizeSeed: (randomize: CheckboxState) => void;
-  colorPalette: string;
-  setColorPalette: (colorPalette: string) => void;
-  controlNetType: string;
-  setControlNetType: (controlNetType: string) => void;
+  paletteTechnique: string;
+  setPaletteTechnique: (colorPalette: string) => void;
   embeddingPath: TextState;
   setEmbeddingPath: (embeddingPath: TextState) => void;
   useEmbedding: CheckboxState;
@@ -58,8 +56,7 @@ const initialConfig = {
   seed: initializeText(String(generateRandomNumber(20))),
   randomizeSeed: initializeCheckbox(true),
   strength: initializeNumber(0.8),
-  colorPalette: "None",
-  controlNetType: "Text-to-Image",
+  paletteTechnique: "",
   embeddingPath: initializeText(String("")),
   useEmbedding: initializeCheckbox(false),
   loraPath: initializeText(String("")),
@@ -87,11 +84,8 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
   const [randomizeSeed, setRandomizeSeed] = useState<CheckboxState>(
     initialConfig.randomizeSeed
   );
-  const [colorPalette, setColorPalette] = useState<string>(
-    initialConfig.colorPalette
-  );
-  const [controlNetType, setControlNetType] = useState<string>(
-    initialConfig.controlNetType
+  const [paletteTechnique, setPaletteTechnique] = useState<string>(
+    initialConfig.paletteTechnique
   );
   const [embeddingPath, setEmbeddingPath] = useState<TextState>(
     initialConfig.embeddingPath
@@ -120,8 +114,7 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
       generator: Number(seed.value),
       strength: strength.value,
       negative_prompt: negativePrompt.value,
-      color_palette: colorPalette,
-      controlnet_input_type: controlNetType,
+      palette_technique: paletteTechnique,
       use_lora: useLora.value,
       lora_path: loraPath.value,
       use_embedding: useEmbedding.value,
@@ -157,10 +150,8 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
         setSeed,
         randomizeSeed,
         setRandomizeSeed,
-        colorPalette,
-        setColorPalette,
-        controlNetType,
-        setControlNetType,
+        paletteTechnique,
+        setPaletteTechnique,
         embeddingPath,
         setEmbeddingPath,
         useEmbedding,

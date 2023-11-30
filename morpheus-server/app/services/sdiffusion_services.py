@@ -7,6 +7,7 @@ from app.error.generation import GenerationNotFoundError, ImageTooLargeError
 from app.integrations.generative_ai_engine.generative_ai_interface import (
     GenerativeAIInterface,
 )
+from loguru import logger
 from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
 from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
 from morpheus_data.repository.generation_repository import GenerationRepository
@@ -41,12 +42,12 @@ class StableDiffusionService:
         return self.sd_generator.generate_text2img_images(request=backend_request)
 
     def generate_img2img_images(
-        self,
-        db: Session,
-        prompt: Prompt,
-        image: bytes,
-        palette_image: bytes,
-        email: str,
+            self,
+            db: Session,
+            prompt: Prompt,
+            image: bytes,
+            palette_image: bytes,
+            email: str,
     ) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
@@ -62,12 +63,12 @@ class StableDiffusionService:
         )
 
     def generate_controlnet_images(
-        self,
-        db: Session,
-        prompt: PromptControlNet,
-        image: bytes,
-        palette_image: bytes,
-        email: str,
+            self,
+            db: Session,
+            prompt: PromptControlNet,
+            image: bytes,
+            palette_image: bytes,
+            email: str,
     ) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         image = self._validate_and_clean_image(image=image)
@@ -78,7 +79,7 @@ class StableDiffusionService:
         )
 
     def generate_pix2pix_images(
-        self, db: Session, prompt: Prompt, image: bytes, email: str
+            self, db: Session, prompt: Prompt, image: bytes, email: str
     ) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         backend_request.pipeline = "StableDiffusionInstructPix2PixPipeline"
@@ -88,7 +89,7 @@ class StableDiffusionService:
         )
 
     def generate_inpainting_images(
-        self, db: Session, prompt: Prompt, image: bytes, mask: bytes, email: str
+            self, db: Session, prompt: Prompt, image: bytes, mask: bytes, email: str
     ) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
@@ -102,7 +103,7 @@ class StableDiffusionService:
         )
 
     def generate_upscaling_images(
-        self, db: Session, prompt: Prompt, image: bytes, email: str
+            self, db: Session, prompt: Prompt, image: bytes, email: str
     ) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         backend_request.pipeline = "StableDiffusionUpscalePipeline"
@@ -128,16 +129,12 @@ class StableDiffusionService:
             raise ModelNotFoundError(f"model {model} does not exist in db")
 
     def _build_backend_request(
-        self, db: Session, prompt: Union[Prompt, PromptControlNet], email: str
+            self, db: Session, prompt: Union[Prompt, PromptControlNet], email: str
     ) -> GenerationRequest:
         self._validate_request(db=db, model=prompt.model)
-        pipeline = (
-            hasattr(prompt, "pipeline") and prompt.pipeline or "StableDiffusionPipeline"
-        )
         request_dict = {
             **prompt.dict(),
             "user_id": email,
-            "pipeline": pipeline,
             "scheduler": prompt.sampler,
             "model_id": prompt.model,
         }

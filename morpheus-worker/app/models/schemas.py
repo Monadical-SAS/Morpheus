@@ -40,7 +40,7 @@ class GenerationRequest(BaseModel):
     model_id: str = None
     controlnet_id: str = None
     controlnet_type: str = None
-    palette_option: str = None
+    palette_technique: str = None
 
     class Config:
         schema_extra = {

@@ -16,6 +16,7 @@ import { CloseIcon } from "../icons/close";
 import { InfoIcon } from "../icons/info";
 import { SettingsIcon } from "../icons/settings";
 import styles from "./ImagineSettings.module.scss";
+import { useImagine } from "@/context/ImagineContext";
 
 interface OptionState {
   title: string;
@@ -56,14 +57,13 @@ const ImagineSettings = () => {
     setAmount,
     negativePrompt,
     setNegativePrompt,
-    colorPalette,
-    setColorPalette,
-    controlNetType,
-    setControlNetType,
+    paletteTechnique,
+    setPaletteTechnique,
     useLora,
     loraScale,
     setLoraScale,
   } = useDiffusion();
+  const { colorPaletteFile } = useImagine();
   const activeFeature = activeLink.feature;
 
   const SettingsContent = (
@@ -128,14 +128,6 @@ const ImagineSettings = () => {
 
         <div className={styles.settingItem}>
           <OptionInfo
-            title={"Sampler"}
-            description={"Select a sampler to use."}
-          />
-          <SamplerSelect />
-        </div>
-
-        <div className={styles.settingItem}>
-          <OptionInfo
             title={"CFG Scale"}
             description={
               "Classifier Free Guidance Scale.  This parameter controls how strongly the image " +
@@ -172,29 +164,28 @@ const ImagineSettings = () => {
           />
         </div>
 
-        {(activeFeature === ModelCategory.Image2Image ||
-          (activeFeature === ModelCategory.ControlNet &&
-            controlNetType === "Image-to-Image")) && (
-          <div className={styles.settingItem}>
-            <OptionInfo
-              title={"Strength"}
-              description={
-                "This parameter controls how much the reference image is transformed by adjusting the amount " +
-                "of added noise. The value must be between 0 and 1, where 0 adds no noise and returns the same " +
-                "input image, and 1 completely replaces the image with noise."
-              }
-            />
+        {activeFeature === ModelCategory.Image2Image ||
+          (activeFeature === ModelCategory.ControlNet && (
+            <div className={styles.settingItem}>
+              <OptionInfo
+                title={"Strength"}
+                description={
+                  "This parameter controls how much the reference image is transformed by adjusting the amount " +
+                  "of added noise. The value must be between 0 and 1, where 0 adds no noise and returns the same " +
+                  "input image, and 1 completely replaces the image with noise."
+                }
+              />
 
-            <InputNumber
-              id="inputNumberStrength"
-              minValue={0}
-              maxValue={1}
-              step={0.01}
-              number={strength}
-              setNumber={setStrength}
-            />
-          </div>
-        )}
+              <InputNumber
+                id="inputNumberStrength"
+                minValue={0}
+                maxValue={1}
+                step={0.01}
+                number={strength}
+                setNumber={setStrength}
+              />
+            </div>
+          ))}
 
         <div className={styles.settingItem}>
           <OptionInfo
@@ -208,10 +199,11 @@ const ImagineSettings = () => {
 
           <InputSeed />
         </div>
+      </div>
 
-        <p className="headline-4 white my-10">Model settings</p>
-
-        {activeFeature === ModelCategory.Image2Image && (
+      <p className="headline-4 white my-10">Model settings</p>
+      <div className={styles.optionsContainer}>
+        {activeFeature === ModelCategory.Image2Image && !!colorPaletteFile && (
           <div className={styles.settingItem}>
             <OptionInfo
               title={"Color Palette"}
@@ -222,7 +214,6 @@ const ImagineSettings = () => {
             />
             <InputSelect
               options={[
-                "None",
                 "Quantization - Blend",
                 "Quantization - Contours",
                 "Quantization Gray - Blend",
@@ -238,54 +229,35 @@ const ImagineSettings = () => {
                 "Color Matching - Symmetric",
                 "Linear Color Transfer",
               ]}
-              selected={colorPalette}
-              setSelected={setColorPalette}
+              selected={paletteTechnique}
+              setSelected={setPaletteTechnique}
             />
           </div>
         )}
 
-        {activeFeature === ModelCategory.ControlNet &&
-          controlNetType === "Image-to-Image" && (
-            <div className={styles.settingItem}>
-              <OptionInfo
-                title={"Color Palette"}
-                description={
-                  "Add a color palette image to generate images with these colors. Different techniques for " +
-                  "coloring the images before being applied to the model can be selected."
-                }
-              />
-              <InputSelect
-                options={[
-                  "None",
-                  "Quantization",
-                  "Quantization Gray",
-                  "Random Polygons",
-                  "Random Color Blocks Small",
-                  "Random Color Blocks Large",
-                  "Color Matching - PCA",
-                  "Color Matching - Cholesky",
-                  "Color Matching - Symmetric",
-                  "Linear Color Transfer",
-                ]}
-                selected={colorPalette}
-                setSelected={setColorPalette}
-              />
-            </div>
-          )}
-
-        {activeFeature === ModelCategory.ControlNet && (
+        {activeFeature === ModelCategory.ControlNet && !!colorPaletteFile && (
           <div className={styles.settingItem}>
             <OptionInfo
-              title={"ControlNet Type"}
+              title={"Color Palette"}
               description={
-                "Select the input type: text only (text-to-image) or text and image (image-to-image)."
+                "Add a color palette image to generate images with these colors. Different techniques for " +
+                "coloring the images before being applied to the model can be selected."
               }
             />
-
             <InputSelect
-              options={["Text-to-Image", "Image-to-Image"]}
-              selected={controlNetType}
-              setSelected={setControlNetType}
+              options={[
+                "Quantization",
+                "Quantization Gray",
+                "Random Polygons",
+                "Random Color Blocks Small",
+                "Random Color Blocks Large",
+                "Color Matching - PCA",
+                "Color Matching - Cholesky",
+                "Color Matching - Symmetric",
+                "Linear Color Transfer",
+              ]}
+              selected={paletteTechnique}
+              setSelected={setPaletteTechnique}
             />
           </div>
         )}

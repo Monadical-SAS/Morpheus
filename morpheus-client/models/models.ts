@@ -41,8 +41,7 @@ export interface Prompt {
   generator: number;
   strength: number;
   negative_prompt: string;
-  color_palette: string;
-  controlnet_input_type?: string;
+  palette_technique: string;
   use_lora: boolean;
   lora_path: string;
   lora_scale: number;
