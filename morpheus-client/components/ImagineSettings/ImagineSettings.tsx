@@ -10,7 +10,7 @@ import InputLora from "@/components/Inputs/InputLora/InputLora";
 import SamplerSelect from "../SamplerSelect/SamplerSelect";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
 import { ModelCategory, useModels } from "@/context/ModelsContext";
-import { useDiffusion } from "@/context/SDContext";
+import { useDiffusion } from "@/context/DiffusionContext";
 import { useShowSettings } from "@/hooks/useShowSettings";
 import { CloseIcon } from "../icons/close";
 import { InfoIcon } from "../icons/info";

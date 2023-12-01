@@ -1,11 +1,9 @@
-import { useState } from "react";
-
 import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
 import { initialText, TextState } from "../Inputs/InputText/InputText";
 import MagicPrompt from "../MagicPrompt/MagicPrompt";
 import ImagineSettings from "../ImagineSettings/ImagineSettings";
-import { useDiffusion } from "@/context/SDContext";
+import { useDiffusion } from "@/context/DiffusionContext";
 import { useImagine } from "@/context/ImagineContext";
 import { useModels } from "@/context/ModelsContext";
 import styles from "./ImagineInput.module.scss";

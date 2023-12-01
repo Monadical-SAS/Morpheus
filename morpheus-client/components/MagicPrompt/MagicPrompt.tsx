@@ -2,7 +2,7 @@ import { CSSProperties, useState } from "react";
 import Loader from "../Loaders/LoaderCircle/Loader";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
 import { MagicPromptIcon } from "../icons/magicPrompt";
-import { useDiffusion } from "@/context/SDContext";
+import { useDiffusion } from "@/context/DiffusionContext";
 import { useToastContext } from "@/context/ToastContext";
 import {
   generateMagicPrompt,

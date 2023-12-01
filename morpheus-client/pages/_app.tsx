@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { ToastProvider } from "@/context/ToastContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { DiffusionProvider } from "@/context/SDContext";
+import { DiffusionProvider } from "@/context/DiffusionContext";
 import { ControlNetProvider } from "@/context/CNContext";
 import { ImagineProvider } from "@/context/ImagineContext";
 import { FirebaseTrackingProvider } from "@/context/GoogleAnalyticsContext";

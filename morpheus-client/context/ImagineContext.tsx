@@ -15,12 +15,17 @@ import {
   generateImageWithUpscaling,
   getGeneratedDataWithRetry,
 } from "@/services/sdiffusion";
-import { useDiffusion } from "./SDContext";
+import { useDiffusion } from "./DiffusionContext";
 import { useControlNet } from "./CNContext";
 import { ErrorResponse } from "@/utils/common";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToastContext } from "@/context/ToastContext";
 import { Prompt, ServerResponse } from "@/models/models";
+import { useRouter } from "next/router";
+import {
+  COLOR_PALETTES_CONTROLNET,
+  COLOR_PALETTES_IMAGE_TO_IMAGE,
+} from "@/utils/constants";
 
 type ImagineOptions =
   | "text2img"
@@ -54,7 +59,14 @@ const ImagineContext = createContext<ImagineContextProps>(
 );
 
 const ImagineProvider = (props: { children: ReactNode }) => {
-  const { prompt, buildPrompt, restartSDSettings } = useDiffusion();
+  const { pathname } = useRouter();
+  const {
+    prompt,
+    buildPrompt,
+    restartSDSettings,
+    paletteTechnique,
+    setPaletteTechnique,
+  } = useDiffusion();
   const { buildControlNetPrompt } = useControlNet();
   const { showErrorAlert } = useToastContext();
 
@@ -79,9 +91,8 @@ const ImagineProvider = (props: { children: ReactNode }) => {
           setImg2imgFile(file);
           setImg2ImgURL("");
         })
-        .catch((err) => {
+        .catch(() => {
           showErrorAlert("Error getting file from URL");
-          console.log(err);
         });
     }
   }, [img2ImgURL]);
@@ -95,6 +106,29 @@ const ImagineProvider = (props: { children: ReactNode }) => {
       setResultImages(localResults);
     }
   }, [localResults]);
+
+  // Set default palette technique when changing color palette file
+  useEffect(() => {
+    console.log(paletteTechnique, pathname);
+    if (colorPaletteFile) {
+      if (pathname.endsWith("/img2img")) {
+        const validPalette = COLOR_PALETTES_IMAGE_TO_IMAGE.find(
+          (palette: string) => palette === paletteTechnique
+        );
+        if (!validPalette) {
+          setPaletteTechnique(COLOR_PALETTES_IMAGE_TO_IMAGE[0]);
+        }
+      }
+      if (pathname.endsWith("/controlnet")) {
+        const validPalette = COLOR_PALETTES_CONTROLNET.find(
+          (palette: string) => palette === paletteTechnique
+        );
+        if (!validPalette) {
+          setPaletteTechnique(COLOR_PALETTES_CONTROLNET[0]);
+        }
+      }
+    }
+  }, [colorPaletteFile, paletteTechnique, pathname]);
 
   const generateImages = async (option: ImagineOptions) => {
     setIsLoading(true);

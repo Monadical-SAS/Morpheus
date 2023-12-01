@@ -1,12 +1,11 @@
 import React, { Fragment } from "react";
-import { useDiffusion } from "@/context/SDContext";
-import { generateRandomNumber } from "@/utils/random";
-import { RefreshIcon } from "../../icons/refresh";
+import { useDiffusion } from "@/context/DiffusionContext";
 import InputCheckbox from "../InputCheckbox/InputCheckbox";
 import InputText from "../InputText/InputText";
 
 const InputLora = () => {
-  const { embeddingPath, setEmbeddingPath, useEmbedding, setEmbedding } = useDiffusion();
+  const { embeddingPath, setEmbeddingPath, useEmbedding, setEmbedding } =
+    useDiffusion();
 
   return (
     <Fragment>

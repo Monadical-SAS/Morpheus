@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {createContext, ReactNode, useContext, useEffect, useState,} from "react";
+import {createContext, ReactNode, useContext, useState,} from "react";
 import {CheckboxState, initializeCheckbox,} from "@/components/Inputs/InputCheckbox/InputCheckbox";
 import {initializeNumber, NumberState,} from "@/components/Inputs/InputNumber/InputNumber";
 import {initializeText, TextState,} from "@/components/Inputs/InputText/InputText";
@@ -136,8 +136,8 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
         setPrompt,
         negativePrompt,
         setNegativePrompt,
-        imageSize: imageSize,
-        setImageSize: setImageSize,
+        imageSize,
+        setImageSize,
         scale,
         setScale,
         strength,
