@@ -1,8 +1,8 @@
 """add color palette
 
-Revision ID: 2b5369a1278f
+Revision ID: f512974ad280
 Revises: ff9030a4288b
-Create Date: 2023-11-30 18:50:59.518534
+Create Date: 2023-12-01 04:51:43.073644
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2b5369a1278f'
+revision = 'f512974ad280'
 down_revision = 'ff9030a4288b'
 branch_labels = None
 depends_on = None
