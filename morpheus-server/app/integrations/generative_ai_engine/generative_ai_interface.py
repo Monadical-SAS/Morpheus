@@ -12,19 +12,13 @@ class GenerativeAIInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def generate_img2img_images(
-        *, request: GenerationRequest, image: Image, palette_image: Image = None
-    ) -> str:
+    def generate_img2img_images(*, request: GenerationRequest, image: Image, palette_image: Image = None) -> str:
         raise NotImplementedError("generate_img2img_images method is not implemented")
 
     @staticmethod
     @abstractmethod
-    def generate_controlnet_images(
-        *, request: GenerationRequest, image: Image, palette_image: Image = None
-    ) -> str:
-        raise NotImplementedError(
-            "generate_controlnet_images method is not implemented"
-        )
+    def generate_controlnet_images(*, request: GenerationRequest, image: Image, palette_image: Image = None) -> str:
+        raise NotImplementedError("generate_controlnet_images method is not implemented")
 
     @staticmethod
     @abstractmethod
@@ -33,12 +27,8 @@ class GenerativeAIInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def generate_inpainting_images(
-        *, request: GenerationRequest, image: Image, mask: Image
-    ) -> str:
-        raise NotImplementedError(
-            "generate_inpainting_images method is not implemented"
-        )
+    def generate_inpainting_images(*, request: GenerationRequest, image: Image, mask: Image) -> str:
+        raise NotImplementedError("generate_inpainting_images method is not implemented")
 
     @staticmethod
     @abstractmethod

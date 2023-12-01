@@ -78,12 +78,8 @@ backend_handlers = {
 def get_file_handlers():
     settings = get_settings()
     try:
-        module_import = importlib.import_module(
-            file_handlers[settings.bucket_type]["module"]
-        )
-        file_handler = getattr(
-            module_import, file_handlers[settings.bucket_type]["handler"]
-        )
+        module_import = importlib.import_module(file_handlers[settings.bucket_type]["module"])
+        file_handler = getattr(module_import, file_handlers[settings.bucket_type]["handler"])
         return file_handler()
     except Exception as e:
         print("Error getting file handler", e)
@@ -94,12 +90,8 @@ def get_file_handlers():
 def get_generative_ai_backend():
     settings = get_settings()
     try:
-        module_import = importlib.import_module(
-            backend_handlers[settings.generative_ai_backend]["module"]
-        )
-        backend = getattr(
-            module_import, backend_handlers[settings.generative_ai_backend]["handler"]
-        )
+        module_import = importlib.import_module(backend_handlers[settings.generative_ai_backend]["module"])
+        backend = getattr(module_import, backend_handlers[settings.generative_ai_backend]["handler"])
         return backend()
     except Exception as e:
         print("Error getting generative ai backend", e)

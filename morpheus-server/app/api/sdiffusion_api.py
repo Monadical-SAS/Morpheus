@@ -98,10 +98,10 @@ async def generate_image_from_prompt_image_controlnet(
     response_description="Modify an image with a prompt.",
 )
 async def generate_pix2pix_from_prompt(
-        prompt: Prompt = Depends(),
-        image: UploadFile = File(...),
-        db=Depends(get_db),
-        user=Depends(get_user),
+    prompt: Prompt = Depends(),
+    image: UploadFile = File(...),
+    db=Depends(get_db),
+    user=Depends(get_user),
 ):
     logger.info(f"Generating pix2pix images for prompt {prompt} and user {user['email']}")
     try:
@@ -124,11 +124,11 @@ async def generate_pix2pix_from_prompt(
     response_description="Perform inpainting on an image with a prompt and an image mask.",
 )
 async def generate_inpaint_from_prompt_and_image_and_mask(
-        prompt: Prompt = Depends(),
-        image: UploadFile = File(...),
-        mask: UploadFile = File(...),
-        db=Depends(get_db),
-        user=Depends(get_user),
+    prompt: Prompt = Depends(),
+    image: UploadFile = File(...),
+    mask: UploadFile = File(...),
+    db=Depends(get_db),
+    user=Depends(get_user),
 ):
     logger.info(f"Generating inpainting images for prompt {prompt} and user {user['email']}")
     try:
@@ -154,10 +154,10 @@ async def generate_inpaint_from_prompt_and_image_and_mask(
     response_description="Perform upscaling on an image with a prompt.",
 )
 async def generate_upscale_from_prompt_and_image(
-        prompt: Prompt = Depends(),
-        image: UploadFile = File(...),
-        db=Depends(get_db),
-        user=Depends(get_user),
+    prompt: Prompt = Depends(),
+    image: UploadFile = File(...),
+    db=Depends(get_db),
+    user=Depends(get_user),
 ):
     logger.info(f"Generating upscaling images for prompt {prompt} and user {user['email']}")
     try:

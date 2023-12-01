@@ -105,9 +105,7 @@ class GenerativeAIStableDiffusionRay(GenerativeAIInterface):
         return str(task_id)
 
     @staticmethod
-    def generate_img2img_images(
-        *, request: GenerationRequest, image: Image, palette_image: Image = None
-    ) -> str:
+    def generate_img2img_images(*, request: GenerationRequest, image: Image, palette_image: Image = None) -> str:
         logger.info(f"generate_img2img_images process with request: {request}")
         task_id = send_request_to_ray_server(
             endpoint="img2img",
@@ -118,9 +116,7 @@ class GenerativeAIStableDiffusionRay(GenerativeAIInterface):
         return str(task_id)
 
     @staticmethod
-    def generate_controlnet_images(
-        *, request: GenerationRequest, image: Image, palette_image: Image = None
-    ) -> str:
+    def generate_controlnet_images(*, request: GenerationRequest, image: Image, palette_image: Image = None) -> str:
         logger.info(f"generate_controlnet_images process with request: {request}")
         task_id = send_request_to_ray_server(
             endpoint="controlnet",
@@ -133,27 +129,19 @@ class GenerativeAIStableDiffusionRay(GenerativeAIInterface):
     @staticmethod
     def generate_pix2pix_images(*, request: GenerationRequest, image: Image) -> str:
         logger.info(f"generate_pix2pix_images process with request: {request}")
-        task_id = send_request_to_ray_server(
-            endpoint="pix2pix", request=request, image=image
-        )
+        task_id = send_request_to_ray_server(endpoint="pix2pix", request=request, image=image)
         return str(task_id)
 
     @staticmethod
-    def generate_inpainting_images(
-        *, request: GenerationRequest, image: Image, mask: Image
-    ) -> str:
+    def generate_inpainting_images(*, request: GenerationRequest, image: Image, mask: Image) -> str:
         logger.info(f"generate_inpainting_images process with request: {request}")
-        task_id = send_request_to_ray_server(
-            endpoint="inpainting", request=request, image=image, mask=mask
-        )
+        task_id = send_request_to_ray_server(endpoint="inpainting", request=request, image=image, mask=mask)
         return str(task_id)
 
     @staticmethod
     def generate_upscaling_images(*, request: GenerationRequest, image: Image) -> str:
         logger.info(f"generate_upscaling_images process with request: {request}")
-        task_id = send_request_to_ray_server(
-            endpoint="upscaling", request=request, image=image
-        )
+        task_id = send_request_to_ray_server(endpoint="upscaling", request=request, image=image)
         return str(task_id)
 
     @staticmethod

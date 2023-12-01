@@ -71,8 +71,8 @@ def validate_morpheus_user_and_role(user_email: str, role: str):
 
 
 def get_user(
-        res: Response,
-        authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
+    res: Response,
+    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
 ):
     decoded_token = validate_firebase_user(authorization=authorization)
     validate_morpheus_user_and_role(user_email=decoded_token["email"], role="user")
@@ -81,8 +81,8 @@ def get_user(
 
 
 def get_admin(
-        res: Response,
-        authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
+    res: Response,
+    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
 ):
     decoded_token = validate_firebase_user(authorization=authorization)
     validate_morpheus_user_and_role(user_email=decoded_token["email"], role="admin")

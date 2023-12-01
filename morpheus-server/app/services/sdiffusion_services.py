@@ -26,9 +26,7 @@ class StableDiffusionService:
         self.settings = get_settings()
 
     def get_generation_result(self, db: Session, task_id: str) -> str:
-        generation = self.generation_repository.get_generation(
-            db=db, generation_id=task_id
-        )
+        generation = self.generation_repository.get_generation(db=db, generation_id=task_id)
         if generation is None:
             raise GenerationNotFoundError(f"Generation with id {task_id} not found")
         return generation
@@ -42,12 +40,12 @@ class StableDiffusionService:
         return self.sd_generator.generate_text2img_images(request=backend_request)
 
     def generate_img2img_images(
-            self,
-            db: Session,
-            prompt: Prompt,
-            image: bytes,
-            palette_image: bytes,
-            email: str,
+        self,
+        db: Session,
+        prompt: Prompt,
+        image: bytes,
+        palette_image: bytes,
+        email: str,
     ) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
@@ -63,12 +61,12 @@ class StableDiffusionService:
         )
 
     def generate_controlnet_images(
-            self,
-            db: Session,
-            prompt: PromptControlNet,
-            image: bytes,
-            palette_image: bytes,
-            email: str,
+        self,
+        db: Session,
+        prompt: PromptControlNet,
+        image: bytes,
+        palette_image: bytes,
+        email: str,
     ) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         image = self._validate_and_clean_image(image=image)
@@ -78,19 +76,13 @@ class StableDiffusionService:
             request=backend_request, image=image, palette_image=palette_image
         )
 
-    def generate_pix2pix_images(
-            self, db: Session, prompt: Prompt, image: bytes, email: str
-    ) -> str:
+    def generate_pix2pix_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         backend_request.pipeline = "StableDiffusionInstructPix2PixPipeline"
         image = self._validate_and_clean_image(image=image)
-        return self.sd_generator.generate_pix2pix_images(
-            request=backend_request, image=image
-        )
+        return self.sd_generator.generate_pix2pix_images(request=backend_request, image=image)
 
-    def generate_inpainting_images(
-            self, db: Session, prompt: Prompt, image: bytes, mask: bytes, email: str
-    ) -> str:
+    def generate_inpainting_images(self, db: Session, prompt: Prompt, image: bytes, mask: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         if backend_request.model_id == "stabilityai/stable-diffusion-xl-base-1.0":
             backend_request.pipeline = "StableDiffusionXLInpaintPipeline"
@@ -98,26 +90,18 @@ class StableDiffusionService:
             backend_request.pipeline = "StableDiffusionInpaintPipeline"
         image = self._validate_and_clean_image(image=image)
         mask = self._validate_and_clean_image(image=mask)
-        return self.sd_generator.generate_inpainting_images(
-            request=backend_request, image=image, mask=mask
-        )
+        return self.sd_generator.generate_inpainting_images(request=backend_request, image=image, mask=mask)
 
-    def generate_upscaling_images(
-            self, db: Session, prompt: Prompt, image: bytes, email: str
-    ) -> str:
+    def generate_upscaling_images(self, db: Session, prompt: Prompt, image: bytes, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)
         backend_request.pipeline = "StableDiffusionUpscalePipeline"
         image = self._validate_and_clean_image(image=image)
         if image.width > 512 or image.height > 512:
-            raise ImageTooLargeError(
-                "Image size for upscaling must be less than 512x512"
-            )
+            raise ImageTooLargeError("Image size for upscaling must be less than 512x512")
 
         prompt.width = image.width
         prompt.height = image.height
-        return self.sd_generator.generate_upscaling_images(
-            request=backend_request, image=image
-        )
+        return self.sd_generator.generate_upscaling_images(request=backend_request, image=image)
 
     def generate_magic_prompt(self, prompt: MagicPrompt, email: str) -> str:
         backend_request = TextGenerationRequest(prompt=prompt.prompt, user_id=email)
@@ -129,7 +113,7 @@ class StableDiffusionService:
             raise ModelNotFoundError(f"model {model} does not exist in db")
 
     def _build_backend_request(
-            self, db: Session, prompt: Union[Prompt, PromptControlNet], email: str
+        self, db: Session, prompt: Union[Prompt, PromptControlNet], email: str
     ) -> GenerationRequest:
         self._validate_request(db=db, model=prompt.model)
         request_dict = {
