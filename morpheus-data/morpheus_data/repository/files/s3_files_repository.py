@@ -6,12 +6,11 @@ from typing import Union
 import boto3
 from PIL import Image
 from fastapi import UploadFile
-from rich import print
-
 from morpheus_data.config import get_settings
 from morpheus_data.repository.files.files_interface import FileRepositoryInterface
 from morpheus_data.utils.images import from_image_to_bytes
 from morpheus_data.utils.timer import get_timestamp
+from rich import print
 
 settings = get_settings()
 logger = logging.getLogger(__name__)
@@ -81,7 +80,11 @@ class S3ImagesRepository(FileRepositoryInterface):
         result = self.s3.list_objects_v2(Bucket=IMAGES_BUCKET, Prefix=filepath)
         return [item["Key"] for item in result.get("Contents", [])]
 
-    def get_files(self, folder_name: str = settings.images_temp_bucket, max_keys: int | None = None):
+    def get_files(
+        self,
+        folder_name: str = settings.images_temp_bucket,
+        max_keys: int | None = None,
+    ):
         try:
             params = {"Bucket": IMAGES_BUCKET, "Prefix": folder_name}
             if max_keys:
@@ -135,7 +138,9 @@ class S3ImagesRepository(FileRepositoryInterface):
     def delete_file(self, filepath: str):
         try:
             file_to_delete = [{"Key": filepath}]
-            self.s3.delete_objects(Bucket=IMAGES_BUCKET, Delete={"Objects": file_to_delete})
+            self.s3.delete_objects(
+                Bucket=IMAGES_BUCKET, Delete={"Objects": file_to_delete}
+            )
         except Exception as e:
             logger.error("Error deleting the files from AWS S3")
             logger.error(e)
@@ -148,7 +153,9 @@ class S3ImagesRepository(FileRepositoryInterface):
             try:
                 files_to_delete = [{"Key": file} for file in content]
                 print("Files to delete:", files_to_delete)
-                self.s3.delete_objects(Bucket=IMAGES_BUCKET, Delete={"Objects": files_to_delete})
+                self.s3.delete_objects(
+                    Bucket=IMAGES_BUCKET, Delete={"Objects": files_to_delete}
+                )
             except Exception as e:
                 logger.error("Error deleting the files from AWS S3")
                 logger.error(e)

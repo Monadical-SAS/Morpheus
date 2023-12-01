@@ -1,5 +1,5 @@
 class UserNotFoundError(Exception):
-    """ Raised when a user is not found in the database """
+    """Raised when a user is not found in the database"""
 
     def __init__(self, msg=None):
         self.msg = msg if msg else "The requested user could not be found."

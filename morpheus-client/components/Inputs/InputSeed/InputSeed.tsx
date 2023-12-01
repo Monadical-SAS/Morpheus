@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { useDiffusion } from "@/context/SDContext";
+import { useDiffusion } from "@/context/DiffusionContext";
 import { generateRandomNumber } from "@/utils/random";
 import { RefreshIcon } from "../../icons/refresh";
 import InputCheckbox from "../InputCheckbox/InputCheckbox";

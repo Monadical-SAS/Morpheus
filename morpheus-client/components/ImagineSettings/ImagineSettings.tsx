@@ -10,11 +10,17 @@ import InputLora from "@/components/Inputs/InputLora/InputLora";
 import SamplerSelect from "../SamplerSelect/SamplerSelect";
 import AppTooltip from "@/components/Tooltip/AppTooltip";
 import { ModelCategory, useModels } from "@/context/ModelsContext";
-import { useDiffusion } from "@/context/SDContext";
+import { useDiffusion } from "@/context/DiffusionContext";
 import { useShowSettings } from "@/hooks/useShowSettings";
 import { CloseIcon } from "../icons/close";
 import { InfoIcon } from "../icons/info";
 import { SettingsIcon } from "../icons/settings";
+import { useImagine } from "@/context/ImagineContext";
+import {
+  COLOR_PALETTES_CONTROLNET,
+  COLOR_PALETTES_IMAGE_TO_IMAGE,
+  IMAGE_SIZES,
+} from "@/utils/constants";
 import styles from "./ImagineSettings.module.scss";
 
 interface OptionState {
@@ -56,10 +62,13 @@ const ImagineSettings = () => {
     setAmount,
     negativePrompt,
     setNegativePrompt,
+    paletteTechnique,
+    setPaletteTechnique,
     useLora,
     loraScale,
     setLoraScale,
   } = useDiffusion();
+  const { colorPaletteFile } = useImagine();
   const activeFeature = activeLink.feature;
 
   const SettingsContent = (
@@ -109,14 +118,7 @@ const ImagineSettings = () => {
           />
 
           <InputSelect
-            options={[
-              "480x480",
-              "512x512",
-              "640x640",
-              "720x720",
-              "768x768",
-              "1024x1024",
-            ]}
+            options={IMAGE_SIZES}
             selected={imageSize}
             setSelected={setImageSize}
           />
@@ -160,28 +162,28 @@ const ImagineSettings = () => {
           />
         </div>
 
-        {(activeFeature === ModelCategory.Image2Image ||
-          activeFeature === ModelCategory.ControlNet) && (
-          <div className={styles.settingItem}>
-            <OptionInfo
-              title={"Strength"}
-              description={
-                "This parameter controls how much the reference image is transformed by adjusting the amount " +
-                "of added noise. The value must be between 0 and 1, where 0 adds no noise and returns the same " +
-                "input image, and 1 completely replaces the image with noise."
-              }
-            />
+        {activeFeature === ModelCategory.Image2Image ||
+          (activeFeature === ModelCategory.ControlNet && (
+            <div className={styles.settingItem}>
+              <OptionInfo
+                title={"Strength"}
+                description={
+                  "This parameter controls how much the reference image is transformed by adjusting the amount " +
+                  "of added noise. The value must be between 0 and 1, where 0 adds no noise and returns the same " +
+                  "input image, and 1 completely replaces the image with noise."
+                }
+              />
 
-            <InputNumber
-              id="inputNumberStrength"
-              minValue={0}
-              maxValue={1}
-              step={0.01}
-              number={strength}
-              setNumber={setStrength}
-            />
-          </div>
-        )}
+              <InputNumber
+                id="inputNumberStrength"
+                minValue={0}
+                maxValue={1}
+                step={0.01}
+                number={strength}
+                setNumber={setStrength}
+              />
+            </div>
+          ))}
 
         <div className={styles.settingItem}>
           <OptionInfo
@@ -199,6 +201,40 @@ const ImagineSettings = () => {
 
       <p className="headline-4 white my-10">Model settings</p>
       <div className={styles.optionsContainer}>
+        {activeFeature === ModelCategory.Image2Image && !!colorPaletteFile && (
+          <div className={styles.settingItem}>
+            <OptionInfo
+              title={"Color Palette"}
+              description={
+                "Add a color palette image to generate images with these colors. Different techniques for " +
+                "coloring the images before being applied to the model can be selected."
+              }
+            />
+            <InputSelect
+              options={COLOR_PALETTES_IMAGE_TO_IMAGE}
+              selected={paletteTechnique}
+              setSelected={setPaletteTechnique}
+            />
+          </div>
+        )}
+
+        {activeFeature === ModelCategory.ControlNet && !!colorPaletteFile && (
+          <div className={styles.settingItem}>
+            <OptionInfo
+              title={"Color Palette"}
+              description={
+                "Add a color palette image to generate images with these colors. Different techniques for " +
+                "coloring the images before being applied to the model can be selected."
+              }
+            />
+            <InputSelect
+              options={COLOR_PALETTES_CONTROLNET}
+              selected={paletteTechnique}
+              setSelected={setPaletteTechnique}
+            />
+          </div>
+        )}
+
         {activeFeature === ModelCategory.ControlNet && (
           <div className={styles.settingItem}>
             <OptionInfo

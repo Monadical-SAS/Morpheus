@@ -6,33 +6,50 @@ from PIL import Image
 
 from app.actors.common.sd_base import StableDiffusionAbstract
 from app.models.schemas import ModelRequest
+from app.utils.color_palette import get_controlnet_palette_base
 from app.utils.controlnet import preprocessing_image
 
 
 @ray.remote(num_gpus=1)
 class StableDiffusionControlnet(StableDiffusionAbstract):
     def __init__(
-            self, *,
-            pipeline: str = "StableDiffusionXLImg2ImgPipeline",
-            scheduler: str = "DDPMScheduler",
-            model_id: str = "stabilityai/stable-diffusion-xl-refiner-1.0",
-            controlnet_id: str = "lllyasviel/sd-controlnet-canny"
+        self,
+        *,
+        pipeline: str,
+        scheduler: str,
+        model_id: str,
+        controlnet_id: str,
     ):
+        pipeline = pipeline or "StableDiffusionControlNetImg2ImgPipeline"
+        scheduler = scheduler or "DDPMScheduler"
+        model_id = model_id or "runwayml/stable-diffusion-v1-5"
+        controlnet_id = controlnet_id or "lllyasviel/sd-controlnet-canny"
+        self.logger = logging.getLogger("ray")
         super().__init__(
             pipeline=pipeline,
             scheduler=scheduler,
             model_id=model_id,
-            controlnet_id=controlnet_id
+            controlnet_id=controlnet_id,
         )
-        self.logger = logging.getLogger("ray")
 
     def generate(self, request: ModelRequest):
         self.logger.info(f"StableDiffusionControlnet.generate: request: {request}")
         self.set_generator(request.generator)
+        controlnet_type = request.controlnet_type or "canny"
         image = Image.open(BytesIO(request.image)).convert("RGB")
-        base_image = preprocessing_image.get(request.controlnet_type)(image)
+        base_image = preprocessing_image.get(controlnet_type)(image)
+
+        if request.palette_image:
+            palette_image = get_controlnet_palette_base(
+                palette_technique=request.palette_technique,
+                base_image=image,
+                palette_image=Image.open(BytesIO(request.palette_image)).convert("RGB"),
+            )
+            image = palette_image if palette_image else image
+
         result = self.pipeline(
-            image=base_image,
+            image=image,
+            control_image=base_image,
             prompt=request.prompt,
             width=request.width,
             height=request.height,

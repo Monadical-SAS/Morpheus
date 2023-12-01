@@ -1,22 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { createContext, ReactNode, useContext, useState } from "react";
-import {
-  CheckboxState,
-  initializeCheckbox,
-} from "@/components/Inputs/InputCheckbox/InputCheckbox";
-import {
-  initializeNumber,
-  NumberState,
-} from "@/components/Inputs/InputNumber/InputNumber";
-import {
-  initializeText,
-  TextState,
-} from "@/components/Inputs/InputText/InputText";
-import { getRandomStringFromArray } from "@/utils/arrays";
-import { generateRandomNumber } from "@/utils/random";
-import { useModels } from "@/context/ModelsContext";
-import { Prompt } from "@/models/models";
-import { PROMPTS, DEFAULT_NEGATIVE_PROMPT } from "@/utils/constants";
+import {createContext, ReactNode, useContext, useState,} from "react";
+import {CheckboxState, initializeCheckbox,} from "@/components/Inputs/InputCheckbox/InputCheckbox";
+import {initializeNumber, NumberState,} from "@/components/Inputs/InputNumber/InputNumber";
+import {initializeText, TextState,} from "@/components/Inputs/InputText/InputText";
+import {getRandomStringFromArray} from "@/utils/arrays";
+import {generateRandomNumber} from "@/utils/random";
+import {useModels} from "@/context/ModelsContext";
+import {Prompt} from "@/models/models";
+import {DEFAULT_NEGATIVE_PROMPT, PROMPTS} from "@/utils/constants";
 
 export interface IDiffusionContext {
   prompt: TextState;
@@ -37,6 +28,8 @@ export interface IDiffusionContext {
   setSeed: (seed: TextState) => void;
   randomizeSeed: CheckboxState;
   setRandomizeSeed: (randomize: CheckboxState) => void;
+  paletteTechnique: string;
+  setPaletteTechnique: (colorPalette: string) => void;
   embeddingPath: TextState;
   setEmbeddingPath: (embeddingPath: TextState) => void;
   useEmbedding: CheckboxState;
@@ -63,6 +56,7 @@ const initialConfig = {
   seed: initializeText(String(generateRandomNumber(20))),
   randomizeSeed: initializeCheckbox(true),
   strength: initializeNumber(0.8),
+  paletteTechnique: "",
   embeddingPath: initializeText(String("")),
   useEmbedding: initializeCheckbox(false),
   loraPath: initializeText(String("")),
@@ -70,41 +64,9 @@ const initialConfig = {
   loraScale: initializeNumber(1.0),
 };
 
-const defaultState = {
-  prompt: initialConfig.prompt,
-  setPrompt: () => {},
-  negativePrompt: initialConfig.negativePrompt,
-  setNegativePrompt: () => {},
-  imageSize: initialConfig.size,
-  setImageSize: () => {},
-  scale: initialConfig.scale,
-  setScale: () => {},
-  strength: initialConfig.strength,
-  setStrength: () => {},
-  steps: initialConfig.steps,
-  setSteps: () => {},
-  amount: initialConfig.amount,
-  setAmount: () => {},
-  seed: initialConfig.seed,
-  setSeed: () => {},
-  randomizeSeed: initialConfig.randomizeSeed,
-  setRandomizeSeed: () => {},
-  embeddingPath: initialConfig.embeddingPath,
-  setEmbeddingPath: () => {},
-  useEmbedding: initialConfig.useEmbedding,
-  setEmbedding: () => {},
-  loraPath: initialConfig.loraPath,
-  setLoraPath: () => {},
-  useLora: initialConfig.useLora,
-  setLora: () => {},
-  loraScale: initialConfig.scale,
-  setLoraScale: () => {},
-  buildPrompt: () => {},
-  restartSDSettings: () => {},
-};
-
-const DiffusionContext = createContext<IDiffusionContext>(defaultState);
-
+const DiffusionContext = createContext<IDiffusionContext>(
+  {} as IDiffusionContext
+);
 const DiffusionProvider = (props: { children: ReactNode }) => {
   const { selectedModel, sampler } = useModels();
 
@@ -121,6 +83,9 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
   const [seed, setSeed] = useState<TextState>(initialConfig.seed);
   const [randomizeSeed, setRandomizeSeed] = useState<CheckboxState>(
     initialConfig.randomizeSeed
+  );
+  const [paletteTechnique, setPaletteTechnique] = useState<string>(
+    initialConfig.paletteTechnique
   );
   const [embeddingPath, setEmbeddingPath] = useState<TextState>(
     initialConfig.embeddingPath
@@ -149,6 +114,7 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
       generator: Number(seed.value),
       strength: strength.value,
       negative_prompt: negativePrompt.value,
+      palette_technique: paletteTechnique,
       use_lora: useLora.value,
       lora_path: loraPath.value,
       use_embedding: useEmbedding.value,
@@ -170,8 +136,8 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
         setPrompt,
         negativePrompt,
         setNegativePrompt,
-        imageSize: imageSize,
-        setImageSize: setImageSize,
+        imageSize,
+        setImageSize,
         scale,
         setScale,
         strength,
@@ -184,6 +150,8 @@ const DiffusionProvider = (props: { children: ReactNode }) => {
         setSeed,
         randomizeSeed,
         setRandomizeSeed,
+        paletteTechnique,
+        setPaletteTechnique,
         embeddingPath,
         setEmbeddingPath,
         useEmbedding,

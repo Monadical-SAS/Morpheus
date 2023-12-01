@@ -12,12 +12,12 @@ class GenerativeAIInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def generate_img2img_images(*, request: GenerationRequest, image: Image) -> str:
+    def generate_img2img_images(*, request: GenerationRequest, image: Image, palette_image: Image = None) -> str:
         raise NotImplementedError("generate_img2img_images method is not implemented")
 
     @staticmethod
     @abstractmethod
-    def generate_controlnet_images(*, request: GenerationRequest, image: Image) -> str:
+    def generate_controlnet_images(*, request: GenerationRequest, image: Image, palette_image: Image = None) -> str:
         raise NotImplementedError("generate_controlnet_images method is not implemented")
 
     @staticmethod

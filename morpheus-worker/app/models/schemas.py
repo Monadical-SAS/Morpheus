@@ -25,7 +25,8 @@ class TextCategoryEnum(str, Enum):
 
 class GenerationRequest(BaseModel):
     task_id: str = None
-    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    user_id: str = "user@morpheus.com"
+    prompt: str = "a beautiful cat with blue eyes, artwork, trending on artstation"
     negative_prompt: str = "bad, low res, ugly, deformed"
     width: int = 768
     height: int = 768
@@ -34,12 +35,12 @@ class GenerationRequest(BaseModel):
     num_images_per_prompt: int = 1
     generator: int = -1
     strength: Optional[float] = 0.8
-    pipeline: str = settings.default_pipeline
-    scheduler: str = settings.default_scheduler
-    model_id: str = settings.default_model
+    pipeline: str = None
+    scheduler: str = None
+    model_id: str = None
     controlnet_id: str = None
     controlnet_type: str = None
-    user_id: str = "user@morpheus.com"
+    palette_technique: str = None
 
     class Config:
         schema_extra = {
@@ -50,11 +51,12 @@ class GenerationRequest(BaseModel):
 class ModelRequest(GenerationRequest):
     image: Optional[bytes] = None
     mask: Optional[bytes] = None
+    palette_image: Optional[bytes] = None
 
 
 class TextGenerationRequest(BaseModel):
     task_id: str = None
-    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    prompt: str = "a beautiful cat with blue eyes, artwork, trending on artstation"
     model_id: str = "Gustavosta/MagicPrompt-Stable-Diffusion"
     user_id: str
 

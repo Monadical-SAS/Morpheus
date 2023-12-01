@@ -22,3 +22,7 @@ rich
 typer
 omegaconf
 flower
+dynamicprompts[attentiongrabber,magicprompt]
+scikit-image
+scikit-learn
+beautifulsoup4

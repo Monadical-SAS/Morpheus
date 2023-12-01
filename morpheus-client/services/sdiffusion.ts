@@ -29,11 +29,13 @@ export const generateImageWithText2Img = async (request: IRequest) => {
 export const sendImageRequestToSDBackend = async (
   request: IRequest,
   image: File | null,
+  palette_img: File | null,
   url: string
 ) => {
   try {
     const formData = new FormData();
     formData.append("image", image ?? "");
+    formData.append("palette_image", palette_img ?? "");
     const response = await httpInstance.post(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -48,22 +50,26 @@ export const sendImageRequestToSDBackend = async (
 
 export const generateImageWithImg2Img = async (
   request: IRequest,
-  image: File | null
+  image: File | null,
+  palette_img?: File | null
 ) => {
   return await sendImageRequestToSDBackend(
     request,
     image,
+    palette_img || null,
     "/sdiffusion/img2img/prompt/"
   );
 };
 
 export const generateImageWithControlNet = async (
   request: IRequest,
-  image: File | null
+  image: File | null,
+  palette_img?: File | null
 ) => {
   return await sendImageRequestToSDBackend(
     request,
     image,
+    palette_img || null,
     "/sdiffusion/controlnet/prompt/"
   );
 };
@@ -75,6 +81,7 @@ export const generateImageWithPix2Pix = async (
   return await sendImageRequestToSDBackend(
     request,
     image,
+    null,
     "/sdiffusion/pix2pix/prompt/"
   );
 };
@@ -124,6 +131,7 @@ export const generateImageWithUpscaling = async (
   return await sendImageRequestToSDBackend(
     request,
     image,
+    null,
     "/sdiffusion/upscale/prompt/"
   );
 };

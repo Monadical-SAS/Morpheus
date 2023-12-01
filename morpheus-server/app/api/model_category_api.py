@@ -16,11 +16,7 @@ category_service = ModelCategoryService()
 
 
 @router.post("", response_model=Union[Response, ModelCategory])
-async def create_model_category(
-        *, category: ModelCategory,
-        db: Session = Depends(get_db),
-        user=Depends(get_admin)
-):
+async def create_model_category(*, category: ModelCategory, db: Session = Depends(get_db), user=Depends(get_admin)):
     logger.info(f"Creating model category {category} by user {user}")
     try:
         category_created = await category_service.create_model_category(db=db, model_category=category)

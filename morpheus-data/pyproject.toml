@@ -2,7 +2,7 @@
 name = "morpheus-data"
 version = "0.2.0"
 description = ""
-authors = [{name = "Monadical", email = "devops@monadical.com"}]
+authors = [{ name = "Monadical", email = "devops@monadical.com" }]
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
@@ -20,7 +20,8 @@ dependencies = [
     "torch==1.13.1",
     "diffusers==0.20.0",
     "dynamicprompts[attentiongrabber,magicprompt]",
-    "safetensors"
+    "safetensors",
+    "loguru"
 ]
 
 [build-system]

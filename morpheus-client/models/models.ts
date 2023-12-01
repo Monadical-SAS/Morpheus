@@ -41,6 +41,7 @@ export interface Prompt {
   generator: number;
   strength: number;
   negative_prompt: string;
+  palette_technique: string;
   use_lora: boolean;
   lora_path: string;
   lora_scale: number;

@@ -14,15 +14,12 @@ Base = declarative_base()
 
 
 def get_db():
-    logger.info("Creating database session")
     db = SessionLocal()
     try:
-        logger.info("Yielding database session")
         yield db
     except PendingRollbackError as e:
         logger.error("Exception occurred: {}".format(str(e)))
         db.rollback()
         raise
     finally:
-        logger.info("Closing database session")
         db.close()

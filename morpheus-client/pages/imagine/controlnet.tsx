@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
 import ImagineBase from "@/components/ImagineBase/ImagineBase";
-import { useDiffusion } from "@/context/SDContext";
+import { useDiffusion } from "@/context/DiffusionContext";
 import { useImagine } from "@/context/ImagineContext";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 
@@ -24,6 +24,7 @@ const ControlNetImg: NextPage = () => {
       formValid={isFormValid}
       showImageInput={true}
       showMaskInput={false}
+      showPaletteInput={true}
       handleGenerate={handleGenerate}
     />
   );

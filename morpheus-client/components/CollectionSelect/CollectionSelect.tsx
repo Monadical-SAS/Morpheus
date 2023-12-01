@@ -40,8 +40,6 @@ const CollectionSelect = (props: CollectionSelectProps) => {
 
   useEffect(() => {
     if (collections && selectedCollection) {
-      console.log("selectedCollection", selectedCollection);
-      console.log("collections", collections);
       props.setSelectedCollectionId(
         collections.find(
           (collection: Collection) => collection.name === selectedCollection

@@ -1,5 +1,43 @@
 export const MOBILE_SCREEN_WIDTH = 768;
 
+export const IMAGE_SIZES = [
+  "480x480",
+  "512x512",
+  "640x640",
+  "720x720",
+  "768x768",
+  "1024x1024",
+];
+
+export const COLOR_PALETTES_IMAGE_TO_IMAGE = [
+  "Quantization - Blend",
+  "Quantization - Contours",
+  "Quantization Gray - Blend",
+  "Quantization Gray - Contours",
+  "Random Polygons - Blend",
+  "Random Polygons - Contours",
+  "Random Color Blocks Small - Blend",
+  "Random Color Blocks Small - Contours",
+  "Random Color Blocks Large - Blend",
+  "Random Color Blocks Large - Contours",
+  "Color Matching - PCA",
+  "Color Matching - Cholesky",
+  "Color Matching - Symmetric",
+  "Linear Color Transfer",
+];
+
+export const COLOR_PALETTES_CONTROLNET = [
+  "Quantization",
+  "Quantization Gray",
+  "Random Polygons",
+  "Random Color Blocks Small",
+  "Random Color Blocks Large",
+  "Color Matching - PCA",
+  "Color Matching - Cholesky",
+  "Color Matching - Symmetric",
+  "Linear Color Transfer",
+];
+
 export const PROMPTS = [
   "portrait photo of a asia old warrior chief, tribal panther make up, blue on red, side profile, looking away, serious eyes, 50mm portrait photography, hard rim lighting photography–beta –ar 2:3 –beta –upbeta –upbeta",
   "Keanu Reeves portrait photo of a asia old warrior chief, tribal panther make up, blue on red, side profile, looking away, serious eyes, 50mm portrait photography, hard rim lighting photography–beta –ar 2:3 –beta –upbeta –beta –upbeta –beta –upbeta",

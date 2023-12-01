@@ -22,16 +22,6 @@ class GenerativeAIBackendEnum(str, Enum):
 class Settings(SettingsData):
     environment: EnvironmentEnum = EnvironmentEnum.local
 
-    model_parent_path: str = "/mnt/"
-    default_model: str = "stabilityai/stable-diffusion-2"
-    controlnet_default_model = "lllyasviel/sd-controlnet-canny"
-    magicprompt_default_model = "Gustavosta/MagicPrompt-Stable-Diffusion"
-    upscaling_model_default = "stabilityai/stable-diffusion-x4-upscaler"
-    default_scheduler: str = "PNDMScheduler"
-    hf_auth_token: str = ""
-    enable_float32: bool = False
-    max_num_images: int = 4
-
     allowed_origins: str = "http://localhost:3000,http://localhost:3001"
     generative_ai_backend: str = GenerativeAIBackendEnum.ray
     ray_backend_url: str = "http://worker-ray:8000"
@@ -88,12 +78,8 @@ backend_handlers = {
 def get_file_handlers():
     settings = get_settings()
     try:
-        module_import = importlib.import_module(
-            file_handlers[settings.bucket_type]["module"]
-        )
-        file_handler = getattr(
-            module_import, file_handlers[settings.bucket_type]["handler"]
-        )
+        module_import = importlib.import_module(file_handlers[settings.bucket_type]["module"])
+        file_handler = getattr(module_import, file_handlers[settings.bucket_type]["handler"])
         return file_handler()
     except Exception as e:
         print("Error getting file handler", e)
@@ -104,12 +90,8 @@ def get_file_handlers():
 def get_generative_ai_backend():
     settings = get_settings()
     try:
-        module_import = importlib.import_module(
-            backend_handlers[settings.generative_ai_backend]["module"]
-        )
-        backend = getattr(
-            module_import, backend_handlers[settings.generative_ai_backend]["handler"]
-        )
+        module_import = importlib.import_module(backend_handlers[settings.generative_ai_backend]["module"])
+        backend = getattr(module_import, backend_handlers[settings.generative_ai_backend]["handler"])
         return backend()
     except Exception as e:
         print("Error getting generative ai backend", e)

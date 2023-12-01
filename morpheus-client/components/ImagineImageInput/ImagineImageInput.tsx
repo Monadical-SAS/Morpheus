@@ -6,7 +6,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-
+import Link from "next/link";
+import ColorPaletteGenerator from "@/components/ColorPaletteGenerator/ColorPaletteGenerator";
 import Modal from "../Modal/Modal";
 import MaskPaintingCanvas from "../MaskPaintingCanvas/MaskPaintingCanvas";
 import { CloseIcon } from "../icons/close";
@@ -14,19 +15,18 @@ import { UploadImageIcon } from "../icons/uploadImage";
 import { PaintImageIcon } from "../icons/paintImage";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import styles from "./ImagineImageInput.module.scss";
-import Link from "next/link";
 
 interface DragDropFileProps {
+  id?: string;
   imageFile: File | null;
   setImageFile: (file: File | null) => void;
   label?: string;
   buttonLabel?: string;
   icon?: ReactNode;
   styles?: CSSProperties;
-  showEditImage?: boolean;
   showPaintImageLink?: boolean;
   showPaintMask?: boolean;
-  id?: string;
+  showColorPalette?: boolean;
 }
 
 const ImagineImageInput = (props: DragDropFileProps) => {
@@ -136,7 +136,9 @@ const ImagineImageInput = (props: DragDropFileProps) => {
         )}
       </form>
 
-      {props.showPaintImageLink || props.showPaintMask ? (
+      {props.showPaintImageLink ||
+      props.showPaintMask ||
+      props.showColorPalette ? (
         <Fragment>
           <div className={styles.verticalSeparator} />
         </Fragment>
@@ -159,6 +161,18 @@ const ImagineImageInput = (props: DragDropFileProps) => {
             onClick={() => setShowEditModal(true)}
           >
             {isMobile ? "Paint" : "Paint an image"}
+          </a>
+        </div>
+      )}
+
+      {props.showColorPalette && (
+        <div className={styles.formInputItem}>
+          <PaintImageIcon />
+          <a
+            className="underline body-1 main pointer"
+            onClick={() => setShowEditModal(true)}
+          >
+            {isMobile ? "Generate" : "Generate a color palette"}
           </a>
         </div>
       )}
@@ -193,11 +207,17 @@ const ImagineImageInput = (props: DragDropFileProps) => {
         isOpen={showEditModal}
         toggleModal={() => setShowEditModal(!showEditModal)}
       >
-        <MaskPaintingCanvas
-          width={isMobile && width ? width - 88 : 512}
-          height={isMobile && width ? width - 88 : 512}
-          closeModal={() => setShowEditModal(false)}
-        />
+        {props.showPaintMask && (
+          <MaskPaintingCanvas
+            width={isMobile && width ? width - 88 : 512}
+            height={isMobile && width ? width - 88 : 512}
+            closeModal={() => setShowEditModal(false)}
+          />
+        )}
+
+        {props.showColorPalette && (
+          <ColorPaletteGenerator closeModal={() => setShowEditModal(false)} />
+        )}
       </Modal>
     </Fragment>
   );

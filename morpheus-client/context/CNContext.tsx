@@ -1,6 +1,12 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { getAvailableModels } from "@/services/models";
-import { useDiffusion } from "./SDContext";
+import { useDiffusion } from "./DiffusionContext";
 import { ModelCategory } from "./ModelsContext";
 
 export interface IControlNetContext {
@@ -32,20 +38,27 @@ const ControlNetProvider = (props: { children: ReactNode }) => {
   const { buildPrompt } = useDiffusion();
   // ControlNet Models
   const [controlNetModels, setControlNetModels] = useState<any>([]);
-  const [selectedCNModel, setSelectedCNModel] = useState<string>(initialConfig.selectedCNModel);
-  const [controlNetType, setControlNetType] = useState<string>(initialConfig.controlNetType);
+  const [selectedCNModel, setSelectedCNModel] = useState<string>(
+    initialConfig.selectedCNModel
+  );
+  const [controlNetType, setControlNetType] = useState<string>(
+    initialConfig.controlNetType
+  );
 
   useEffect(() => {
     // Fetch ControlNet models
     async function getControlNetModels() {
-    const response = await getAvailableModels("/models");
-    if (response.success && response.data) {
-      const filteredModels = response.data.filter((model: any) =>
-        model.categories.some((category: any) => category.name === ModelCategory.Processing)
-      );
-      setControlNetModels(filteredModels || []);
+      const response = await getAvailableModels("/models");
+      if (response.success && response.data) {
+        const filteredModels = response.data.filter((model: any) =>
+          model.categories.some(
+            (category: any) => category.name === ModelCategory.Processing
+          )
+        );
+        setControlNetModels(filteredModels || []);
+      }
     }
-  }
+
     getControlNetModels();
   }, []);
 

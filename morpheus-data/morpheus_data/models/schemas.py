@@ -3,8 +3,9 @@ from enum import Enum
 from typing import Optional, List
 from uuid import UUID
 
-from morpheus_data.config import get_settings
 from pydantic import BaseModel, Field, validator
+
+from morpheus_data.config import get_settings
 
 settings = get_settings()
 
@@ -44,11 +45,13 @@ class User(BaseModel):
                 "name": "Juan Arias",
                 "bio": "Juan Arias biography",
                 "avatar": "https://upload.wikimedia.org/wikipedia/en/8/86/Avatar_Aang.png",
-                "roles": [{
-                    "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
-                    "name": "admin",
-                    "description": "Administrator role",
-                }],
+                "roles": [
+                    {
+                        "id": "c0a80121-7ac0-11eb-9439-0242ac130002",
+                        "name": "admin",
+                        "description": "Administrator role",
+                    }
+                ],
             }
         }
 
@@ -105,8 +108,6 @@ class ModelKind(str, Enum):
 
 class Prompt(BaseModel):
     prompt: str = Field(..., min_length=1)
-    model: str
-    sampler: str
     negative_prompt: str
     width: int = 512
     height: int = 512
@@ -115,11 +116,14 @@ class Prompt(BaseModel):
     num_images_per_prompt: int = 1
     generator: int = -1
     strength: Optional[float] = 0.75
+    model: str
+    sampler: str
     use_lora: Optional[bool] = False
     lora_path: Optional[str] = ""
     lora_scale: Optional[float] = 1.0
     use_embedding: Optional[bool] = False
     embedding_path: Optional[str] = ""
+    palette_technique: str = None
 
     @validator("model")
     def check_if_empty_model(cls, model):
@@ -147,8 +151,6 @@ class Prompt(BaseModel):
         schema_extra = {
             "example": {
                 "prompt": "Prompt text",
-                "model": "stabilityai/stable-diffusion-2",
-                "sampler": "Euler",
                 "negative_prompt": "Negative prompt text",
                 "width": 512,
                 "height": 512,
@@ -157,11 +159,14 @@ class Prompt(BaseModel):
                 "num_images_per_prompt": 1,
                 "generator": -1,
                 "strength": 0.75,
+                "model": "stabilityai/stable-diffusion-2",
+                "sampler": "Euler",
                 "use_lora": False,
                 "lora_path": "",
                 "lora_scale": 1.0,
                 "use_embedding": False,
                 "embedding_path": "",
+                "palette_technique": "Quantization",
             }
         }
 
@@ -316,7 +321,7 @@ class Generation(BaseModel):
 
 class GenerationRequest(BaseModel):
     task_id: UUID = None
-    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    prompt: str = "a beautiful cat with blue eyes, artwork, trending on artstation"
     negative_prompt: str = "bad, low res, ugly, deformed"
     width: int = 768
     height: int = 768
@@ -325,16 +330,19 @@ class GenerationRequest(BaseModel):
     num_images_per_prompt: int = 1
     generator: int = -1
     strength: Optional[float] = 0.75
-    pipeline: str = settings.default_pipeline
-    scheduler: str = settings.default_scheduler
-    model_id: str = settings.default_model
+    pipeline: str = None
+    scheduler: str = None
+    model_id: str = None
     controlnet_id: str = None
     controlnet_type: str = None
+    palette_technique: str = None
     user_id: str
 
 
 class TextGenerationRequest(BaseModel):
     task_id: UUID = None
-    prompt: str = "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    prompt: str = (
+        "a beautiful cat with blue eyes, artwork, fujicolor, trending on artstation"
+    )
     model_id: str = "Gustavosta/MagicPrompt-Stable-Diffusion"
     user_id: str

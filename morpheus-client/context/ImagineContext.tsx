@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   createContext,
   ReactNode,
@@ -16,12 +15,17 @@ import {
   generateImageWithUpscaling,
   getGeneratedDataWithRetry,
 } from "@/services/sdiffusion";
-import { useDiffusion } from "./SDContext";
+import { useDiffusion } from "./DiffusionContext";
 import { useControlNet } from "./CNContext";
 import { ErrorResponse } from "@/utils/common";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToastContext } from "@/context/ToastContext";
 import { Prompt, ServerResponse } from "@/models/models";
+import { useRouter } from "next/router";
+import {
+  COLOR_PALETTES_CONTROLNET,
+  COLOR_PALETTES_IMAGE_TO_IMAGE,
+} from "@/utils/constants";
 
 type ImagineOptions =
   | "text2img"
@@ -43,34 +47,34 @@ export interface ImagineContextProps {
   setImg2imgFile: (image: File | null) => void;
   maskFile: File | null;
   setMaskFile: (image: File | null) => void;
+  colorPaletteFile: File | null;
+  setColorPaletteFile: (image: File | null) => void;
   generateImages: (option: ImagineOptions) => void;
   resultImages: Array<ImagineResult>;
   clearResults: () => void;
 }
 
-const defaultState = {
-  isLoading: false,
-  setImg2ImgURL: () => console.log("setImg2ImgURL"),
-  img2imgFile: null,
-  setImg2imgFile: () => console.log("setImg2imgFile"),
-  maskFile: null,
-  setMaskFile: () => console.log("setMaskFile"),
-  generateImages: () => console.log("generateImages"),
-  resultImages: [],
-  clearResults: () => console.log("clearResults"),
-};
-
-const ImagineContext = createContext<ImagineContextProps>(defaultState);
+const ImagineContext = createContext<ImagineContextProps>(
+  {} as ImagineContextProps
+);
 
 const ImagineProvider = (props: { children: ReactNode }) => {
-  const { prompt, buildPrompt, restartSDSettings } = useDiffusion();
+  const { pathname } = useRouter();
+  const {
+    prompt,
+    buildPrompt,
+    restartSDSettings,
+    paletteTechnique,
+    setPaletteTechnique,
+  } = useDiffusion();
   const { buildControlNetPrompt } = useControlNet();
   const { showErrorAlert } = useToastContext();
 
-  // Images settings
+  // Image to image images
   const [img2ImgURL, setImg2ImgURL] = useState<string>("");
   const [img2imgFile, setImg2imgFile] = useState<File | null>(null);
   const [maskFile, setMaskFile] = useState<File | null>(null);
+  const [colorPaletteFile, setColorPaletteFile] = useState<File | null>(null);
 
   // Image results
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -87,18 +91,43 @@ const ImagineProvider = (props: { children: ReactNode }) => {
           setImg2imgFile(file);
           setImg2ImgURL("");
         })
-        .catch((err) => {
+        .catch(() => {
           showErrorAlert("Error getting file from URL");
-          console.log(err);
         });
     }
   }, [img2ImgURL]);
+
+  useEffect(() => {
+    maskFile && setMaskFile(null);
+  }, [img2imgFile]);
 
   useEffect(() => {
     if (localResults.length > 0 && resultImages.length === 0) {
       setResultImages(localResults);
     }
   }, [localResults]);
+
+  // Set default palette technique when changing color palette file
+  useEffect(() => {
+    if (colorPaletteFile) {
+      if (pathname.endsWith("/img2img")) {
+        const validPalette = COLOR_PALETTES_IMAGE_TO_IMAGE.find(
+          (palette: string) => palette === paletteTechnique
+        );
+        if (!validPalette) {
+          setPaletteTechnique(COLOR_PALETTES_IMAGE_TO_IMAGE[0]);
+        }
+      }
+      if (pathname.endsWith("/controlnet")) {
+        const validPalette = COLOR_PALETTES_CONTROLNET.find(
+          (palette: string) => palette === paletteTechnique
+        );
+        if (!validPalette) {
+          setPaletteTechnique(COLOR_PALETTES_CONTROLNET[0]);
+        }
+      }
+    }
+  }, [colorPaletteFile, paletteTechnique, pathname]);
 
   const generateImages = async (option: ImagineOptions) => {
     setIsLoading(true);
@@ -118,7 +147,6 @@ const ImagineProvider = (props: { children: ReactNode }) => {
     const responseModel: ServerResponse = await getGeneratedDataWithRetry(
       taskId
     );
-    console.log("responseModel", responseModel);
     if (!responseModel.success) {
       setIsLoading(false);
       showErrorAlert(
@@ -136,9 +164,17 @@ const ImagineProvider = (props: { children: ReactNode }) => {
       if (option === "text2img") {
         return await generateImageWithText2Img(request);
       } else if (option === "img2img") {
-        return await generateImageWithImg2Img(request, img2imgFile);
+        return await generateImageWithImg2Img(
+          request,
+          img2imgFile,
+          colorPaletteFile
+        );
       } else if (option === "controlnet") {
-        return await generateImageWithControlNet(request, img2imgFile);
+        return await generateImageWithControlNet(
+          request,
+          img2imgFile,
+          colorPaletteFile
+        );
       } else if (option === "pix2pix") {
         return await generateImageWithPix2Pix(request, img2imgFile);
       } else if (option === "inpainting") {
@@ -189,6 +225,8 @@ const ImagineProvider = (props: { children: ReactNode }) => {
         setImg2imgFile,
         maskFile,
         setMaskFile,
+        colorPaletteFile,
+        setColorPaletteFile,
         generateImages,
         resultImages,
         clearResults,

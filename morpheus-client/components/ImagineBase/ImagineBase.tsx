@@ -13,12 +13,20 @@ import styles from "./ImagineBase.module.scss";
 interface MainContainerProps {
   showImageInput?: boolean;
   showMaskInput?: boolean;
+  showPaletteInput?: boolean;
   formValid: boolean;
   handleGenerate: () => void;
 }
 
 const ImagineBase = (props: MainContainerProps) => {
-  const { img2imgFile, setImg2imgFile, maskFile, setMaskFile } = useImagine();
+  const {
+    img2imgFile,
+    setImg2imgFile,
+    maskFile,
+    setMaskFile,
+    colorPaletteFile,
+    setColorPaletteFile,
+  } = useImagine();
   const { isMobile } = useWindowDimensions();
 
   const ImagineInputInstance = (
@@ -35,8 +43,8 @@ const ImagineBase = (props: MainContainerProps) => {
           label={"Base Image"}
           imageFile={img2imgFile}
           setImageFile={setImg2imgFile}
-          showEditImage={props.showMaskInput}
           showPaintImageLink={true}
+          showColorPalette={false}
         />
       )}
       {props.showMaskInput && (
@@ -46,6 +54,16 @@ const ImagineBase = (props: MainContainerProps) => {
           setImageFile={setMaskFile}
           icon={<UploadMaskIcon />}
           showPaintMask={img2imgFile !== null}
+          showColorPalette={false}
+        />
+      )}
+      {props.showPaletteInput && (
+        <ImagineImageInput
+          label={"Palette image"}
+          imageFile={colorPaletteFile}
+          setImageFile={setColorPaletteFile}
+          showPaintMask={false}
+          showColorPalette={img2imgFile !== null}
         />
       )}
     </div>

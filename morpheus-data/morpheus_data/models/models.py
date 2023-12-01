@@ -1,11 +1,21 @@
 import uuid
 
-from morpheus_data.database.database import Base
 from sqlalchemy import ARRAY, DateTime, Enum
-from sqlalchemy import Boolean, Column, String, ForeignKey, Integer, Float, Numeric, JSON
+from sqlalchemy import (
+    Boolean,
+    Column,
+    String,
+    ForeignKey,
+    Integer,
+    Float,
+    Numeric,
+    JSON,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+
+from morpheus_data.database.database import Base
 
 
 class BaseModel(Base):
@@ -27,7 +37,9 @@ class User(BaseModel):
     collections = relationship("Collection", back_populates="owner")
     prompts = relationship("Prompt", back_populates="owner")
     artworks = relationship("ArtWork", back_populates="owner")
-    roles = relationship("Role", secondary="user_role_association", back_populates="users")
+    roles = relationship(
+        "Role", secondary="user_role_association", back_populates="users"
+    )
 
 
 class Role(BaseModel):
@@ -36,7 +48,9 @@ class Role(BaseModel):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(64), unique=True, index=True)
     description = Column(String(512), nullable=True)
-    users = relationship("User", secondary="user_role_association", back_populates="roles")
+    users = relationship(
+        "User", secondary="user_role_association", back_populates="roles"
+    )
 
 
 class UserRoleAssociation(BaseModel):
@@ -66,20 +80,23 @@ class Prompt(BaseModel):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     prompt = Column(String(2048), nullable=True)
     negative_prompt = Column(String(2048), nullable=True)
-    model = Column(String(64), nullable=True)
-    sampler = Column(String(64), nullable=True)
     width = Column(Integer, nullable=True)
     height = Column(Integer, nullable=True)
     num_inference_steps = Column(Integer, nullable=True)
     guidance_scale = Column(Integer, nullable=True)
     num_images_per_prompt = Column(Integer, nullable=True)
+    generator = Column(Numeric, nullable=True)
+    strength = Column(Float, nullable=True)
+    model = Column(String(64), nullable=True)
+    sampler = Column(String(64), nullable=True)
     use_lora: Column(Boolean, nullable=True)
     lora_path: Column(String(512), nullable=True)
     lora_scale: Column(Float, nullable=True)
     use_embedding: Column(Boolean, nullable=True)
     embedding_path: Column(String(512), nullable=True)
-    generator = Column(Numeric, nullable=True)
-    strength = Column(Float, nullable=True)
+    palette_technique = Column(String(64), nullable=True)
+    controlnet_model = Column(String(64), nullable=True)
+    controlnet_type = Column(String(64), nullable=True)
     owner_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
     owner = relationship("User", back_populates="prompts")
     artworks = relationship("ArtWork", back_populates="prompt")
@@ -107,9 +124,7 @@ class ModelCategory(BaseModel):
     name = Column(String(64), nullable=True)
     description = Column(String(512), nullable=True)
     models = relationship(
-        "MLModel",
-        secondary="model_category_association",
-        back_populates="categories"
+        "MLModel", secondary="model_category_association", back_populates="categories"
     )
 
 
@@ -123,9 +138,7 @@ class MLModel(BaseModel):
     description = Column(String(512), nullable=True)
     url_docs = Column(String(512), nullable=True)
     categories = relationship(
-        "ModelCategory",
-        secondary="model_category_association",
-        back_populates="models"
+        "ModelCategory", secondary="model_category_association", back_populates="models"
     )
     extra_params = Column(JSON, nullable=True)
     is_active = Column(Boolean, default=True)
@@ -146,5 +159,5 @@ class Generation(BaseModel):
     status = Column(
         Enum("PENDING", "COMPLETED", "FAILED", name="generation_status"),
         nullable=False,
-        default="PENDING"
+        default="PENDING",
     )
