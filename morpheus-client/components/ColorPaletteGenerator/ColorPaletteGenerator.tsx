@@ -63,7 +63,7 @@ const ColorPaletteGenerator = (props: ColorPaletteGeneratorProps) => {
       <h2 className="headline-3 white">Generate Color Palette</h2>
 
       <canvas ref={canvasRef} width={500} height={500} hidden />
-      <div className="w-[500px] h-[500px] grid mt-5 p-1 bg-white">
+      <div className="w-full h-[300px] md:w-[500px] md:h-[500px] grid mt-5 p-1 bg-white">
         {colors.map((color, index) => (
           <div key={index}>
             <input
@@ -81,15 +81,18 @@ const ColorPaletteGenerator = (props: ColorPaletteGeneratorProps) => {
           Add Color
         </button>
 
-        <span className="material-icons text-white" onClick={resetColors}>
+        <span
+          className="material-icons text-white cursor-pointer"
+          onClick={resetColors}
+        >
           replay
         </span>
 
-        <span onClick={props.closeModal}>
+        <span onClick={props.closeModal} className="cursor-pointer">
           <CloseIcon width={"24"} height={"24"} color={"#FFFFFF"} />
         </span>
 
-        <span onClick={handleCompleted}>
+        <span onClick={handleCompleted} className="cursor-pointer">
           <CheckIcon width={"24"} height={"24"} color={"#FFFFFF"} />
         </span>
       </div>
