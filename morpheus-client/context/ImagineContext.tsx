@@ -109,7 +109,6 @@ const ImagineProvider = (props: { children: ReactNode }) => {
 
   // Set default palette technique when changing color palette file
   useEffect(() => {
-    console.log(paletteTechnique, pathname);
     if (colorPaletteFile) {
       if (pathname.endsWith("/img2img")) {
         const validPalette = COLOR_PALETTES_IMAGE_TO_IMAGE.find(
@@ -148,7 +147,6 @@ const ImagineProvider = (props: { children: ReactNode }) => {
     const responseModel: ServerResponse = await getGeneratedDataWithRetry(
       taskId
     );
-    console.log("responseModel", responseModel);
     if (!responseModel.success) {
       setIsLoading(false);
       showErrorAlert(
