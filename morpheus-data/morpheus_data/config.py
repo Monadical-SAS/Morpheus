@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     bucket_type: str = "S3"
     models_bucket: str
     images_bucket: str
-    temp_images_folder: str
+    images_temp_bucket: str
 
     temp_model_folder: str = "./tmp"
     default_scheduler: str = "DDPMScheduler"

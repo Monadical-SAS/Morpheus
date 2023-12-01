@@ -82,7 +82,7 @@ class S3ImagesRepository(FileRepositoryInterface):
 
     def get_files(
         self,
-        folder_name: str = settings.temp_images_folder,
+        folder_name: str = settings.images_temp_bucket,
         max_keys: int | None = None,
     ):
         try:

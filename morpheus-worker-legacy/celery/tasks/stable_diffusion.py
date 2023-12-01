@@ -109,7 +109,7 @@ def generate_stable_diffusion_text2img_output_task(
         # upload to s3
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(
-            images=images, user_bucket=settings.temp_images_folder
+            images=images, user_bucket=settings.images_temp_bucket
         )
         url_images = file_service.get_image_urls(filenames=filename)
 
@@ -158,7 +158,7 @@ def generate_stable_diffusion_xl_text2img_output_task(
         # upload to s3
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(
-            images=images, user_bucket=settings.temp_images_folder
+            images=images, user_bucket=settings.images_temp_bucket
         )
         url_images = file_service.get_image_urls(filenames=filename)
 
@@ -341,7 +341,7 @@ def generate_stable_diffusion_img2img_output_task(
         # upload to s3
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(
-            images=images, user_bucket=settings.temp_images_folder
+            images=images, user_bucket=settings.images_temp_bucket
         )
         url_images = file_service.get_image_urls(filenames=filename)
         return url_images
@@ -462,7 +462,7 @@ def generate_stable_diffusion_controlnet_output_task(
         # upload to s3
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(
-            images=images, user_bucket=settings.temp_images_folder
+            images=images, user_bucket=settings.images_temp_bucket
         )
         url_images = file_service.get_image_urls(filenames=filename)
         return url_images
@@ -511,7 +511,7 @@ def generate_stable_diffusion_pix2pix_output_task(
         # Upload generated images to s3.
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(
-            images=images, user_bucket=settings.temp_images_folder
+            images=images, user_bucket=settings.images_temp_bucket
         )
         url_images = file_service.get_image_urls(filenames=filename)
         return url_images
@@ -560,7 +560,7 @@ def generate_stable_diffusion_inpaint_output_task(
         # Upload generated images to s3.
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(
-            images=images, user_bucket=settings.temp_images_folder
+            images=images, user_bucket=settings.images_temp_bucket
         )
         url_images = file_service.get_image_urls(filenames=filename)
         return url_images
@@ -609,7 +609,7 @@ def generate_stable_diffusion_upscale_output_task(
         # Upload generated images to s3.
         logger.info("Uploading image(s) to s3 and getting the url(s)")
         filename = file_service.upload_multiple_images_to_s3(
-            images=images, user_bucket=settings.temp_images_folder
+            images=images, user_bucket=settings.images_temp_bucket
         )
         url_images = file_service.get_image_urls(filenames=filename)
         return url_images

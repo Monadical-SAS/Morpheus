@@ -26,7 +26,7 @@ class S3Client:
         img_byte_arr = BytesIO()
         file.save(img_byte_arr, format="png")
         img_byte_arr = img_byte_arr.getvalue()
-        key = f"{settings.temp_images_folder}/{file_name}"
+        key = f"{settings.images_temp_bucket}/{file_name}"
 
         self.logger.info(f"StableDiffusionV2Text2Img.generate: key: {key}")
         self.logger.info(f"StableDiffusionV2Text2Img.generate: file_name: {file_name}")

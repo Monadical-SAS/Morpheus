@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     aws_access_key_id: str
     aws_secret_access_key: str
     images_bucket: str
-    temp_images_folder: str
+    images_temp_bucket: str
     models_folder: str = "/mnt/"
 
     # Models config
