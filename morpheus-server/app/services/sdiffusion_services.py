@@ -7,7 +7,6 @@ from app.error.generation import GenerationNotFoundError, ImageTooLargeError
 from app.integrations.generative_ai_engine.generative_ai_interface import (
     GenerativeAIInterface,
 )
-from loguru import logger
 from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
 from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
 from morpheus_data.repository.generation_repository import GenerationRepository
