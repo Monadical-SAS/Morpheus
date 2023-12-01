@@ -43,8 +43,8 @@ const ImagineBase = (props: MainContainerProps) => {
           label={"Base Image"}
           imageFile={img2imgFile}
           setImageFile={setImg2imgFile}
-          showEditImage={props.showMaskInput}
           showPaintImageLink={true}
+          showColorPalette={false}
         />
       )}
       {props.showMaskInput && (
@@ -54,6 +54,7 @@ const ImagineBase = (props: MainContainerProps) => {
           setImageFile={setMaskFile}
           icon={<UploadMaskIcon />}
           showPaintMask={img2imgFile !== null}
+          showColorPalette={false}
         />
       )}
       {props.showPaletteInput && (
@@ -61,7 +62,8 @@ const ImagineBase = (props: MainContainerProps) => {
           label={"Palette image"}
           imageFile={colorPaletteFile}
           setImageFile={setColorPaletteFile}
-          showPaintMask={img2imgFile !== null}
+          showPaintMask={false}
+          showColorPalette={img2imgFile !== null}
         />
       )}
     </div>

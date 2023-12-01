@@ -42,7 +42,6 @@ export interface ImagineContextProps {
   setImg2imgFile: (image: File | null) => void;
   maskFile: File | null;
   setMaskFile: (image: File | null) => void;
-  setColorPaletteURL: (image: string) => void;
   colorPaletteFile: File | null;
   setColorPaletteFile: (image: File | null) => void;
   generateImages: (option: ImagineOptions) => void;
@@ -50,33 +49,19 @@ export interface ImagineContextProps {
   clearResults: () => void;
 }
 
-const defaultState = {
-  isLoading: false,
-  setImg2ImgURL: () => console.log("setImg2ImgURL"),
-  img2imgFile: null,
-  setImg2imgFile: () => console.log("setImg2imgFile"),
-  maskFile: null,
-  setMaskFile: () => console.log("setMaskFile"),
-  setColorPaletteURL: () => console.log("setColorPaletteURL"),
-  colorPaletteFile: null,
-  setColorPaletteFile: () => console.log("setColorPaletteFile"),
-  generateImages: () => console.log("generateImages"),
-  resultImages: [],
-  clearResults: () => console.log("clearResults"),
-};
-
-const ImagineContext = createContext<ImagineContextProps>(defaultState);
+const ImagineContext = createContext<ImagineContextProps>(
+  {} as ImagineContextProps
+);
 
 const ImagineProvider = (props: { children: ReactNode }) => {
   const { prompt, buildPrompt, restartSDSettings } = useDiffusion();
   const { buildControlNetPrompt } = useControlNet();
   const { showErrorAlert } = useToastContext();
 
-  // Images settings
+  // Image to image images
   const [img2ImgURL, setImg2ImgURL] = useState<string>("");
   const [img2imgFile, setImg2imgFile] = useState<File | null>(null);
   const [maskFile, setMaskFile] = useState<File | null>(null);
-  const [colorPaletteURL, setColorPaletteURL] = useState<string>("");
   const [colorPaletteFile, setColorPaletteFile] = useState<File | null>(null);
 
   // Image results
@@ -100,20 +85,6 @@ const ImagineProvider = (props: { children: ReactNode }) => {
         });
     }
   }, [img2ImgURL]);
-
-  useEffect(() => {
-    if (colorPaletteURL) {
-      getFileBlobFromURL(colorPaletteURL)
-        .then((file: File) => {
-          setColorPaletteFile(file);
-          setColorPaletteURL("");
-        })
-        .catch((err) => {
-          showErrorAlert("Error getting file from URL");
-          console.log(err);
-        });
-    }
-  }, [colorPaletteURL]);
 
   useEffect(() => {
     maskFile && setMaskFile(null);
@@ -222,7 +193,6 @@ const ImagineProvider = (props: { children: ReactNode }) => {
         setImg2imgFile,
         maskFile,
         setMaskFile,
-        setColorPaletteURL: setColorPaletteURL,
         colorPaletteFile,
         setColorPaletteFile,
         generateImages,

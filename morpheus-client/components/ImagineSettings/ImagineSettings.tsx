@@ -15,8 +15,13 @@ import { useShowSettings } from "@/hooks/useShowSettings";
 import { CloseIcon } from "../icons/close";
 import { InfoIcon } from "../icons/info";
 import { SettingsIcon } from "../icons/settings";
-import styles from "./ImagineSettings.module.scss";
 import { useImagine } from "@/context/ImagineContext";
+import {
+  COLOR_PALETTES_CONTROLNET,
+  COLOR_PALETTES_IMAGE_TO_IMAGE,
+  IMAGE_SIZES,
+} from "@/utils/constants";
+import styles from "./ImagineSettings.module.scss";
 
 interface OptionState {
   title: string;
@@ -113,14 +118,7 @@ const ImagineSettings = () => {
           />
 
           <InputSelect
-            options={[
-              "480x480",
-              "512x512",
-              "640x640",
-              "720x720",
-              "768x768",
-              "1024x1024",
-            ]}
+            options={IMAGE_SIZES}
             selected={imageSize}
             setSelected={setImageSize}
           />
@@ -213,22 +211,7 @@ const ImagineSettings = () => {
               }
             />
             <InputSelect
-              options={[
-                "Quantization - Blend",
-                "Quantization - Contours",
-                "Quantization Gray - Blend",
-                "Quantization Gray - Contours",
-                "Random Polygons - Blend",
-                "Random Polygons - Contours",
-                "Random Color Blocks Small - Blend",
-                "Random Color Blocks Small - Contours",
-                "Random Color Blocks Large - Blend",
-                "Random Color Blocks Large - Contours",
-                "Color Matching - PCA",
-                "Color Matching - Cholesky",
-                "Color Matching - Symmetric",
-                "Linear Color Transfer",
-              ]}
+              options={COLOR_PALETTES_IMAGE_TO_IMAGE}
               selected={paletteTechnique}
               setSelected={setPaletteTechnique}
             />
@@ -245,17 +228,7 @@ const ImagineSettings = () => {
               }
             />
             <InputSelect
-              options={[
-                "Quantization",
-                "Quantization Gray",
-                "Random Polygons",
-                "Random Color Blocks Small",
-                "Random Color Blocks Large",
-                "Color Matching - PCA",
-                "Color Matching - Cholesky",
-                "Color Matching - Symmetric",
-                "Linear Color Transfer",
-              ]}
+              options={COLOR_PALETTES_CONTROLNET}
               selected={paletteTechnique}
               setSelected={setPaletteTechnique}
             />
