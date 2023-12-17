@@ -24,6 +24,14 @@ opencv-contrib-python-headless
 scikit-image
 scikit-learn
 
+# 3D texturing
+matplotlib
+einops
+imageio
+opencv-python
+torch-vision
+xatlas
+
 # Text generation
 dynamicprompts[attentiongrabber,magicprompt]
 
