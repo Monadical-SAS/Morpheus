@@ -43,3 +43,6 @@ class Settings(BaseSettings):
 def get_settings():
     settings = Settings()
     return settings
+
+
+settings = get_settings()

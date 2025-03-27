@@ -9,6 +9,7 @@ ARG BASE_IMAGE
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install torch
+RUN pip install kaolin==0.15.0 -f https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.1.1_cu121.html
 RUN pip install -r requirements.txt
 
 WORKDIR /opt

@@ -4,6 +4,7 @@ from abc import ABC
 from pathlib import Path
 
 import torch
+
 from app.settings.settings import get_settings
 
 settings = get_settings()
@@ -16,7 +17,8 @@ class StableDiffusionAbstract(ABC):
         pipeline: str = settings.default_pipeline,
         model_id: str = settings.default_model,
         scheduler: str = settings.default_scheduler,
-        controlnet_id: str = None
+        controlnet_id: str = None,
+        dtype: torch.dtype = None
     ):
         self.logger = logging.getLogger("ray")
         self.generator = None
@@ -42,7 +44,9 @@ class StableDiffusionAbstract(ABC):
         # Check the environment variable/settings file to determine if we should
         # be using 16 bit or 32 bit precision when generating images.  16 bit
         # will be faster, but 32 bit may have higher image quality.
-        self.dtype = torch.float32 if settings.enable_float32 else torch.float16
+        self.dtype = (
+            dtype or torch.float32 if settings.enable_float32 else torch.float16
+        )
         self.logger.info(
             "Floating point precision during image generation: " + str(self.dtype)
         )
