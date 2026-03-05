@@ -7,7 +7,6 @@ import { Collection } from "@/models/models";
 import { useAuth } from "@/context/AuthContext";
 import { getUserCollections } from "@/services/collection";
 import { useToastContext } from "@/context/ToastContext";
-import styles from "./Collections.module.scss";
 
 const Collections = () => {
   const { user } = useAuth();
@@ -40,18 +39,18 @@ const Collections = () => {
 
   return (
     <Fragment>
-      <div className={styles.collectionsContainer}>
-        <div className={styles.header}>
+      <div className="w-full h-auto flex flex-col my-12 max-md:mx-6 max-md:max-w-full">
+        <div className="flex flex-row justify-between items-center">
           <p className="headline-2 white">Collections</p>
         </div>
 
-        <div className={styles.collectionList}>
+        <div className="flex flex-row flex-wrap gap-6 mt-8">
           {collections.length > 0 ? (
             collections.map((collection: Collection, collectionId: number) => (
               <CollectionCard collection={collection} key={collectionId} />
             ))
           ) : (
-            <p className={`base-1 white ${styles.noCollections}`}>
+            <p className="base-1 white -mt-6">
               No collections found
             </p>
           )}

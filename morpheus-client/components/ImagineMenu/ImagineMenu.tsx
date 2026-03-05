@@ -13,7 +13,6 @@ import { EnhanceIcon } from "../icons/enhance";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
 import Modal from "@/components/Modal/Modal";
 import { useToastContext } from "@/context/ToastContext";
-import styles from "./ImagineMenu.module.scss";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 
 const categoryConfigs = [
@@ -108,7 +107,7 @@ const ImagineMenu = () => {
         text={activeFeatureLabel}
         onClick={() => setShowMobileModal(true)}
         loading={false}
-        className={styles.mobileButton}
+        className="mx-6 mt-24 mb-6 w-[calc(100%-48px)]"
       />
       <Modal
         width={"610px"}
@@ -120,8 +119,8 @@ const ImagineMenu = () => {
       </Modal>
     </Fragment>
   ) : (
-    <div className={styles.imagineMenu}>
-      <div className={styles.brandContainer}>
+    <div className="flex-[0_0_300px] bg-[#252238] max-h-full overflow-y-auto p-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-md:flex-1 max-md:w-[calc(100%-24px)] max-md:max-w-[100vw] max-md:h-auto max-md:mt-[94px] max-md:mx-3 max-md:p-0 max-md:flex max-md:flex-row max-md:justify-center max-md:gap-2 max-md:rounded-t-lg">
+      <div className="w-full h-auto max-md:hidden">
         <Brand />
       </div>
 
@@ -149,10 +148,10 @@ const FeatureItem = (props: FeatureItemProps) => {
 
   return (
     <div
-      className={`${styles.menuItem} ${props.active ? styles.active : ""}`}
+      className={`w-full h-auto flex flex-row items-center cursor-pointer mt-4 ml-6 font-bold mb-6 hover:text-white max-md:flex-row max-md:p-2 ${props.active ? "text-[#B3005E]" : ""}`}
       onClick={handleClick}
     >
-      <span className={styles.icon}>
+      <span className="mr-2 max-md:mr-4">
         {React.cloneElement(props.icon as React.ReactElement, {
           color: props.active ? "#B3005E" : "#6D6D94",
         })}

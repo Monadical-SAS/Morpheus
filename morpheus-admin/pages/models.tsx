@@ -7,7 +7,6 @@ import { Button, ButtonSize, ButtonVariant } from "@/components/atoms/button";
 import { Select } from "@/components/atoms/select";
 import { deleteModel, getAvailableModels, updateModel } from "@/api/models";
 import { Model, Response } from "@/lib/models";
-import styles from "@/styles/pages/Home.module.scss";
 import { useToastContext } from "@/context/ToastContext";
 import { TextInput } from "@/components/atoms/input";
 import { LoadingContext } from "@/context/LoadingContext";
@@ -121,7 +120,7 @@ export default function Home() {
   return (
     <PrivateRoute>
       <MainLayout>
-        <main className={styles.main}>
+        <main className="w-screen flex-1 py-12 px-6">
           <h1 className="text-5xl font-bold">Models</h1>
 
           <div className="my-5">

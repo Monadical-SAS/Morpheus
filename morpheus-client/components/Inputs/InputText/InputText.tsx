@@ -1,7 +1,6 @@
 import React, { CSSProperties, Fragment, ReactNode, useEffect } from "react";
 import { buildStringFromArray } from "@/utils/strings";
 import { getInputValidators } from "../validators";
-import styles from "../Input.module.scss";
 
 export interface TextState {
   value: string;
@@ -53,15 +52,15 @@ const InputText = (props: InputTextProps) => {
 
   return (
     <Fragment>
-      <div className={styles.inputIconContainer} style={props.styles}>
+      <div className="w-full flex flex-col box-border relative" style={props.styles}>
         {props.label && (
-          <label htmlFor={props.id} className="base-2 white">
+          <label htmlFor={props.id} className="base-2 white mb-[10px]">
             {props.label}
           </label>
         )}
 
         {props.iconLeft && (
-          <span className={styles.iconLeft}>{props.iconLeft}</span>
+          <span className="absolute top-4 left-4">{props.iconLeft}</span>
         )}
 
         <input
@@ -70,18 +69,16 @@ const InputText = (props: InputTextProps) => {
           placeholder={props.placeholder}
           disabled={props.disabled}
           onChange={(event) => handleTextChange(event)}
-          className={`${props.iconLeft && styles.pLeft} ${
-            props.iconRight && styles.pRight
-          }`}
+          className={`w-full flex-1 outline-none h-12 min-h-[48px] px-5 rounded-lg text-[#8B90B2] border border-[#312E47] bg-[#252238] focus:border-[#d9006d] transition-all duration-500 placeholder:text-[#8B90B2] ${props.iconLeft ? "pl-11" : ""} ${props.iconRight ? "pr-11" : ""}`}
           value={props.text.value}
         />
 
         {props.iconRight && (
-          <span className={styles.iconRight}>{props.iconRight}</span>
+          <span className="absolute top-3 right-4 cursor-pointer">{props.iconRight}</span>
         )}
       </div>
 
-      <small className={styles.error}>
+      <small className="caption-1 text-red-500">
         {buildStringFromArray(props.text.validators)}
       </small>
     </Fragment>

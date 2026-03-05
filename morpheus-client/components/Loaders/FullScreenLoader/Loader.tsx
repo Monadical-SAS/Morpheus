@@ -1,5 +1,4 @@
 import Loader from "../LoaderCircle/Loader";
-import styles from "./Loader.module.scss";
 
 type FullScreenLoaderProps = {
   isLoading: boolean;
@@ -7,7 +6,7 @@ type FullScreenLoaderProps = {
 
 const FullScreenLoader = (props: FullScreenLoaderProps) => {
   return (
-    <div className={styles.fullScreenLoader}>
+    <div className="w-screen h-screen absolute top-0 left-0 z-[9999] flex justify-center items-center">
       <Loader
         isLoading={props.isLoading}
         message={"Loading..."}

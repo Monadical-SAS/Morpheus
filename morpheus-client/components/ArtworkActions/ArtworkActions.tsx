@@ -14,7 +14,6 @@ import { useToastContext } from "@/context/ToastContext";
 import { downloadImage } from "@/utils/images";
 import { deleteArtWork } from "@/services/artworks";
 import { ArtWork } from "@/models/models";
-import styles from "./ArtworkActions.module.scss";
 
 interface ImageActionsProps {
   artwork: ArtWork;
@@ -76,8 +75,8 @@ const ArtworkActions = (props: ImageActionsProps) => {
 
   return (
     <Fragment>
-      <div className={styles.actionButtons} style={props.styles}>
-        <div className={styles.artworkActions}>
+      <div className="h-8 w-auto mt-6 flex flex-row justify-between items-center flex-wrap gap-y-6 max-md:h-auto max-md:justify-start" style={props.styles}>
+        <div className="flex flex-row items-center [&>span]:mr-4 [&>span]:text-[#312E47] [&>span]:cursor-pointer [&>span]:text-[28px]">
           <AppTooltip content={"Download"} direction={"top"}>
             <span onClick={handleImageDownload}>
               <DownloadIcon width={"24"} height={"24"} />
@@ -110,7 +109,7 @@ const ArtworkActions = (props: ImageActionsProps) => {
           <ShareButton artwork={props.artwork} />
         </div>
 
-        <div className={styles.imagineActions}>
+        <div className="flex flex-row items-center [&>span]:mr-3 [&>span]:cursor-pointer [&>span]:text-[28px]">
           <ButtonSetImage2
             redirect={"img2img"}
             icon={<Img2ImgIcon width={"24"} height={"24"} color={"#6D6D94"} />}

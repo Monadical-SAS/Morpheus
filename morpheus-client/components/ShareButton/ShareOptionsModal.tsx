@@ -1,7 +1,6 @@
 import React from "react";
 import ShareOptions from "./ShareOptions";
 import { ShareButtonProps } from "./ShareButton";
-import styles from "./ShareButton.module.scss";
 
 interface ShareButtonsProps extends ShareButtonProps {
   closeForm: () => void;
@@ -9,7 +8,7 @@ interface ShareButtonsProps extends ShareButtonProps {
 
 const ShareOptionsModal = (props: ShareButtonsProps) => {
   return (
-    <div className={styles.modalContent}>
+    <div className="w-[500px] h-auto flex flex-col px-6 max-md:w-full max-md:px-0">
       <ShareOptions
         url={props.artwork.image}
         message={props.artwork.title || props.artwork.prompt?.prompt || ""}

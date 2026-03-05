@@ -5,7 +5,6 @@ import { AuthOption, useAuth } from "@/context/AuthContext";
 import { TextInput } from "@/components/atoms/input";
 import { useForm } from "react-hook-form";
 import { Button, ButtonVariant } from "@/components/atoms/button";
-import styles from "./LoginForm.module.scss";
 
 export interface LoginFormModel {
   email: string;
@@ -42,7 +41,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className={styles.loginContainer}>
+    <div className="w-full">
       <h1 className="text-2xl text-center mt-[100px]">Login Form</h1>
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-2">
@@ -76,7 +75,7 @@ export const LoginForm = () => {
         />
 
         <a
-          className={`app-link body-3 main ${styles.linkForget}`}
+          className="app-link body-3 main block mt-0"
           onClick={() => setAuthOption(AuthOption.Reset)}
         >
           Forgot password?

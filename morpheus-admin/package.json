@@ -43,7 +43,6 @@
     "daisyui": "^3.5.1",
     "postcss": "^8.4.27",
     "prettier": "^3.0.0",
-    "sass": "^1.64.1",
     "tailwindcss": "^3.3.3"
   }
 }

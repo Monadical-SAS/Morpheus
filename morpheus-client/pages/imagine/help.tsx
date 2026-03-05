@@ -4,7 +4,6 @@ import { NextPage } from "next";
 import PrivateRoute from "../../components/Auth/PrivateRoute/PrivateRoute";
 import FAQ from "../../components/FAQ/FAQ";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
-import styles from "../../styles/pages/Help.module.scss";
 
 const Help: NextPage = () => {
   const { sendAnalyticsRecord } = useAnalytics();
@@ -19,7 +18,7 @@ const Help: NextPage = () => {
 
   return (
     <PrivateRoute>
-      <div className={styles.mainContent}>
+      <div className="h-full w-full flex flex-col justify-center items-center bg-[#14172D] px-[340px] py-[120px] max-md:mt-[60px] max-md:px-6 max-md:py-12">
         <FAQ />
       </div>
     </PrivateRoute>

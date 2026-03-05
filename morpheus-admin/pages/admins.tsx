@@ -5,7 +5,6 @@ import PrivateRoute from "@/layout/PrivateRoute/PrivateRoute";
 import { AdminForm } from "@/components/organisms/AdminForm/AdminForm";
 import { Button, ButtonSize, ButtonVariant } from "@/components/atoms/button";
 import { useToastContext } from "@/context/ToastContext";
-import styles from "@/styles/pages/Home.module.scss";
 import { Response, User } from "@/lib/models";
 import { deleteAdmin, getAdmins } from "@/api/users";
 import { LoadingContext } from "@/context/LoadingContext";
@@ -60,7 +59,7 @@ export default function Home() {
   return (
     <PrivateRoute>
       <MainLayout>
-        <main className={styles.main}>
+        <main className="w-screen flex-1 py-12 px-6">
           <h1 className="text-5xl font-bold">Admins</h1>
 
           <div className="my-5">

@@ -1,6 +1,5 @@
 import React, { CSSProperties } from "react";
 import Loader from "../../Loaders/LoaderCircle/Loader";
-import styles from "./ButtonPrimary.module.scss";
 
 interface ButtonPrimaryProps {
   loading: boolean;
@@ -18,9 +17,9 @@ const ButtonPrimary = (props: ButtonPrimaryProps) => {
       style={props.styles}
       disabled={props.disabled || props.loading}
       onClick={props.onClick}
-      className={`${styles.buttonPrimary} ${
-        props.disabled && styles.disabled
-      } ${props.className}`}
+      className={`w-[526px] max-w-full h-12 box-border flex flex-row justify-center items-center gap-4 px-[57px] cursor-pointer bg-[#B3005E] border-none rounded-lg max-md:w-full max-md:px-0 ${
+        props.disabled ? "!bg-[#6D6D94] cursor-not-allowed" : ""
+      } ${props.className || ""}`}
     >
       {props.loading ? (
         <Loader

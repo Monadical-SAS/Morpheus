@@ -12,7 +12,6 @@ import { deleteCollection, getCollectionDetails } from "@/services/collection";
 import { useToastContext } from "@/context/ToastContext";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import { ArtWork, Collection } from "@/models/models";
-import styles from "@/styles/pages/CollectionDetails.module.scss";
 
 const CollectionDetail: NextPage = () => {
   const router = useRouter();
@@ -103,32 +102,34 @@ const CollectionDetail: NextPage = () => {
         />
       ) : (
         <Fragment>
-          <div className={styles.mainContainer}>
-            <div className={styles.collectionContainer}>
-              <div className={styles.collectionInfo}>
-                <div className={styles.imageContainer}>
+          <div className="w-full h-full flex flex-col items-center mt-6">
+            <div className="w-full max-w-[1280px] h-auto">
+              <div className="w-full flex flex-row items-center max-md:flex-col max-md:items-center">
+                <div className="w-[250px] h-[250px] flex justify-center items-center max-md:w-[150px] max-md:h-[150px]">
                   <img
-                    src={collection?.image}
+                    src={collection?.image || "/images/avatar.png"}
                     alt={collection?.name}
                     loading="lazy"
+                    className="w-[200px] h-[200px] p-2 object-cover rounded-full border-2 border-[#B3005E] max-md:w-[150px] max-md:h-[150px]"
+                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/avatar.png"; }}
                   />
                 </div>
 
-                <div className={styles.textContainer}>
-                  <h2 className="headline-1 white">{collection?.name}</h2>
+                <div className="w-full h-full p-6 max-md:text-center">
+                  <h2 className="headline-1 white capitalize">{collection?.name}</h2>
                   <p className="body-2 white">{collection?.description}</p>
                 </div>
 
-                <div className={styles.actionIcons}>
+                <div className="w-[100px] h-auto flex justify-end items-center">
                   <span
-                    className="material-symbols-outlined"
+                    className="material-symbols-outlined cursor-pointer text-white text-[28px] ml-4 hover:text-[#B3005E] transition-colors"
                     onClick={handleEdit}
                   >
                     edit
                   </span>
 
                   <span
-                    className="material-symbols-outlined"
+                    className="material-symbols-outlined cursor-pointer text-white text-[28px] ml-4 hover:text-[#B3005E] transition-colors"
                     onClick={handleDelete}
                   >
                     delete
@@ -137,7 +138,7 @@ const CollectionDetail: NextPage = () => {
               </div>
             </div>
 
-            <div className={styles.artworksContent}>
+            <div className="w-full max-w-[1280px] mt-12 max-md:mt-6 max-md:p-6">
               <ArtWorkList artworkList={artWorks} />
             </div>
           </div>

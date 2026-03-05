@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import Head from "next/head";
-import "@/styles/globals.scss";
+import "@/styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import type { AppProps } from "next/app";

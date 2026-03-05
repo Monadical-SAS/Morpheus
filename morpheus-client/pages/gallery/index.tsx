@@ -12,7 +12,6 @@ import { getUserArtWorks } from "@/services/artworks";
 import { isEmptyObject } from "@/utils/object";
 import { useToastContext } from "@/context/ToastContext";
 import { ArtWork } from "@/models/models";
-import styles from "@/styles/pages/Gallery.module.scss";
 
 const Gallery: NextPage = () => {
   const { user } = useAuth();
@@ -59,7 +58,7 @@ const Gallery: NextPage = () => {
           fontColor={"white"}
         />
       ) : (
-        <div className={styles.container}>
+        <div className="w-full pt-[120px] flex flex-col items-center max-w-[1280px] max-md:max-w-[calc(100vw-48px)]">
           <SearchForm setUserArtWorks={setArtWorks} />
 
           <ArtWorkList

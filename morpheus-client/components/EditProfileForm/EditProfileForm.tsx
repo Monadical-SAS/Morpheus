@@ -12,8 +12,6 @@ import InputText, {
   initialText,
   TextState,
 } from "../Inputs/InputText/InputText";
-import styles from "./EditProfileForm.module.scss";
-
 const EditProfileForm = () => {
   const { user, loadUser } = useAuth();
   const { showSuccessAlert, showErrorAlert } = useToastContext();
@@ -71,13 +69,13 @@ const EditProfileForm = () => {
   };
 
   return (
-    <form className={styles.editProfileForm}>
-      <div className={styles.avatarContainer}>
-        <span className={`base-2 white ${styles.avatarLabel}`}>Avatar</span>
-        <div className={styles.avatarInput}>
+    <form className="w-full flex flex-col">
+      <div>
+        <span className="base-2 white">Avatar</span>
+        <div className="flex mt-[10px] max-md:flex-col max-md:items-center">
           <UserImage size={"108px"} />
 
-          <div className={styles.inputContent}>
+          <div className="flex flex-col ml-4 max-md:w-full max-md:ml-0 max-md:mt-4">
             <InputFile file={newAvatar} setFile={setNewAvatar} />
             <p className="caption-1 secondary">
               At least 800x800 px recommended. JPG or PNG is allowed

@@ -10,7 +10,6 @@ import { UploadMaskIcon } from "@/components/icons/uploadMask";
 import { useImagine } from "@/context/ImagineContext";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 
-import styles from "./ImagineBase.module.scss";
 
 interface MainContainerProps {
   showImageInput?: boolean;
@@ -39,7 +38,7 @@ const ImagineBase = (props: MainContainerProps) => {
   );
 
   const ImageInputs = (props.showImageInput || props.showMaskInput) && (
-    <div className={styles.imageInputsContainer}>
+    <div className="w-full flex flex-wrap flex-row justify-start gap-6 flex-1 mb-12 max-md:mb-4">
       {props.showImageInput && (
         <ImagineImageInput
           label={"Base Image"}
@@ -73,7 +72,7 @@ const ImagineBase = (props: MainContainerProps) => {
 
   return (
     <ImagineLayout>
-      <main className={styles.imagineBase}>
+      <main className="h-full flex-[1_auto] flex flex-col max-h-[calc(100vh-80px)] min-w-[300px] max-w-[100vw] max-md:flex-col max-md:max-h-full">
         {isMobile && (
           <Fragment>
             <ImagineMenu />
@@ -83,16 +82,16 @@ const ImagineBase = (props: MainContainerProps) => {
         )}
 
         {!isMobile && (
-          <div className={styles.topBar}>
+          <div className="flex flex-row items-center justify-end pt-4 px-6 gap-4 bg-[#14172D]">
             <ModelSelect />
             <ImagineSettings />
           </div>
         )}
 
-        <div className={styles.imagesContent}>
+        <div className="w-full h-full flex flex-col p-6 max-h-[calc(100vh-180px)] overflow-y-auto rounded-bl-3xl bg-[#14172D] md:rounded-bl-none max-md:flex-col max-md:py-12 max-md:h-full max-md:max-h-full max-md:rounded-bl-none">
           {!isMobile && ImageInputs}
 
-          <div className={styles.results}>
+          <div className="w-full h-full flex-[2] flex flex-col">
             <ImageGallery />
             <br />
           </div>

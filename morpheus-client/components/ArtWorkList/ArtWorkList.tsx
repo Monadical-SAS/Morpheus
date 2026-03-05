@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import ButtonSecondary from "../buttons/ButtonSecondary/ButtonSecondary";
 import ArtworkCard from "../ArtworkCard/ArtworkCard";
 import { ArtWork } from "@/models/models";
-import styles from "./ArtWorkList.module.scss";
 
 interface ArtWorkListProps {
   artworkList: ArtWork[];
@@ -32,12 +31,12 @@ const ArtWorkList = (props: ArtWorkListProps) => {
   };
 
   return (
-    <div className={styles.artworksContainer}>
-      <div className={styles.header}>
+    <div className="w-full h-auto flex flex-col max-md:max-w-full">
+      <div className="flex flex-row justify-between items-center">
         <p className="body-2 white mb-3">Newest</p>
       </div>
 
-      <div className={styles.artworksList}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6 max-md:!grid-cols-[repeat(auto-fill,minmax(100%,1fr))] max-md:p-0">
         {renderArtworks.length > 0 ? (
           renderArtworks.map((artWork: ArtWork) => (
             <ArtworkCard

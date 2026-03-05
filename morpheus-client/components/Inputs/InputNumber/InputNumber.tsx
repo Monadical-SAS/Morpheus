@@ -1,7 +1,6 @@
 import React, { CSSProperties, Fragment } from "react";
 import { buildStringFromArray } from "@/utils/strings";
 import { getInputNumberValidators, isNumber } from "../validators";
-import styles from "../Input.module.scss";
 
 export interface NumberState {
   value: number;
@@ -53,9 +52,9 @@ const InputNumber = (props: InputNumberProps) => {
 
   return (
     <Fragment>
-      <div className={styles.inputContainer} style={props.containerStyles}>
+      <div className="w-full flex flex-col box-border relative" style={props.containerStyles}>
         {props.label && (
-          <label className="body-2 white" htmlFor={props.id}>
+          <label className="body-2 white mb-[10px]" htmlFor={props.id}>
             {props.label}
           </label>
         )}
@@ -66,6 +65,7 @@ const InputNumber = (props: InputNumberProps) => {
           value={props.number.value}
           disabled={props.disabled}
           onChange={(event) => handleNumberChange(event)}
+          className="w-full flex-1 outline-none h-12 min-h-[48px] px-5 rounded-lg text-[#8B90B2] border border-[#312E47] bg-[#252238] focus:border-[#d9006d] transition-all duration-500 placeholder:text-[#8B90B2]"
           style={props.inputStyles}
           step={props.step || 1}
           min={props.minValue}
@@ -73,7 +73,7 @@ const InputNumber = (props: InputNumberProps) => {
         />
 
         {props.number.validators && (
-          <small className={styles.error}>
+          <small className="caption-1 text-red-500">
             {buildStringFromArray(props.number.validators)}
           </small>
         )}

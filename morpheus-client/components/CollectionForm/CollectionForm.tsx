@@ -12,7 +12,6 @@ import InputText, {
   TextState,
 } from "../Inputs/InputText/InputText";
 import { Collection } from "@/models/models";
-import styles from "./CollectionForm.module.scss";
 
 interface CollectionFormProps {
   collection?: Collection;
@@ -133,7 +132,7 @@ const CollectionForm = (props: CollectionFormProps) => {
   };
 
   return (
-    <form className={styles.collectionFormContainer}>
+    <form className="w-full max-w-[800px]">
       <InputText
         id="inputTextCollectionName"
         label={"Name"}
@@ -157,16 +156,16 @@ const CollectionForm = (props: CollectionFormProps) => {
         placeholder={"Collection description"}
       />
 
-      <div className={styles.imageContainer}>
-        <span className={`base-2 white ${styles.imageLabel}`}>Image</span>
-        <div className={styles.imageInput}>
+      <div className="mt-8">
+        <span className="base-2 white mb-[10px] block">Image</span>
+        <div className="flex mt-[10px] max-md:flex-col max-md:items-center">
           {props.collection && props.collection.image ? (
-            <img src={props.collection?.image} alt={props.collection?.name} />
+            <img src={props.collection?.image} alt={props.collection?.name} className="w-[108px] h-[108px] rounded-full object-cover" />
           ) : (
             <ImageIcon />
           )}
 
-          <div className={styles.inputContent}>
+          <div className="flex-1 flex flex-col ml-4 max-md:w-full max-md:ml-0 max-md:mt-4">
             <InputFile file={image} setFile={setImage} />
             <p className="caption-1 secondary">
               At least 800x800 px recommended. JPG or PNG is allowed
@@ -175,7 +174,7 @@ const CollectionForm = (props: CollectionFormProps) => {
         </div>
       </div>
 
-      <div className={styles.buttonsContainer}>
+      <div className="flex flex-row items-center justify-between mt-8 max-md:flex-col max-md:items-center">
         <ButtonPrimary
           text={"Save"}
           loading={isLoading}

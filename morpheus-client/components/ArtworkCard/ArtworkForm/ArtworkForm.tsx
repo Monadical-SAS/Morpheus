@@ -9,7 +9,6 @@ import InputText, {
   TextState,
 } from "../../Inputs/InputText/InputText";
 import { ArtWork } from "@/models/models";
-import styles from "./ArtworkForm.module.scss";
 
 interface ArtworkFormProps {
   artwork?: ArtWork;
@@ -127,7 +126,7 @@ const ArtworkForm = (props: ArtworkFormProps) => {
   }
 
   return props.showForm ? (
-    <div className={styles.artworkForm}>
+    <div className="mt-6">
       <CollectionSelect
         selectedCollectionId={selectedCollectionId}
         setSelectedCollectionId={setSelectedCollectionId}
@@ -144,7 +143,7 @@ const ArtworkForm = (props: ArtworkFormProps) => {
         styles={{ marginTop: "24px" }}
       />
 
-      <div className={styles.buttonsContainer}>
+      <div className="mt-6 flex flex-row items-center max-md:mb-12">
         <ButtonPrimary
           text={`${props.artwork.id ? "Update" : "Save"}`}
           loading={isLoading}
@@ -152,7 +151,7 @@ const ArtworkForm = (props: ArtworkFormProps) => {
           disabled={!isFormValid}
         />
 
-        <span className={styles.cancelIcon} onClick={handleCancel}>
+        <span className="cursor-pointer max-md:ml-4" onClick={handleCancel}>
           <CloseIcon />
         </span>
       </div>

@@ -8,7 +8,6 @@ import React, {
 import { buildStringFromArray } from "@/utils/strings";
 import { TextState } from "../InputText/InputText";
 import { getInputValidators } from "../validators";
-import styles from "./TextArea.module.scss";
 
 export interface InputTextProps {
   id?: string;
@@ -78,9 +77,9 @@ const InputTextArea = ({
 
   return (
     <Fragment>
-      <div className={styles.textAreaContainer} style={props.styles}>
+      <div className="relative w-full h-auto flex flex-col" style={props.styles}>
         {props.label && (
-          <label htmlFor={props.id} className="base-2 white">
+          <label htmlFor={props.id} className="base-2 white mb-[10px]">
             {props.label}
           </label>
         )}
@@ -88,7 +87,7 @@ const InputTextArea = ({
         <textarea
           id={props.id}
           autoFocus={props.autoFocus}
-          className={`${styles.textArea} ${props.rightIcon && styles.pRight} `}
+          className={`w-full px-5 py-3 rounded-lg text-[#8B90B2] border border-[#312E47] bg-[#252238] focus:border-[#d9006d] transition-[border-color] duration-150 min-h-[48px] max-h-[300px] resize-y overflow-hidden outline-none max-md:h-[100px] ${props.rightIcon ? "pr-12" : ""}`}
           placeholder={props.placeholder}
           value={props.text.value}
           disabled={props.disabled}
@@ -101,11 +100,11 @@ const InputTextArea = ({
         />
 
         {props.rightIcon && (
-          <span className={styles.rightIcon}>{props.rightIcon}</span>
+          <span className="absolute top-[7px] right-2">{props.rightIcon}</span>
         )}
 
         {props.showCount && (
-          <span className={`base-2 ${props.color} ${styles.count}`}>
+          <span className={`base-2 ${props.color} self-end`}>
             {props.text.value?.length}
             {props.maxValueLength ? " / " + props.maxValueLength : ""}
           </span>
@@ -113,7 +112,7 @@ const InputTextArea = ({
       </div>
 
       {props.text.validators && (
-        <small className={styles.error}>
+        <small className="caption-1 text-red-500">
           {buildStringFromArray(props.text.validators)}
         </small>
       )}

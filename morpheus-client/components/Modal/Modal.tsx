@@ -8,7 +8,6 @@ import React, {
 import ReactDOM from "react-dom";
 import { CloseIcon } from "../icons/close";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
-import styles from "./Modal.module.scss";
 
 interface ModalProps {
   showHeader?: boolean;
@@ -72,18 +71,18 @@ const Modal = (props: ModalProps) => {
 
   const renderModalContent = () => {
     return props.isOpen ? (
-      <dialog className={styles.modalContainer} onClick={props.toggleModal}>
+      <dialog className="z-40 w-screen h-screen absolute top-0 right-0 bottom-0 left-0 bg-[rgba(0,0,0,0.7)] flex justify-center items-center" onClick={props.toggleModal}>
         <div
           style={initialStyles}
           onClick={(e) => e.stopPropagation()}
-          className={styles.modalBody}
+          className="w-[50vw] max-w-[1280px] h-[50vh] max-h-[90vh] p-12 rounded-lg flex flex-col gap-8 bg-[#252238] border border-[#312E47] overflow-y-auto max-md:w-[80vw] max-md:max-w-[90vw] max-md:h-auto max-md:p-6"
         >
           {props.showHeader && (
-            <div className={styles.modalHeader}>
-              <div className={styles.headerContent}>
+            <div className="flex justify-between items-center gap-4">
+              <div className="flex-1 flex items-center">
                 {props.headerContent ? props.headerContent : null}
               </div>
-              <span className={styles.closeIcon} onClick={props.toggleModal}>
+              <span className="justify-self-end cursor-pointer" onClick={props.toggleModal}>
                 <CloseIcon />
               </span>
             </div>

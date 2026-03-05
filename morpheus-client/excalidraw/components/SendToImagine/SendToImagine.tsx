@@ -5,7 +5,6 @@ import { useImagine } from "@/context/ImagineContext";
 import { getFileFromBlob } from "@/utils/images";
 import { useApp, useExcalidrawAppState, useExcalidrawElements } from "../App";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
-import styles from "./SendToImagine.module.scss";
 
 export const SendImageToImagine = () => {
   const router = useRouter();
@@ -34,7 +33,7 @@ export const SendImageToImagine = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="w-auto h-auto fixed bottom-6 right-6 flex gap-6 max-md:w-[calc(100%-48px)] [&>button]:max-w-[250px]">
       <ButtonPrimary loading={false} text={"Cancel"} onClick={handleCancel} />
       <ButtonPrimary
         loading={false}

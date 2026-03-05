@@ -5,7 +5,6 @@ import { searchArtWorks } from "@/services/artworks";
 import { useToastContext } from "@/context/ToastContext";
 import { initialText, TextState } from "../Inputs/InputText/InputText";
 import { ArtWork } from "@/models/models";
-import styles from "./SearchForm.module.scss";
 
 interface SearchFormProps {
   setUserArtWorks: (images: Array<ArtWork>) => void;
@@ -33,10 +32,10 @@ const SearchForm = (props: SearchFormProps) => {
   };
 
   return (
-    <div className={styles.searchFormContainer}>
+    <div className="w-full flex flex-col mb-12">
       <h2 className="headline-1 white">Explore</h2>
 
-      <div className={styles.searchContent}>
+      <div className="mt-12 flex flex-row items-center gap-6">
         <InputSearch
           text={searchText}
           setText={setSearchText}

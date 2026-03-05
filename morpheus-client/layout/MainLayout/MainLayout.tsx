@@ -1,7 +1,6 @@
 import { CSSProperties, ReactNode } from "react";
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/Navbar";
-import styles from "./MainLayout.module.scss";
 import PrivateRoute from "@/components/Auth/PrivateRoute/PrivateRoute";
 
 interface MainContainerProps {
@@ -12,10 +11,10 @@ interface MainContainerProps {
 
 export const MainLayout = (props: MainContainerProps) => {
   return (
-    <div className={styles.mainLayout}>
+    <div className="w-full max-w-[100vw] h-full flex flex-col items-center bg-[#14172D] overflow-y-auto">
       <Navbar showBrand={true} />
 
-      <main className={styles.mainContent} style={props.style}>
+      <main className="w-full flex flex-col items-center flex-auto" style={props.style}>
         {props.children}
       </main>
 

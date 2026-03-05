@@ -1,6 +1,5 @@
 import React from "react";
 import dynamic from "next/dynamic";
-import styles from "./Excalidraw.module.scss";
 
 const Excalidraw = () => {
   const Editor = dynamic(
@@ -12,7 +11,7 @@ const Excalidraw = () => {
   );
 
   return (
-    <div className={styles.paintContainer}>
+    <div className="w-full h-full max-h-[calc(100vh-180px)] max-md:mt-[60px] max-md:max-h-[calc(100vh-160px)]">
       <Editor />
     </div>
   );

@@ -2,14 +2,12 @@ import { CSSProperties, Fragment } from "react";
 import RoundedIcon from "../RoundedIcon/RoundedIcon";
 import Modal from "../Modal/Modal";
 import { useModal } from "../../hooks/useModal";
-import styles from "./HelpPrompt.module.scss";
-
 const HelpContent = () => {
   return (
-    <div className={styles.helpContent}>
+    <div className="w-full h-max px-6 pb-6">
       <h1 className="bold40">Prompt Basics</h1>
       <p className="body">Let’s first understand the structure of a prompt.</p>
-      <p className={`bodyBold ${styles.highlight}`}>
+      <p className="bodyBold w-fit text-[#B3005E] px-3 py-1 rounded my-2">
         (subject)(style), (action/scene), (artist), (filters)
       </p>
       <p className="body">
@@ -20,7 +18,7 @@ const HelpContent = () => {
       <p className="body">
         This is the basic building block of any prompt. The so called raw
       </p>
-      <p className={`bodyBold ${styles.highlight}`}>
+      <p className="bodyBold w-fit text-[#B3005E] px-3 py-1 rounded my-2">
         prompt. Ex: a black horse.
       </p>
       <p className="heading">(style)</p>
@@ -37,7 +35,7 @@ const HelpContent = () => {
         The action describes what the subject is actually doing and the scene
         describes where.
       </p>
-      <p className={`bodyBold ${styles.highlight}`}>
+      <p className="bodyBold w-fit text-[#B3005E] px-3 py-1 rounded my-2">
         Example: jumping in the forest
       </p>
       <p className="heading">(filters)</p>
@@ -48,7 +46,7 @@ const HelpContent = () => {
         realistic lighting add “Unreal Engine.” You can be creative and add any
         filter that you want, but here are some examples:
       </p>
-      <p className={`bodyBold ${styles.highlight}`}>
+      <p className="bodyBold w-fit text-[#B3005E] px-3 py-1 rounded my-2">
         Highly detailed, surrealism, trending on art station, triadic color
         scheme, smooth, sharp focus, matte, elegant, the most beautiful image
         ever seen, illustration, digital paint, dark, gloomy, octane render, 8k,
@@ -56,13 +54,13 @@ const HelpContent = () => {
         processing, picture of the day, ambient lighting, epic composition
       </p>
       <p className="body">Here is a final example using this basic rule:</p>
-      <p className={`bodyBold ${styles.highlight}`}>
+      <p className="bodyBold w-fit text-[#B3005E] px-3 py-1 rounded my-2">
         realistic art of a black horse, in the forest, by marc simonetti, fog,
         centered, symmetry, painted, intricate, volumetric lighting, beautiful,
         rich deep colours, masterpiece, sharp focus, ultra detailed, 4k
       </p>
 
-      <div className={styles.reference}>
+      <div>
         <p className="heading">Reference:</p>
         <a
           target="_blank"

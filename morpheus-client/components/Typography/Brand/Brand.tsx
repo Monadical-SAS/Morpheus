@@ -1,5 +1,4 @@
 import React, { CSSProperties } from "react";
-import styles from "./Brand.module.scss";
 
 interface BrandProps {
   onClick?: () => void;
@@ -10,7 +9,7 @@ const Brand = (props: BrandProps) => {
   return (
     <h2
       onClick={props.onClick}
-      className={`headline-1 ${styles.morpheusTitle}`}
+      className="morpheus-title"
       style={props.styles}
     >
       Morpheus
