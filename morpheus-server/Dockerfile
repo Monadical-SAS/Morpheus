@@ -34,7 +34,7 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # Install dependencies
 RUN pip install --upgrade pip
 COPY requirements.txt .
-RUN pip install torch==1.13.1 && pip install -r requirements.txt --no-cache-dir
+RUN pip install "torch>=2.0.0" && pip install -r requirements.txt --no-cache-dir
 
 # Find the latest wheel file of morpheus-data in the /wheels directory and install it
 COPY --from=lib /wheels /wheels
