@@ -38,10 +38,9 @@ const ArtworkCard = (props: ImageCardProps) => {
 
   return (
     <Fragment>
-      <div className={styles.artworkCard} style={initialStyles}>
+      <div className={styles.artworkCard} style={initialStyles} onClick={handleClick}>
         {props.artwork?.image ? (
           <AppImage
-            onClick={handleClick}
             src={props.artwork.image}
             alt={props.artwork.title}
           />
