@@ -30,7 +30,7 @@ class GenerationRequest(BaseModel):
     negative_prompt: str = "bad, low res, ugly, deformed"
     width: int = 768
     height: int = 768
-    num_inference_steps: int = 50
+    num_inference_steps: int = 20
     guidance_scale: int = 10
     num_images_per_prompt: int = 1
     generator: int = -1

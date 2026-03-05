@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from pydantic import BaseSettings, PostgresDsn
 
 
@@ -17,7 +19,8 @@ class Settings(BaseSettings):
     models_folder: str = "/mnt/"
 
     # Models config
-    default_scheduler: str = "DDPMScheduler"
+    # DPMSolverMultistepScheduler converges in ~20 steps vs DDPMScheduler's 50+
+    default_scheduler: str = "DPMSolverMultistepScheduler"
     default_pipeline: str = "StableDiffusionXLPipeline"
     default_model: str = "stabilityai/stable-diffusion-xl-base-1.0"
     enable_float32: bool = False
@@ -40,6 +43,6 @@ class Settings(BaseSettings):
         env_file = "secrets.env"
 
 
+@lru_cache()
 def get_settings():
-    settings = Settings()
-    return settings
+    return Settings()
