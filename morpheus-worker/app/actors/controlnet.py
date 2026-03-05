@@ -2,6 +2,7 @@ import logging
 from io import BytesIO
 
 import ray
+import torch
 from PIL import Image
 
 from app.actors.common.sd_base import StableDiffusionAbstract
@@ -31,6 +32,24 @@ class StableDiffusionControlnet(StableDiffusionAbstract):
             model_id=model_id,
             controlnet_id=controlnet_id,
         )
+
+    def _warmup(self):
+        if self.device != "cuda":
+            return
+        self.logger.info("Running controlnet warmup pass...")
+        try:
+            dummy = Image.new("RGB", (128, 128))
+            with torch.no_grad():
+                self.pipeline(
+                    image=dummy,
+                    control_image=dummy,
+                    prompt="warmup",
+                    num_inference_steps=1,
+                    output_type="latent",
+                )
+            self.logger.info("Warmup complete")
+        except Exception as e:
+            self.logger.warning(f"Warmup failed (non-fatal): {e}")
 
     def generate(self, request: ModelRequest):
         self.logger.info(f"StableDiffusionControlnet.generate: request: {request}")

@@ -1,6 +1,7 @@
 import logging
 
 import ray
+import torch
 from app.actors.common.sd_base import StableDiffusionAbstract
 from app.models.schemas import ModelRequest
 
@@ -19,6 +20,17 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
             scheduler=scheduler
         )
         self.logger = logging.getLogger("ray")
+
+    def _warmup(self):
+        if self.device != "cuda":
+            return
+        self.logger.info("Running text2img warmup pass...")
+        try:
+            with torch.no_grad():
+                self.pipeline(prompt="warmup", num_inference_steps=1, output_type="latent", width=128, height=128)
+            self.logger.info("Warmup complete")
+        except Exception as e:
+            self.logger.warning(f"Warmup failed (non-fatal): {e}")
 
     def generate(self, request: ModelRequest):
         self.logger.info(f"StableDiffusionV2Text2Img.generate: request: {request}")

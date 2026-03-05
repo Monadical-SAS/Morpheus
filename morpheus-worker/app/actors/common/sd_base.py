@@ -108,6 +108,9 @@ class StableDiffusionAbstract(ABC):
         self.activate_attention_slicing()
         self.activate_xformers()
 
+        # Warmup: trigger CUDA JIT on startup so the first real request is fast
+        self._warmup()
+
     def generate_images(self, *args, **kwargs):
         pass
 
@@ -137,3 +140,8 @@ class StableDiffusionAbstract(ABC):
         else:
             self.logger.info("Xformers is disabled")
             self.pipeline.disable_xformers_memory_efficient_attention()
+
+    def _warmup(self):
+        """Run a minimal pipeline pass after load to trigger CUDA JIT compilation.
+        Subclasses should override this with pipeline-appropriate dummy inputs."""
+        pass
