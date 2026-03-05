@@ -27,11 +27,18 @@ const ArtworkForm = (props: ArtworkFormProps) => {
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>("");
 
   useEffect(() => {
-    if (props.artwork && props.artwork.title) {
+    if (props.artwork?.title) {
       setTitle({ value: props.artwork.title, validators: [] });
+    } else if (props.artwork?.prompt?.prompt) {
+      const normalized = props.artwork.prompt.prompt
+        .replace(/[^a-zA-Z0-9 ]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 64);
+      setTitle({ value: normalized, validators: [] });
     }
 
-    if (props.artwork && props.artwork.collection_id) {
+    if (props.artwork?.collection_id) {
       setSelectedCollectionId(props.artwork.collection_id);
     }
   }, [props.artwork]);
