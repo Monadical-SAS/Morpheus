@@ -29,8 +29,6 @@ services:
     build:
       context: morpheus-server
       dockerfile: ./Dockerfile
-      args:
-        - TAG=${TAG:-latest}
     image: morpheus-server:latest
     env_file:
       - morpheus-server/secrets.env
@@ -43,24 +41,6 @@ services:
       - "8001:8001"
     stdin_open: true
     tty: true
-    depends_on:
-      postgres:
-        condition: service_healthy
-      datalib:
-        condition: service_completed_successfully
-
-  datalib:
-    build:
-      context: morpheus-data
-      dockerfile: ./Dockerfile
-      args:
-        DOCKER_BUILDKIT: 1
-    image: monadicalsas/morpheus-data:${TAG:-latest}
-    env_file:
-      - morpheus-server/secrets.env
-    volumes:
-      - ./wheels:/wheels
-      - ./morpheus-data:/app
     depends_on:
       postgres:
         condition: service_healthy
@@ -125,10 +105,11 @@ services:
       api:
         condition: service_started
     healthcheck:
-      test: [ "CMD-SHELL", "ray status" ]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      test: [ "CMD-SHELL", "curl -sf http://localhost:8000/ > /dev/null" ]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
     # If you don't have a gpu, comment the deploy section below
     deploy:
       resources:
@@ -137,14 +118,6 @@ services:
             - count: 1
               capabilities: [ gpu ]
 
-  worker-ray-deployer:
-    image: morpheus-worker:latest
-    command: bash -c "sleep 10 && ray job submit -- serve deploy models.yaml"
-    environment:
-      - RAY_ADDRESS=http://worker-ray:8265
-    depends_on:
-      worker-ray:
-        condition: service_healthy
 
   cloudflare-api:
     image: cloudflare/cloudflared
@@ -172,8 +145,6 @@ services:
     build:
       context: morpheus-server
       dockerfile: ./scripts/models/Dockerfile
-      args:
-        - TAG=${TAG:-latest}
     image: morpheus-script-model:latest
     profiles: [ "manage" ]
     env_file:
@@ -182,9 +153,6 @@ services:
       - ./morpheus-server:/opt/api
     stdin_open: true
     tty: true
-    depends_on:
-      datalib:
-        condition: service_completed_successfully
 
 volumes:
   pg_data:

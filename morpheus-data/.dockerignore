@@ -1,4 +1,0 @@
-secrets.env
-build
-dist
-*.egg-info

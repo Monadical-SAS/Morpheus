@@ -3,7 +3,7 @@ from functools import lru_cache
 
 from pydantic import BaseSettings
 
-from morpheus_data.registry.model_manager import (
+from app.registry.model_manager import (
     download_controlnet_model_from_huggingface,
     download_magicprompt_model_from_huggingface,
     download_model_from_huggingface,

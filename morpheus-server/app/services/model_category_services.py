@@ -3,8 +3,8 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from morpheus_data.models.schemas import ModelCategory
-from morpheus_data.repository.model_category_repository import ModelCategoryRepository
+from app.models.schemas import ModelCategory
+from app.repository.model_category_repository import ModelCategoryRepository
 
 
 class ModelCategoryService:

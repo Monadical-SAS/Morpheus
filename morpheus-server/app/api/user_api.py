@@ -6,8 +6,8 @@ from app.services.user_services import UserService
 from fastapi import APIRouter
 from fastapi import Depends
 from loguru import logger
-from morpheus_data.database.database import get_db
-from morpheus_data.models.schemas import User
+from app.database.database import get_db
+from app.models.schemas import User
 from sqlalchemy.orm import Session
 
 router = APIRouter()

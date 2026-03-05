@@ -20,8 +20,7 @@ PostgreSQL (5432)   AWS S3         morpheus-worker (Ray, ports 8000/8265)
                                   Firebase (Auth/Collab)
 ```
 
-- **morpheus-data** is a shared Python library (built as a wheel) used by `morpheus-server` and `morpheus-worker`. It owns all SQLAlchemy models, Pydantic schemas, Alembic migrations, and S3/Firebase repository implementations.
-- **morpheus-server** is the FastAPI backend. It depends on the `morpheus-data` wheel being built first.
+- **morpheus-server** is the FastAPI backend. It owns all SQLAlchemy models, Pydantic schemas, Alembic migrations, and S3/Firebase repository implementations.
 - **morpheus-worker** runs a Ray cluster for GPU-accelerated Stable Diffusion inference.
 - The client uses Firebase for authentication and Socket.io for real-time collaboration.
 
@@ -36,7 +35,7 @@ cp morpheus-client/env.local.dist morpheus-client/.env.local
 cp morpheus-client/env.local.dist morpheus-admin/.env.local
 
 # Apply DB migrations (required before first start)
-docker compose run --rm datalib alembic upgrade head
+docker compose run --rm api alembic upgrade head
 
 # Start all services
 docker compose up
@@ -45,7 +44,7 @@ docker compose up
 docker compose up api client admin
 ```
 
-### Backend (morpheus-server / morpheus-data)
+### Backend (morpheus-server)
 
 ```bash
 # Run all tests
@@ -68,10 +67,10 @@ docker compose run --rm api black --line-length 120 --exclude app/migrations/ .
 
 ```bash
 # Auto-generate a migration from model changes
-docker compose run --rm datalib alembic revision --autogenerate -m "Description"
+docker compose run --rm api alembic revision --autogenerate -m "Description"
 
 # Apply pending migrations
-docker compose run --rm datalib alembic upgrade head
+docker compose run --rm api alembic upgrade head
 ```
 
 ### Frontend (morpheus-client / morpheus-admin)
@@ -96,8 +95,6 @@ docker compose exec collaborative yarn fix        # Prettier + ESLint fix
 ### Building Docker images
 
 ```bash
-# Build order matters: datalib must be built first
-docker compose build datalib  # generates wheel file consumed by api/worker
 docker compose build api
 docker compose build client admin collaborative
 
@@ -116,22 +113,21 @@ docker compose run --rm model-script db register <server> <target>
 
 ## Code Architecture Details
 
-### morpheus-data (shared library)
-
-All database models live in `morpheus_data/models/models.py` (SQLAlchemy) and `morpheus_data/models/schemas.py` (Pydantic). Changes here require rebuilding the wheel (`docker compose build datalib`) before dependent services pick them up.
-
-Repository classes in `morpheus_data/repository/` follow the repository pattern and are the only place that touches the database or S3 directly.
-
 ### morpheus-server structure
 
 ```
 app/
   api/          # FastAPI route handlers (thin layer, delegates to services)
   services/     # Business logic
-  models/       # Pydantic request/response models (distinct from DB models)
+  models/       # SQLAlchemy ORM models and Pydantic schemas
+  repository/   # Database and S3 repository classes
+  registry/     # Model registry (HuggingFace, S3)
+  database/     # DB engine, session, init data
   integrations/ # Third-party integrations
+  utils/        # Image helpers, timer, decorators
   config.py     # Pydantic Settings (reads from secrets.env)
   app.py        # FastAPI app setup, router registration
+migrations/     # Alembic migrations
 main.py         # Uvicorn entry point
 ```
 
@@ -149,7 +145,7 @@ main.py         # Uvicorn entry point
 
 - Black formatter with `--line-length 120`
 - Flake8 with `--max-line-length 120 --exclude app/migrations/`
-- Alembic migrations live in `morpheus-data/morpheus_data/migrations/`
+- Alembic migrations live in `morpheus-server/migrations/`
 
 ### TypeScript/JavaScript code standards
 

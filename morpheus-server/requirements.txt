@@ -21,6 +21,7 @@ sentry-sdk[fastapi]
 rich
 typer
 omegaconf
+diffusers>=0.28.0
 flower
 dynamicprompts[attentiongrabber,magicprompt]
 scikit-image

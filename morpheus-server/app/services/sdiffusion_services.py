@@ -7,13 +7,13 @@ from app.error.generation import GenerationNotFoundError, ImageTooLargeError
 from app.integrations.generative_ai_engine.generative_ai_interface import (
     GenerativeAIInterface,
 )
-from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
-from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
-from morpheus_data.repository.files.s3_files_repository import S3ImagesRepository
-from morpheus_data.repository.generation_repository import GenerationRepository
-from morpheus_data.repository.model_repository import ModelRepository
-from morpheus_data.repository.user_repository import UserRepository
-from morpheus_data.utils.images import get_rgb_image_from_bytes
+from app.models.schemas import GenerationRequest, TextGenerationRequest
+from app.models.schemas import MagicPrompt, Prompt, PromptControlNet
+from app.repository.files.s3_files_repository import S3ImagesRepository
+from app.repository.generation_repository import GenerationRepository
+from app.repository.model_repository import ModelRepository
+from app.repository.user_repository import UserRepository
+from app.utils.images import get_rgb_image_from_bytes
 from sqlalchemy.orm import Session
 
 

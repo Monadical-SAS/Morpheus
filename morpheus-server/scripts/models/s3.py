@@ -3,7 +3,7 @@ import typer
 from config import Target, config_file, download_model
 from utils import load_config_from_file
 
-from morpheus_data.registry.s3_model_registry import S3ModelRegistry  # noqa: E402
+from app.registry.s3_model_registry import S3ModelRegistry  # noqa: E402
 
 
 app = typer.Typer(help="subcommand to manage models in S3:  register/list/delete")

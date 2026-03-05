@@ -1,5 +1,3 @@
-ARG TAG="latest"
-FROM monadicalsas/morpheus-data:${TAG} as lib
 FROM python:3.10-slim
 
 # Configuration defaults
@@ -32,11 +30,6 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 RUN pip install --upgrade pip
 COPY requirements.txt .
 RUN pip install torch==1.13.1 && pip install -r requirements.txt
-
-# Find the latest wheel file of morpheus_data in the /wheels directory and install it
-COPY --from=lib /wheels /wheels
-RUN latest_wheel=$(ls -1 /wheels/*.whl | sort -V | tail -n 1) && \
-    pip install $latest_wheel
 
 COPY . .
 ENTRYPOINT ["python", "scripts/models/cli.py"]
