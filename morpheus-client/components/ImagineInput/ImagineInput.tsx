@@ -2,7 +2,6 @@ import ButtonPrimary from "../buttons/ButtonPrimary/ButtonPrimary";
 import InputTextArea from "../Inputs/InputTextArea/InputTextArea";
 import { initialText, TextState } from "../Inputs/InputText/InputText";
 import MagicPrompt from "../MagicPrompt/MagicPrompt";
-import ImagineSettings from "../ImagineSettings/ImagineSettings";
 import { useDiffusion } from "@/context/DiffusionContext";
 import { useImagine } from "@/context/ImagineContext";
 import { useModels } from "@/context/ModelsContext";
@@ -30,6 +29,7 @@ const ImagineInput = (props: ImagineInputProps) => {
   const { prompt, setPrompt } = useDiffusion();
   const { isLoading } = useImagine();
   const isRequestValid = props.isFormValid && !!selectedModel;
+
   return (
     <div className={styles.imagineInputWrapper}>
       <div className={styles.imagineInputContainer}>
@@ -56,7 +56,6 @@ const ImagineInput = (props: ImagineInputProps) => {
             disabled={!isRequestValid}
             text={"Generate"}
           />
-          <ImagineSettings />
         </div>
       </div>
     </div>

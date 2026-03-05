@@ -4,36 +4,41 @@ import { Model } from "@/models/models";
 import { useModels } from "@/context/ModelsContext";
 
 const ModelSelect = () => {
-  const { models, selectedModel, setSelectedModel } = useModels();
-  const [modelOptions, setModelOptions] = useState<string[]>([]);
-  const [localSelectedModel, setLocalSelectedModel] = useState<string>(
-    models.find((m) => m.source === selectedModel.name)?.name || ""
+  const { models, selectedModel, activeLink, setActiveLink } = useModels();
+
+  const compatibleModels = models.filter((m: Model) =>
+    m.categories.some((c) => c.name === activeLink.feature)
+  );
+
+  const modelOptions = compatibleModels.map((m: Model) => m.name);
+
+  const [localSelected, setLocalSelected] = useState<string>(
+    selectedModel?.name || ""
   );
 
   useEffect(() => {
-    if (models && models.length > 0) {
-      setModelOptions(models.map((model: Model) => model.name) || []);
+    if (selectedModel?.name) {
+      setLocalSelected(selectedModel.name);
     }
-  }, [models]);
+  }, [selectedModel]);
 
   useEffect(() => {
-    if (models && models.length > 0) {
-      if (localSelectedModel && localSelectedModel !== selectedModel.name) {
-        const selected = models.find(
-          (m: Model) => m.name === localSelectedModel
-        );
-        setSelectedModel(selected as Model);
-      }
+    if (!localSelected || localSelected === selectedModel?.name) return;
+    const model = models.find((m: Model) => m.name === localSelected);
+    if (model) {
+      setActiveLink({ model, feature: activeLink.feature });
     }
-  }, [localSelectedModel]);
+  }, [localSelected]);
 
   return (
     <Fragment>
       {modelOptions.length > 0 && (
         <InputSelect
+          label="Model"
           options={modelOptions}
-          selected={localSelectedModel}
-          setSelected={setLocalSelectedModel}
+          selected={localSelected}
+          setSelected={setLocalSelected}
+          triggerClassName="w-auto border-0 shadow-none focus:ring-0 px-0 gap-2"
         />
       )}
     </Fragment>

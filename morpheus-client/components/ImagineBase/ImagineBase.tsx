@@ -4,6 +4,8 @@ import ImagineImageInput from "@/components/ImagineImageInput/ImagineImageInput"
 import ImageGallery from "@/components/ImageGallery/ImageGallery";
 import ImagineInput from "@/components/ImagineInput/ImagineInput";
 import ImagineLayout from "@/layout/ImagineLayout/ImagineLayout";
+import ImagineSettings from "@/components/ImagineSettings/ImagineSettings";
+import ModelSelect from "@/components/ModelSelect/ModelSelect";
 import { UploadMaskIcon } from "@/components/icons/uploadMask";
 import { useImagine } from "@/context/ImagineContext";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
@@ -80,6 +82,13 @@ const ImagineBase = (props: MainContainerProps) => {
           </Fragment>
         )}
 
+        {!isMobile && (
+          <div className={styles.topBar}>
+            <ModelSelect />
+            <ImagineSettings />
+          </div>
+        )}
+
         <div className={styles.imagesContent}>
           {!isMobile && ImageInputs}
 
@@ -88,6 +97,7 @@ const ImagineBase = (props: MainContainerProps) => {
             <br />
           </div>
         </div>
+
         {!isMobile && ImagineInputInstance}
       </main>
     </ImagineLayout>
