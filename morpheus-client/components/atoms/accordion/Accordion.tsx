@@ -6,6 +6,7 @@ import styles from "./Accordion.module.scss";
 interface AccordionProps {
   itemId: string;
   title: string;
+  icon?: ReactNode;
   isOpen?: boolean;
   setOpenedItem: (item: string) => void;
   children: ReactNode;
@@ -20,6 +21,7 @@ export const Accordion = (props: AccordionProps) => {
     <div className={styles.accordion}>
       <div className={styles.accordionHeader} onClick={onToggle}>
         <span>{props.isOpen ? <ArrowDownIcon /> : <ArrowRightIcon />}</span>
+        {props.icon && <span className={styles.accordionIcon}>{props.icon}</span>}
         <p className="headline-6 white bold">{props.title}</p>
       </div>
       {props.isOpen && (
