@@ -1,0 +1,4073 @@
+@charset "UTF-8";
+.zoom-actions,
+.undo-redo-buttons {
+  background-color: var(--island-bg-color);
+  border-radius: var(--border-radius-lg);
+}
+
+.zoom-button,
+.undo-redo-buttons button {
+  border: 1px solid var(--default-border-color) !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  font-size: 0.875rem !important;
+  width: var(--lg-button-size);
+  height: var(--lg-button-size);
+}
+.zoom-button svg,
+.undo-redo-buttons button svg {
+  width: var(--lg-icon-size) !important;
+  height: var(--lg-icon-size) !important;
+}
+.zoom-button .ToolIcon__icon,
+.undo-redo-buttons button .ToolIcon__icon {
+  width: 100%;
+  height: 100%;
+}
+
+.reset-zoom-button {
+  border-left: 0 !important;
+  border-right: 0 !important;
+  padding: 0 0.625rem !important;
+  width: 3.75rem !important;
+  justify-content: center;
+  color: var(--text-primary-color);
+}
+
+.zoom-out-button {
+  border-top-left-radius: var(--border-radius-lg) !important;
+  border-bottom-left-radius: var(--border-radius-lg) !important;
+}
+:root[dir=rtl] .zoom-out-button {
+  transform: scaleX(-1);
+}
+.zoom-out-button .ToolIcon__icon {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.zoom-in-button {
+  border-top-right-radius: var(--border-radius-lg) !important;
+  border-bottom-right-radius: var(--border-radius-lg) !important;
+}
+:root[dir=rtl] .zoom-in-button {
+  transform: scaleX(-1);
+}
+.zoom-in-button .ToolIcon__icon {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.undo-redo-buttons .undo-button-container button {
+  border-top-left-radius: var(--border-radius-lg) !important;
+  border-bottom-left-radius: var(--border-radius-lg) !important;
+  border-right: 0 !important;
+}
+:root[dir=rtl] .undo-redo-buttons .undo-button-container button {
+  transform: scaleX(-1);
+}
+.undo-redo-buttons .undo-button-container button .ToolIcon__icon {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.undo-redo-buttons .redo-button-container button {
+  border-top-right-radius: var(--border-radius-lg) !important;
+  border-bottom-right-radius: var(--border-radius-lg) !important;
+}
+:root[dir=rtl] .undo-redo-buttons .redo-button-container button {
+  transform: scaleX(-1);
+}
+.undo-redo-buttons .redo-button-container button .ToolIcon__icon {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .Avatar {
+  width: 1.25rem;
+  height: 1.25rem;
+  position: relative;
+  border-radius: 100%;
+  outline-offset: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.625rem;
+  font-weight: 500;
+  line-height: 1;
+}
+.excalidraw .Avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+}
+.excalidraw .Avatar::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  bottom: -3px;
+  left: -3px;
+  border: 1px solid var(--avatar-border-color);
+  border-radius: 100%;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw {
+  --theme-filter: none;
+  --button-destructive-bg-color: #ffe3e3;
+  --button-destructive-color: #c92a2a;
+  --button-gray-1: #e9ecef;
+  --button-gray-2: #ced4da;
+  --button-gray-3: #adb5bd;
+  --button-special-active-bg-color: #ebfbee;
+  --dialog-border-color: var(--color-gray-20);
+  --dropdown-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="292.4" height="292.4" viewBox="0 0 292 292"><path d="M287 197L159 69c-4-3-8-5-13-5s-9 2-13 5L5 197c-3 4-5 8-5 13s2 9 5 13c4 4 8 5 13 5h256c5 0 9-1 13-5s5-8 5-13-1-9-5-13z"/></svg>');
+  --focus-highlight-color: #a5d8ff;
+  --icon-fill-color: var(--color-gray-80);
+  --icon-green-fill-color: #2b8a3e;
+  --default-bg-color: #ffffff;
+  --input-bg-color: #ffffff;
+  --input-border-color: #ced4da;
+  --input-hover-bg-color: #f1f3f5;
+  --input-label-color: #495057;
+  --island-bg-color: rgba(255, 255, 255, 0.96);
+  --keybinding-color: var(--color-gray-40);
+  --link-color: #1c7ed6;
+  --overlay-bg-color: rgba(255, 255, 255, 0.88);
+  --popup-bg-color: #ffffff;
+  --popup-secondary-bg-color: #f1f3f5;
+  --popup-text-color: #000000;
+  --popup-text-inverted-color: #ffffff;
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+  --sar: env(safe-area-inset-right);
+  --sat: env(safe-area-inset-top);
+  --select-highlight-color: #339af0;
+  --shadow-island: 0px 7px 14px rgba(0, 0, 0, 0.05),
+    0px 0px 3.12708px rgba(0, 0, 0, 0.0798),
+    0px 0px 0.931014px rgba(0, 0, 0, 0.1702);
+  --button-hover-bg: var(--color-gray-10);
+  --default-border-color: var(--color-gray-30);
+  --default-button-size: 2rem;
+  --default-icon-size: 1rem;
+  --lg-button-size: 2.25rem;
+  --lg-icon-size: 1rem;
+  --editor-container-padding: 1rem;
+  --scrollbar-thumb: var(--button-gray-2);
+  --scrollbar-thumb-hover: var(--button-gray-3);
+  --modal-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07),
+    0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198),
+    0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275),
+    0px 12.5216px 10.0172px rgba(0, 0, 0, 0.035),
+    0px 6.6501px 5.32008px rgba(0, 0, 0, 0.0282725),
+    0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802);
+  --avatar-border-color: var(--color-gray-20);
+  --sidebar-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07),
+    0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198),
+    0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275),
+    0px 12.5216px 10.0172px rgba(0, 0, 0, 0.035),
+    0px 6.6501px 5.32008px rgba(0, 0, 0, 0.0282725),
+    0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802);
+  --sidebar-border-color: var(--color-gray-20);
+  --sidebar-bg-color: #fff;
+  --library-dropdown-shadow: 0px 15px 6px rgba(0, 0, 0, 0.01),
+    0px 8px 5px rgba(0, 0, 0, 0.05), 0px 4px 4px rgba(0, 0, 0, 0.09),
+    0px 1px 2px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+  --space-factor: 0.25rem;
+  --text-primary-color: var(--color-gray-80);
+  --color-selection: #6965db;
+  --color-icon-white: #ffffff;
+  --color-primary: #6965db;
+  --color-primary-darker: #5b57d1;
+  --color-primary-darkest: #4a47b1;
+  --color-primary-light: #e3e2fe;
+  --color-primary-light-darker: #d7d5ff;
+  --color-gray-10: #f5f5f5;
+  --color-gray-20: #ebebeb;
+  --color-gray-30: #d6d6d6;
+  --color-gray-40: #b8b8b8;
+  --color-gray-50: #999999;
+  --color-gray-60: #7a7a7a;
+  --color-gray-70: #5c5c5c;
+  --color-gray-80: #3d3d3d;
+  --color-gray-85: #242424;
+  --color-gray-90: #1e1e1e;
+  --color-gray-100: #121212;
+  --color-warning: #fceeca;
+  --color-text-warning: var(--text-primary-color);
+  --color-danger: #db6965;
+  --color-promo: #e70078;
+  --border-radius-md: 0.375rem;
+  --border-radius-lg: 0.5rem;
+}
+@media screen and (min-device-width: 1921px) {
+  .excalidraw {
+    --lg-button-size: 2.5rem;
+    --lg-icon-size: 1.25rem;
+    --default-button-size: 2.25rem;
+    --default-icon-size: 1.25rem;
+  }
+}
+.excalidraw.theme--dark.theme--dark-background-none {
+  background: none;
+}
+.excalidraw.theme--dark {
+  --theme-filter: invert(93%) hue-rotate(180deg);
+  --button-destructive-bg-color: #5a0000;
+  --button-destructive-color: #ffa8a8;
+  --button-gray-1: #363636;
+  --button-gray-2: #272727;
+  --button-gray-3: #222;
+  --button-special-active-bg-color: #204624;
+  --dialog-border-color: var(--color-gray-80);
+  --dropdown-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="292.4" height="292.4" viewBox="0 0 292 292"><path fill="%23ced4da" d="M287 197L159 69c-4-3-8-5-13-5s-9 2-13 5L5 197c-3 4-5 8-5 13s2 9 5 13c4 4 8 5 13 5h256c5 0 9-1 13-5s5-8 5-13-1-9-5-13z"/></svg>');
+  --focus-highlight-color: #228be6;
+  --icon-fill-color: var(--color-gray-40);
+  --icon-green-fill-color: #69db7c;
+  --default-bg-color: #121212;
+  --input-bg-color: #121212;
+  --input-border-color: #2e2e2e;
+  --input-hover-bg-color: #181818;
+  --input-label-color: #e9ecef;
+  --island-bg-color: #262627;
+  --keybinding-color: var(--color-gray-60);
+  --link-color: #4dabf7;
+  --overlay-bg-color: rgba(52, 58, 64, 0.12);
+  --popup-bg-color: #2c2c2c;
+  --popup-secondary-bg-color: #222;
+  --popup-text-color: #ced4da;
+  --popup-text-inverted-color: #2c2c2c;
+  --select-highlight-color: #4dabf7;
+  --text-primary-color: var(--color-gray-40);
+  --button-hover-bg: var(--color-gray-80);
+  --default-border-color: var(--color-gray-80);
+  --shadow-island: 0px 13px 33px rgba(0, 0, 0, 0.07),
+    0px 4.13px 9.94853px rgba(0, 0, 0, 0.0456112),
+    0px 1.13px 4.13211px rgba(0, 0, 0, 0.035),
+    0px 0.769896px 1.4945px rgba(0, 0, 0, 0.0243888);
+  --modal-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07),
+    0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198),
+    0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275),
+    0px 12.5216px 10.0172px rgba(0, 0, 0, 0.035),
+    0px 6.6501px 5.32008px rgba(0, 0, 0, 0.0282725),
+    0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802);
+  --avatar-border-color: var(--color-gray-85);
+  --sidebar-border-color: var(--color-gray-85);
+  --sidebar-bg-color: #191919;
+  --scrollbar-thumb: #343a40;
+  --scrollbar-thumb-hover: #495057;
+  --color-selection: #3530c4;
+  --color-icon-white: var(--color-gray-90);
+  --color-primary: #a8a5ff;
+  --color-primary-darker: #b2aeff;
+  --color-primary-darkest: #beb9ff;
+  --color-primary-light: #4f4d6f;
+  --color-primary-light-darker: #43415e;
+  --color-text-warning: var(--color-gray-80);
+  --color-danger: #ffa8a5;
+  --color-promo: #d297ff;
+}
+
+.excalidraw .excalidraw-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.625rem;
+  width: var(--button-width, var(--default-button-size));
+  height: var(--button-height, var(--default-button-size));
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--button-border, var(--default-border-color));
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  background-color: var(--button-bg, var(--island-bg-color));
+  color: var(--button-color, var(--text-primary-color));
+}
+.excalidraw .excalidraw-button svg {
+  width: var(--button-width, var(--lg-icon-size));
+  height: var(--button-height, var(--lg-icon-size));
+}
+.excalidraw .excalidraw-button:hover {
+  background-color: var(--button-hover-bg, var(--island-bg-color));
+  border-color: var(--button-hover-border, var(--button-border, var(--default-border-color)));
+  color: var(--button-hover-color, var(--button-color, var(--text-primary-color, inherit)));
+}
+.excalidraw .excalidraw-button:active {
+  background-color: var(--button-active-bg, var(--island-bg-color));
+  border-color: var(--button-active-border, var(--color-primary-darkest));
+}
+.excalidraw .excalidraw-button.active {
+  background-color: var(--button-selected-bg, var(--color-primary-light));
+  border-color: var(--button-selected-border, var(--color-primary-light));
+}
+.excalidraw .excalidraw-button.active:hover {
+  background-color: var(--button-selected-hover-bg, var(--color-primary-light));
+}
+.excalidraw .excalidraw-button.active svg {
+  color: var(--button-color, var(--color-primary-darker));
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .Card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 290px;
+  margin: 1em;
+  text-align: center;
+}
+.excalidraw .Card .Card-icon {
+  font-size: 2.6em;
+  display: flex;
+  flex: 0 0 auto;
+  padding: 1.4rem;
+  border-radius: 50%;
+  background: var(--card-color);
+  color: #ffffff;
+}
+.excalidraw .Card .Card-icon svg {
+  width: 2.8rem;
+  height: 2.8rem;
+}
+.excalidraw .Card .Card-details {
+  font-size: 0.96em;
+  min-height: 90px;
+  padding: 0 1em;
+  margin-bottom: auto;
+}
+.excalidraw .Card .Card-button.ToolIcon_type_button {
+  height: 2.5rem;
+  margin-top: 1em;
+  margin-bottom: 0.3em;
+  background-color: var(--card-color);
+}
+.excalidraw .Card .Card-button.ToolIcon_type_button:hover {
+  background-color: var(--card-color-darker);
+}
+.excalidraw .Card .Card-button.ToolIcon_type_button:active {
+  background-color: var(--card-color-darkest);
+}
+.excalidraw .Card .Card-button.ToolIcon_type_button .ToolIcon__label {
+  color: #ffffff;
+}
+.excalidraw .Card .Card-button.ToolIcon_type_button .Spinner {
+  --spinner-color: #fff;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .Checkbox {
+  margin: 4px 0.3em;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.excalidraw .Checkbox:hover:not(.is-checked) .Checkbox-box:not(:focus) {
+  box-shadow: 0 0 0 2px #4dabf7;
+}
+.excalidraw .Checkbox:hover:not(.is-checked) .Checkbox-box:not(:focus) svg {
+  display: block;
+  opacity: 0.3;
+}
+.excalidraw .Checkbox:active .Checkbox-box {
+  box-shadow: 0 0 2px 1px inset #1c7ed6 !important;
+}
+.excalidraw .Checkbox:hover .Checkbox-box {
+  background-color: rgba(208, 235, 255, 0.2);
+}
+.excalidraw .Checkbox.is-checked .Checkbox-box {
+  background-color: #d0ebff;
+}
+.excalidraw .Checkbox.is-checked .Checkbox-box svg {
+  display: block;
+}
+.excalidraw .Checkbox.is-checked:hover .Checkbox-box {
+  background-color: #a5d8ff;
+}
+.excalidraw .Checkbox .Checkbox-box {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  flex: 0 0 auto;
+  margin: 0 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px #1c7ed6;
+  background-color: transparent;
+  border-radius: 4px;
+  color: #1c7ed6;
+  border: 0;
+}
+.excalidraw .Checkbox .Checkbox-box:focus {
+  box-shadow: 0 0 0 3px #1c7ed6;
+}
+.excalidraw .Checkbox .Checkbox-box svg {
+  display: none;
+  width: 16px;
+  height: 16px;
+  stroke-width: 3px;
+}
+.excalidraw .Checkbox .Checkbox-label {
+  display: flex;
+  align-items: center;
+}
+.excalidraw .Checkbox .excalidraw-tooltip-icon {
+  width: 1em;
+  height: 1em;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .color-picker {
+  background: var(--popup-bg-color);
+  border: 0 solid rgba(255, 255, 255, 0.25);
+  box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px;
+  border-radius: 4px;
+  position: absolute;
+}
+:root[dir=ltr] .excalidraw .color-picker {
+  left: -5.5px;
+}
+:root[dir=rtl] .excalidraw .color-picker {
+  right: -5.5px;
+}
+.excalidraw .color-picker-control-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+.excalidraw .color-picker-input-container {
+  border: 1px solid var(--default-border-color);
+  border-radius: var(--border-radius-lg);
+  width: var(--default-button-size);
+  height: var(--default-button-size);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.excalidraw .color-picker-input-container .color-picker-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 30px;
+  height: 32px;
+  background-color: transparent;
+  border: none !important;
+  cursor: pointer;
+  padding: 0 !important;
+  margin-top: -1px;
+}
+.excalidraw .color-picker-input-container .color-picker-input::-webkit-color-swatch {
+  border-radius: 4px;
+  border: none;
+}
+.excalidraw .color-picker-input-container .color-picker-input::-moz-color-swatch {
+  border-radius: 4px;
+  border: none;
+}
+.excalidraw .color-picker-control-container + .popover {
+  position: static;
+}
+.excalidraw .color-picker-popover-container {
+  margin-top: -0.25rem;
+}
+:root[dir=ltr] .excalidraw .color-picker-popover-container {
+  margin-left: 0.5rem;
+}
+:root[dir=rtl] .excalidraw .color-picker-popover-container {
+  margin-left: -3rem;
+}
+.excalidraw .color-picker-triangle {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 9px 10px;
+  border-color: transparent transparent var(--popup-bg-color);
+  position: absolute;
+  top: 10px;
+}
+:root[dir=ltr] .excalidraw .color-picker-triangle {
+  transform: rotate(270deg);
+  left: -14px;
+}
+:root[dir=rtl] .excalidraw .color-picker-triangle {
+  transform: rotate(90deg);
+  right: -14px;
+}
+.excalidraw .color-picker-triangle-shadow {
+  border-color: transparent transparent rgba(0, 0, 0, 0.1);
+}
+:root[dir=ltr] .excalidraw .color-picker-triangle-shadow {
+  left: -14px;
+}
+:root[dir=rtl] .excalidraw .color-picker-triangle-shadow {
+  right: -16px;
+}
+.excalidraw .color-picker-content--default {
+  padding: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  grid-gap: 0.5rem;
+  border-radius: 4px;
+}
+.excalidraw .color-picker-content--default:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--focus-highlight-color);
+}
+.excalidraw .color-picker-content--canvas {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem;
+}
+.excalidraw .color-picker-content--canvas-title {
+  color: #868e96;
+  font-size: 12px;
+  padding: 0 0.25rem;
+}
+.excalidraw .color-picker-content--canvas-colors {
+  padding: 0.5rem 0;
+}
+.excalidraw .color-picker-content--canvas-colors .color-picker-swatch {
+  margin: 0 0.25rem;
+}
+.excalidraw .color-picker-content .color-input-container {
+  grid-column: 1/span 5;
+}
+.excalidraw .color-picker-swatch {
+  position: relative;
+  height: 1.875rem;
+  width: 1.875rem;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  background-color: currentColor !important;
+  filter: var(--theme-filter);
+}
+.excalidraw .color-picker-swatch:focus {
+  /* TODO: only show the border when the color is too light to see as a shadow */
+  box-shadow: 0 0 4px 1px currentColor;
+  border-color: var(--select-highlight-color);
+}
+.excalidraw .color-picker-transparent {
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 1px inset;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.excalidraw .color-picker-transparent,
+.excalidraw .color-picker-label-swatch {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==") left center;
+}
+.excalidraw .color-picker-hash {
+  height: var(--default-button-size);
+  flex-shrink: 0;
+  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+  border: 1px solid var(--default-border-color);
+  border-right: 0;
+  box-sizing: border-box;
+  color: var(--input-label-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+:root[dir=ltr] .excalidraw .color-picker-hash {
+  border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+}
+:root[dir=rtl] .excalidraw .color-picker-hash {
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+  border-right: 1px solid var(--default-border-color);
+  border-left: 0;
+}
+.excalidraw .color-input-container {
+  display: flex;
+}
+.excalidraw .color-input-container:focus-within {
+  box-shadow: 0 0 0 1px var(--color-primary-darkest);
+  border-radius: var(--border-radius-lg);
+}
+.excalidraw .color-picker-input {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  font-size: 0.875rem;
+  font-family: inherit;
+  background-color: transparent;
+  color: var(--text-primary-color);
+  border: 0;
+  outline: none;
+  height: var(--default-button-size);
+  border: 1px solid var(--default-border-color);
+  border-left: 0;
+  letter-spacing: 0.4px;
+  padding: 0.5rem;
+  padding-left: 0.25rem;
+  appearance: none;
+}
+:root[dir=ltr] .excalidraw .color-picker-input {
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+}
+:root[dir=rtl] .excalidraw .color-picker-input {
+  border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+  border-left: 1px solid var(--default-border-color);
+  border-right: 0;
+}
+.excalidraw .color-picker-input:focus-visible {
+  box-shadow: none;
+}
+.excalidraw .color-picker-label-swatch-container {
+  border: 1px solid var(--default-border-color);
+  border-radius: var(--border-radius-lg);
+  width: var(--default-button-size);
+  height: var(--default-button-size);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.excalidraw .color-picker-label-swatch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.625rem;
+  width: var(--button-width, var(--default-button-size));
+  height: var(--button-height, var(--default-button-size));
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--button-border, var(--default-border-color));
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  background-color: var(--button-bg, var(--island-bg-color));
+  color: var(--button-color, var(--text-primary-color));
+  background-color: var(--swatch-color) !important;
+  overflow: hidden;
+  position: relative;
+  filter: var(--theme-filter);
+  border: 0 !important;
+}
+.excalidraw .color-picker-label-swatch svg {
+  width: var(--button-width, var(--lg-icon-size));
+  height: var(--button-height, var(--lg-icon-size));
+}
+.excalidraw .color-picker-label-swatch:hover {
+  background-color: var(--button-hover-bg, var(--island-bg-color));
+  border-color: var(--button-hover-border, var(--button-border, var(--default-border-color)));
+  color: var(--button-hover-color, var(--button-color, var(--text-primary-color, inherit)));
+}
+.excalidraw .color-picker-label-swatch:active {
+  background-color: var(--button-active-bg, var(--island-bg-color));
+  border-color: var(--button-active-border, var(--color-primary-darkest));
+}
+.excalidraw .color-picker-label-swatch.active {
+  background-color: var(--button-selected-bg, var(--color-primary-light));
+  border-color: var(--button-selected-border, var(--color-primary-light));
+}
+.excalidraw .color-picker-label-swatch.active:hover {
+  background-color: var(--button-selected-hover-bg, var(--color-primary-light));
+}
+.excalidraw .color-picker-label-swatch.active svg {
+  color: var(--button-color, var(--color-primary-darker));
+}
+.excalidraw .color-picker-label-swatch:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--swatch-color);
+}
+.excalidraw .color-picker-keybinding {
+  position: absolute;
+  bottom: 2px;
+  font-size: 0.7em;
+}
+:root[dir=ltr] .excalidraw .color-picker-keybinding {
+  right: 2px;
+}
+:root[dir=rtl] .excalidraw .color-picker-keybinding {
+  left: 2px;
+}
+.excalidraw--mobile.excalidraw .color-picker-keybinding {
+  display: none;
+}
+
+.excalidraw .color-picker-type-canvasBackground .color-picker-keybinding {
+  color: #aaa;
+}
+.excalidraw .color-picker-type-elementBackground .color-picker-keybinding {
+  color: #ffffff;
+}
+.excalidraw .color-picker-swatch[aria-label=transparent] .color-picker-keybinding {
+  color: #aaa;
+}
+.excalidraw .color-picker-type-elementStroke .color-picker-keybinding {
+  color: #d4d4d4;
+}
+.excalidraw.theme--dark .color-picker-type-elementBackground .color-picker-keybinding {
+  color: #000000;
+}
+.excalidraw.theme--dark .color-picker-swatch[aria-label=transparent] .color-picker-keybinding {
+  color: #000000;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .confirm-dialog-buttons {
+  display: flex;
+  column-gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .context-menu {
+  position: relative;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  padding: 0;
+  list-style: none;
+  user-select: none;
+  margin: -0.25rem 0 0 0.125rem;
+  padding: 0.5rem 0;
+  background-color: var(--popup-secondary-bg-color);
+  border: 1px solid var(--button-gray-3);
+  cursor: default;
+}
+.excalidraw .context-menu button {
+  color: var(--popup-text-color);
+}
+.excalidraw .context-menu-item {
+  position: relative;
+  width: 100%;
+  min-width: 9.5rem;
+  margin: 0;
+  padding: 0.25rem 1rem 0.25rem 1.25rem;
+  text-align: start;
+  border-radius: 0;
+  background-color: transparent;
+  border: none;
+  white-space: nowrap;
+  font-family: inherit;
+  display: grid;
+  grid-template-columns: 1fr 0.2fr;
+  align-items: center;
+}
+.excalidraw .context-menu-item.checkmark::before {
+  position: absolute;
+  left: 6px;
+  margin-bottom: 1px;
+  content: "✓";
+}
+.excalidraw .context-menu-item.dangerous .context-menu-item__label {
+  color: #f03e3e;
+}
+.excalidraw .context-menu-item .context-menu-item__label {
+  justify-self: start;
+  margin-inline-end: 20px;
+}
+.excalidraw .context-menu-item .context-menu-item__shortcut {
+  justify-self: end;
+  opacity: 0.6;
+  font-family: inherit;
+  font-size: 0.7rem;
+}
+.excalidraw .context-menu-item:hover {
+  color: var(--popup-bg-color);
+  background-color: var(--select-highlight-color);
+}
+.excalidraw .context-menu-item:hover.dangerous {
+  background-color: #fa5252;
+}
+.excalidraw .context-menu-item:hover.dangerous .context-menu-item__label {
+  color: var(--popup-bg-color);
+}
+.excalidraw .context-menu-item:focus {
+  z-index: 1;
+}
+.excalidraw--mobile.excalidraw .context-menu-item {
+  display: block;
+}
+.excalidraw--mobile.excalidraw .context-menu-item .context-menu-item__label {
+  margin-inline-end: 0;
+}
+.excalidraw--mobile.excalidraw .context-menu-item .context-menu-item__shortcut {
+  display: none;
+}
+
+.excalidraw .context-menu-item-separator {
+  border: none;
+  border-top: 1px solid #adb5bd;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .Dialog {
+  user-select: text;
+  cursor: auto;
+}
+.excalidraw .Dialog__title {
+  margin: 0;
+  text-align: left;
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--dialog-border-color);
+  padding: 0 0 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.excalidraw .Dialog__action-button {
+  position: relative;
+  display: flex;
+  column-gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid var(--default-border-color);
+  background-color: transparent;
+  height: 3rem;
+  border-radius: var(--border-radius-lg);
+  letter-spacing: 0.4px;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  user-select: none;
+}
+.excalidraw .Dialog__action-button svg {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+}
+.excalidraw .Dialog__action-button--danger {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  color: #fff;
+}
+.excalidraw .Dialog__action-button--primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+.excalidraw.theme--dark .Dialog__action-button--danger {
+  color: var(--color-gray-100);
+}
+.excalidraw.theme--dark .Dialog__action-button--primary {
+  color: var(--color-gray-100);
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .ExportDialog__preview {
+  --preview-padding: calc(var(--space-factor) * 4);
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==") left center;
+  text-align: center;
+  padding: var(--preview-padding);
+  margin-bottom: calc(var(--space-factor) * 3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.excalidraw .ExportDialog__preview canvas {
+  max-width: calc(100% - var(--preview-padding) * 2);
+  max-height: 25rem;
+}
+.excalidraw.theme--dark .ExportDialog__preview canvas {
+  filter: none;
+}
+.excalidraw .ExportDialog__actions {
+  width: 100%;
+  display: flex;
+  grid-gap: calc(var(--space-factor) * 2);
+  align-items: top;
+  justify-content: space-between;
+}
+.excalidraw--mobile.excalidraw .ExportDialog {
+  display: flex;
+  flex-direction: column;
+}
+.excalidraw--mobile.excalidraw .ExportDialog__actions {
+  flex-direction: column;
+  align-items: center;
+}
+.excalidraw--mobile.excalidraw .ExportDialog__actions > * {
+  margin-bottom: calc(var(--space-factor) * 3);
+}
+.excalidraw--mobile.excalidraw .ExportDialog__preview canvas {
+  max-height: 30vh;
+}
+.excalidraw--mobile.excalidraw .ExportDialog__dialog,
+.excalidraw--mobile.excalidraw .ExportDialog__dialog .Island {
+  height: 100%;
+  box-sizing: border-box;
+}
+.excalidraw--mobile.excalidraw .ExportDialog__dialog .Island {
+  overflow-y: auto;
+}
+
+.excalidraw .ExportDialog--json .ExportDialog-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  justify-items: center;
+  row-gap: 2em;
+}
+@media (max-width: 460px) {
+  .excalidraw .ExportDialog--json .ExportDialog-cards {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .excalidraw .ExportDialog--json .ExportDialog-cards .Card-details {
+    min-height: 40px;
+  }
+}
+.excalidraw .ExportDialog--json .ExportDialog-cards .ProjectName {
+  width: fit-content;
+  margin: 1em auto;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.excalidraw .ExportDialog--json .ExportDialog-cards .ProjectName .TextInput {
+  width: auto;
+}
+.excalidraw .ExportDialog--json .ExportDialog-cards .ProjectName-label {
+  margin: 0.625em 0;
+  font-weight: bold;
+}
+.excalidraw button.ExportDialog-imageExportButton {
+  border: 0;
+  width: 5rem;
+  height: 5rem;
+  margin: 0 0.2em;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background-color: var(--button-color);
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.28), 0 6px 10px 0 rgba(0, 0, 0, 0.14);
+  font-family: Cascadia;
+  font-size: 1.8em;
+  color: #ffffff;
+}
+.excalidraw button.ExportDialog-imageExportButton:hover {
+  background-color: var(--button-color-darker);
+}
+.excalidraw button.ExportDialog-imageExportButton:active {
+  background-color: var(--button-color-darkest);
+  box-shadow: none;
+}
+.excalidraw button.ExportDialog-imageExportButton svg {
+  width: 0.9em;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .FixedSideContainer {
+  position: absolute;
+  pointer-events: none;
+}
+.excalidraw .FixedSideContainer > * {
+  pointer-events: all;
+}
+.excalidraw .FixedSideContainer_side_top {
+  left: var(--editor-container-padding);
+  top: var(--editor-container-padding);
+  right: var(--editor-container-padding);
+  bottom: var(--editor-container-padding);
+  z-index: 2;
+}
+.excalidraw .FixedSideContainer_side_top.zen-mode {
+  right: 42px;
+}
+
+/* TODO: if these are used, make sure to implement RTL support
+.FixedSideContainer_side_left {
+  left: var(--space-factor);
+  top: var(--space-factor);
+  bottom: var(--space-factor);
+  z-index: 1;
+}
+
+.FixedSideContainer_side_right {
+  right: var(--space-factor);
+  top: var(--space-factor);
+  bottom: var(--space-factor);
+  z-index: 3;
+}
+*/
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .HelpDialog .Modal__content {
+  max-width: 960px;
+}
+.excalidraw .HelpDialog h3 {
+  margin: 1.5rem 0;
+  font-weight: bold;
+  font-size: 1.125rem;
+}
+.excalidraw .HelpDialog__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.excalidraw .HelpDialog__btn {
+  display: flex;
+  column-gap: 0.5rem;
+  align-items: center;
+  border: 1px solid var(--default-border-color);
+  padding: 0.625rem 1rem;
+  border-radius: var(--border-radius-lg);
+  color: var(--text-primary-color);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.4px;
+}
+.excalidraw .HelpDialog__btn:hover {
+  text-decoration: none;
+}
+.excalidraw .HelpDialog__link-icon {
+  line-height: 0;
+}
+.excalidraw .HelpDialog__link-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+.excalidraw .HelpDialog__islands-container {
+  display: grid;
+  grid-column-gap: 1.5rem;
+  grid-row-gap: 2rem;
+}
+@media screen and (min-width: 1024px) {
+  .excalidraw .HelpDialog__islands-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .excalidraw .HelpDialog__island--tools {
+    grid-area: 1/1/2/2;
+  }
+  .excalidraw .HelpDialog__island--view {
+    grid-area: 2/1/3/2;
+  }
+  .excalidraw .HelpDialog__island--editor {
+    grid-area: 1/2/3/3;
+  }
+}
+.excalidraw .HelpDialog__island h4 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+  margin-bottom: 0.625rem;
+}
+.excalidraw .HelpDialog__island-content {
+  border: 1px solid var(--dialog-border-color);
+  border-radius: var(--border-radius-lg);
+}
+.excalidraw .HelpDialog__shortcut {
+  border-bottom: 1px solid var(--dialog-border-color);
+  padding: 0.375rem 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  column-gap: 0.5rem;
+}
+.excalidraw .HelpDialog__shortcut:last-child {
+  border-bottom: none;
+}
+.excalidraw .HelpDialog__key-container {
+  display: flex;
+  align-items: center;
+  column-gap: 0.25rem;
+  flex-shrink: 0;
+}
+.excalidraw .HelpDialog__key {
+  display: flex;
+  box-sizing: border-box;
+  font-size: 0.625rem;
+  background-color: var(--color-primary-light);
+  border-radius: var(--border-radius-md);
+  padding: 0.5rem;
+  word-break: keep-all;
+  align-items: center;
+  font-family: inherit;
+  line-height: 1;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .HintViewer {
+  pointer-events: none;
+  box-sizing: border-box;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  top: 100%;
+  max-width: 100%;
+  width: 100%;
+  margin-top: 0.5rem;
+  text-align: center;
+  color: var(--color-gray-40);
+  font-size: 0.75rem;
+}
+.excalidraw--mobile.excalidraw .HintViewer {
+  position: static;
+  padding-right: 2rem;
+}
+
+.excalidraw .HintViewer > span {
+  padding: 0.25rem;
+}
+.excalidraw.theme--dark .HintViewer {
+  color: var(--color-gray-60);
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .picker-container {
+  display: inline-block;
+  box-sizing: border-box;
+  margin-right: 0.25rem;
+}
+.excalidraw .picker {
+  background: var(--popup-bg-color);
+  border: 0 solid rgba(255, 255, 255, 0.25);
+  box-shadow: rgba(0, 0, 0, 0.25) 2px 2px 4px 2px;
+  border-radius: 4px;
+  position: absolute;
+}
+.excalidraw .picker-container button,
+.excalidraw .picker button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.excalidraw .picker-container button:focus-visible,
+.excalidraw .picker button:focus-visible {
+  outline: transparent;
+  background-color: var(--button-gray-2);
+}
+.excalidraw .picker-container button:focus-visible svg,
+.excalidraw .picker button:focus-visible svg {
+  opacity: 1;
+}
+.excalidraw .picker-container button:hover,
+.excalidraw .picker button:hover {
+  background-color: var(--button-gray-2);
+}
+.excalidraw .picker-container button:active,
+.excalidraw .picker button:active {
+  background-color: var(--button-gray-3);
+}
+.excalidraw .picker-container button:disabled,
+.excalidraw .picker button:disabled {
+  cursor: not-allowed;
+}
+.excalidraw .picker-container button svg,
+.excalidraw .picker button svg {
+  margin: 0;
+  width: 36px;
+  height: 18px;
+  pointer-events: none;
+}
+.excalidraw .picker button {
+  padding: 0.25rem 0.28rem 0.35rem 0.25rem;
+}
+.excalidraw .picker-triangle {
+  width: 0;
+  height: 0;
+  position: relative;
+  top: -10px;
+  z-index: 10;
+}
+:root[dir=ltr] .excalidraw .picker-triangle {
+  left: 12px;
+}
+:root[dir=rtl] .excalidraw .picker-triangle {
+  right: 12px;
+}
+.excalidraw .picker-triangle:before {
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-width: 0 9px 10px;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1);
+  top: -1px;
+}
+.excalidraw .picker-triangle:after {
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-width: 0 9px 10px;
+  border-color: transparent transparent var(--popup-bg-color);
+}
+.excalidraw .picker-content {
+  padding: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-gap: 0.5rem;
+  border-radius: 4px;
+}
+:root[dir=rtl] .excalidraw .picker-content {
+  padding: 0.4rem;
+}
+.excalidraw .picker-keybinding {
+  position: absolute;
+  bottom: 2px;
+  font-size: 0.7em;
+  color: var(--keybinding-color);
+}
+:root[dir=ltr] .excalidraw .picker-keybinding {
+  right: 2px;
+}
+:root[dir=rtl] .excalidraw .picker-keybinding {
+  left: 2px;
+}
+.excalidraw--mobile.excalidraw .picker-keybinding {
+  display: none;
+}
+
+.excalidraw .picker-type-canvasBackground .picker-keybinding {
+  color: #aaa;
+}
+.excalidraw .picker-type-elementBackground .picker-keybinding {
+  color: #ffffff;
+}
+.excalidraw .picker-swatch[aria-label=transparent] .picker-keybinding {
+  color: #aaa;
+}
+.excalidraw .picker-type-elementStroke .picker-keybinding {
+  color: #d4d4d4;
+}
+.excalidraw.theme--dark .picker-type-elementBackground .picker-keybinding {
+  color: #000000;
+}
+.excalidraw.theme--dark .picker-swatch[aria-label=transparent] .picker-keybinding {
+  color: #000000;
+}
+
+.excalidraw .Island {
+  --padding: 0;
+  box-sizing: border-box;
+  background-color: var(--island-bg-color);
+  box-shadow: var(--shadow-island);
+  border-radius: var(--border-radius-lg);
+  padding: calc(var(--padding) * var(--space-factor));
+  position: relative;
+  transition: box-shadow 0.5s ease-in-out;
+}
+.excalidraw .Island.zen-mode {
+  box-shadow: none;
+}
+
+.excalidraw .library-menu-items-container {
+  height: 100%;
+  width: 100%;
+}
+.excalidraw .layer-ui__library {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+.excalidraw .library-actions-counter {
+  background-color: var(--color-primary);
+  color: var(--color-primary-light);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  bottom: -0.25rem;
+  right: -0.25rem;
+  font-size: 0.625rem;
+  pointer-events: none;
+}
+.excalidraw .layer-ui__library-message {
+  padding: 2rem;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: center;
+}
+.excalidraw .layer-ui__library-message span {
+  font-size: 0.8em;
+}
+.excalidraw .publish-library-success .Dialog__content {
+  display: flex;
+  flex-direction: column;
+}
+.excalidraw .publish-library-success-close.ToolIcon_type_button {
+  background-color: #228be6;
+  align-self: flex-end;
+}
+.excalidraw .publish-library-success-close.ToolIcon_type_button:hover {
+  background-color: #1971c2;
+}
+.excalidraw .publish-library-success-close.ToolIcon_type_button .ToolIcon__icon {
+  width: auto;
+  font-size: 1rem;
+  color: #ffffff;
+  padding: 0 0.5rem;
+}
+.excalidraw .library-menu-control-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+}
+.excalidraw .library-menu-browse-button {
+  flex: 1;
+  height: var(--lg-button-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  border-radius: var(--border-radius-lg);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none !important;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+.excalidraw .library-menu-browse-button:hover {
+  background-color: var(--color-primary-darker);
+}
+.excalidraw .library-menu-browse-button:active {
+  background-color: var(--color-primary-darkest);
+}
+.excalidraw.theme--dark .library-menu-browse-button {
+  color: var(--color-gray-100);
+}
+.excalidraw.excalidraw--mobile .library-menu-browse-button {
+  height: var(--default-button-size);
+}
+.excalidraw .layer-ui__library .dropdown-menu {
+  width: auto;
+  top: initial;
+  right: 0;
+  left: initial;
+  bottom: 100%;
+  margin-bottom: 0.625rem;
+}
+.excalidraw .layer-ui__library .dropdown-menu .dropdown-menu-container {
+  width: 196px;
+  box-shadow: var(--library-dropdown-shadow);
+  border-radius: var(--border-radius-lg);
+  padding: 0.25rem 0.5rem;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .layer-ui__wrapper.animate {
+  transition: width 0.1s ease-in-out;
+}
+.excalidraw .layer-ui__wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: var(--zIndex-layerUI);
+}
+.excalidraw .layer-ui__wrapper__top-right {
+  display: flex;
+  gap: 0.75rem;
+}
+.excalidraw .layer-ui__wrapper__footer {
+  width: 100%;
+}
+.excalidraw .layer-ui__wrapper__footer-right {
+  z-index: 100;
+  display: flex;
+}
+.excalidraw .layer-ui__wrapper .zen-mode-transition {
+  transition: transform 0.5s ease-in-out;
+}
+:root[dir=ltr] .excalidraw .layer-ui__wrapper .zen-mode-transition.transition-left {
+  transform: translate(-999px, 0);
+}
+:root[dir=ltr] .excalidraw .layer-ui__wrapper .zen-mode-transition.transition-right {
+  transform: translate(999px, 0);
+}
+:root[dir=rtl] .excalidraw .layer-ui__wrapper .zen-mode-transition.transition-left {
+  transform: translate(999px, 0);
+}
+:root[dir=rtl] .excalidraw .layer-ui__wrapper .zen-mode-transition.transition-right {
+  transform: translate(-999px, 0);
+}
+.excalidraw .layer-ui__wrapper .zen-mode-transition.layer-ui__wrapper__footer-left--transition-bottom {
+  transform: translate(0, 92px);
+}
+.excalidraw .layer-ui__wrapper .disable-zen-mode {
+  height: 30px;
+  position: absolute;
+  bottom: 10px;
+  font-size: 10px;
+  padding: 10px;
+  font-weight: 500;
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0s linear 0s, opacity 0.5s;
+}
+[dir=ltr] .excalidraw .layer-ui__wrapper .disable-zen-mode {
+  right: 15px;
+}
+[dir=rtl] .excalidraw .layer-ui__wrapper .disable-zen-mode {
+  left: 15px;
+}
+.excalidraw .layer-ui__wrapper .disable-zen-mode--visible {
+  opacity: 1;
+  visibility: visible;
+  transition: visibility 0s linear 300ms, opacity 0.5s;
+  transition-delay: 0.8s;
+}
+.excalidraw .layer-ui__wrapper .layer-ui__wrapper__footer-left,
+.excalidraw .layer-ui__wrapper .layer-ui__wrapper__footer-right,
+.excalidraw .layer-ui__wrapper .disable-zen-mode--visible {
+  pointer-events: all;
+}
+.excalidraw .layer-ui__wrapper .layer-ui__wrapper__footer-right {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.excalidraw {
+  --container-padding-y: 1.5rem;
+  --container-padding-x: 0.75rem;
+}
+.excalidraw .library-menu-items__no-items {
+  text-align: center;
+  color: var(--color-gray-70);
+  line-height: 1.5;
+  font-size: 0.875rem;
+  width: 100%;
+}
+.excalidraw .library-menu-items__no-items__label {
+  color: var(--color-primary);
+  font-weight: bold;
+  font-size: 1.125rem;
+  margin-bottom: 0.75rem;
+}
+.excalidraw.theme--dark .library-menu-items__no-items {
+  color: var(--color-gray-40);
+}
+.excalidraw .library-menu-items-container {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  overflow-y: auto;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  margin: 0;
+  border-bottom: 1px solid var(--sidebar-border-color);
+  position: relative;
+}
+.excalidraw .library-menu-items-container__row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+.excalidraw .library-menu-items-container__items {
+  row-gap: 0.5rem;
+  padding: var(--container-padding-y) 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 1rem;
+}
+.excalidraw .library-menu-items-container__header {
+  color: var(--color-primary);
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+}
+.excalidraw .library-menu-items-container__header--excal {
+  margin-top: 2rem;
+}
+.excalidraw .library-menu-items-container .separator {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin: 0.6em 0.2em;
+  color: var(--text-primary-color);
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .library-unit {
+  align-items: center;
+  border: 1px solid transparent;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 55px;
+  height: 55px;
+  box-sizing: border-box;
+  border-radius: var(--border-radius-lg);
+}
+.excalidraw .library-unit--hover {
+  border-color: var(--color-primary);
+}
+.excalidraw .library-unit--selected {
+  border-color: var(--color-primary);
+  border-width: 1px;
+}
+.excalidraw .library-unit__dragger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+.excalidraw .library-unit__dragger > svg {
+  filter: var(--theme-filter);
+  flex-grow: 1;
+  max-height: 100%;
+  max-width: 100%;
+}
+.excalidraw .library-unit__checkbox-container,
+.excalidraw .library-unit__checkbox-container:hover,
+.excalidraw .library-unit__checkbox-container:active {
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--icon-fill-color);
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0.5rem;
+  position: absolute;
+  left: 2rem;
+  bottom: 2rem;
+  cursor: pointer;
+}
+.excalidraw .library-unit__checkbox-container input,
+.excalidraw .library-unit__checkbox-container:hover input,
+.excalidraw .library-unit__checkbox-container:active input {
+  cursor: pointer;
+}
+.excalidraw .library-unit__checkbox {
+  position: absolute;
+  top: 0.125rem;
+  right: 0.125rem;
+  margin: 0;
+}
+.excalidraw .library-unit__checkbox .Checkbox-box {
+  margin: 0;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 4px;
+  background-color: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+  box-shadow: none !important;
+  padding: 2px;
+}
+.excalidraw .library-unit__checkbox.Checkbox:hover .Checkbox-box {
+  background-color: var(--color-primary-light);
+}
+.excalidraw .library-unit__checkbox.is-checked .Checkbox-box {
+  background-color: var(--color-primary) !important;
+}
+.excalidraw .library-unit__checkbox.is-checked .Checkbox-box svg {
+  color: var(--color-primary-light);
+}
+.excalidraw .library-unit__removeFromLibrary > svg {
+  height: 16px;
+  width: 16px;
+}
+.excalidraw .library-unit__adder {
+  transform: scale(1);
+  animation: library-unit__adder-animation 1s ease-in infinite;
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+.excalidraw .library-unit__adder svg {
+  color: var(--color-primary-light);
+  width: 1rem;
+  height: 1rem;
+}
+.excalidraw .library-unit:active .library-unit__adder {
+  animation: none;
+  transform: scale(0.8);
+}
+.excalidraw .library-unit__active {
+  cursor: pointer;
+}
+@keyframes library-unit__adder-animation {
+  0% {
+    transform: scale(0.85);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.85);
+  }
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw.excalidraw-modal-container {
+  position: absolute;
+  z-index: 10;
+}
+.excalidraw .Modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  padding: calc(var(--space-factor) * 10);
+}
+.excalidraw .Modal .Island {
+  padding: 2.5rem !important;
+}
+.excalidraw .Modal__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  background-color: rgba(18, 18, 18, 0.2);
+}
+.excalidraw .Modal__content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--max-width);
+  max-height: 100%;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: Modal__content_fade-in 0.1s ease-out 0.05s forwards;
+  position: relative;
+  overflow-y: auto;
+  background: var(--island-bg-color);
+  border: 1px solid var(--dialog-border-color);
+  box-shadow: var(--modal-shadow);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+.excalidraw .Modal__content:focus {
+  outline: none;
+}
+.excalidraw--mobile.excalidraw .Modal__content {
+  max-width: 100%;
+  border: 0;
+  border-radius: 0;
+}
+
+@keyframes Modal__content_fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.excalidraw .Modal__close {
+  color: var(--icon-fill-color);
+  margin: 0;
+  padding: 0.375rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: 0;
+  background-color: transparent;
+  line-height: 0;
+  cursor: pointer;
+}
+.excalidraw .Modal__close svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.excalidraw--mobile.excalidraw .Modal {
+  padding: 0;
+}
+.excalidraw--mobile.excalidraw .Modal__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw--mobile.excalidraw .PasteChartDialog .Island {
+  display: flex;
+  flex-direction: column;
+}
+
+.excalidraw .PasteChartDialog .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.excalidraw--mobile.excalidraw .PasteChartDialog .container {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.excalidraw .PasteChartDialog .ChartPreview {
+  margin: 8px;
+  text-align: center;
+  width: 192px;
+  height: 128px;
+  border-radius: 2px;
+  padding: 1px;
+  border: 1px solid #ced4da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+.excalidraw .PasteChartDialog .ChartPreview div {
+  display: inline-block;
+}
+.excalidraw .PasteChartDialog .ChartPreview svg {
+  max-height: 120px;
+  max-width: 186px;
+}
+.excalidraw .PasteChartDialog .ChartPreview:hover {
+  padding: 0;
+  border: 2px solid #339af0;
+}
+
+.excalidraw .popover {
+  position: absolute;
+  z-index: 10;
+  padding: 5px 0 5px;
+  outline: none;
+}
+
+.ProjectName {
+  margin: auto;
+  display: flex;
+  align-items: center;
+}
+.ProjectName .TextInput {
+  height: calc(1rem - 3px);
+  width: 200px;
+  overflow: hidden;
+  text-align: center;
+  margin-left: 8px;
+  text-overflow: ellipsis;
+}
+.ProjectName .TextInput--readonly {
+  background: none;
+  border: none;
+  width: auto;
+  max-width: 200px;
+  padding-left: 2px;
+}
+.ProjectName .TextInput--readonly:hover {
+  background: none;
+}
+
+.excalidraw .UserList {
+  pointer-events: none;
+  /*github corner*/
+  padding: var(--space-factor) var(--space-factor) var(--space-factor) var(--space-factor);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.625rem;
+  max-height: 140px;
+  max-width: 290px;
+  overflow: hidden;
+}
+.excalidraw .UserList:empty {
+  display: none;
+}
+.excalidraw .UserList > * {
+  pointer-events: all;
+}
+.excalidraw .UserList_mobile {
+  padding: 0;
+  justify-content: normal;
+  margin: 0.5rem 0;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw-tooltip {
+  --ui-font: Assistant, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--ui-font);
+  position: fixed;
+  z-index: 1000;
+  padding: 8px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  pointer-events: none;
+  word-wrap: break-word;
+  background: #000000;
+  line-height: 1.5;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  display: none;
+}
+.excalidraw-tooltip.excalidraw-tooltip--visible {
+  display: block;
+}
+
+.excalidraw-tooltip-wrapper {
+  display: flex;
+}
+
+.excalidraw-tooltip-icon {
+  width: 0.9em;
+  height: 0.9em;
+  margin-left: 5px;
+  margin-top: 1px;
+  display: flex;
+}
+.excalidraw--mobile.excalidraw-tooltip-icon {
+  display: none;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .ToolIcon {
+  border-radius: var(--border-radius-lg);
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.excalidraw .ToolIcon__hidden {
+  display: none !important;
+}
+.excalidraw .ToolIcon.fillable .ToolIcon_type_radio:checked + .ToolIcon__icon,
+.excalidraw .ToolIcon.fillable .ToolIcon_type_checkbox:checked + .ToolIcon__icon {
+  --icon-fill-color: var(--color-primary-darker);
+}
+.excalidraw .ToolIcon.fillable .ToolIcon_type_radio:checked + .ToolIcon__icon svg,
+.excalidraw .ToolIcon.fillable .ToolIcon_type_checkbox:checked + .ToolIcon__icon svg {
+  fill: var(--icon-fill-color);
+}
+.excalidraw .ToolIcon .ToolIcon_type_radio:checked + .ToolIcon__icon,
+.excalidraw .ToolIcon .ToolIcon_type_checkbox:checked + .ToolIcon__icon {
+  background: var(--color-primary-light);
+  --keybinding-color: var(--color-gray-60);
+}
+.excalidraw .ToolIcon .ToolIcon_type_radio:checked + .ToolIcon__icon svg,
+.excalidraw .ToolIcon .ToolIcon_type_checkbox:checked + .ToolIcon__icon svg {
+  color: var(--color-primary-darker);
+}
+.excalidraw .ToolIcon .ToolIcon__keybinding {
+  bottom: 4px;
+  right: 4px;
+}
+.excalidraw .ToolIcon .ToolIcon__icon:hover {
+  background: var(--button-hover-bg);
+}
+.excalidraw .ToolIcon .ToolIcon__icon:active {
+  background: var(--button-hover-bg);
+  border: 1px solid var(--color-primary-darkest);
+}
+.excalidraw .ToolIcon--plain {
+  background-color: transparent;
+}
+.excalidraw .ToolIcon--plain .ToolIcon__icon {
+  width: 2rem;
+  height: 2rem;
+}
+.excalidraw .ToolIcon_type_radio,
+.excalidraw .ToolIcon_type_checkbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.excalidraw .ToolIcon__icon {
+  box-sizing: border-box;
+  width: var(--default-button-size);
+  height: var(--default-button-size);
+  color: var(--icon-fill-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--border-radius-lg);
+}
+.excalidraw .ToolIcon__icon + .ToolIcon__label {
+  margin-inline-start: 0;
+}
+.excalidraw .ToolIcon__icon svg {
+  position: relative;
+  width: var(--default-icon-size);
+  height: var(--default-icon-size);
+  color: var(--icon-fill-color);
+}
+.excalidraw .ToolIcon__label {
+  display: flex;
+  align-items: center;
+  color: var(--icon-fill-color);
+  font-family: var(--ui-font);
+  margin: 0 0.8em;
+  text-overflow: ellipsis;
+}
+.excalidraw .ToolIcon__label .Spinner {
+  margin-left: 0.6em;
+}
+.excalidraw .ToolIcon_size_small .ToolIcon__icon {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.8em;
+}
+.excalidraw .ToolIcon_type_button,
+.excalidraw .Modal .ToolIcon_type_button,
+.excalidraw .ToolIcon_type_button {
+  padding: 0;
+  border: none;
+  margin: 0;
+  font-size: inherit;
+  background-color: initial;
+}
+.excalidraw .ToolIcon_type_button:focus-visible,
+.excalidraw .Modal .ToolIcon_type_button:focus-visible,
+.excalidraw .ToolIcon_type_button:focus-visible {
+  box-shadow: 0 0 0 2px var(--focus-highlight-color);
+}
+.excalidraw .ToolIcon_type_button.ToolIcon--selected,
+.excalidraw .Modal .ToolIcon_type_button.ToolIcon--selected,
+.excalidraw .ToolIcon_type_button.ToolIcon--selected {
+  background-color: var(--button-gray-2);
+}
+.excalidraw .ToolIcon_type_button.ToolIcon--selected:active,
+.excalidraw .Modal .ToolIcon_type_button.ToolIcon--selected:active,
+.excalidraw .ToolIcon_type_button.ToolIcon--selected:active {
+  background-color: var(--button-gray-3);
+}
+.excalidraw .ToolIcon_type_button:active,
+.excalidraw .Modal .ToolIcon_type_button:active,
+.excalidraw .ToolIcon_type_button:active {
+  background-color: var(--button-gray-3);
+}
+.excalidraw .ToolIcon_type_button--show,
+.excalidraw .Modal .ToolIcon_type_button--show,
+.excalidraw .ToolIcon_type_button--show {
+  visibility: visible;
+}
+.excalidraw .ToolIcon_type_button--hide,
+.excalidraw .Modal .ToolIcon_type_button--hide,
+.excalidraw .ToolIcon_type_button--hide {
+  display: none !important;
+}
+.excalidraw .ToolIcon_type_floating {
+  background-color: transparent;
+}
+.excalidraw .ToolIcon_type_floating:hover {
+  background-color: transparent;
+}
+.excalidraw .ToolIcon_type_floating:active {
+  background-color: transparent;
+}
+.excalidraw .ToolIcon_type_floating .ToolIcon__icon {
+  background-color: var(--button-gray-1);
+  width: 2rem;
+  height: 2rem;
+}
+.excalidraw .ToolIcon_type_floating .ToolIcon__icon:hover {
+  background-color: var(--button-gray-2);
+}
+.excalidraw .ToolIcon_type_floating .ToolIcon__icon:active {
+  background-color: var(--button-gray-3);
+}
+.excalidraw .ToolIcon__keybinding {
+  position: absolute;
+  bottom: 2px;
+  right: 3px;
+  font-size: 0.625rem;
+  color: var(--keybinding-color);
+  font-family: var(--ui-font);
+  user-select: none;
+}
+:root[dir=ltr] .excalidraw .unlocked-icon {
+  left: 2px;
+}
+:root[dir=rtl] .excalidraw .unlocked-icon {
+  right: 2px;
+}
+.excalidraw .App-toolbar-container .ToolIcon__icon {
+  width: var(--lg-button-size);
+  height: var(--lg-button-size);
+}
+.excalidraw .App-toolbar-container .ToolIcon__icon svg {
+  width: var(--lg-icon-size);
+  height: var(--lg-icon-size);
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .App-toolbar.zen-mode .ToolIcon__keybinding,
+.excalidraw .App-toolbar.zen-mode .HintViewer {
+  display: none;
+}
+.excalidraw .App-toolbar__divider {
+  width: 1px;
+  height: 1.5rem;
+  align-self: center;
+  background-color: var(--default-border-color);
+  margin: 0 0.5rem;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .Toast {
+  animation: fade-in 0.5s;
+  background-color: var(--button-gray-1);
+  border-radius: 4px;
+  bottom: 10px;
+  box-sizing: border-box;
+  cursor: default;
+  left: 50%;
+  margin-left: -150px;
+  padding: 4px 0;
+  position: absolute;
+  text-align: center;
+  width: 300px;
+  z-index: 999999;
+}
+.excalidraw .Toast .Toast__message {
+  padding: 0 1.6rem;
+  color: var(--popup-text-color);
+  white-space: pre-wrap;
+}
+.excalidraw .Toast .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.4rem;
+}
+.excalidraw .Toast .close .ToolIcon__icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .TextInput {
+  display: inline-block;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .Stats {
+  position: absolute;
+  top: 64px;
+  right: 12px;
+  font-size: 12px;
+  z-index: 10;
+  pointer-events: all;
+}
+.excalidraw .Stats h3 {
+  margin: 0 24px 8px 0;
+  white-space: nowrap;
+}
+.excalidraw .Stats .close {
+  float: right;
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+}
+.excalidraw .Stats .close svg {
+  width: 100%;
+  height: 100%;
+}
+.excalidraw .Stats table {
+  width: 100%;
+}
+.excalidraw .Stats table th {
+  border-bottom: 1px solid var(--input-border-color);
+  padding: 4px;
+}
+.excalidraw .Stats table tr td:nth-child(2) {
+  min-width: 24px;
+  text-align: right;
+}
+:root[dir=rtl] .excalidraw .Stats {
+  left: 12px;
+  right: initial;
+}
+:root[dir=rtl] .excalidraw .Stats h3 {
+  margin: 0 0 8px 24px;
+}
+:root[dir=rtl] .excalidraw .Stats .close {
+  float: left;
+}
+
+.excalidraw .Stack {
+  --gap: 0;
+  display: grid;
+  gap: calc(var(--space-factor) * var(--gap));
+}
+.excalidraw .Stack_vertical {
+  grid-template-columns: auto;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+}
+.excalidraw .Stack_horizontal {
+  grid-template-rows: auto;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+}
+
+.excalidraw .Spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  --spinner-color: var(--icon-fill-color);
+}
+.excalidraw .Spinner svg {
+  animation: rotate 1.6s linear infinite;
+  transform-origin: center center;
+}
+.excalidraw .Spinner circle {
+  stroke: var(--spinner-color);
+  animation: dash 1.6s linear 0s infinite;
+  stroke-linecap: round;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 300;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 150, 300;
+    stroke-dashoffset: -200;
+  }
+  100% {
+    stroke-dasharray: 1, 300;
+    stroke-dashoffset: -280;
+  }
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .publish-library__fields {
+  display: flex;
+  flex-direction: column;
+}
+.excalidraw .publish-library__fields label {
+  padding: 1em 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.excalidraw .publish-library__fields label span {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #868e96;
+}
+.excalidraw .publish-library__fields label input,
+.excalidraw .publish-library__fields label textarea {
+  width: 70%;
+  padding: 0.6em;
+  font-family: var(--ui-font);
+}
+.excalidraw .publish-library__fields label .required {
+  color: #e03131;
+  margin: 0.2rem;
+}
+.excalidraw .publish-library__buttons {
+  display: flex;
+  padding: 0.2rem 0;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.excalidraw .publish-library__buttons .ToolIcon__icon {
+  min-width: 2.5rem;
+  width: auto;
+  font-size: 1rem;
+}
+.excalidraw .publish-library__buttons .ToolIcon_type_button {
+  margin-left: 1rem;
+  padding: 0 0.5rem;
+}
+.excalidraw .publish-library__buttons--confirm.ToolIcon_type_button {
+  background-color: #228be6;
+}
+.excalidraw .publish-library__buttons--confirm.ToolIcon_type_button:hover {
+  background-color: #1971c2;
+}
+.excalidraw .publish-library__buttons--cancel.ToolIcon_type_button {
+  background-color: #adb5bd;
+}
+.excalidraw .publish-library__buttons--cancel.ToolIcon_type_button:hover {
+  background-color: #868e96;
+}
+.excalidraw .publish-library__buttons .ToolIcon__icon {
+  color: #ffffff;
+}
+.excalidraw .publish-library__buttons .ToolIcon__icon .Spinner {
+  --spinner-color: #fff;
+}
+.excalidraw .publish-library__buttons .ToolIcon__icon .Spinner svg {
+  padding: 0.5rem;
+}
+.excalidraw .publish-library .selected-library-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+.excalidraw .publish-library .selected-library-items .single-library-item-wrapper {
+  width: 9rem;
+}
+.excalidraw .publish-library-warning {
+  color: #fa5252;
+}
+.excalidraw .publish-library-note {
+  padding: 1em 0;
+  font-style: italic;
+  font-size: 14px;
+  display: block;
+}
+.excalidraw .single-library-item {
+  position: relative;
+}
+.excalidraw .single-library-item-status {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.3rem;
+  font-size: 0.7rem;
+  color: #f03e3e;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.1rem 0.2rem;
+  border-radius: 0.2rem;
+}
+.excalidraw .single-library-item__svg {
+  background-color: #ffffff;
+  padding: 0.3rem;
+  width: 7.5rem;
+  height: 7.5rem;
+  border: 1px solid var(--button-gray-2);
+}
+.excalidraw .single-library-item__svg svg {
+  width: 100%;
+  height: 100%;
+}
+.excalidraw .single-library-item .ToolIcon__icon {
+  background-color: #ffffff;
+  width: auto;
+  height: auto;
+  margin: 0 0.5rem;
+}
+.excalidraw .single-library-item .ToolIcon,
+.excalidraw .single-library-item .ToolIcon_type_button:hover {
+  background-color: white;
+}
+.excalidraw .single-library-item .required,
+.excalidraw .single-library-item .error {
+  color: #e03131;
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0.2rem;
+}
+.excalidraw .single-library-item .error {
+  font-weight: 500;
+  margin: 0;
+  padding: 0.3em 0;
+}
+.excalidraw .single-library-item--remove {
+  position: absolute;
+  top: 0.2rem;
+  right: 1rem;
+}
+.excalidraw .single-library-item--remove .ToolIcon__icon {
+  margin: 0;
+}
+.excalidraw .single-library-item--remove .ToolIcon__icon {
+  background-color: #fa5252;
+}
+.excalidraw .single-library-item--remove .ToolIcon__icon:hover {
+  background-color: #f03e3e;
+}
+.excalidraw .single-library-item--remove .ToolIcon__icon:active {
+  background-color: #e03131;
+}
+.excalidraw .single-library-item--remove svg {
+  color: #ffffff;
+  padding: 0.26rem;
+  border-radius: 0.3em;
+  width: 1rem;
+  height: 1rem;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .sidebar {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 5;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--sidebar-bg-color);
+  box-shadow: var(--sidebar-shadow);
+  overflow: hidden;
+  border-radius: 0;
+  width: calc(302px - var(--space-factor) * 2);
+  border-left: 1px solid var(--sidebar-border-color);
+}
+:root[dir=rtl] .excalidraw .sidebar {
+  left: 0;
+  right: auto;
+}
+.excalidraw .sidebar--docked {
+  box-shadow: none;
+}
+:root[dir=rtl] .excalidraw .sidebar {
+  border-right: 1px solid var(--sidebar-border-color);
+  border-left: 0;
+}
+.excalidraw .sidebar__header {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.excalidraw .sidebar__header__buttons {
+  gap: 0;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+.excalidraw .sidebar__header__buttons button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.625rem;
+  width: var(--button-width, var(--default-button-size));
+  height: var(--button-height, var(--default-button-size));
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--button-border, var(--default-border-color));
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  background-color: var(--button-bg, var(--island-bg-color));
+  color: var(--button-color, var(--text-primary-color));
+  --button-bg: transparent;
+  border: 0 !important;
+  width: var(--lg-button-size);
+  height: var(--lg-button-size);
+  padding: 0;
+}
+.excalidraw .sidebar__header__buttons button svg {
+  width: var(--button-width, var(--lg-icon-size));
+  height: var(--button-height, var(--lg-icon-size));
+}
+.excalidraw .sidebar__header__buttons button:hover {
+  background-color: var(--button-hover-bg, var(--island-bg-color));
+  border-color: var(--button-hover-border, var(--button-border, var(--default-border-color)));
+  color: var(--button-hover-color, var(--button-color, var(--text-primary-color, inherit)));
+}
+.excalidraw .sidebar__header__buttons button:active {
+  background-color: var(--button-active-bg, var(--island-bg-color));
+  border-color: var(--button-active-border, var(--color-primary-darkest));
+}
+.excalidraw .sidebar__header__buttons button.active {
+  background-color: var(--button-selected-bg, var(--color-primary-light));
+  border-color: var(--button-selected-border, var(--color-primary-light));
+}
+.excalidraw .sidebar__header__buttons button.active:hover {
+  background-color: var(--button-selected-hover-bg, var(--color-primary-light));
+}
+.excalidraw .sidebar__header__buttons button.active svg {
+  color: var(--button-color, var(--color-primary-darker));
+}
+.excalidraw .sidebar__header__buttons button svg {
+  width: var(--lg-icon-size);
+  height: var(--lg-icon-size);
+}
+.excalidraw .sidebar__header__buttons button:hover {
+  background: var(--button-hover-bg, var(--island-bg-color));
+}
+.excalidraw .sidebar__header__buttons .sidebar__dock.selected svg {
+  stroke: var(--color-primary);
+  fill: var(--color-primary);
+}
+.excalidraw .sidebar-tabs-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 1rem 0.75rem;
+}
+.excalidraw .sidebar-tabs-root [role=tabpanel] {
+  flex: 1;
+  outline: none;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  outline: none;
+}
+.excalidraw .sidebar-tabs-root [role=tabpanel][data-state=inactive] {
+  display: none !important;
+}
+.excalidraw .sidebar-tabs-root [role=tablist] {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+}
+.excalidraw .sidebar-tabs-root > .sidebar__header {
+  padding-top: 0;
+  padding-bottom: 1rem;
+}
+.excalidraw .sidebar-tab-trigger {
+  --button-width: auto;
+  --button-bg: transparent;
+  --button-hover-bg: transparent;
+  --button-active-bg: var(--color-primary);
+  --button-hover-color: var(--color-primary);
+  --button-hover-border: var(--color-primary);
+}
+.excalidraw .sidebar-tab-trigger[data-state=active] {
+  --button-bg: var(--color-primary);
+  --button-hover-bg: var(--color-primary-darker);
+  --button-hover-color: var(--color-icon-white);
+  --button-border: var(--color-primary);
+  color: var(--color-icon-white);
+}
+.excalidraw .default-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+.excalidraw .default-sidebar .sidebar-triggers {
+  display: flex;
+  gap: 0;
+  padding: 2px;
+  margin-top: -3px;
+  margin-bottom: -3px;
+  border: 1px solid var(--sidebar-border-color);
+  background: var(--default-bg-color);
+  border-radius: 0.625rem;
+}
+.excalidraw .default-sidebar .sidebar-triggers .sidebar-tab-trigger {
+  height: var(--lg-button-size);
+  width: var(--lg-button-size);
+  border: none;
+}
+.excalidraw .default-sidebar .sidebar__header {
+  border-bottom: 1px solid var(--sidebar-border-color);
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .sidebar-trigger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.625rem;
+  width: var(--button-width, var(--default-button-size));
+  height: var(--button-height, var(--default-button-size));
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--button-border, var(--default-border-color));
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  background-color: var(--button-bg, var(--island-bg-color));
+  color: var(--button-color, var(--text-primary-color));
+  background-color: var(--island-bg-color);
+  width: auto;
+  height: var(--lg-button-size);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.4px;
+}
+.excalidraw .sidebar-trigger svg {
+  width: var(--button-width, var(--lg-icon-size));
+  height: var(--button-height, var(--lg-icon-size));
+}
+.excalidraw .sidebar-trigger:hover {
+  background-color: var(--button-hover-bg, var(--island-bg-color));
+  border-color: var(--button-hover-border, var(--button-border, var(--default-border-color)));
+  color: var(--button-hover-color, var(--button-color, var(--text-primary-color, inherit)));
+}
+.excalidraw .sidebar-trigger:active {
+  background-color: var(--button-active-bg, var(--island-bg-color));
+  border-color: var(--button-active-border, var(--color-primary-darkest));
+}
+.excalidraw .sidebar-trigger.active {
+  background-color: var(--button-selected-bg, var(--color-primary-light));
+  border-color: var(--button-selected-border, var(--color-primary-light));
+}
+.excalidraw .sidebar-trigger.active:hover {
+  background-color: var(--button-selected-hover-bg, var(--color-primary-light));
+}
+.excalidraw .sidebar-trigger.active svg {
+  color: var(--button-color, var(--color-primary-darker));
+}
+.excalidraw .sidebar-trigger svg {
+  width: var(--lg-icon-size);
+  height: var(--lg-icon-size);
+}
+.excalidraw .default-sidebar-trigger .sidebar-trigger__label {
+  display: none;
+}
+@media screen and (min-width: 1024px) {
+  .excalidraw .default-sidebar-trigger .sidebar-trigger__label {
+    display: block;
+  }
+}
+
+.excalidraw .ActiveFile .ActiveFile__fileName {
+  display: flex;
+  align-items: center;
+}
+.excalidraw .ActiveFile .ActiveFile__fileName span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 9.3em;
+}
+.excalidraw .ActiveFile .ActiveFile__fileName svg {
+  width: 1.15em;
+  margin-inline-end: 0.3em;
+  transform: scaleY(0.9);
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .collab-button {
+  --button-bg: var(--color-primary);
+  --button-color: white;
+  --button-border: var(--color-primary);
+  --button-width: var(--lg-button-size);
+  --button-height: var(--lg-button-size);
+  --button-hover-bg: var(--color-primary-darker);
+  --button-hover-border: var(--color-primary-darker);
+  --button-active-bg: var(--color-primary-darker);
+  flex-shrink: 0;
+}
+.excalidraw .collab-button.active.active {
+  background-color: #0fb884;
+  border-color: #0fb884;
+}
+.excalidraw .collab-button.active.active svg {
+  color: #fff;
+}
+.excalidraw .collab-button.active.active:hover, .excalidraw .collab-button.active.active:active {
+  background-color: #0fb884;
+  border-color: #0fb884;
+}
+.excalidraw.theme--dark .collab-button {
+  color: var(--color-gray-90);
+}
+.excalidraw .CollabButton.is-collaborating {
+  background-color: var(--button-special-active-bg-color);
+}
+.excalidraw .CollabButton.is-collaborating .ToolIcon__icon svg,
+.excalidraw .CollabButton.is-collaborating .ToolIcon__label {
+  color: var(--icon-green-fill-color);
+}
+.excalidraw .CollabButton-collaborators {
+  min-width: 1em;
+  min-height: 1em;
+  line-height: 1;
+  position: absolute;
+  bottom: -5px;
+  padding: 3px;
+  border-radius: 50%;
+  background-color: #b2f2bb;
+  color: #2b8a3e;
+  font-size: 0.6rem;
+  font-family: "Cascadia";
+}
+:root[dir=ltr] .excalidraw .CollabButton-collaborators {
+  right: -5px;
+}
+:root[dir=rtl] .excalidraw .CollabButton-collaborators {
+  left: -5px;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  margin-top: 0.25rem;
+}
+.excalidraw .dropdown-menu--mobile {
+  bottom: 55px;
+  top: auto;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
+}
+.excalidraw .dropdown-menu--mobile .dropdown-menu-container {
+  padding: 8px 8px;
+  box-sizing: border-box;
+  background-color: var(--island-bg-color);
+  box-shadow: var(--shadow-island);
+  border-radius: var(--border-radius-lg);
+  position: relative;
+  transition: box-shadow 0.5s ease-in-out;
+}
+.excalidraw .dropdown-menu--mobile .dropdown-menu-container.zen-mode {
+  box-shadow: none;
+}
+.excalidraw .dropdown-menu .dropdown-menu-container {
+  background-color: #fff !important;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  --gap: 2;
+}
+.excalidraw .dropdown-menu .dropdown-menu-item-base {
+  display: flex;
+  padding: 0 0.625rem;
+  column-gap: 0.625rem;
+  font-size: 0.875rem;
+  color: var(--color-gray-100);
+  width: 100%;
+  box-sizing: border-box;
+  font-weight: normal;
+  font-family: inherit;
+}
+.excalidraw .dropdown-menu .dropdown-menu-item {
+  background-color: transparent;
+  border: 0;
+  align-items: center;
+  height: 2rem;
+  cursor: pointer;
+  border-radius: var(--border-radius-md);
+}
+@media screen and (min-width: 1921px) {
+  .excalidraw .dropdown-menu .dropdown-menu-item {
+    height: 2.25rem;
+  }
+}
+.excalidraw .dropdown-menu .dropdown-menu-item__text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.excalidraw .dropdown-menu .dropdown-menu-item__shortcut {
+  margin-inline-start: auto;
+  opacity: 0.5;
+}
+.excalidraw .dropdown-menu .dropdown-menu-item:hover {
+  background-color: var(--button-hover-bg);
+  text-decoration: none;
+}
+.excalidraw .dropdown-menu .dropdown-menu-item svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}
+.excalidraw .dropdown-menu .dropdown-menu-item-custom {
+  margin-top: 0.5rem;
+}
+.excalidraw .dropdown-menu .dropdown-menu-group-title {
+  font-size: 14px;
+  text-align: left;
+  margin: 10px 0;
+  font-weight: 500;
+}
+.excalidraw.theme--dark .dropdown-menu-item {
+  color: var(--color-gray-40);
+}
+.excalidraw.theme--dark .dropdown-menu-container {
+  background-color: var(--color-gray-90) !important;
+}
+.excalidraw .dropdown-menu-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.625rem;
+  width: var(--button-width, var(--default-button-size));
+  height: var(--button-height, var(--default-button-size));
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--button-border, var(--default-border-color));
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  background-color: var(--button-bg, var(--island-bg-color));
+  color: var(--button-color, var(--text-primary-color));
+  background-color: var(--island-bg-color);
+  width: var(--lg-button-size);
+  height: var(--lg-button-size);
+}
+.excalidraw .dropdown-menu-button svg {
+  width: var(--button-width, var(--lg-icon-size));
+  height: var(--button-height, var(--lg-icon-size));
+}
+.excalidraw .dropdown-menu-button:hover {
+  background-color: var(--button-hover-bg, var(--island-bg-color));
+  border-color: var(--button-hover-border, var(--button-border, var(--default-border-color)));
+  color: var(--button-hover-color, var(--button-color, var(--text-primary-color, inherit)));
+}
+.excalidraw .dropdown-menu-button:active {
+  background-color: var(--button-active-bg, var(--island-bg-color));
+  border-color: var(--button-active-border, var(--color-primary-darkest));
+}
+.excalidraw .dropdown-menu-button.active {
+  background-color: var(--button-selected-bg, var(--color-primary-light));
+  border-color: var(--button-selected-border, var(--color-primary-light));
+}
+.excalidraw .dropdown-menu-button.active:hover {
+  background-color: var(--button-selected-hover-bg, var(--color-primary-light));
+}
+.excalidraw .dropdown-menu-button.active svg {
+  color: var(--button-color, var(--color-primary-darker));
+}
+.excalidraw .dropdown-menu-button svg {
+  width: var(--lg-icon-size);
+  height: var(--lg-icon-size);
+}
+.excalidraw .dropdown-menu-button--mobile {
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: var(--default-button-size);
+  height: var(--default-button-size);
+}
+
+.footer-center {
+  pointer-events: none;
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+}
+.footer-center > * {
+  pointer-events: all;
+}
+
+.excalidraw .virgil {
+  font-family: "Virgil";
+}
+.excalidraw .welcome-screen-decor {
+  pointer-events: none;
+  color: var(--color-gray-40);
+}
+.excalidraw.theme--dark .welcome-screen-decor {
+  color: var(--color-gray-60);
+}
+@media (max-height: 599px) {
+  .excalidraw .welcome-screen-decor-hint {
+    display: none !important;
+  }
+}
+@media (max-width: 1024px), (max-width: 800px) {
+  .excalidraw .welcome-screen-decor-hint .welcome-screen-decor--help, .excalidraw .welcome-screen-decor-hint .welcome-screen-decor--menu {
+    display: none;
+  }
+}
+.excalidraw .welcome-screen-decor-hint--help {
+  display: flex;
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+}
+:root[dir=rtl] .excalidraw .welcome-screen-decor-hint--help {
+  left: 0;
+  right: auto;
+}
+.excalidraw .welcome-screen-decor-hint--help svg {
+  margin-top: 0.5rem;
+  width: 85px;
+  height: 71px;
+  transform: scaleX(-1) rotate(80deg);
+}
+:root[dir=rtl] .excalidraw .welcome-screen-decor-hint--help svg {
+  transform: rotate(80deg);
+}
+.excalidraw .welcome-screen-decor-hint--toolbar {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 2.5rem;
+  display: flex;
+  align-items: baseline;
+}
+.excalidraw .welcome-screen-decor-hint--toolbar .welcome-screen-decor-hint__label {
+  width: 120px;
+  position: relative;
+  top: -0.5rem;
+}
+.excalidraw .welcome-screen-decor-hint--toolbar svg {
+  width: 38px;
+  height: 78px;
+}
+:root[dir=rtl] .excalidraw .welcome-screen-decor-hint--toolbar svg {
+  transform: scaleX(-1);
+}
+.excalidraw .welcome-screen-decor-hint--menu {
+  position: absolute;
+  width: 320px;
+  font-size: 1rem;
+  top: 100%;
+  margin-top: 0.25rem;
+  margin-inline-start: 0.6rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+.excalidraw .welcome-screen-decor-hint--menu svg {
+  width: 41px;
+  height: 94px;
+}
+:root[dir=rtl] .excalidraw .welcome-screen-decor-hint--menu svg {
+  transform: scaleX(-1);
+}
+@media (max-width: 860px) {
+  .excalidraw .welcome-screen-decor-hint--menu .welcome-screen-decor-hint__label {
+    max-width: 160px;
+  }
+}
+.excalidraw .welcome-screen-center {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  pointer-events: none;
+  left: 1rem;
+  top: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+}
+.excalidraw .welcome-screen-center__logo {
+  display: flex;
+  align-items: center;
+  column-gap: 0.75rem;
+  font-size: 2.25rem;
+}
+.excalidraw .welcome-screen-center__logo svg {
+  width: 1.625rem;
+  height: auto;
+}
+.excalidraw .welcome-screen-center__heading {
+  font-size: 1.125rem;
+  text-align: center;
+}
+.excalidraw .welcome-screen-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
+  align-items: center;
+}
+.excalidraw .welcome-screen-menu-item {
+  box-sizing: border-box;
+  pointer-events: all;
+  color: var(--color-gray-50);
+  font-size: 0.875rem;
+  width: 100%;
+  min-width: 300px;
+  max-width: 400px;
+  display: grid;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 0.75rem;
+  border-radius: var(--border-radius-md);
+  grid-template-columns: calc(var(--default-icon-size) + 0.5rem) 1fr 3rem;
+}
+.excalidraw .welcome-screen-menu-item__text {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  text-align: left;
+  column-gap: 0.5rem;
+}
+.excalidraw .welcome-screen-menu-item__icon {
+  width: var(--default-icon-size);
+  height: var(--default-icon-size);
+}
+.excalidraw .welcome-screen-menu-item__shortcut {
+  margin-left: auto;
+  color: var(--color-gray-40);
+  font-size: 0.75rem;
+}
+.excalidraw:not(:active) .welcome-screen-menu-item:hover {
+  text-decoration: none;
+  background: var(--color-gray-10);
+}
+.excalidraw:not(:active) .welcome-screen-menu-item:hover .welcome-screen-menu-item__shortcut {
+  color: var(--color-gray-50);
+}
+.excalidraw:not(:active) .welcome-screen-menu-item:hover .welcome-screen-menu-item__text {
+  color: var(--color-gray-100);
+}
+.excalidraw .welcome-screen-menu-item:active {
+  background: var(--color-gray-20);
+}
+.excalidraw .welcome-screen-menu-item:active .welcome-screen-menu-item__shortcut {
+  color: var(--color-gray-50);
+}
+.excalidraw .welcome-screen-menu-item:active .welcome-screen-menu-item__text {
+  color: var(--color-gray-100);
+}
+.excalidraw .welcome-screen-menu-item:active--promo {
+  color: var(--color-promo) !important;
+}
+.excalidraw .welcome-screen-menu-item:active--promo:hover .welcome-screen-menu-item__text {
+  color: var(--color-promo) !important;
+}
+.excalidraw.theme--dark .welcome-screen-menu-item {
+  color: var(--color-gray-60);
+}
+.excalidraw.theme--dark .welcome-screen-menu-item__shortcut {
+  color: var(--color-gray-60);
+}
+.excalidraw.theme--dark:not(:active) .welcome-screen-menu-item:hover {
+  background: var(--color-gray-85);
+}
+.excalidraw.theme--dark:not(:active) .welcome-screen-menu-item:hover .welcome-screen-menu-item__shortcut {
+  color: var(--color-gray-50);
+}
+.excalidraw.theme--dark:not(:active) .welcome-screen-menu-item:hover .welcome-screen-menu-item__text {
+  color: var(--color-gray-10);
+}
+.excalidraw.theme--dark .welcome-screen-menu-item:active {
+  background-color: var(--color-gray-90);
+}
+.excalidraw.theme--dark .welcome-screen-menu-item:active .welcome-screen-menu-item__text {
+  color: var(--color-gray-10);
+}
+@media (max-height: 599px) {
+  .excalidraw .welcome-screen-center {
+    margin-top: 4rem;
+  }
+}
+@media (min-height: 600px) and (max-height: 900px) {
+  .excalidraw .welcome-screen-center {
+    margin-top: 8rem;
+  }
+}
+@media (max-height: 500px), (max-width: 320px) {
+  .excalidraw .welcome-screen-center {
+    display: none;
+  }
+}
+
+.excalidraw {
+  --color-primary-contrast-offset: #625ee0;
+}
+.excalidraw.theme--dark {
+  --color-primary-contrast-offset: #726dff;
+}
+.excalidraw .footer-center {
+  justify-content: flex-end;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-inline-start: auto;
+}
+.excalidraw .encrypted-icon {
+  border-radius: var(--space-factor);
+  color: var(--color-primary);
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-inline-start: auto;
+  margin-inline-end: 0.6em;
+}
+.excalidraw .encrypted-icon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.excalidraw .dropdown-menu-container .dropdown-menu-item.active-collab {
+  background-color: #ecfdf5;
+  color: #064e3c;
+}
+.excalidraw .dropdown-menu-container .dropdown-menu-item.ExcalidrawPlus {
+  color: var(--color-promo);
+}
+.excalidraw.theme--dark .dropdown-menu-item.active-collab {
+  background-color: #064e3c;
+  color: #ecfdf5;
+}
+.excalidraw .collab-offline-warning {
+  pointer-events: none;
+  position: absolute;
+  top: 6.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  text-align: center;
+  line-height: 1.5;
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-warning);
+  color: var(--color-text-warning);
+  z-index: 6;
+  white-space: pre;
+}
+
+.excalidraw-app.is-collaborating [data-testid=clear-canvas-button] {
+  display: none;
+}
+
+.plus-button {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  align-items: center;
+  border: 1px solid var(--color-primary);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--space-factor);
+  color: var(--color-primary) !important;
+  text-decoration: none !important;
+  font-size: 0.75rem;
+  box-sizing: border-box;
+  height: var(--default-button-size);
+}
+.plus-button:hover {
+  background-color: var(--color-primary);
+  color: white !important;
+}
+.plus-button:active {
+  background-color: var(--color-primary-darker);
+}
+
+.theme--dark .plus-button:hover {
+  color: black !important;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw {
+  border-bottom-left-radius: 24px;
+}
+@media (max-width: 576px) {
+  .excalidraw {
+    border-bottom-left-radius: 0;
+  }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+  .excalidraw {
+    border-bottom-left-radius: 0;
+  }
+}
+.excalidraw .RoomDialog__button {
+  border: 1px solid var(--default-border-color) !important;
+}
+.excalidraw .RoomDialog-linkContainer {
+  display: flex;
+  margin: 1.5em 0;
+}
+.excalidraw input.RoomDialog-link {
+  color: var(--text-primary-color);
+  min-width: 0;
+  flex: 1 1 auto;
+  margin-inline-start: 1em;
+  display: inline-block;
+  cursor: pointer;
+  border: none;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+  border-radius: var(--space-factor);
+  background-color: var(--button-gray-1);
+}
+.excalidraw .RoomDialog-emoji {
+  font-family: sans-serif;
+}
+.excalidraw .RoomDialog-usernameContainer {
+  display: flex;
+  margin: 1.5em 0;
+  align-items: center;
+  justify-content: center;
+}
+.excalidraw--mobile.excalidraw .RoomDialog-usernameContainer {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.excalidraw--mobile.excalidraw .RoomDialog-usernameLabel {
+  font-weight: bold;
+}
+
+.excalidraw .RoomDialog-username {
+  background-color: var(--input-bg-color);
+  border-color: var(--input-border-color);
+  appearance: none;
+  min-width: 0;
+  flex: 1 1 auto;
+  margin-inline-start: 1em;
+  font-size: 1em;
+}
+.excalidraw--mobile.excalidraw .RoomDialog-username {
+  margin-top: 0.5em;
+  margin-inline-start: 0;
+}
+
+.excalidraw .RoomDialog-sessionStartButtonContainer {
+  display: flex;
+  justify-content: center;
+}
+.excalidraw .Modal .RoomDialog-stopSession {
+  background-color: var(--button-destructive-bg-color);
+}
+.excalidraw .Modal .RoomDialog-stopSession .ToolIcon__label,
+.excalidraw .Modal .RoomDialog-stopSession .ToolIcon__icon svg {
+  color: var(--button-destructive-color);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; /* added line */
+  user-select: none;
+}
+
+.LoadingMessage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.LoadingMessage .Spinner {
+  font-size: 2.8em;
+}
+.LoadingMessage .LoadingMessage-text {
+  margin-top: 1em;
+  font-size: 0.8em;
+}
+
+.LoadingMessage--dark {
+  background-color: #121212;
+  color: #ced4da;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+:export {
+  themeFilter: invert(93%) hue-rotate(180deg);
+  rightSidebarWidth: 302px;
+}
+
+.excalidraw {
+  --theme-filter: none;
+  --button-destructive-bg-color: #ffe3e3;
+  --button-destructive-color: #c92a2a;
+  --button-gray-1: #e9ecef;
+  --button-gray-2: #ced4da;
+  --button-gray-3: #adb5bd;
+  --button-special-active-bg-color: #ebfbee;
+  --dialog-border-color: var(--color-gray-20);
+  --dropdown-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="292.4" height="292.4" viewBox="0 0 292 292"><path d="M287 197L159 69c-4-3-8-5-13-5s-9 2-13 5L5 197c-3 4-5 8-5 13s2 9 5 13c4 4 8 5 13 5h256c5 0 9-1 13-5s5-8 5-13-1-9-5-13z"/></svg>');
+  --focus-highlight-color: #a5d8ff;
+  --icon-fill-color: var(--color-gray-80);
+  --icon-green-fill-color: #2b8a3e;
+  --default-bg-color: #ffffff;
+  --input-bg-color: #ffffff;
+  --input-border-color: #ced4da;
+  --input-hover-bg-color: #f1f3f5;
+  --input-label-color: #495057;
+  --island-bg-color: rgba(255, 255, 255, 0.96);
+  --keybinding-color: var(--color-gray-40);
+  --link-color: #1c7ed6;
+  --overlay-bg-color: rgba(255, 255, 255, 0.88);
+  --popup-bg-color: #ffffff;
+  --popup-secondary-bg-color: #f1f3f5;
+  --popup-text-color: #000000;
+  --popup-text-inverted-color: #ffffff;
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+  --sar: env(safe-area-inset-right);
+  --sat: env(safe-area-inset-top);
+  --select-highlight-color: #339af0;
+  --shadow-island: 0px 7px 14px rgba(0, 0, 0, 0.05),
+    0px 0px 3.12708px rgba(0, 0, 0, 0.0798),
+    0px 0px 0.931014px rgba(0, 0, 0, 0.1702);
+  --button-hover-bg: var(--color-gray-10);
+  --default-border-color: var(--color-gray-30);
+  --default-button-size: 2rem;
+  --default-icon-size: 1rem;
+  --lg-button-size: 2.25rem;
+  --lg-icon-size: 1rem;
+  --editor-container-padding: 1rem;
+  --scrollbar-thumb: var(--button-gray-2);
+  --scrollbar-thumb-hover: var(--button-gray-3);
+  --modal-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07),
+    0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198),
+    0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275),
+    0px 12.5216px 10.0172px rgba(0, 0, 0, 0.035),
+    0px 6.6501px 5.32008px rgba(0, 0, 0, 0.0282725),
+    0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802);
+  --avatar-border-color: var(--color-gray-20);
+  --sidebar-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07),
+    0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198),
+    0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275),
+    0px 12.5216px 10.0172px rgba(0, 0, 0, 0.035),
+    0px 6.6501px 5.32008px rgba(0, 0, 0, 0.0282725),
+    0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802);
+  --sidebar-border-color: var(--color-gray-20);
+  --sidebar-bg-color: #fff;
+  --library-dropdown-shadow: 0px 15px 6px rgba(0, 0, 0, 0.01),
+    0px 8px 5px rgba(0, 0, 0, 0.05), 0px 4px 4px rgba(0, 0, 0, 0.09),
+    0px 1px 2px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+  --space-factor: 0.25rem;
+  --text-primary-color: var(--color-gray-80);
+  --color-selection: #6965db;
+  --color-icon-white: #ffffff;
+  --color-primary: #6965db;
+  --color-primary-darker: #5b57d1;
+  --color-primary-darkest: #4a47b1;
+  --color-primary-light: #e3e2fe;
+  --color-primary-light-darker: #d7d5ff;
+  --color-gray-10: #f5f5f5;
+  --color-gray-20: #ebebeb;
+  --color-gray-30: #d6d6d6;
+  --color-gray-40: #b8b8b8;
+  --color-gray-50: #999999;
+  --color-gray-60: #7a7a7a;
+  --color-gray-70: #5c5c5c;
+  --color-gray-80: #3d3d3d;
+  --color-gray-85: #242424;
+  --color-gray-90: #1e1e1e;
+  --color-gray-100: #121212;
+  --color-warning: #fceeca;
+  --color-text-warning: var(--text-primary-color);
+  --color-danger: #db6965;
+  --color-promo: #e70078;
+  --border-radius-md: 0.375rem;
+  --border-radius-lg: 0.5rem;
+}
+@media screen and (min-device-width: 1921px) {
+  .excalidraw {
+    --lg-button-size: 2.5rem;
+    --lg-icon-size: 1.25rem;
+    --default-button-size: 2.25rem;
+    --default-icon-size: 1.25rem;
+  }
+}
+.excalidraw.theme--dark.theme--dark-background-none {
+  background: none;
+}
+.excalidraw.theme--dark {
+  --theme-filter: invert(93%) hue-rotate(180deg);
+  --button-destructive-bg-color: #5a0000;
+  --button-destructive-color: #ffa8a8;
+  --button-gray-1: #363636;
+  --button-gray-2: #272727;
+  --button-gray-3: #222;
+  --button-special-active-bg-color: #204624;
+  --dialog-border-color: var(--color-gray-80);
+  --dropdown-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="292.4" height="292.4" viewBox="0 0 292 292"><path fill="%23ced4da" d="M287 197L159 69c-4-3-8-5-13-5s-9 2-13 5L5 197c-3 4-5 8-5 13s2 9 5 13c4 4 8 5 13 5h256c5 0 9-1 13-5s5-8 5-13-1-9-5-13z"/></svg>');
+  --focus-highlight-color: #228be6;
+  --icon-fill-color: var(--color-gray-40);
+  --icon-green-fill-color: #69db7c;
+  --default-bg-color: #121212;
+  --input-bg-color: #121212;
+  --input-border-color: #2e2e2e;
+  --input-hover-bg-color: #181818;
+  --input-label-color: #e9ecef;
+  --island-bg-color: #262627;
+  --keybinding-color: var(--color-gray-60);
+  --link-color: #4dabf7;
+  --overlay-bg-color: rgba(52, 58, 64, 0.12);
+  --popup-bg-color: #2c2c2c;
+  --popup-secondary-bg-color: #222;
+  --popup-text-color: #ced4da;
+  --popup-text-inverted-color: #2c2c2c;
+  --select-highlight-color: #4dabf7;
+  --text-primary-color: var(--color-gray-40);
+  --button-hover-bg: var(--color-gray-80);
+  --default-border-color: var(--color-gray-80);
+  --shadow-island: 0px 13px 33px rgba(0, 0, 0, 0.07),
+    0px 4.13px 9.94853px rgba(0, 0, 0, 0.0456112),
+    0px 1.13px 4.13211px rgba(0, 0, 0, 0.035),
+    0px 0.769896px 1.4945px rgba(0, 0, 0, 0.0243888);
+  --modal-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07),
+    0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198),
+    0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275),
+    0px 12.5216px 10.0172px rgba(0, 0, 0, 0.035),
+    0px 6.6501px 5.32008px rgba(0, 0, 0, 0.0282725),
+    0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802);
+  --avatar-border-color: var(--color-gray-85);
+  --sidebar-border-color: var(--color-gray-85);
+  --sidebar-bg-color: #191919;
+  --scrollbar-thumb: #343a40;
+  --scrollbar-thumb-hover: #495057;
+  --color-selection: #3530c4;
+  --color-icon-white: var(--color-gray-90);
+  --color-primary: #a8a5ff;
+  --color-primary-darker: #b2aeff;
+  --color-primary-darkest: #beb9ff;
+  --color-primary-light: #4f4d6f;
+  --color-primary-light-darker: #43415e;
+  --color-text-warning: var(--color-gray-80);
+  --color-danger: #ffa8a5;
+  --color-promo: #d297ff;
+}
+
+:root {
+  --zIndex-canvas: 1;
+  --zIndex-wysiwyg: 2;
+  --zIndex-layerUI: 3;
+}
+
+.excalidraw {
+  --ui-font: Assistant, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--ui-font);
+  position: relative;
+  overflow: hidden;
+  color: var(--text-primary-color);
+  display: flex;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  user-select: none;
+}
+.excalidraw button {
+  cursor: pointer;
+}
+.excalidraw:focus {
+  outline: none;
+}
+.excalidraw a {
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--link-color);
+}
+.excalidraw a:hover {
+  text-decoration: underline;
+}
+.excalidraw canvas {
+  touch-action: none;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  z-index: var(--zIndex-canvas);
+}
+.excalidraw__canvas {
+  position: absolute;
+}
+.excalidraw.theme--dark canvas {
+  filter: var(--theme-filter);
+}
+.excalidraw .FixedSideContainer {
+  padding-top: var(--sat, 0);
+  padding-right: var(--sar, 0);
+  padding-bottom: var(--sab, 0);
+  padding-left: var(--sal, 0);
+}
+.excalidraw .panelRow {
+  display: flex;
+  justify-content: space-between;
+}
+.excalidraw .panelColumn {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
+}
+.excalidraw .panelColumn h3,
+.excalidraw .panelColumn legend,
+.excalidraw .panelColumn .control-label {
+  margin: 0;
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-primary-color);
+  font-weight: normal;
+  display: block;
+}
+.excalidraw .panelColumn .control-label input {
+  display: block;
+  width: 100%;
+}
+.excalidraw .panelColumn legend {
+  padding: 0;
+}
+.excalidraw .panelColumn .iconSelectList {
+  flex-wrap: wrap;
+  position: relative;
+}
+.excalidraw .panelColumn .buttonList {
+  flex-wrap: wrap;
+  display: flex;
+  column-gap: 0.5rem;
+  row-gap: 0.5rem;
+}
+.excalidraw .panelColumn .buttonList label {
+  font-size: 0.75rem;
+}
+.excalidraw .panelColumn .buttonList input[type=radio],
+.excalidraw .panelColumn .buttonList input[type=button] {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.excalidraw .panelColumn .buttonList .iconRow {
+  margin-top: 8px;
+}
+.excalidraw .panelColumn fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.excalidraw .divider {
+  width: 1px;
+  background-color: #e9ecef;
+  margin: 1px;
+}
+.excalidraw .welcome-screen-menu-item:focus-visible,
+.excalidraw .dropdown-menu-item:focus-visible,
+.excalidraw button:focus-visible,
+.excalidraw .buttonList label:focus-within,
+.excalidraw input:focus-visible {
+  outline: transparent;
+  box-shadow: 0 0 0 2px var(--focus-highlight-color);
+}
+.excalidraw .buttonList .ToolIcon__icon {
+  all: unset !important;
+  display: flex !important;
+}
+.excalidraw .buttonList button {
+  background-color: transparent;
+}
+.excalidraw .buttonList label,
+.excalidraw .buttonList button,
+.excalidraw .buttonList .zIndexButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.625rem;
+  width: var(--button-width, var(--default-button-size));
+  height: var(--button-height, var(--default-button-size));
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--button-border, var(--default-border-color));
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  background-color: var(--button-bg, var(--island-bg-color));
+  color: var(--button-color, var(--text-primary-color));
+  padding: 0;
+}
+.excalidraw .buttonList label svg,
+.excalidraw .buttonList button svg,
+.excalidraw .buttonList .zIndexButton svg {
+  width: var(--button-width, var(--lg-icon-size));
+  height: var(--button-height, var(--lg-icon-size));
+}
+.excalidraw .buttonList label:hover,
+.excalidraw .buttonList button:hover,
+.excalidraw .buttonList .zIndexButton:hover {
+  background-color: var(--button-hover-bg, var(--island-bg-color));
+  border-color: var(--button-hover-border, var(--button-border, var(--default-border-color)));
+  color: var(--button-hover-color, var(--button-color, var(--text-primary-color, inherit)));
+}
+.excalidraw .buttonList label:active,
+.excalidraw .buttonList button:active,
+.excalidraw .buttonList .zIndexButton:active {
+  background-color: var(--button-active-bg, var(--island-bg-color));
+  border-color: var(--button-active-border, var(--color-primary-darkest));
+}
+.excalidraw .buttonList label.active,
+.excalidraw .buttonList button.active,
+.excalidraw .buttonList .zIndexButton.active {
+  background-color: var(--button-selected-bg, var(--color-primary-light));
+  border-color: var(--button-selected-border, var(--color-primary-light));
+}
+.excalidraw .buttonList label.active:hover,
+.excalidraw .buttonList button.active:hover,
+.excalidraw .buttonList .zIndexButton.active:hover {
+  background-color: var(--button-selected-hover-bg, var(--color-primary-light));
+}
+.excalidraw .buttonList label.active svg,
+.excalidraw .buttonList button.active svg,
+.excalidraw .buttonList .zIndexButton.active svg {
+  color: var(--button-color, var(--color-primary-darker));
+}
+.excalidraw .buttonList label svg,
+.excalidraw .buttonList button svg,
+.excalidraw .buttonList .zIndexButton svg {
+  width: var(--default-icon-size);
+  height: var(--default-icon-size);
+}
+.excalidraw .App-top-bar {
+  z-index: var(--zIndex-layerUI);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.excalidraw .App-bottom-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  --bar-padding: calc(4 * var(--space-factor));
+  padding-top: max(var(--bar-padding), var(--sat,0));
+  padding-right: var(--sar, 0);
+  padding-bottom: var(--sab, 0);
+  padding-left: var(--sal, 0);
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  pointer-events: none;
+}
+.excalidraw .App-bottom-bar > .Island {
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  pointer-events: initial;
+}
+.excalidraw .App-bottom-bar > .Island .panelColumn {
+  padding: 8px 8px 0 8px;
+}
+.excalidraw .App-toolbar {
+  width: 100%;
+}
+.excalidraw .App-toolbar .eraser.ToolIcon:hover {
+  --icon-fill-color: #fff;
+  --keybinding-color: #fff;
+}
+.excalidraw .App-toolbar .eraser.active {
+  background-color: var(--color-primary);
+}
+.excalidraw .App-toolbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+}
+.excalidraw .App-mobile-menu {
+  width: 100%;
+  overflow-x: visible;
+  overflow-y: auto;
+  box-sizing: border-box;
+  margin-bottom: var(--bar-padding);
+}
+.excalidraw .App-menu {
+  display: grid;
+  color: var(--icon-fill-color);
+}
+.excalidraw .shapes-section {
+  display: flex;
+  justify-content: center;
+  pointer-events: none !important;
+}
+.excalidraw .shapes-section > * {
+  pointer-events: all;
+}
+.excalidraw .App-menu_top {
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-gap: 2rem;
+  align-items: flex-start;
+  cursor: default;
+  pointer-events: none !important;
+}
+@media (min-width: 1536px) {
+  .excalidraw .App-menu_top {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 3rem;
+  }
+}
+.excalidraw .layer-ui__wrapper:not(.disable-pointerEvents) .App-menu_top > * {
+  pointer-events: all;
+}
+.excalidraw .App-menu_top > *:first-child {
+  justify-self: flex-start;
+}
+.excalidraw .App-menu_top > *:last-child {
+  justify-self: flex-end;
+}
+.excalidraw .App-menu_bottom {
+  position: absolute;
+  bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  cursor: default;
+  pointer-events: none !important;
+  box-sizing: border-box;
+  padding: 0 1rem;
+}
+.excalidraw .App-menu_bottom--transition-left section {
+  width: 185px;
+}
+.excalidraw .App-menu_bottom section {
+  display: flex;
+}
+.excalidraw .App-menu_bottom > *:first-child {
+  justify-self: flex-start;
+}
+.excalidraw .App-menu_bottom > *:last-child {
+  justify-self: flex-end;
+}
+.excalidraw .App-menu_left {
+  grid-template-rows: 1fr auto 1fr;
+  height: 100%;
+}
+.excalidraw .App-menu_right {
+  grid-template-rows: 1fr;
+  height: 100%;
+}
+.excalidraw .App-menu__left {
+  overflow-y: auto;
+  padding: 0.75rem;
+  width: 202px;
+  box-sizing: border-box;
+  position: absolute;
+}
+.excalidraw .dropdown-select {
+  height: 1.5rem;
+  padding: 0;
+  padding-inline-start: 0.5rem;
+  padding-inline-end: 1.5rem;
+  color: var(--icon-fill-color);
+  background-color: var(--button-gray-1);
+  border-radius: var(--space-factor);
+  border: 1px solid var(--button-gray-2);
+  font-size: 0.8rem;
+  font-family: inherit;
+  outline: none;
+  appearance: none;
+  background-image: var(--dropdown-icon);
+  background-repeat: no-repeat;
+  background-position: right 0.7rem top 50%, 0 0;
+  background-size: 0.65em auto, 100%;
+}
+:root[dir=rtl] .excalidraw .dropdown-select {
+  background-position: left 0.7rem top 50%, 0 0;
+}
+.excalidraw .dropdown-select:focus {
+  box-shadow: 0 0 0 2px var(--focus-highlight-color);
+}
+.excalidraw .dropdown-select:hover {
+  background-color: var(--button-gray-2);
+}
+.excalidraw .dropdown-select:active {
+  background-color: var(--button-gray-2);
+}
+.excalidraw .dropdown-select__language {
+  height: 2rem;
+  background-color: var(--island-bg-color);
+  border-color: var(--default-border-color) !important;
+  cursor: pointer;
+}
+.excalidraw .dropdown-select__language:hover {
+  background-color: var(--island-bg-color);
+}
+.excalidraw .disable-zen-mode {
+  border-radius: var(--border-radius-lg);
+  background-color: var(--color-gray-20);
+  border: 1px solid var(--color-gray-30);
+  padding: 10px 20px;
+}
+.excalidraw .disable-zen-mode:hover {
+  background-color: var(--color-gray-30);
+}
+.excalidraw .scroll-back-to-content {
+  border-radius: var(--border-radius-lg);
+  background-color: var(--island-bg-color);
+  color: var(--icon-fill-color);
+  border: 1px solid var(--default-border-color);
+  padding: 10px 20px;
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  pointer-events: all;
+  font-family: inherit;
+}
+.excalidraw .scroll-back-to-content:hover {
+  background-color: var(--button-hover-bg);
+}
+.excalidraw .scroll-back-to-content:active {
+  border: 1px solid var(--color-primary-darkest);
+}
+.excalidraw .help-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.625rem;
+  width: var(--button-width, var(--default-button-size));
+  height: var(--button-height, var(--default-button-size));
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--button-border, var(--default-border-color));
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  background-color: var(--button-bg, var(--island-bg-color));
+  color: var(--button-color, var(--text-primary-color));
+  background-color: var(--island-bg-color);
+  width: var(--lg-button-size);
+  height: var(--lg-button-size);
+}
+.excalidraw .help-icon svg {
+  width: var(--button-width, var(--lg-icon-size));
+  height: var(--button-height, var(--lg-icon-size));
+}
+.excalidraw .help-icon:hover {
+  background-color: var(--button-hover-bg, var(--island-bg-color));
+  border-color: var(--button-hover-border, var(--button-border, var(--default-border-color)));
+  color: var(--button-hover-color, var(--button-color, var(--text-primary-color, inherit)));
+}
+.excalidraw .help-icon:active {
+  background-color: var(--button-active-bg, var(--island-bg-color));
+  border-color: var(--button-active-border, var(--color-primary-darkest));
+}
+.excalidraw .help-icon.active {
+  background-color: var(--button-selected-bg, var(--color-primary-light));
+  border-color: var(--button-selected-border, var(--color-primary-light));
+}
+.excalidraw .help-icon.active:hover {
+  background-color: var(--button-selected-hover-bg, var(--color-primary-light));
+}
+.excalidraw .help-icon.active svg {
+  color: var(--button-color, var(--color-primary-darker));
+}
+.excalidraw .help-icon svg {
+  width: var(--lg-icon-size);
+  height: var(--lg-icon-size);
+}
+.excalidraw .reset-zoom-button {
+  font-family: var(--ui-font);
+}
+.excalidraw .finalize-button {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.4em;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-inline-start: 0.6em;
+}
+.excalidraw .undo-redo-buttons,
+.excalidraw .eraser-buttons {
+  display: grid;
+  grid-auto-flow: column;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-inline-start: 0.6em;
+}
+.excalidraw--mobile.excalidraw aside {
+  display: none;
+}
+.excalidraw--mobile.excalidraw .scroll-back-to-content {
+  bottom: calc(80px + var(--sab, 0));
+  z-index: -1;
+}
+
+:root[dir=rtl] .excalidraw .rtl-mirror {
+  transform: scaleX(-1);
+}
+.excalidraw .zen-mode-visibility {
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+  width: auto;
+  transition: opacity 0.5s;
+}
+.excalidraw .zen-mode-visibility.zen-mode-visibility--hidden {
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  transition: opacity 0.5s;
+}
+.excalidraw .disable-pointerEvents {
+  pointer-events: none !important;
+}
+.excalidraw.excalidraw--view-mode .App-menu {
+  display: flex;
+  justify-content: space-between;
+}
+.excalidraw input[type=text],
+.excalidraw textarea:not(.excalidraw-wysiwyg) {
+  color: var(--text-primary-color);
+  border: 1.5px solid var(--input-border-color);
+  padding: 0.75rem;
+  white-space: nowrap;
+  border-radius: var(--space-factor);
+  background-color: var(--input-bg-color);
+}
+.excalidraw input[type=text]:not(:focus):hover,
+.excalidraw textarea:not(.excalidraw-wysiwyg):not(:focus):hover {
+  background-color: var(--input-hover-bg-color);
+}
+.excalidraw input[type=text]:focus,
+.excalidraw textarea:not(.excalidraw-wysiwyg):focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--focus-highlight-color);
+}
+@media print {
+  .excalidraw .App-bottom-bar,
+  .excalidraw .FixedSideContainer,
+  .excalidraw .layer-ui__wrapper {
+    display: none;
+  }
+}
+.excalidraw ::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+.excalidraw ::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+}
+.excalidraw ::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+.excalidraw ::-webkit-scrollbar-thumb:active {
+  background: var(--scrollbar-thumb);
+}
+.excalidraw .mobile-misc-tools-container {
+  position: absolute;
+  top: calc(5rem - var(--editor-container-padding));
+  right: calc(var(--editor-container-padding) * -1);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--sidebar-border-color);
+  border-top-left-radius: var(--border-radius-lg);
+  border-bottom-left-radius: var(--border-radius-lg);
+  border-right: 0;
+  overflow: hidden;
+  background-color: var(--island-bg-color);
+}
+.excalidraw .mobile-misc-tools-container .ToolIcon__icon {
+  border-radius: 0;
+}
+.excalidraw .mobile-misc-tools-container .default-sidebar-trigger {
+  border: 0;
+}
+.excalidraw .App-toolbar--mobile {
+  overflow-x: auto;
+  max-width: 90vw;
+}
+.excalidraw .App-toolbar--mobile .ToolIcon__keybinding {
+  display: none;
+}
+.excalidraw .UserList-Wrapper {
+  margin: 0;
+  padding: 0;
+  border: none;
+  text-align: left;
+}
+.excalidraw .UserList-Wrapper legend {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin: 0 0 0.25rem;
+  padding: 0;
+}
+
+.ErrorSplash.excalidraw {
+  min-height: 100vh;
+  padding: 20px 0;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: text;
+}
+.ErrorSplash.excalidraw .ErrorSplash-messageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: #ffe3e3;
+  border: 3px solid #c92a2a;
+}
+.ErrorSplash.excalidraw .ErrorSplash-paragraph {
+  margin: 15px 0;
+  max-width: 600px;
+}
+.ErrorSplash.excalidraw .ErrorSplash-paragraph.align-center {
+  text-align: center;
+}
+.ErrorSplash.excalidraw .bigger,
+.ErrorSplash.excalidraw .bigger button {
+  font-size: 1.1em;
+}
+.ErrorSplash.excalidraw .smaller,
+.ErrorSplash.excalidraw .smaller button {
+  font-size: 0.9em;
+}
+.ErrorSplash.excalidraw .ErrorSplash-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ErrorSplash.excalidraw .ErrorSplash-details textarea {
+  width: 100%;
+  margin: 10px 0;
+  font-family: "Cascadia";
+  font-size: 0.8em;
+}
