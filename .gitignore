@@ -7,3 +7,4 @@ etc/cloudflare/**/*.json
 *.pyc
 node_modules
 .vscode/settings.json
+/infra/charts/**
