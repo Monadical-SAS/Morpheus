@@ -26,7 +26,7 @@ settings = get_settings()
 app = FastAPI()
 
 
-@serve.deployment(num_replicas=1, route_prefix="/")
+@serve.deployment(num_replicas=1)
 @serve.ingress(app)
 class APIIngress:
     def __init__(self) -> None:

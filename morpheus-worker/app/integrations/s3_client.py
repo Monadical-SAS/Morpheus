@@ -39,7 +39,7 @@ class S3Client:
                 Key=key,
             )
             self.logger.info(f"Image uploaded to S3: {key}")
-            return f"https://{self.IMAGES_BUCKET}.s3.amazonaws.com/{key}"
+            return key
         except Exception as e:
             self.logger.error(f"Error uploading image to S3: {key}")
             self.logger.error(e)

@@ -9,6 +9,7 @@ from app.integrations.generative_ai_engine.generative_ai_interface import (
 )
 from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
 from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
+from morpheus_data.repository.files.s3_files_repository import S3ImagesRepository
 from morpheus_data.repository.generation_repository import GenerationRepository
 from morpheus_data.repository.model_repository import ModelRepository
 from morpheus_data.repository.user_repository import UserRepository
@@ -22,13 +23,27 @@ class StableDiffusionService:
         self.generation_repository = GenerationRepository()
         self.model_repository = ModelRepository()
         self.user_repository = UserRepository()
+        self.files_repository = S3ImagesRepository()
         self.settings = get_settings()
 
     def get_generation_result(self, db: Session, task_id: str) -> str:
         generation = self.generation_repository.get_generation(db=db, generation_id=task_id)
         if generation is None:
             raise GenerationNotFoundError(f"Generation with id {task_id} not found")
+        if generation.results:
+            generation.results = [self._to_presigned_url(r) for r in generation.results]
         return generation
+
+    def _to_presigned_url(self, result: str) -> str:
+        """Convert an S3 key or legacy public URL to a pre-signed URL."""
+        if result.startswith("https://"):
+            # Legacy format: extract key from URL (everything after the bucket domain)
+            # e.g. https://bucket.s3.amazonaws.com/folder/file.png -> folder/file.png
+            parts = result.split(".s3.amazonaws.com/", 1)
+            key = parts[1] if len(parts) == 2 else result
+        else:
+            key = result
+        return self.files_repository.generate_public_url(file_name=key)
 
     def generate_text2img_images(self, db: Session, prompt: Prompt, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)

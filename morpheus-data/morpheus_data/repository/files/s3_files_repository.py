@@ -101,12 +101,15 @@ class S3ImagesRepository(FileRepositoryInterface):
             logger.error("Error getting the images from AWS S3")
             logger.error(e)
 
-    @staticmethod
-    def generate_public_url(*, file_name: str):
+    def generate_public_url(self, *, file_name: str, expiration: int = 3600):
         try:
-            return f"https://{IMAGES_BUCKET}.s3.amazonaws.com/{file_name}"
+            return self.s3.generate_presigned_url(
+                "get_object",
+                Params={"Bucket": IMAGES_BUCKET, "Key": file_name},
+                ExpiresIn=expiration,
+            )
         except Exception as e:
-            logger.error("Error generating the public url")
+            logger.error("Error generating the presigned url")
             logger.error(e)
 
     def get_file_url(self, *, filename: str):
@@ -174,4 +177,5 @@ def get_file_name(*, file: Union[UploadFile, Image.Image], folder_name: str):
 def get_file_path(*, object_url: str):
     splits = object_url.split("/")
     folder, filename = splits[-2], splits[-1]
+    filename = filename.split("?")[0]  # strip query params from pre-signed URLs
     return folder, filename

@@ -48,9 +48,8 @@ class FileRepositoryInterface(ABC):
     def get_file_urls(self, filenames: list[str]):
         raise NotImplementedError("This method is not implemented")
 
-    @staticmethod
     @abstractmethod
-    def generate_public_url(*, file_name: str):
+    def generate_public_url(self, *, file_name: str, expiration: int = 3600):
         raise NotImplementedError("This method is not implemented")
 
 
