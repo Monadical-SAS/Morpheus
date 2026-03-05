@@ -14,6 +14,17 @@ from app.models.schemas import CategoryEnum, Generation, ModelRequest
 # for local testing
 # from app.utils.images import create_fake_images
 
+_ACTOR_NAMESPACE = "morpheus"
+
+_GENERATORS = {
+    CategoryEnum.TEXT_TO_IMAGE: StableDiffusionText2Img,
+    CategoryEnum.IMAGE_TO_IMAGE: StableDiffusionImageToImage,
+    CategoryEnum.CONTROLNET: StableDiffusionControlnet,
+    CategoryEnum.PIX_TO_PIX: StableDiffusionPixToPix,
+    CategoryEnum.UPSCALING: StableDiffusionUpscaling,
+    CategoryEnum.INPAINTING: StableDiffusionInpainting,
+}
+
 
 @ray.remote
 class ModelHandler:
@@ -29,23 +40,40 @@ class ModelHandler:
         if self.endpoint == CategoryEnum.CONTROLNET:
             self.generator_args["controlnet_id"] = self.request.controlnet_id
 
-        self.generator = self.get_generator().remote(**self.generator_args)
+        self.generator = self._get_or_create_generator()
         self.s3_client = S3Client()
 
-    def get_generator(self):
-        generators = {
-            CategoryEnum.TEXT_TO_IMAGE: StableDiffusionText2Img,
-            CategoryEnum.IMAGE_TO_IMAGE: StableDiffusionImageToImage,
-            CategoryEnum.CONTROLNET: StableDiffusionControlnet,
-            CategoryEnum.PIX_TO_PIX: StableDiffusionPixToPix,
-            CategoryEnum.UPSCALING: StableDiffusionUpscaling,
-            CategoryEnum.INPAINTING: StableDiffusionInpainting,
-        }
-        generator = generators.get(self.endpoint)
-        if generator is None:
+    def _make_actor_name(self) -> str:
+        """Build a deterministic name for the SD actor based on its config.
+        Actors with the same name are reused across requests (model stays loaded)."""
+        parts = [
+            self.endpoint.value,
+            (self.request.model_id or "default").replace("/", "--").replace(".", "-"),
+            (self.request.pipeline or "default"),
+            (self.request.scheduler or "default"),
+        ]
+        if self.endpoint == CategoryEnum.CONTROLNET:
+            parts.append((self.request.controlnet_id or "default").replace("/", "--"))
+        return "_".join(parts)
+
+    def _get_or_create_generator(self):
+        """Return an existing named actor (model already loaded) or create a new one."""
+        actor_name = self._make_actor_name()
+        GeneratorClass = _GENERATORS.get(self.endpoint)
+        if GeneratorClass is None:
             raise ValueError(f"Invalid endpoint: {self.endpoint}")
 
-        return generator
+        try:
+            actor = ray.get_actor(actor_name, namespace=_ACTOR_NAMESPACE)
+            self.logger.info(f"Reusing existing actor: {actor_name}")
+            return actor
+        except ValueError:
+            self.logger.info(f"Creating new actor (first request for this model): {actor_name}")
+            return GeneratorClass.options(
+                name=actor_name,
+                namespace=_ACTOR_NAMESPACE,
+                lifetime="detached",
+            ).remote(**self.generator_args)
 
     def handle_generation(self):
         self.logger.info(f"Generating image for: {self.request}")
@@ -63,7 +91,7 @@ class ModelHandler:
             # for local testing
             # generated_images = create_fake_images(n_images=self.request.num_images_per_prompt)
 
-            # Upload images to S3 Bucket
+            # Upload images to S3 Bucket (parallel)
             image_urls = self.s3_client.upload_multiple_files(
                 files=generated_images,
                 file_name=f"{self.request.task_id}"
@@ -76,7 +104,6 @@ class ModelHandler:
                 status="COMPLETED"
             ))
 
-            # Return image URLs
             self.logger.info(f"Generation {generation.id} updated with result: {generation.results}")
             return generation
         except Exception as e:
