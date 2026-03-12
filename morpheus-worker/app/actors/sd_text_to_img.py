@@ -33,7 +33,7 @@ class StableDiffusionText2Img(StableDiffusionAbstract):
             self.logger.warning(f"Warmup failed (non-fatal): {e}")
 
     def generate(self, request: ModelRequest):
-        self.logger.info(f"StableDiffusionV2Text2Img.generate: request: {request}")
+        self.logger.info(f"StableDiffusionV2Text2Img.generate: request: {request.dict(exclude={'image', 'palette_image', 'mask'})}")
         self.set_generator(request.generator)
         result = self.pipeline(
             prompt=request.prompt,

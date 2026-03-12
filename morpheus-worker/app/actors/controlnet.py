@@ -52,7 +52,7 @@ class StableDiffusionControlnet(StableDiffusionAbstract):
             self.logger.warning(f"Warmup failed (non-fatal): {e}")
 
     def generate(self, request: ModelRequest):
-        self.logger.info(f"StableDiffusionControlnet.generate: request: {request}")
+        self.logger.info(f"StableDiffusionControlnet.generate: request: {request.dict(exclude={'image', 'palette_image', 'mask'})}")
         self.set_generator(request.generator)
         controlnet_type = request.controlnet_type or "canny"
         image = Image.open(BytesIO(request.image)).convert("RGB")

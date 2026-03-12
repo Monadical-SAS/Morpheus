@@ -37,7 +37,7 @@ class StableDiffusionInpainting(StableDiffusionAbstract):
             self.logger.warning(f"Warmup failed (non-fatal): {e}")
 
     def generate(self, request: ModelRequest):
-        self.logger.info(f"StableDiffusionInpainting.generate: request: {request}")
+        self.logger.info(f"StableDiffusionInpainting.generate: request: {request.dict(exclude={'image', 'palette_image', 'mask'})}")
         self.set_generator(request.generator)
         image = Image.open(BytesIO(request.image)).convert("RGB")
         mask = Image.open(BytesIO(request.mask)).convert("RGB")
