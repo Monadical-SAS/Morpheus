@@ -235,6 +235,18 @@ The Morpheus project will be running on your local machine at localhost:3000 (cl
 localhost:8001 (api). Morpheus uses some Stable Diffusion models by default, if you want to change the setup you
 can do it from the administration panel.
 
+## Local Service URLs
+
+Once running, the services are available at:
+
+| Service | URL |
+|---|---|
+| Frontend (morpheus-client) | http://localhost:3000 |
+| Admin panel (morpheus-admin) | http://localhost:3001 |
+| Backend API (morpheus-server) | http://localhost:8001 |
+| Worker panel (Ray Dashboard) | http://localhost:8265 |
+| PGAdmin | http://localhost:8002 |
+
 # Development
 
 ## Running the backend tests
