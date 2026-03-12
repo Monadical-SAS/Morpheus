@@ -6,23 +6,38 @@ from app.actors.magic_prompt import StableDiffusionMagicPrompt
 from app.integrations.db_client import DBClient
 from app.models.schemas import Generation, TextCategoryEnum, TextGenerationRequest
 
+_ACTOR_NAMESPACE = "morpheus"
+
+_TEXT_GENERATORS = {
+    TextCategoryEnum.MAGIC_PROMPT: StableDiffusionMagicPrompt,
+}
+
 
 @ray.remote
 class TextModelHandler:
     def __init__(self, *, endpoint: TextCategoryEnum):
         self.endpoint = endpoint
         self.logger = logging.getLogger("ray")
-        self.generator = self.get_generator().remote()
+        self.generator = self._get_or_create_generator()
 
-    def get_generator(self):
-        generators = {
-            TextCategoryEnum.MAGIC_PROMPT: StableDiffusionMagicPrompt,
-        }
-        generator = generators.get(self.endpoint)
-        if generator is None:
+    def _get_or_create_generator(self):
+        """Return an existing named actor (model already loaded) or create a new one."""
+        actor_name = f"text_{self.endpoint.value}"
+        GeneratorClass = _TEXT_GENERATORS.get(self.endpoint)
+        if GeneratorClass is None:
             raise ValueError(f"Invalid endpoint: {self.endpoint}")
 
-        return generator
+        try:
+            actor = ray.get_actor(actor_name, namespace=_ACTOR_NAMESPACE)
+            self.logger.info(f"Reusing existing actor: {actor_name}")
+            return actor
+        except ValueError:
+            self.logger.info(f"Creating new actor (first request for this model): {actor_name}")
+            return GeneratorClass.options(
+                name=actor_name,
+                namespace=_ACTOR_NAMESPACE,
+                lifetime="detached",
+            ).remote()
 
     def handle_generation(self, request: TextGenerationRequest):
         self.logger.info(f"Generating text for: {request}")

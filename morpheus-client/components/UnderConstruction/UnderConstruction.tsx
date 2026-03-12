@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
-import styles from "./UnderConstruction.module.scss";
 
 interface UnderConstructionProps {
   title?: string;
@@ -15,11 +14,7 @@ const UnderConstruction = (props: UnderConstructionProps) => {
   }, [router]);
 
   return (
-    <div
-      className={`${styles.textContent} ${
-        props.variant === "small" && styles.small
-      }`}
-    >
+    <div className="h-auto w-auto flex p-12 flex-col justify-center items-center bg-[rgba(0,0,0,0.4)] max-md:p-6 max-md:text-center">
       <h2 className="bold40 white">{props.title}</h2>
       <hr />
       <p className="heading white">

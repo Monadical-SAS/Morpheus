@@ -2,9 +2,8 @@ import importlib
 from enum import Enum
 from functools import lru_cache
 
-from morpheus_data.config import Settings as SettingsData
 from omegaconf import OmegaConf
-from pydantic import PostgresDsn
+from pydantic import BaseSettings, PostgresDsn
 
 
 class EnvironmentEnum(str, Enum):
@@ -19,9 +18,36 @@ class GenerativeAIBackendEnum(str, Enum):
     ray = "ray"
 
 
-class Settings(SettingsData):
-    environment: EnvironmentEnum = EnvironmentEnum.local
+class Settings(BaseSettings):
+    postgres_user: str = "postgres"
+    postgres_password: str = "password"
+    postgres_host: str = "postgres"
+    postgres_port: str = "5432"
+    postgres_db: str = "morpheus"
 
+    firebase_project_id: str
+    firebase_private_key: str
+    firebase_client_email: str
+    firebase_web_api_key: str
+
+    aws_access_key_id: str = ""
+    aws_secret_access_key: str = ""
+    bucket_type: str = "S3"
+    models_bucket: str
+    images_bucket: str
+    images_temp_bucket: str
+    firebase_storage_bucket: str = ""
+
+    temp_model_folder: str = "./tmp"
+    default_scheduler: str = "DDPMScheduler"
+    default_pipeline: str = "StableDiffusionXLPipeline"
+    default_model: str = "stabilityai/stable-diffusion-xl-base-1.0"
+    max_num_images: int = 4
+
+    admin_email: str = "admin@morpheus.com"
+    admin_password: str = "morpheusAdmin"
+
+    environment: EnvironmentEnum = EnvironmentEnum.local
     allowed_origins: str = "http://localhost:3000,http://localhost:3001"
     generative_ai_backend: str = GenerativeAIBackendEnum.ray
     ray_backend_url: str = "http://worker-ray:8000"
@@ -57,9 +83,13 @@ samplers = read_available_samplers("config/sd-schedulers.yaml")
 
 file_handlers = {
     "S3": {
-        "module": "morpheus_data.repository.files.s3_files_repository",
+        "module": "app.repository.files.s3_files_repository",
         "handler": "S3ImagesRepository",
-    }
+    },
+    "Firebase": {
+        "module": "app.repository.files.firebase_files_repository",
+        "handler": "FirebaseImagesRepository",
+    },
 }
 
 backend_handlers = {

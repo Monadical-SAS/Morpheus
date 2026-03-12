@@ -7,7 +7,6 @@ import { AuthOption, useAuth } from "@/context/AuthContext";
 import { useToastContext } from "@/context/ToastContext";
 import { isAllTrue } from "@/utils/arrays";
 import { initialText, TextState } from "../../Inputs/InputText/InputText";
-import styles from "../LoginForm/LoginForm.module.scss";
 
 export const ResetForm = () => {
   const { setAuthOption, resetPassword } = useAuth();
@@ -41,12 +40,12 @@ export const ResetForm = () => {
   };
 
   return (
-    <div className={styles.loginContainer}>
-      <div className={styles.titleContainer}>
+    <div className="w-full">
+      <div className="flex items-center">
         <span onClick={() => setAuthOption(AuthOption.Login)}>
           <ArrowBackIcon />
         </span>
-        <h2 className={`headline-5 white ${styles.resetTitle}`}>
+        <h2 className="headline-5 white ml-4">
           Reset your Password
         </h2>
       </div>

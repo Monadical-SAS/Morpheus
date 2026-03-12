@@ -13,9 +13,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ModelsProvider } from "@/context/ModelsContext";
 import { CookiesConsentProvider } from "@/context/CookiesConsentContext";
 
-import "../App.scss";
 import "../styles/globals.css";
-import "../excalidraw/main.scss";
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (

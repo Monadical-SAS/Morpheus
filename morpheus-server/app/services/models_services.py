@@ -3,11 +3,11 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from morpheus_data.models.schemas import MLModel, MLModelCreate
-from morpheus_data.registry.model_manager import ModelManagerHuggingFace
-from morpheus_data.registry.s3_model_registry import S3ModelRegistry
-from morpheus_data.repository.model_category_repository import ModelCategoryRepository
-from morpheus_data.repository.model_repository import ModelRepository
+from app.models.schemas import MLModel, MLModelCreate
+from app.registry.model_manager import ModelManagerHuggingFace
+from app.registry.s3_model_registry import S3ModelRegistry
+from app.repository.model_category_repository import ModelCategoryRepository
+from app.repository.model_repository import ModelRepository
 
 from app.config import EnvironmentEnum, get_settings
 

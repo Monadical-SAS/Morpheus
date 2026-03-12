@@ -8,7 +8,6 @@ import { ImageIcon } from "../icons/image";
 import { useAuth } from "@/context/AuthContext";
 import { useModal } from "@/hooks/useModal";
 import { ArtWork } from "@/models/models";
-import styles from "./ArtworkCard.module.scss";
 
 interface ImageCardProps {
   artwork: ArtWork;
@@ -38,10 +37,9 @@ const ArtworkCard = (props: ImageCardProps) => {
 
   return (
     <Fragment>
-      <div className={styles.artworkCard} style={initialStyles}>
+      <div className="group overflow-hidden rounded-lg cursor-pointer relative hover:border hover:border-[#312E47]" style={initialStyles} onClick={handleClick}>
         {props.artwork?.image ? (
           <AppImage
-            onClick={handleClick}
             src={props.artwork.image}
             alt={props.artwork.title}
           />
@@ -51,7 +49,7 @@ const ArtworkCard = (props: ImageCardProps) => {
           </span>
         )}
 
-        <div className={styles.smallActions}>
+        <div className="h-[60px] w-full absolute top-0 left-0 right-0 hidden group-hover:flex justify-center items-center bg-[#14172D] border-b border-[#312E47] transition-all duration-500 ease-in-out max-md:hidden">
           <ArtworkActions
             artwork={props.artwork}
             showDelete={false}
@@ -71,7 +69,7 @@ const ArtworkCard = (props: ImageCardProps) => {
           toggleModal={toggleModal}
           headerContent={<ArtworkCreator creator={user} />}
         >
-          <div className={styles.modalContent}>
+          <div className="flex-1">
             <ArtworkCardDetails
               artwork={props.artwork}
               toggleModal={toggleModal}

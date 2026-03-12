@@ -1,7 +1,6 @@
 import React, { CSSProperties, Fragment } from "react";
 import { buildStringFromArray } from "../../../utils/strings";
 import { CheckIcon } from "../../icons/check";
-import styles from "./InputCheckbox.module.scss";
 
 
 export interface CheckboxState {
@@ -35,20 +34,18 @@ const InputCheckbox = (props: InputCheckboxProps) => {
   return (
     <Fragment>
       <div
-        className={styles.inputCheckboxContainer}
+        className="min-w-[250px] flex flex-row items-center cursor-pointer"
         style={props.styles}
         onClick={handleCheckboxChange}
       >
         <div
-          className={`${styles.checkbox} ${
-            props.checked.value && styles.checked
-          }`}
+          className={`w-4 h-4 flex flex-row justify-center items-center rounded ${props.checked.value ? "bg-[#B3005E] border-0" : "text-[#8B90B2] border border-[#8B90B2] bg-[#252238]"}`}
         >
           {props.checked.value && <CheckIcon />}
         </div>
 
         {props.label && (
-          <label className="caption-1 white" htmlFor={props.id}>
+          <label className="caption-1 white ml-2" htmlFor={props.id}>
             {props.label}
           </label>
         )}

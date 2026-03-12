@@ -8,7 +8,7 @@ import s3
 from config import APIServer, DBTarget, Target, api_server_urls, config_file, download_model, models_url
 from utils import load_config_from_file
 
-from morpheus_data.registry.model_manager import remove_model_from_disk, list_models_in_disk
+from app.registry.model_manager import remove_model_from_disk, list_models_in_disk
 
 cli = typer.Typer(rich_markup_mode="rich")
 

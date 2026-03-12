@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { buildStringFromArray } from "@/utils/strings";
 import { LookIcon } from "../../icons/lock";
-import styles from "../Input.module.scss";
 import { TextState } from "../InputText/InputText";
 import { matchPassword, maxLength, minLength, required } from "../validators";
 
@@ -34,8 +33,8 @@ const InputPassword = (props: InputPasswordProps) => {
 
   return (
     <Fragment>
-      <div className={styles.inputIconContainer}>
-        <span className={styles.iconLeft}>
+      <div className="w-full flex flex-col box-border relative">
+        <span className="absolute top-4 left-4">
           <LookIcon />
         </span>
 
@@ -47,12 +46,13 @@ const InputPassword = (props: InputPasswordProps) => {
           value={props.password.value}
           disabled={props.disabled}
           onChange={(event) => handlePasswordChange(event)}
+          className="w-full flex-1 outline-none h-12 min-h-[48px] pl-11 pr-11 rounded-lg text-[#8B90B2] border border-[#312E47] bg-[#252238] focus:border-[#d9006d] transition-all duration-500 placeholder:text-[#8B90B2]"
         />
 
-        <span className={styles.iconRight}>
+        <span className="absolute top-3 right-4 cursor-pointer">
           {showPassword ? (
             <i
-              className={`material-icons ${styles.active}`}
+              className="material-icons text-[#B3005E]"
               onClick={() => setShowPassword(false)}
             >
               visibility
@@ -65,7 +65,7 @@ const InputPassword = (props: InputPasswordProps) => {
         </span>
       </div>
 
-      <small className={styles.error}>
+      <small className="caption-1 text-red-500">
         {buildStringFromArray(props.password.validators)}
       </small>
     </Fragment>

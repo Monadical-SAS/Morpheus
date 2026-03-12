@@ -3,7 +3,7 @@ from app.integrations.generative_ai_engine.generative_ai_interface import (
     GenerativeAIInterface,
 )
 from loguru import logger
-from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
+from app.models.schemas import GenerationRequest, TextGenerationRequest
 
 
 class GenerativeAIStableDiffusionCelery(GenerativeAIInterface):

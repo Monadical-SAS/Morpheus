@@ -25,4 +25,4 @@ applications:
   deployments:
 
   - name: APIIngress
-    num_replicas: 1
+    num_replicas: 2

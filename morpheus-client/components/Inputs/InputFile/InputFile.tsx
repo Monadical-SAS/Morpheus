@@ -1,6 +1,5 @@
 import React, { ChangeEvent, createRef, CSSProperties, useEffect } from "react";
 import { CloseIcon } from "../../icons/close";
-import styles from "./InputFile.module.scss";
 
 interface InputFileProps {
   label?: string;
@@ -32,9 +31,9 @@ const InputFile = (props: InputFileProps) => {
   };
 
   return (
-    <div className={styles.inputContainer} style={props.styles}>
+    <div className="w-auto max-w-full" style={props.styles}>
       {props.label && (
-        <p className={`base-2 white ${styles.inputLabel}`}>{props.label}</p>
+        <p className="base-2 white mb-[10px]">{props.label}</p>
       )}
 
       <input
@@ -44,15 +43,15 @@ const InputFile = (props: InputFileProps) => {
         required
         onChange={(e) => handleFileChange(e)}
         ref={ref}
-        className="base-3 white"
+        className="hidden"
       />
 
-      <label htmlFor="images" className="base-1 white">
+      <label htmlFor="images" className="w-full h-12 min-h-[48px] max-h-[48px] flex items-center justify-center px-3 py-2 cursor-pointer rounded-lg bg-[#252238] border-2 border-[#312E47] base-1 white">
         Upload new image
       </label>
 
       {props.file && (
-        <div className={styles.fileResult}>
+        <div className="mt-[10px] flex items-center gap-4">
           <p className="base-2 white">{props.file.name}</p>
           <span onClick={resetInputFile}>
             <CloseIcon width={"16"} height={"16"} />

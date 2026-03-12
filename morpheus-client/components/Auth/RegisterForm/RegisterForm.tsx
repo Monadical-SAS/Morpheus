@@ -11,9 +11,8 @@ import InputText, {
 } from "../../Inputs/InputText/InputText";
 import { Separator } from "../Separator/Separator";
 import { SignUpWithGoogle } from "../SocialSignUp/SignUpWithGoogle";
-import styles from "./RegisterForm.module.scss";
 
-export const RegisterForm = () => {
+export const RegisterForm = ({ className }: { className?: string }) => {
   const { registerWithEmailAndPassword } = useAuth();
 
   const [loading, setLoading] = useState(false);
@@ -53,11 +52,11 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div className={styles.registerContainer}>
+    <div className={`w-full ${className || ""}`}>
       <SignUpWithGoogle />
       <Separator />
 
-      <form>
+      <form className="w-full">
         <InputText
           id="inputTextUserName"
           text={name}
@@ -84,6 +83,7 @@ export const RegisterForm = () => {
         />
 
         <ButtonPrimary
+          styles={{ marginTop: "32px" }}
           disabled={!formValid}
           loading={loading}
           text={"Create account"}
@@ -91,7 +91,7 @@ export const RegisterForm = () => {
         />
       </form>
 
-      <p className={`caption-1 secondary ${styles.caption}`}>
+      <p className="caption-1 secondary mt-6">
         By creating an account, you agree to our{" "}
         <a href="" className="app-link caption-1 white">
           Terms of Service

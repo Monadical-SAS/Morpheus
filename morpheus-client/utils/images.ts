@@ -40,6 +40,7 @@ export const getImageFilename = (url: string) => {
 
 export const getFileBlobFromURL = async (url: string) => {
   const blob = await getImageBlob(url);
+  if (!blob) throw new Error(`Failed to fetch image from URL (possible CORS issue): ${url}`);
   const filename = getImageFilename(url);
   return new File([blob], filename, { type: "image/png" });
 };

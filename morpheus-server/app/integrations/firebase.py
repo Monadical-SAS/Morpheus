@@ -4,8 +4,8 @@ from fastapi import Depends, HTTPException, status, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from firebase_admin import auth, credentials, initialize_app
 from loguru import logger
-from morpheus_data.database.database import get_db
-from morpheus_data.repository.user_repository import UserRepository
+from app.database.database import get_db
+from app.repository.user_repository import UserRepository
 from sqlalchemy.exc import PendingRollbackError
 
 settings = get_settings()

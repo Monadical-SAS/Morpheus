@@ -6,7 +6,6 @@ import { useToastContext } from "@/context/ToastContext";
 import { TextInput } from "@/components/atoms/input";
 import { Button, ButtonVariant } from "@/components/atoms/button";
 import { useForm } from "react-hook-form";
-import styles from "../LoginForm/LoginForm.module.scss";
 
 interface ResetFormModel {
   email: string;
@@ -48,12 +47,12 @@ export const ResetForm = () => {
   };
 
   return (
-    <div className={styles.loginContainer}>
-      <div className={styles.titleContainer}>
+    <div className="w-full">
+      <div className="flex items-center">
         <span onClick={() => setAuthOption(AuthOption.Login)}>
           <ArrowBackIcon />
         </span>
-        <h2 className={`headline-5 white ${styles.resetTitle}`}>
+        <h2 className="headline-5 white ml-4">
           Reset your Password
         </h2>
       </div>

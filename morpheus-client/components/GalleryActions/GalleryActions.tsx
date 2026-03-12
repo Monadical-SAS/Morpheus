@@ -1,5 +1,4 @@
 import RoundedIcon from "../RoundedIcon/RoundedIcon";
-import styles from "./GalleryActions.module.scss";
 
 interface ImageActionsProps {
   showCollections: boolean;
@@ -8,7 +7,7 @@ interface ImageActionsProps {
 
 const GalleryActions = (props: ImageActionsProps) => {
   return (
-    <div className={styles.actionButtons}>
+    <div className="absolute top-2 left-2">
       <RoundedIcon
         status={props.showCollections}
         icon={"folder"}

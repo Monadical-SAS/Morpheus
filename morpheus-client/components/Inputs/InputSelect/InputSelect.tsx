@@ -15,6 +15,7 @@ export interface InputSelectProps {
   setSelected: (selected: string) => void;
   styles?: CSSProperties;
   optional?: boolean;
+  triggerClassName?: string;
 }
 
 const InputSelect = (props: InputSelectProps) => {
@@ -30,7 +31,7 @@ const InputSelect = (props: InputSelectProps) => {
       value={props.selected}
       onValueChange={props.setSelected}
     >
-      <SelectTrigger>
+      <SelectTrigger className={props.triggerClassName}>
         <SelectValue placeholder={props.label} />
       </SelectTrigger>
       <SelectContent>

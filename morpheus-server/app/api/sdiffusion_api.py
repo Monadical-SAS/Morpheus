@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, File, UploadFile
 from loguru import logger
-from morpheus_data.database.database import get_db
-from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
+from app.database.database import get_db
+from app.models.schemas import MagicPrompt, Prompt, PromptControlNet
 from typing import Optional
 
 from app.config import get_generative_ai_backend

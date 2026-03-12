@@ -16,8 +16,8 @@ from app.config import get_settings
 from config.logger import InitLogger
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from morpheus_data.database.database import engine, Base
-from morpheus_data.database.init_db import init_morpheus_data
+from app.database.database import engine, Base
+from app.database.init_db import init_morpheus_data
 
 SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
 sentry_sdk.init(

@@ -5,19 +5,18 @@ import { LoginForm } from "./LoginForm/LoginForm";
 import { RegisterForm } from "./RegisterForm/RegisterForm";
 import { ResetForm } from "./ResetForm/ResetForm";
 import { AuthOption, useAuth } from "@/context/AuthContext";
-import styles from "./Auth.module.scss";
 
 export const Auth = () => {
   const { authOption } = useAuth();
 
   return (
-    <div className={styles.authContainer}>
+    <div className="w-full h-auto flex flex-col justify-center items-center max-w-[526px] max-md:w-full max-md:h-full max-md:p-6">
       <Brand styles={{ marginBottom: "30px" }} />
 
       {authOption !== AuthOption.Reset && <ToggleAuthOption />}
 
-      {authOption === AuthOption.Login && <LoginForm />}
-      {authOption === AuthOption.SignUp && <RegisterForm />}
+      {authOption === AuthOption.Login && <LoginForm className="mt-6" />}
+      {authOption === AuthOption.SignUp && <RegisterForm className="mt-6" />}
       {authOption === AuthOption.Reset && <ResetForm />}
     </div>
   );

@@ -1,5 +1,4 @@
 import { capitalize } from "../../utils/strings";
-import styles from "./ShareButton.module.scss";
 
 interface ShareOptionProps {
   url: string;
@@ -13,7 +12,7 @@ const ShareOption = (props: ShareOptionProps) => {
 
   return (
     <img
-      className={styles.imgIcon}
+      className="w-[60px] min-w-[60px] h-[60px] min-h-[60px] mr-[5px] rounded-full cursor-pointer hover:shadow-[0_0_10px_rgba(0,0,0,0.3)]"
       src={`/images/icons/${props.image}.svg`}
       onClick={handleClick}
       alt={`Share to ${capitalize(props.image)}`}
@@ -28,7 +27,7 @@ interface ShareOptionsProps {
 
 const ShareOptions = (props: ShareOptionsProps) => {
   return (
-    <div className={styles.shareOptions}>
+    <div className="mt-12 flex flex-row items-center justify-center flex-wrap gap-8">
       <ShareOption
         url={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
           props.url

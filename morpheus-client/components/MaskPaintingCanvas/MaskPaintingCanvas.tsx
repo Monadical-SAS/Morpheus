@@ -11,7 +11,6 @@ import InputNumber, {
   initializeNumber,
   NumberState,
 } from "../Inputs/InputNumber/InputNumber";
-import styles from "./MaskPaintingCanvas.module.scss";
 
 type MaskedCanvasProps = {
   width: number;
@@ -189,11 +188,11 @@ const MaskPaintingCanvas = (props: MaskedCanvasProps) => {
   };
 
   return (
-    <div className={styles.canvasContainer}>
-      <canvas ref={imageCanvasRef} className={styles.imageCanvas} />
+    <div className="relative">
+      <canvas ref={imageCanvasRef} />
 
       <canvas
-        className={styles.drawingCanvas}
+        className="absolute top-0 right-0 left-0 bottom-0 cursor-crosshair"
         ref={drawingCanvasRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -204,7 +203,7 @@ const MaskPaintingCanvas = (props: MaskedCanvasProps) => {
         onTouchEnd={handleTouchEnd}
       />
 
-      <div className={styles.actionsContainer}>
+      <div className="flex flex-row items-center mt-4">
         <InputNumber
           id="inputNumberBrushSize"
           number={brushSize}
@@ -216,7 +215,7 @@ const MaskPaintingCanvas = (props: MaskedCanvasProps) => {
           step={10}
         />
 
-        <div className={styles.actions}>
+        <div className="flex flex-row justify-center items-center gap-4 ml-6 mt-6">
           <span className="material-icons" onClick={resetCanvas}>
             replay
           </span>

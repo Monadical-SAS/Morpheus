@@ -7,8 +7,8 @@ from app.services.model_category_services import ModelCategoryService
 from fastapi import APIRouter
 from fastapi import Depends
 from loguru import logger
-from morpheus_data.database.database import get_db
-from morpheus_data.models.schemas import ModelCategory
+from app.database.database import get_db
+from app.models.schemas import ModelCategory
 from sqlalchemy.orm import Session
 
 router = APIRouter()

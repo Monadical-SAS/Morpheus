@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from pydantic import BaseSettings, PostgresDsn
 
 
@@ -9,19 +11,32 @@ class Settings(BaseSettings):
     postgres_port: str = "5432"
     postgres_db: str = "morpheus"
 
-    # AWS and s3 config
-    aws_access_key_id: str
-    aws_secret_access_key: str
+    # Storage config
+    bucket_type: str = "S3"
     images_bucket: str
     images_temp_bucket: str
     models_folder: str = "/mnt/"
 
+    # AWS credentials (required when bucket_type=S3)
+    aws_access_key_id: str = ""
+    aws_secret_access_key: str = ""
+
+    # Firebase credentials (required when bucket_type=Firebase)
+    firebase_project_id: str = ""
+    firebase_private_key: str = ""
+    firebase_client_email: str = ""
+    firebase_storage_bucket: str = ""
+
     # Models config
-    default_scheduler: str = "DDPMScheduler"
+    # DPMSolverMultistepScheduler converges in ~20 steps vs DDPMScheduler's 50+
+    default_scheduler: str = "DPMSolverMultistepScheduler"
     default_pipeline: str = "StableDiffusionXLPipeline"
     default_model: str = "stabilityai/stable-diffusion-xl-base-1.0"
     enable_float32: bool = False
     enable_attention_slicing: bool = True
+
+    # Generation timeout in seconds (prevents hanging when GPU is unavailable)
+    generation_timeout_seconds: int = 300
 
     # Prometheus
     prometheus_instance_name: str = "morpheus"
@@ -40,6 +55,6 @@ class Settings(BaseSettings):
         env_file = "secrets.env"
 
 
+@lru_cache()
 def get_settings():
-    settings = Settings()
-    return settings
+    return Settings()

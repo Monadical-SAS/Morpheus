@@ -1,6 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper";
-import styles from "./Slider.module.scss";
 import "swiper/css/navigation";
 import "swiper/css";
 import Image from "next/image";
@@ -10,7 +9,7 @@ const Slider = () => {
   const images = Array.from({ length: 16 }, (_, i) => `image${i + 1}.png`);
 
   return (
-    <div className={styles.sliderContainer}>
+    <div className="absolute m-0 p-0 w-full h-full flex justify-center bg-[#252238]">
       <Swiper
         centeredSlides={true}
         autoplay={{
@@ -29,7 +28,7 @@ const Slider = () => {
                   sizes="(max-width: 640px) 640px, (max-width: 768px) 768px, (max-width: 1024px) 1024px, 100vw"
                   width={1024}
                   height={768}
-                  className={styles.image}
+                  className="w-full h-full object-cover"
                 />
               }
             />

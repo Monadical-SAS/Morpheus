@@ -1,4 +1,3 @@
-import styles from "./FullScreenLoader.module.scss";
 import CircleLoader from "@/components/molecules/CircleLoader/CircleLoader";
 
 type FullScreenLoaderProps = {
@@ -7,7 +6,7 @@ type FullScreenLoaderProps = {
 
 const FullScreenLoader = (props: FullScreenLoaderProps) => {
   return (
-    <div className={styles.fullScreenLoader}>
+    <div className="w-screen h-screen absolute top-0 left-0 z-[9999] flex justify-center items-center">
       <CircleLoader
         isLoading={props.isLoading}
         message={"Loading..."}

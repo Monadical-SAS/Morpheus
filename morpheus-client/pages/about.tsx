@@ -12,7 +12,6 @@ import {
   Text2ImgDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
-import styles from "../styles/pages/About.module.scss";
 
 const About = () => {
   const { sendAnalyticsRecord } = useAnalytics();
@@ -27,9 +26,9 @@ const About = () => {
 
   return (
     <MainLayout showFooter={true}>
-      <div className={styles.aboutContainer}>
-        <section className={styles.header}>
-          <div className={styles.headerInfo}>
+      <div className="w-full h-auto flex flex-col py-[100px] px-6 max-w-[1300px] self-center max-md:py-12 max-md:mt-12">
+        <section className="w-full flex flex-col xl:flex-row xl:justify-between">
+          <div className="max-w-[636px] h-full flex flex-col justify-center max-xl:max-w-full max-xl:h-auto">
             <h2 className="headline-1 white">
               Create breathtaking visuals in seconds:
             </h2>
@@ -39,10 +38,10 @@ const About = () => {
             </p>
           </div>
 
-          <img src="/images/redesign/aboutExample.svg" alt="Morpheus example" />
+          <img src="/images/redesign/aboutExample.svg" alt="Morpheus example" className="mt-12 ml-12 w-full h-auto max-xl:ml-0 max-xl:max-w-full" />
         </section>
 
-        <section className={styles.about}>
+        <section className="mt-24 [&>p]:mb-8">
           <p className="body-1 secondary">
             Morpheus is an experimental{" "}
             <AppLink
@@ -90,7 +89,7 @@ const About = () => {
           </p>
         </section>
 
-        <section className={styles.frontEnd}>
+        <section className="mt-12 [&>h3]:mt-12">
           <h2 className="headline-2 white">Frontend</h2>
           <p className="body-1 secondary">
             Our hosted version of the Morpheus project supports text-to-image,
@@ -114,7 +113,7 @@ const About = () => {
           <InpaintingDescription className="body-1 secondary" />
         </section>
 
-        <section className={styles.backEnd}>
+        <section className="mt-12 [&>p]:mb-8">
           <h2 className="headline-2 white">Backend</h2>
 
           <p className="body-1 secondary">
@@ -122,7 +121,7 @@ const About = () => {
             image model as simple as possible.
           </p>
 
-          <ul className="body-1 secondary">
+          <ul className="body-1 secondary list-disc ml-8 [&>li]:mb-4">
             <li>
               Go to the Models Info YAML file and update it with the information
               for the new model:
@@ -156,7 +155,7 @@ const About = () => {
           </p>
         </section>
 
-        <section className={styles.images}>
+        <section className="mt-12 flex flex-row flex-wrap gap-6">
           <ImagePrompt
             image={"/images/redesign/about/morpheus.png"}
             prompt={
@@ -182,7 +181,7 @@ const About = () => {
           />
         </section>
 
-        <section className={styles.roadmap} id="roadmap">
+        <section className="mt-24 [&>h3]:mt-12" id="roadmap">
           <h2 className="headline-2 white">Roadmap</h2>
 
           <h3 className="headline-4 white">
@@ -218,7 +217,7 @@ const About = () => {
           </p>
         </section>
 
-        <section className={styles.faqContainer}>
+        <section className="mt-[180px] mb-12">
           <FAQ />
         </section>
       </div>

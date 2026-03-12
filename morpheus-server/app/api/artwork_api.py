@@ -5,8 +5,8 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from morpheus_data.database.database import get_db
-from morpheus_data.models.schemas import ArtWork, ArtWorkCreate
+from app.database.database import get_db
+from app.models.schemas import ArtWork, ArtWorkCreate
 
 from app.config import get_file_handlers
 from app.integrations.firebase import get_user

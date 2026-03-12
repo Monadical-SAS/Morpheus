@@ -9,7 +9,6 @@ import { AuthOption, useAuth } from "@/context/AuthContext";
 import { isEmptyObject } from "@/utils/object";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { User } from "@/models/models";
-import styles from "./Navbar.module.scss";
 
 type NavMenuProps = {
   user: User;
@@ -35,18 +34,19 @@ const NavMenu = (props: NavMenuProps) => {
 
   const getLinkStyles = (path: string) => {
     const current = currentPath.split("/")[1];
-    return `base-1 secondary ${current === path && styles.activeLink}`;
+    const active = current === path;
+    return `base-1 secondary h-full px-3 mx-[6px] flex items-center cursor-pointer transition-all duration-200 hover:text-white max-md:w-full max-md:px-6 max-md:py-3 max-md:justify-start${active ? " text-white border-b-2 border-[#B3005E]" : ""}`;
   };
 
   return (
     <Fragment>
       {props.showBrand && (
-        <div className={styles.brand}>
+        <div className="flex-1 h-full flex justify-start items-center max-md:w-full max-md:mt-6 max-md:pl-6">
           <Brand onClick={props.redirectToHome} styles={{ fontSize: "20px" }} />
         </div>
       )}
 
-      <div className={styles.links}>
+      <div className="h-full flex justify-center items-center max-md:w-full max-md:flex-col max-md:justify-start max-md:items-start max-md:mt-6">
         <Link className={getLinkStyles("imagine")} href={"/imagine/text2img"}>
           Imagine
         </Link>
@@ -58,15 +58,14 @@ const NavMenu = (props: NavMenuProps) => {
         </Link>
       </div>
 
-      <nav className={styles.auth}>
+      <nav className="flex-1 flex justify-end max-md:w-full max-md:justify-start max-md:items-start">
         <span
-          className={styles.avatarImage}
           onClick={() => setShowUserCard(true)}
         >
           <UserImage />
         </span>
 
-        <div className={styles.userCardContainer}>
+        <div className="max-md:w-full max-md:h-auto">
           <UserCard
             showCard={showUserCard}
             setShowCard={setShowUserCard}
@@ -112,14 +111,14 @@ const Navbar = (props: NavbarProps) => {
   );
 
   return (
-    <div className={styles.navbarContainer}>
+    <div className="h-[80px] min-h-[80px] max-h-[80px] min-w-[300px] w-full px-8 flex flex-row items-center justify-between flex-auto bg-[#14172D] shadow-[inset_0px_-1px_0px_#312E47] z-20 max-md:h-16 max-md:min-h-[64px] max-md:max-h-16 max-md:p-0 max-md:justify-start max-md:items-start max-md:absolute">
       {isMobile ? (
         <Fragment>
           <BurgerMenu
             isOpen={showMobileMenu}
             onStateChange={(state) => setShowMobileMenu(state.isOpen)}
           >
-            <div className={styles.burgerMenuContent}>
+            <div className="!flex flex-col-reverse">
               <NavMenu
                 user={user}
                 redirectToHome={redirectToHome}

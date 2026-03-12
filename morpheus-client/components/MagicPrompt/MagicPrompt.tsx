@@ -9,7 +9,6 @@ import {
   getGeneratedDataWithRetry,
 } from "@/services/sdiffusion";
 import { getInputValidators } from "../Inputs/validators";
-import styles from "./MagicPrompt.module.scss";
 import { ServerResponse } from "@/models/models";
 
 interface MagicPromptProps {
@@ -94,7 +93,7 @@ const MagicPrompt = (props: MagicPromptProps) => {
       }
       direction={"top"}
     >
-      <span className={styles.magicPrompt}>
+      <span className="w-[35px] h-[35px] !flex !items-center !justify-center text-[22px] transition-all duration-200 outline-none select-none">
         {isLoading ? (
           <Loader
             isLoading={isLoading}
@@ -105,7 +104,7 @@ const MagicPrompt = (props: MagicPromptProps) => {
         ) : (
           <span
             onClick={handleClick}
-            className={`${!prompt.value && styles.disabled}`}
+            className={!prompt.value ? "cursor-not-allowed opacity-50" : ""}
           >
             <MagicPromptIcon />
           </span>

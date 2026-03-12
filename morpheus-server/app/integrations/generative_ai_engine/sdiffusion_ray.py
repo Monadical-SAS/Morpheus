@@ -6,8 +6,8 @@ from app.integrations.generative_ai_engine.generative_ai_interface import (
     GenerativeAIInterface,
 )
 from loguru import logger
-from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
-from morpheus_data.utils.images import from_image_to_bytes
+from app.models.schemas import GenerationRequest, TextGenerationRequest
+from app.utils.images import from_image_to_bytes
 
 settings = get_settings()
 RAY_BACKEND_URL = settings.ray_backend_url

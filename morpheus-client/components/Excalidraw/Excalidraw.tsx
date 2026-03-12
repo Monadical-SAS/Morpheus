@@ -1,20 +1,12 @@
 import React from "react";
 import dynamic from "next/dynamic";
-import styles from "./Excalidraw.module.scss";
 
-const Excalidraw = () => {
-  const Editor = dynamic(
-    async () =>
-      import("../../excalidraw/excalidraw-app/index").then(
-        (mod) => mod.default
-      ),
-    { ssr: false }
-  );
+const ExcalidrawCanvas = dynamic(() => import("./ExcalidrawCanvas"), { ssr: false });
 
-  return (
-    <div className={styles.paintContainer}>
-      <Editor />
-    </div>
-  );
-};
+const Excalidraw = () => (
+  <div className="w-full h-full max-h-[calc(100vh-180px)] max-md:mt-[60px] max-md:max-h-[calc(100vh-160px)]">
+    <ExcalidrawCanvas />
+  </div>
+);
+
 export default React.memo(Excalidraw);

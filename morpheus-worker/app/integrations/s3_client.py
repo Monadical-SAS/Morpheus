@@ -1,4 +1,5 @@
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 from typing import Any, List
 
@@ -39,15 +40,19 @@ class S3Client:
                 Key=key,
             )
             self.logger.info(f"Image uploaded to S3: {key}")
-            return f"https://{self.IMAGES_BUCKET}.s3.amazonaws.com/{key}"
+            return key
         except Exception as e:
             self.logger.error(f"Error uploading image to S3: {key}")
             self.logger.error(e)
 
     def upload_multiple_files(self, *, files: List[Any], file_name: str):
-        image_urls = [
-            self.upload_file(file=image, file_name=f"{file_name}-{index}.png")
-            for index, image in enumerate(files)
-        ]
-        self.logger.info(f"StableDiffusionV2Text2Img.generate: all_data: {image_urls}")
+        with ThreadPoolExecutor() as executor:
+            futures = {
+                executor.submit(self.upload_file, file=image, file_name=f"{file_name}-{index}.png"): index
+                for index, image in enumerate(files)
+            }
+            image_urls = [None] * len(files)
+            for future, index in futures.items():
+                image_urls[index] = future.result()
+        self.logger.info(f"All images uploaded: {image_urls}")
         return image_urls

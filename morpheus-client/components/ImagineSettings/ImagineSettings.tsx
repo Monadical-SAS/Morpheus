@@ -21,7 +21,6 @@ import {
   COLOR_PALETTES_IMAGE_TO_IMAGE,
   IMAGE_SIZES,
 } from "@/utils/constants";
-import styles from "./ImagineSettings.module.scss";
 
 interface OptionState {
   title: string;
@@ -31,13 +30,13 @@ interface OptionState {
 const OptionInfo = (props: OptionState) => {
   return (
     <Fragment>
-      <div className={styles.title}>
+      <div className="mb-3 flex flex-row items-center">
         <p className="base-2 white">{props.title}</p>
 
-        <span className={styles.infoIcon}>
+        <span className="relative cursor-pointer ml-4 group">
           <InfoIcon />
 
-          <div className={styles.cardInfo}>
+          <div className="hidden group-hover:flex absolute bottom-7 left-[50px] w-[280px] max-w-[280px] h-auto max-h-[300px] p-2 -translate-x-1/2 shadow-[0_2px_5px_rgba(0,0,0,0.2)] rounded-lg bg-[#252238] transition-all duration-300">
             <p className="caption-1 white">{props.description}</p>
           </div>
         </span>
@@ -72,9 +71,9 @@ const ImagineSettings = () => {
   const activeFeature = activeLink.feature;
 
   const SettingsContent = (
-    <div className={styles.settingsContainer}>
-      <div className={styles.optionsContainer}>
-        <div className={styles.settingItemNegativePrompt}>
+    <div className="h-auto flex flex-col text-white rounded-lg bg-[#252238]">
+      <div className="w-full flex flex-wrap gap-6 sm:justify-between">
+        <div className="w-full">
           <OptionInfo
             title={"Negative prompt"}
             description={
@@ -94,7 +93,7 @@ const ImagineSettings = () => {
           />
         </div>
 
-        <div className={styles.settingItem}>
+        <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
           <OptionInfo
             title={"Number of Images"}
             description={
@@ -111,7 +110,7 @@ const ImagineSettings = () => {
           />
         </div>
 
-        <div className={styles.settingItem}>
+        <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
           <OptionInfo
             title={"Image Size"}
             description={"Resize image to target resolution."}
@@ -124,7 +123,7 @@ const ImagineSettings = () => {
           />
         </div>
 
-        <div className={styles.settingItem}>
+        <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
           <OptionInfo
             title={"CFG Scale"}
             description={
@@ -143,7 +142,7 @@ const ImagineSettings = () => {
           />
         </div>
 
-        <div className={styles.settingItem}>
+        <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
           <OptionInfo
             title={"Number of Steps"}
             description={
@@ -164,7 +163,7 @@ const ImagineSettings = () => {
 
         {activeFeature === ModelCategory.Image2Image ||
           (activeFeature === ModelCategory.ControlNet && (
-            <div className={styles.settingItem}>
+            <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
               <OptionInfo
                 title={"Strength"}
                 description={
@@ -185,7 +184,7 @@ const ImagineSettings = () => {
             </div>
           ))}
 
-        <div className={styles.settingItem}>
+        <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
           <OptionInfo
             title={"Seed Generator"}
             description={
@@ -200,9 +199,9 @@ const ImagineSettings = () => {
       </div>
 
       <p className="headline-4 white my-10">Model settings</p>
-      <div className={styles.optionsContainer}>
+      <div className="w-full flex flex-wrap gap-6 sm:justify-between">
         {activeFeature === ModelCategory.Image2Image && !!colorPaletteFile && (
-          <div className={styles.settingItem}>
+          <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
             <OptionInfo
               title={"Color Palette"}
               description={
@@ -219,7 +218,7 @@ const ImagineSettings = () => {
         )}
 
         {activeFeature === ModelCategory.ControlNet && !!colorPaletteFile && (
-          <div className={styles.settingItem}>
+          <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
             <OptionInfo
               title={"Color Palette"}
               description={
@@ -236,7 +235,7 @@ const ImagineSettings = () => {
         )}
 
         {activeFeature === ModelCategory.ControlNet && (
-          <div className={styles.settingItem}>
+          <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
             <OptionInfo
               title={"ControlNet Model"}
               description={
@@ -247,7 +246,7 @@ const ImagineSettings = () => {
           </div>
         )}
 
-        <div className={styles.settingItem}>
+        <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
           <OptionInfo
             title={"Sampler"}
             description={"Select a sampler to use."}
@@ -258,7 +257,7 @@ const ImagineSettings = () => {
         {(activeFeature === ModelCategory.Text2Image ||
           activeFeature === ModelCategory.Image2Image ||
           activeFeature === ModelCategory.ControlNet) && (
-          <div className={styles.settingItem}>
+          <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
             <OptionInfo
               title={"LoRA"}
               description={
@@ -276,7 +275,7 @@ const ImagineSettings = () => {
           (activeFeature === ModelCategory.Text2Image ||
             activeFeature === ModelCategory.Image2Image ||
             activeFeature === ModelCategory.ControlNet) && (
-            <div className={styles.settingItem}>
+            <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
               <OptionInfo
                 title={"LoRA Scale"}
                 description={
@@ -301,7 +300,7 @@ const ImagineSettings = () => {
         {(activeFeature === ModelCategory.Text2Image ||
           activeFeature === ModelCategory.Image2Image ||
           activeFeature === ModelCategory.ControlNet) && (
-          <div className={styles.settingItem}>
+          <div className="w-full max-w-full sm:w-[46%] sm:max-w-[46%] lg:w-[22%] lg:max-w-[22%] flex flex-col">
             <OptionInfo
               title={"TI Embedding"}
               description={
@@ -323,11 +322,11 @@ const ImagineSettings = () => {
     <Fragment>
       <AppTooltip content={"Settings"} direction={"top"}>
         {showSettings ? (
-          <span className={styles.rightBarIconClose} onClick={toggleSettings}>
+          <span className="w-12 min-w-[48px] h-12 ml-2 flex items-center justify-center cursor-pointer" onClick={toggleSettings}>
             <CloseIcon />
           </span>
         ) : (
-          <span className={styles.rightBarIcon} onClick={toggleSettings}>
+          <span className="w-12 min-w-[48px] h-12 ml-2 flex items-center justify-center cursor-pointer rounded-lg p-3 bg-[#B3005E] z-10" onClick={toggleSettings}>
             <SettingsIcon />
           </span>
         )}

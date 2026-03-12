@@ -8,7 +8,6 @@ import {
   Pix2PixDescription,
   Text2ImgDescription,
 } from "@/components/ImagineActionsDescription/ImagineActionsDescription";
-import styles from "./FAQ.module.scss";
 
 interface AccordionProps {
   title: string;
@@ -23,14 +22,14 @@ const Accordion = (props: AccordionProps) => {
   };
 
   return (
-    <div className={`${styles.accordion} ${isOpen && styles.open}`}>
-      <div className={styles.accordionHeader} onClick={toggleAccordion}>
+    <div className="p-6 border-b border-[#312E47] first:border-t last:border-b-0">
+      <div className="flex flex-row items-center cursor-pointer p-[10px] transition-colors duration-300" onClick={toggleAccordion}>
         {isOpen ? <MinusIcon /> : <PlusIcon />}
-        <p className="headline-6 white">{props.title}</p>
+        <p className="headline-6 white ml-8">{props.title}</p>
       </div>
 
       {isOpen && (
-        <div className={styles.accordionContent}>
+        <div className="p-[10px] text-left ml-12">
           <p className="body-2 secondary">{props.content}</p>
         </div>
       )}
@@ -122,7 +121,7 @@ export const FAQ = () => {
   ];
 
   return (
-    <div className={styles.FAQContainer}>
+    <div className="w-full h-auto text-center">
       <h2 className="headline-2 white">Frequently Asked Questions</h2>
 
       {faqs.map((faq, index) => (

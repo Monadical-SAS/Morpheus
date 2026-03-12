@@ -4,7 +4,6 @@ import { NextPage } from "next";
 import { useAnalytics } from "@/context/GoogleAnalyticsContext";
 import UnderConstruction from "@/components/UnderConstruction/UnderConstruction";
 import PrivateRoute from "@/components/Auth/PrivateRoute/PrivateRoute";
-import styles from "@/styles/pages/Training.module.scss";
 
 const Training: NextPage = () => {
   const { sendAnalyticsRecord } = useAnalytics();
@@ -19,7 +18,7 @@ const Training: NextPage = () => {
 
   return (
     <PrivateRoute>
-      <div className={styles.mainContent}>
+      <div className="w-full h-full bg-[url('/images/paint/training.png')] bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center">
         <UnderConstruction title={"Training Models"} variant={"small"} />
       </div>
     </PrivateRoute>

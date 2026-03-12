@@ -1,9 +1,8 @@
-import React, { CSSProperties, Fragment } from "react";
+import React, { CSSProperties } from "react";
 import { EmailIcon } from "../../icons/email";
 import { getInputValidators, validEmail } from "../validators";
 import { buildStringFromArray } from "@/utils/strings";
 import { TextState } from "../InputText/InputText";
-import styles from "../Input.module.scss";
 
 export interface InputEMailProps {
   id?: string;
@@ -37,27 +36,26 @@ const InputEmail = (props: InputEMailProps) => {
   };
 
   return (
-    <Fragment>
-      <div className={styles.inputIconContainer} style={props.styles}>
-        <span className={styles.iconLeft}>
-          <EmailIcon />
-        </span>
+    <div className="w-full flex flex-col box-border relative" style={props.styles}>
+      <span className="absolute top-4 left-4">
+        <EmailIcon />
+      </span>
 
-        <input
-          id={props.id}
-          type="email"
-          placeholder={"Username or email"}
-          autoComplete="username"
-          value={props.email.value}
-          disabled={props.disabled}
-          onChange={(event) => handleEmailChange(event)}
-        />
-      </div>
+      <input
+        id={props.id}
+        type="email"
+        placeholder={"Username or email"}
+        autoComplete="username"
+        value={props.email.value}
+        disabled={props.disabled}
+        onChange={(event) => handleEmailChange(event)}
+        className="w-full flex-1 outline-none h-12 min-h-[48px] pl-11 pr-5 rounded-lg text-[#8B90B2] border border-[#312E47] bg-[#252238] focus:border-[#d9006d] transition-all duration-500 placeholder:text-[#8B90B2]"
+      />
 
-      <small className={styles.error}>
+      <small className="caption-1 text-red-500">
         {buildStringFromArray(props.email.validators)}
       </small>
-    </Fragment>
+    </div>
   );
 };
 

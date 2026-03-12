@@ -9,7 +9,6 @@ import InputText, {
   TextState,
 } from "../../Inputs/InputText/InputText";
 import { ArtWork } from "@/models/models";
-import styles from "./ArtworkForm.module.scss";
 
 interface ArtworkFormProps {
   artwork?: ArtWork;
@@ -27,11 +26,18 @@ const ArtworkForm = (props: ArtworkFormProps) => {
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>("");
 
   useEffect(() => {
-    if (props.artwork && props.artwork.title) {
+    if (props.artwork?.title) {
       setTitle({ value: props.artwork.title, validators: [] });
+    } else if (props.artwork?.prompt?.prompt) {
+      const normalized = props.artwork.prompt.prompt
+        .replace(/[^a-zA-Z0-9 ]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 64);
+      setTitle({ value: normalized, validators: [] });
     }
 
-    if (props.artwork && props.artwork.collection_id) {
+    if (props.artwork?.collection_id) {
       setSelectedCollectionId(props.artwork.collection_id);
     }
   }, [props.artwork]);
@@ -120,7 +126,7 @@ const ArtworkForm = (props: ArtworkFormProps) => {
   }
 
   return props.showForm ? (
-    <div className={styles.artworkForm}>
+    <div className="mt-6">
       <CollectionSelect
         selectedCollectionId={selectedCollectionId}
         setSelectedCollectionId={setSelectedCollectionId}
@@ -137,7 +143,7 @@ const ArtworkForm = (props: ArtworkFormProps) => {
         styles={{ marginTop: "24px" }}
       />
 
-      <div className={styles.buttonsContainer}>
+      <div className="mt-6 flex flex-row items-center max-md:mb-12">
         <ButtonPrimary
           text={`${props.artwork.id ? "Update" : "Save"}`}
           loading={isLoading}
@@ -145,7 +151,7 @@ const ArtworkForm = (props: ArtworkFormProps) => {
           disabled={!isFormValid}
         />
 
-        <span className={styles.cancelIcon} onClick={handleCancel}>
+        <span className="cursor-pointer max-md:ml-4" onClick={handleCancel}>
           <CloseIcon />
         </span>
       </div>

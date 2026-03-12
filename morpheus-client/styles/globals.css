@@ -2,52 +2,656 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---- Font faces ---- */
 @font-face {
-    font-family: "Poppins";
-    src: url("/fonts/Poppins-Regular.ttf");
-    font-display: swap;
+  font-family: "PoppinsRegular";
+  src: url("/fonts/Poppins-Regular.ttf");
+  font-display: swap;
 }
 
+@font-face {
+  font-family: "LatoRegular";
+  src: url("/fonts/Lato-Regular.ttf");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "LatoBold";
+  src: url("/fonts/Lato-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- CSS Variables ---- */
 @layer base {
-    :root {
-        --background: #14172D;
-        --foreground: #FFFFFF;
+  :root {
+    --background: #14172D;
+    --foreground: #FFFFFF;
 
-        --muted: #252238;
-        --muted-foreground: #FFFFFF;
+    --muted: #252238;
+    --muted-foreground: #FFFFFF;
 
-        --popover: #14172D;
-        --popover-foreground: #FFFFFF;
+    --popover: #14172D;
+    --popover-foreground: #FFFFFF;
 
-        --card: #14172D;
-        --card-foreground: #FFFFFF;
+    --card: #14172D;
+    --card-foreground: #FFFFFF;
 
-        --border: #312E47;
-        --input: #14172D;
+    --border: #312E47;
+    --input: #14172D;
 
-        --primary: #B3005E;
-        --primary-foreground: #FFFFFF;
+    --primary: #B3005E;
+    --primary-foreground: #FFFFFF;
 
-        --secondary: #252238;
-        --secondary-foreground: #8B90B2;
+    --secondary: #252238;
+    --secondary-foreground: #8B90B2;
 
-        --accent: #252238;
-        --accent-foreground: #FFFFFF;
+    --accent: #252238;
+    --accent-foreground: #FFFFFF;
 
-        --destructive: #ff548a;
-        --destructive-foreground: #222732;
+    --destructive: #ff548a;
+    --destructive-foreground: #222732;
 
-        --success: #d8fde0;
-        --success-foreground: #222732;
+    --success: #d8fde0;
+    --success-foreground: #222732;
 
-        --info: #8eb2ff;
-        --info-foreground: #222732;
+    --info: #8eb2ff;
+    --info-foreground: #222732;
 
-        --warning: #ffcd47;
-        --warning-foreground: #222732;
+    --warning: #ffcd47;
+    --warning-foreground: #222732;
 
-        --ring: 215 20.2% 65.1%;
+    --ring: 215 20.2% 65.1%;
 
-        --radius: 0.5rem;
-    }
+    --radius: 0.5rem;
+  }
+}
+
+/* ---- Global base styles ---- */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: LatoRegular, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+code {
+  font-family: source-code-pro, Consolas, 'Courier New', monospace;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-link {
+  text-decoration: none;
+  cursor: pointer !important;
+}
+
+h1::selection, h2::selection, h3::selection, h4::selection, h5::selection, h6::selection,
+p::selection, span::selection {
+  background-color: #B3005E;
+  color: #ffffff;
+}
+
+#__next {
+  height: 100%;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #14172D;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 16px;
+  background-color: #6D6D94;
+  border: 3px solid #6D6D94;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #FFFFFF #14172D;
+}
+
+/* ---- Burger menu ---- */
+.bm-burger-button {
+  position: absolute;
+  width: 32px;
+  height: 24px;
+  left: 24px;
+  top: 20px;
+  z-index: 40 !important;
+}
+
+.bm-burger-button button:focus {
+  outline: 2px solid #B3005E;
+  outline-offset: 8px;
+}
+
+.bm-burger-button button:focus + span span.bm-burger-bars {
+  background-color: #B3005E;
+}
+
+.right .bm-burger-button {
+  left: initial;
+  right: 36px;
+}
+
+.bm-burger-bars {
+  background: #fff;
+}
+
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+.bm-menu {
+  background: #14172D;
+}
+
+/* ---- Excalidraw custom colors ---- */
+.custom-styles .excalidraw .excalidraw.theme--dark {
+  --color-primary: #a11692;
+  --color-primary-darker: #891480;
+  --color-primary-darkest: #710f6d;
+  --color-primary-light: #b91ea4;
+}
+
+/* ---- Typography (Poppins) ---- */
+.headline-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 72px;
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+.headline-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 56px;
+  margin: 0;
+}
+
+.headline-3 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+.headline-4 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 40px;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.headline-5 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 40px;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.headline-6 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.body-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+  margin: 0;
+}
+
+.body-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  margin: 0;
+}
+
+.body-3 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.base-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.base-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.caption-1 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.caption-2 {
+  font-family: PoppinsRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* ---- Typography (Lato) ---- */
+.small {
+  font-family: LatoRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 8px;
+  line-height: 8px;
+  margin: 0;
+}
+
+.boldSmall {
+  font-family: LatoBold, sans-serif;
+  font-size: 8px;
+  line-height: 14px;
+  margin: 0;
+}
+
+.bold12 {
+  font-family: LatoBold, sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0;
+}
+
+.body {
+  font-family: LatoRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+}
+
+.bigBody {
+  font-family: LatoRegular, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+  margin: 0;
+}
+
+.bodyBold {
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+}
+
+.heading {
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+  margin: 0;
+}
+
+.bold40 {
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 56px;
+  margin: 0;
+}
+
+.bold64 {
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 72px;
+  margin: 0;
+}
+
+.button {
+  font-family: LatoBold, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ---- Typography color modifiers ---- */
+/* In @layer components so Tailwind utilities can override them */
+@layer components {
+  .white { color: #ffffff; }
+  .primary { color: #ffffff; }
+  .secondary { color: #8B90B2; }
+  .main { color: #B3005E; }
+  .accent { color: #FF5F9E; }
+  .success { color: #70cc6e; }
+  .info { color: #01c2c2; }
+  .danger { color: #da4444; }
+  .grey { color: #979797; }
+  .black { color: #222732; }
+  .mainColor { color: #B3005E; }
+  .upper { text-transform: uppercase; }
+  .capitalize { text-transform: capitalize; }
+  .ellipsis { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pointer { cursor: pointer; }
+  .shadow { text-shadow: 2px 2px #222732; }
+  .center { text-align: center !important; }
+  .left { text-align: left !important; }
+  .right { text-align: right !important; }
+}
+
+/* ---- Button global classes ---- */
+.buttonSubmit {
+  cursor: pointer;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center;
+  text-transform: uppercase;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  text-shadow: none;
+  font-family: LatoBold, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 16px;
+  width: auto;
+  min-width: 178px !important;
+  height: 48px !important;
+  padding: 12px 24px !important;
+  background: #B3005E !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+}
+
+.buttonSubmit span {
+  margin-right: 8px;
+}
+
+.buttonSubmit.disabled {
+  background-color: #CDAED2 !important;
+  cursor: not-allowed;
+}
+
+.buttonSubmit.secondary {
+  border: 2px solid #ffffff;
+  background-color: transparent !important;
+}
+
+.buttonSubmit.borderMain {
+  border: 2px solid #B3005E;
+  color: #B3005E !important;
+  background-color: transparent !important;
+}
+
+.buttonSubmit.borderMain.disabled {
+  border: 2px solid #CDAED2;
+  color: #CDAED2 !important;
+  background-color: #ffffff;
+}
+
+.buttonDisabled {
+  cursor: pointer;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center;
+  text-transform: uppercase;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  text-shadow: none;
+  font-family: LatoBold, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 16px;
+  width: auto;
+  min-width: 178px !important;
+  height: 48px !important;
+  padding: 12px 24px !important;
+  background-color: #CDAED2 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  cursor: not-allowed;
+}
+
+.buttonDanger {
+  cursor: pointer;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center;
+  text-transform: uppercase;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  text-shadow: none;
+  font-family: LatoBold, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 16px;
+  width: auto;
+  min-width: 178px !important;
+  height: 48px !important;
+  padding: 12px 24px !important;
+  background-color: #da4444 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+}
+
+/* ---- Gradient title ---- */
+.morpheus-title {
+  font-size: 32px;
+  line-height: 48px;
+  text-transform: uppercase;
+  background: linear-gradient(107.97deg, #E90064 -14.72%, #FF5F9E 62.24%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ---- Loader animations ---- */
+.loader-rotate {
+  animation: rotate 1.3s infinite linear;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loader-layers {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: #B3005E;
+  transform: rotateX(65deg) rotate(45deg);
+  color: #979797;
+  animation: layers1 1s linear infinite alternate;
+}
+
+.loader-layers::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.9);
+  animation: layerTr 1s linear infinite alternate;
+}
+
+@keyframes layers1 {
+  0% { box-shadow: 0 0 0 0 }
+  90%, 100% { box-shadow: 20px 20px 0 -4px }
+}
+
+@keyframes layerTr {
+  0% { transform: translate(0, 0) scale(1) }
+  100% { transform: translate(-25px, -25px) scale(1) }
+}
+
+/* ---- AppImage spinner ---- */
+.image-loading-overlay::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #B3005E;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Slider (input range) ---- */
+.morpheus-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.morpheus-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #B3005E;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.morpheus-slider::-webkit-slider-thumb:hover {
+  box-shadow: rgba(179, 0, 94, 0.6) 0 0 0 8px;
+}
+
+.morpheus-slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #B3005E;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+/* ---- Tooltip arrows ---- */
+.tooltip-tip::before {
+  content: " ";
+  left: 50%;
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  margin-left: -6px;
+  border: 6px solid transparent;
+  z-index: 40;
+}
+
+.tooltip-tip.top::before {
+  top: 100%;
+  border-top-color: black;
+}
+
+.tooltip-tip.right::before {
+  left: -6px;
+  top: 50%;
+  transform: translateX(0) translateY(-50%);
+  border-right-color: black;
+}
+
+.tooltip-tip.bottom::before {
+  bottom: 100%;
+  border-bottom-color: black;
+}
+
+.tooltip-tip.left::before {
+  left: auto;
+  right: -12px;
+  top: 50%;
+  transform: translateX(0) translateY(-50%);
+  border-left-color: black;
 }

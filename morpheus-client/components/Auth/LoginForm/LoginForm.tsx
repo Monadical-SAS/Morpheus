@@ -10,9 +10,8 @@ import { Separator } from "../Separator/Separator";
 import { AuthOption, useAuth } from "@/context/AuthContext";
 import { isAllTrue } from "@/utils/arrays";
 import { initialText, TextState } from "../../Inputs/InputText/InputText";
-import styles from "./LoginForm.module.scss";
 
-export const LoginForm = () => {
+export const LoginForm = ({ className }: { className?: string }) => {
   const router = useRouter();
   const { setAuthOption, loginWithEmailAndPassword } = useAuth();
   const { showSuccessAlert } = useToastContext();
@@ -53,11 +52,11 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className={styles.loginContainer}>
+    <div className={`w-full ${className || ""}`}>
       <SignUpWithGoogle />
       <Separator />
 
-      <form>
+      <form className="w-full">
         <InputEmail
           id="inputEmailLogin"
           label={"Email"}
@@ -73,7 +72,7 @@ export const LoginForm = () => {
           disabled={false}
         />
         <a
-          className={`app-link body-3 main ${styles.linkForget}`}
+          className="app-link body-3 main block mt-0"
           onClick={() => setAuthOption(AuthOption.Reset)}
         >
           Forgot password?

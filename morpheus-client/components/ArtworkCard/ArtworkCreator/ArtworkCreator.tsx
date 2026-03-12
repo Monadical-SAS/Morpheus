@@ -1,6 +1,4 @@
 import { User } from "@/models/models";
-import styles from "./ArtworkCreator.module.scss";
-import { UserIcon } from "../../icons/user";
 
 interface ImageCreatorProps {
   creator: User;
@@ -8,13 +6,15 @@ interface ImageCreatorProps {
 
 const ArtworkCreator = (props: ImageCreatorProps) => {
   return (
-    <div className={styles.creatorContainer}>
-      {props.creator?.avatar ? (
-        <img src={props.creator.avatar} alt="avatar" loading="lazy" />
-      ) : (
-        <UserIcon width={"48px"} height={"48px"} />
-      )}
-      <div className={styles.creatorInfo}>
+    <div className="w-auto flex flex-row items-center">
+      <img
+        src={props.creator?.avatar || "/images/avatar.png"}
+        alt="avatar"
+        loading="lazy"
+        className="w-12 h-12 rounded-full object-cover"
+        onError={(e) => { (e.target as HTMLImageElement).src = "/images/avatar.png"; }}
+      />
+      <div className="ml-4">
         <p className="body-3 secondary">{props.creator.name}</p>
         <p className="body-2 white">{props.creator.email}</p>
       </div>

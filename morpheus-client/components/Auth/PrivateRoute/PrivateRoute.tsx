@@ -3,7 +3,6 @@ import FullScreenLoader from "../../Loaders/FullScreenLoader/Loader";
 import { Auth } from "../Auth";
 import { useAuth } from "@/context/AuthContext";
 import { isEmptyObject } from "@/utils/object";
-import styles from "./PrivateRoute.module.scss";
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -16,7 +15,7 @@ const PrivateRoute = (props: PrivateRouteProps) => {
 
   if (isEmptyObject(user)) {
     return (
-      <div className={styles.authWrapper}>
+      <div className="w-full h-full flex justify-center items-center bg-[#14172D]">
         <Auth />
       </div>
     );

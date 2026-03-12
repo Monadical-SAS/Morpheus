@@ -1,5 +1,4 @@
 import { CSSProperties } from "react";
-import styles from "./CircleLoader.module.scss";
 
 const CircleLoader = (props: {
   primary?: boolean;
@@ -13,11 +12,11 @@ const CircleLoader = (props: {
 }) => {
   return (
     <div
-      className={`${styles.loaderContainer} ${props.primary && styles.primary}`}
+      className={`flex flex-col justify-center items-center ${props.primary ? "inset-0 absolute w-screen h-screen" : ""}`}
       style={props.styles}
     >
       <svg
-        className={styles.loader}
+        className="loader-rotate"
         width={props.width || 50}
         height={props.height || 50}
         color={props.color || "#B3005E"}
@@ -54,7 +53,7 @@ const CircleLoader = (props: {
       </svg>
 
       {props.message && (
-        <p className={`base-1 ${props.fontColor} ${styles.loaderText}`}>
+        <p className={`base-1 ${props.fontColor} m-2`}>
           {props.message}
         </p>
       )}

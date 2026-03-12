@@ -1,10 +1,10 @@
 from typing import List, Union
 
-from morpheus_data.models.schemas import User
-from morpheus_data.repository.collection_repository import CollectionRepository
-from morpheus_data.repository.firebase_repository import FirebaseRepository
-from morpheus_data.repository.role_repository import RoleRepository
-from morpheus_data.repository.user_repository import UserRepository
+from app.models.schemas import User
+from app.repository.collection_repository import CollectionRepository
+from app.repository.firebase_repository import FirebaseRepository
+from app.repository.role_repository import RoleRepository
+from app.repository.user_repository import UserRepository
 from sqlalchemy.orm import Session
 
 

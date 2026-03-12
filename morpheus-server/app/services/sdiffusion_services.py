@@ -1,18 +1,18 @@
 from typing import Union
 
 from PIL import Image
-from app.config import get_settings
+from app.config import get_file_handlers, get_settings
 from app.error.error import ImageNotProvidedError, ModelNotFoundError
 from app.error.generation import GenerationNotFoundError, ImageTooLargeError
 from app.integrations.generative_ai_engine.generative_ai_interface import (
     GenerativeAIInterface,
 )
-from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
-from morpheus_data.models.schemas import MagicPrompt, Prompt, PromptControlNet
-from morpheus_data.repository.generation_repository import GenerationRepository
-from morpheus_data.repository.model_repository import ModelRepository
-from morpheus_data.repository.user_repository import UserRepository
-from morpheus_data.utils.images import get_rgb_image_from_bytes
+from app.models.schemas import GenerationRequest, TextGenerationRequest
+from app.models.schemas import MagicPrompt, Prompt, PromptControlNet
+from app.repository.generation_repository import GenerationRepository
+from app.repository.model_repository import ModelRepository
+from app.repository.user_repository import UserRepository
+from app.utils.images import get_rgb_image_from_bytes
 from sqlalchemy.orm import Session
 
 
@@ -22,13 +22,32 @@ class StableDiffusionService:
         self.generation_repository = GenerationRepository()
         self.model_repository = ModelRepository()
         self.user_repository = UserRepository()
+        self.files_repository = get_file_handlers()
         self.settings = get_settings()
 
     def get_generation_result(self, db: Session, task_id: str) -> str:
         generation = self.generation_repository.get_generation(db=db, generation_id=task_id)
         if generation is None:
             raise GenerationNotFoundError(f"Generation with id {task_id} not found")
+        if generation.results:
+            generation.results = [self._to_presigned_url(r) for r in generation.results]
         return generation
+
+    def _to_presigned_url(self, result: str) -> str:
+        """Convert a storage key or legacy URL to a signed URL."""
+        if result.startswith("https://"):
+            # Legacy S3: https://bucket.s3.amazonaws.com/folder/file.png
+            if ".s3.amazonaws.com/" in result:
+                key = result.split(".s3.amazonaws.com/", 1)[1]
+            # GCS/Firebase signed URL: https://storage.googleapis.com/{bucket}/{path}?...
+            elif "storage.googleapis.com/" in result:
+                after_host = result.split("storage.googleapis.com/", 1)[1]
+                key = "/".join(after_host.split("/")[1:]).split("?")[0]
+            else:
+                key = result
+        else:
+            key = result
+        return self.files_repository.generate_public_url(file_name=key)
 
     def generate_text2img_images(self, db: Session, prompt: Prompt, email: str) -> str:
         backend_request = self._build_backend_request(db=db, prompt=prompt, email=email)

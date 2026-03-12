@@ -2,6 +2,7 @@ import logging
 from io import BytesIO
 
 import ray
+import torch
 from PIL import Image
 
 from app.actors.common.sd_base import StableDiffusionAbstract
@@ -23,8 +24,20 @@ class StableDiffusionInpainting(StableDiffusionAbstract):
         )
         self.logger = logging.getLogger("ray")
 
+    def _warmup(self):
+        if self.device != "cuda":
+            return
+        self.logger.info("Running inpainting warmup pass...")
+        try:
+            dummy = Image.new("RGB", (128, 128))
+            with torch.no_grad():
+                self.pipeline(image=dummy, mask_image=dummy, prompt="warmup", num_inference_steps=1, output_type="latent")
+            self.logger.info("Warmup complete")
+        except Exception as e:
+            self.logger.warning(f"Warmup failed (non-fatal): {e}")
+
     def generate(self, request: ModelRequest):
-        self.logger.info(f"StableDiffusionInpainting.generate: request: {request}")
+        self.logger.info(f"StableDiffusionInpainting.generate: request: {request.dict(exclude={'image', 'palette_image', 'mask'})}")
         self.set_generator(request.generator)
         image = Image.open(BytesIO(request.image)).convert("RGB")
         mask = Image.open(BytesIO(request.mask)).convert("RGB")

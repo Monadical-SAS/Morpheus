@@ -3,7 +3,7 @@ from typing import List, Union
 from fastapi import APIRouter
 from omegaconf import DictConfig, OmegaConf
 
-from morpheus_data.models.schemas import SamplerModel
+from app.models.schemas import SamplerModel
 
 from app.config import samplers
 from app.models.schemas import Response

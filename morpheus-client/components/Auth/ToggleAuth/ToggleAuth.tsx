@@ -1,18 +1,18 @@
 import React from "react";
 import { AuthOption, useAuth } from "@/context/AuthContext";
-import styles from "./ToggleAuth.module.scss";
 
 export const ToggleAuthOption = () => {
   const { authOption, setAuthOption } = useAuth();
 
   const getButtonStyles = (buttonName: string) => {
-    return `base-1 white ${styles.toggleButton} ${
-      authOption === buttonName && styles.active
+    const isActive = authOption === buttonName;
+    return `base-1 white max-w-[259px] h-12 cursor-pointer flex justify-center items-center text-center gap-[10px] flex-1 select-none transition-all duration-200 border-none ${
+      isActive ? "bg-[#252238] rounded-[6px]" : "bg-transparent"
     }`;
   };
 
   return (
-    <div className={styles.toggleAuthContainer}>
+    <div className="flex flex-row items-start p-1 w-[526px] h-14 bg-[#14172D] rounded-lg max-md:w-full">
       <button
         onClick={() => setAuthOption(AuthOption.Login)}
         className={getButtonStyles(AuthOption.Login)}

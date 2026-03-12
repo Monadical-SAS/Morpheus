@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-const path = require("path");
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const nextConfig = {
@@ -13,9 +12,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
     domains: ["https://morpheus-results-staging-253.s3.amazonaws.com/"],
-  },
-  sassOptions: {
-    includePaths: [path.join(__dirname, "styles")],
   },
 };
 

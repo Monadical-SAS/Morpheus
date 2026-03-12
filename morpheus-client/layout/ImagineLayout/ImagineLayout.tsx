@@ -3,7 +3,6 @@ import ImagineMenu from "@/components/ImagineMenu/ImagineMenu";
 import Navbar from "@/components/Navbar/Navbar";
 import PrivateRoute from "@/components/Auth/PrivateRoute/PrivateRoute";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
-import styles from "./ImagineLayout.module.scss";
 
 interface ImagineContainerProps {
   children: React.ReactNode;
@@ -14,9 +13,9 @@ const ImagineLayout = (props: ImagineContainerProps) => {
 
   return (
     <PrivateRoute>
-      <div className={styles.imagineLayout}>
+      <div className="w-full max-w-[100vw] h-full max-h-screen flex flex-wrap flex-row bg-[#252238]">
         {!isMobile && <ImagineMenu />}
-        <div className={styles.imagineContent}>
+        <div className="flex-1 flex flex-col">
           <Navbar />
           {props.children}
         </div>

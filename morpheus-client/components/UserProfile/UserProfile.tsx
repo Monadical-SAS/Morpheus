@@ -5,7 +5,6 @@ import { logout, removeUserInfo } from "@/services/users";
 import { useAuth } from "@/context/AuthContext";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { useToastContext } from "@/context/ToastContext";
-import styles from "./UserProfile.module.scss";
 
 export const UserProfile = () => {
   const { user } = useAuth();
@@ -37,27 +36,27 @@ export const UserProfile = () => {
   };
 
   const DeleteAccount = (
-    <div className={styles.navItem} onClick={confirmRemove}>
+    <div className="h-12 flex items-center mb-6 cursor-pointer" onClick={confirmRemove}>
       <CloseIcon width={"16"} height={"16"} color={"#B3005E"} />
-      <p className="base-2 main">Delete account</p>
+      <p className="base-2 main ml-3">Delete account</p>
     </div>
   );
 
   return (
-    <div className={styles.userProfileContainer}>
-      <div className={styles.userProfileNav}>
-        <div className={`${styles.navItem} ${styles.active}`}>
+    <div className="w-full flex flex-row gap-8 max-md:flex-col max-md:gap-0">
+      <div className="min-w-[144px] mr-8 flex flex-col flex-1 max-md:mr-0 max-md:mb-6 max-md:flex-row max-md:items-center max-md:gap-16">
+        <div className="h-12 flex items-center mb-6 cursor-pointer border-b-2 border-[#B3005E]">
           <UserIcon width={"16"} height={"16"} color={"white"} />
-          <p className="base-2 white">Edit profile</p>
+          <p className="base-2 white ml-3">Edit profile</p>
         </div>
         {!isMobile && DeleteAccount}
       </div>
 
-      <div className={styles.userProfileContent}>
+      <div className="min-w-[422px] flex flex-col flex-[3] max-md:min-w-full">
         <EditProfileForm />
       </div>
       {isMobile && (
-        <div className={styles.mobileDeleteAccount}>{DeleteAccount}</div>
+        <div className="w-full mt-12 flex justify-center">{DeleteAccount}</div>
       )}
     </div>
   );

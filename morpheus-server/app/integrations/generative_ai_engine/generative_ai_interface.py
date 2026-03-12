@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from PIL import Image
-from morpheus_data.models.schemas import GenerationRequest, TextGenerationRequest
+from app.models.schemas import GenerationRequest, TextGenerationRequest
 
 
 class GenerativeAIInterface(ABC):

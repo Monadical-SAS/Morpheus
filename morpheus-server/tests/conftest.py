@@ -1,11 +1,11 @@
 import pytest
 from app.app import app
 from httpx import AsyncClient
-from morpheus_data.database.database import get_db
-from morpheus_data.models.schemas import User, Role
-from morpheus_data.repository.firebase_repository import FirebaseRepository
-from morpheus_data.repository.role_repository import RoleRepository
-from morpheus_data.repository.user_repository import UserRepository
+from app.database.database import get_db
+from app.models.schemas import User, Role
+from app.repository.firebase_repository import FirebaseRepository
+from app.repository.role_repository import RoleRepository
+from app.repository.user_repository import UserRepository
 
 db = next(get_db())
 

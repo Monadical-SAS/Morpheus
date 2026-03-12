@@ -1,4 +1,3 @@
-import styles from "./InputSlider.module.scss";
 import { ChangeEvent, CSSProperties } from "react";
 
 export interface RangeProps {
@@ -18,8 +17,8 @@ const InputSlider = (props: RangeProps) => {
   };
 
   return (
-    <div className={styles.inputSlider} style={props.styles}>
-      <label htmlFor="rangeSlider">{props.label}</label>
+    <div className="w-full h-auto flex flex-col mb-6" style={props.styles}>
+      <label htmlFor="rangeSlider" className="mb-2 mt-4">{props.label}</label>
       <input
         id="rangeSlider"
         type="range"
@@ -28,7 +27,7 @@ const InputSlider = (props: RangeProps) => {
         step={props.step || 1}
         value={props.value}
         onChange={handleChange}
-        className={styles.slider}
+        className="appearance-none w-full h-[15px] rounded bg-[#d3d3d3] outline-none opacity-70 transition-opacity duration-200 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[25px] [&::-webkit-slider-thumb]:h-[25px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#B3005E] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-0"
       />
       <input
         type="number"
@@ -37,7 +36,7 @@ const InputSlider = (props: RangeProps) => {
         step={props.step || 1}
         value={props.value}
         onChange={handleChange}
-        className={`${styles.sliderNumber} ${props.dark ? styles.dark : ""}`}
+        className={`mt-[5px] w-[15%] h-[30px] border border-[#d3d3d3] rounded text-base ${props.dark ? "bg-[#252238] text-white" : ""}`}
       />
     </div>
   );
