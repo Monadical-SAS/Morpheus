@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     enable_float32: bool = False
     enable_attention_slicing: bool = True
 
+    # Generation timeout in seconds (prevents hanging when GPU is unavailable)
+    generation_timeout_seconds: int = 300
+
     # Prometheus
     prometheus_instance_name: str = "morpheus"
 
