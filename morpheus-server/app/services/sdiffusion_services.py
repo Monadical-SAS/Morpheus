@@ -1,7 +1,7 @@
 from typing import Union
 
 from PIL import Image
-from app.config import get_settings
+from app.config import get_file_handlers, get_settings
 from app.error.error import ImageNotProvidedError, ModelNotFoundError
 from app.error.generation import GenerationNotFoundError, ImageTooLargeError
 from app.integrations.generative_ai_engine.generative_ai_interface import (
@@ -9,7 +9,6 @@ from app.integrations.generative_ai_engine.generative_ai_interface import (
 )
 from app.models.schemas import GenerationRequest, TextGenerationRequest
 from app.models.schemas import MagicPrompt, Prompt, PromptControlNet
-from app.repository.files.s3_files_repository import S3ImagesRepository
 from app.repository.generation_repository import GenerationRepository
 from app.repository.model_repository import ModelRepository
 from app.repository.user_repository import UserRepository
@@ -23,7 +22,7 @@ class StableDiffusionService:
         self.generation_repository = GenerationRepository()
         self.model_repository = ModelRepository()
         self.user_repository = UserRepository()
-        self.files_repository = S3ImagesRepository()
+        self.files_repository = get_file_handlers()
         self.settings = get_settings()
 
     def get_generation_result(self, db: Session, task_id: str) -> str:
@@ -35,12 +34,17 @@ class StableDiffusionService:
         return generation
 
     def _to_presigned_url(self, result: str) -> str:
-        """Convert an S3 key or legacy public URL to a pre-signed URL."""
+        """Convert a storage key or legacy URL to a signed URL."""
         if result.startswith("https://"):
-            # Legacy format: extract key from URL (everything after the bucket domain)
-            # e.g. https://bucket.s3.amazonaws.com/folder/file.png -> folder/file.png
-            parts = result.split(".s3.amazonaws.com/", 1)
-            key = parts[1] if len(parts) == 2 else result
+            # Legacy S3: https://bucket.s3.amazonaws.com/folder/file.png
+            if ".s3.amazonaws.com/" in result:
+                key = result.split(".s3.amazonaws.com/", 1)[1]
+            # GCS/Firebase signed URL: https://storage.googleapis.com/{bucket}/{path}?...
+            elif "storage.googleapis.com/" in result:
+                after_host = result.split("storage.googleapis.com/", 1)[1]
+                key = "/".join(after_host.split("/")[1:]).split("?")[0]
+            else:
+                key = result
         else:
             key = result
         return self.files_repository.generate_public_url(file_name=key)

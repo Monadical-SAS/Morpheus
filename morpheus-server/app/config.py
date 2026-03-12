@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     models_bucket: str
     images_bucket: str
     images_temp_bucket: str
+    firebase_storage_bucket: str = ""
 
     temp_model_folder: str = "./tmp"
     default_scheduler: str = "DDPMScheduler"
@@ -84,7 +85,11 @@ file_handlers = {
     "S3": {
         "module": "app.repository.files.s3_files_repository",
         "handler": "S3ImagesRepository",
-    }
+    },
+    "Firebase": {
+        "module": "app.repository.files.firebase_files_repository",
+        "handler": "FirebaseImagesRepository",
+    },
 }
 
 backend_handlers = {
