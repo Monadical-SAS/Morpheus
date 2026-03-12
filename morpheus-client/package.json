@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.0",
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-tabs": "1.0.2",
     "@radix-ui/react-toast": "^1.1.4",
@@ -42,7 +43,7 @@
     "react-dom": "^18.2.0",
     "react-toastify": "^9.1.1",
     "roughjs": "4.5.2",
-"socket.io-client": "2.3.1",
+    "socket.io-client": "2.3.1",
     "swiper": "^8.4.4",
     "tailwind-merge": "^1.13.0",
     "tailwindcss-animate": "^1.0.5",

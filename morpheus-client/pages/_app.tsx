@@ -14,7 +14,6 @@ import { ModelsProvider } from "@/context/ModelsContext";
 import { CookiesConsentProvider } from "@/context/CookiesConsentContext";
 
 import "../styles/globals.css";
-import "../excalidraw/main.css";
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
